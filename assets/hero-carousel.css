@@ -1,0 +1,484 @@
+/* ========== HERO CAROUSEL STYLES ========== */
+/* This file contains all styles for the hero carousel section */
+
+/* ---- Base ---- */
+.hero-carousel {
+  position: relative;
+  color: var(--hc-foreground, #ffffff);
+}
+
+/* ---- Scroller ---- */
+.hero-carousel__scroller {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.hero-carousel__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-carousel__scroller:focus-visible {
+  outline: 2px solid var(--hc-foreground, #ffffff);
+  outline-offset: -2px;
+}
+
+/* ---- Slide ---- */
+.hero-carousel__slide {
+  position: relative;
+  display: flex;
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  isolation: isolate;
+}
+
+.hero-carousel__slide--empty {
+  min-height: 50vh;
+  background: #f0f0f0;
+}
+
+/* ---- Schedule & VIP Badges ---- */
+.hero-carousel__schedule-badge,
+.hero-carousel__vip-badge {
+  position: absolute;
+  z-index: 3;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Only show in theme editor or to merchants */
+.hero-carousel__schedule-badge {
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  align-items: flex-end;
+}
+
+.hero-carousel__vip-badge {
+  top: 1rem;
+  left: 1rem;
+  background: #ffd700;
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Hide badges on public view - only visible in theme editor */
+body:not(.theme-editor) .hero-carousel__schedule-badge,
+body:not(.theme-editor) .hero-carousel__vip-badge {
+  display: none;
+}
+
+/* ---- Heights ---- */
+.hero-carousel--small .hero-carousel__slide {
+  min-height: 26rem;
+}
+
+.hero-carousel--medium .hero-carousel__slide {
+  min-height: 34rem;
+}
+
+.hero-carousel--large .hero-carousel__slide {
+  min-height: 45rem;
+}
+
+.hero-carousel--full .hero-carousel__slide {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+@media (max-width: 749px) {
+  .hero-carousel--small .hero-carousel__slide {
+    min-height: 20rem;
+  }
+
+  .hero-carousel--medium .hero-carousel__slide {
+    min-height: 28rem;
+  }
+
+  .hero-carousel--large .hero-carousel__slide {
+    min-height: 36rem;
+  }
+}
+
+/* ---- Media ---- */
+.hero-carousel__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Absolutely positioned so sizing comes from .hero-carousel__media directly.
+   Percentage heights through the inline <picture> wrapper are unreliable
+   and let tall portrait images overflow at their natural size. */
+.hero-carousel__image,
+.hero-carousel__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-carousel__placeholder {
+  fill: #a0a0a0;
+  background: #6b6b6b;
+}
+
+.hero-carousel__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--hc-overlay, #000000);
+  opacity: var(--hc-overlay-opacity, 0.25);
+  pointer-events: none;
+}
+
+/* ---- Content placement ---- */
+.hero-carousel__content-wrapper {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+/* Vertical */
+.hero-carousel__content-wrapper--top-left,
+.hero-carousel__content-wrapper--top-center,
+.hero-carousel__content-wrapper--top-right {
+  align-items: flex-start;
+}
+
+.hero-carousel__content-wrapper--middle-left,
+.hero-carousel__content-wrapper--middle-center,
+.hero-carousel__content-wrapper--middle-right {
+  align-items: center;
+}
+
+.hero-carousel__content-wrapper--bottom-left,
+.hero-carousel__content-wrapper--bottom-center,
+.hero-carousel__content-wrapper--bottom-right {
+  align-items: flex-end;
+}
+
+/* Horizontal */
+.hero-carousel__content-wrapper--top-left,
+.hero-carousel__content-wrapper--middle-left,
+.hero-carousel__content-wrapper--bottom-left {
+  justify-content: flex-start;
+}
+
+.hero-carousel__content-wrapper--top-center,
+.hero-carousel__content-wrapper--middle-center,
+.hero-carousel__content-wrapper--bottom-center {
+  justify-content: center;
+}
+
+.hero-carousel__content-wrapper--top-right,
+.hero-carousel__content-wrapper--middle-right,
+.hero-carousel__content-wrapper--bottom-right {
+  justify-content: flex-end;
+}
+
+/* ---- Content ---- */
+.hero-carousel__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  max-width: 40rem;
+}
+
+.hero-carousel__content--align-left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.hero-carousel__content--align-center {
+  text-align: center;
+  align-items: center;
+}
+
+.hero-carousel__content--align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.hero-carousel__caption {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+}
+
+.hero-carousel__heading {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+}
+
+.hero-carousel__heading--small {
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+}
+
+.hero-carousel__heading--medium {
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+}
+
+.hero-carousel__heading--large {
+  font-size: clamp(2.75rem, 1.6rem + 4.5vw, 4.75rem);
+}
+
+.hero-carousel__text {
+  line-height: 1.6;
+}
+
+.hero-carousel__text > p {
+  margin: 0 0 0.5em;
+}
+
+.hero-carousel__text > p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Buttons ----
+   Inherits the theme's .button classes when present; self-contained
+   fallback below so the section works standalone. Colors pull from the
+   theme's Accent palette (--color-accent-background / --color-accent-foreground)
+   instead of being hardcoded, matching hero.css. */
+.hero-carousel__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.375rem;
+}
+
+.hero-carousel__content--align-center .hero-carousel__buttons {
+  justify-content: center;
+}
+
+.hero-carousel__content--align-right .hero-carousel__buttons {
+  justify-content: flex-end;
+}
+
+.hero-carousel__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.625rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.hero-carousel__button--primary {
+  color: var(--color-accent-foreground, #ffffff);
+  background-color: var(--color-accent-background, #121212);
+  border: 1px solid var(--color-accent-background, #121212);
+}
+
+.hero-carousel__button--primary:hover,
+.hero-carousel__button--primary:focus-visible {
+  opacity: 0.85;
+}
+
+.hero-carousel__button--secondary {
+  color: currentColor;
+  background-color: transparent;
+  border: 1px solid currentColor;
+}
+
+.hero-carousel__button--secondary:hover,
+.hero-carousel__button--secondary:focus-visible {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.hero-carousel__button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ---- Arrows (overlaid, vertically centered) ---- */
+.hero-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.hero-carousel__arrow--prev {
+  left: 1rem;
+}
+
+.hero-carousel__arrow--next {
+  right: 1rem;
+}
+
+.hero-carousel__arrow:hover,
+.hero-carousel__arrow:focus-visible {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.hero-carousel__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 749px) {
+  .hero-carousel__arrow {
+    display: none;
+  }
+}
+
+/* ---- Bottom bar: dots + playback ---- */
+.hero-carousel__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.hero-carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  pointer-events: auto;
+}
+
+.hero-carousel__dot {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* 28px tap target around an 8px visual dot */
+.hero-carousel__dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transition: background-color 0.2s ease, width 0.2s ease;
+}
+
+.hero-carousel__dot:hover::after {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.hero-carousel__dot[aria-current='true']::after {
+  width: 20px;
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.hero-carousel__playback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.2s ease;
+}
+
+.hero-carousel__playback:hover,
+.hero-carousel__playback:focus-visible {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.hero-carousel__playback-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.hero-carousel__playback-icon--play {
+  display: none;
+}
+
+.hero-carousel--paused .hero-carousel__playback-icon--pause {
+  display: none;
+}
+
+.hero-carousel--paused .hero-carousel__playback-icon--play {
+  display: block;
+}
+
+/* ---- Focus states ---- */
+.hero-carousel :is(a, button):focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-carousel__scroller {
+    scroll-behavior: auto;
+  }
+
+  .hero-carousel__button,
+  .hero-carousel__arrow,
+  .hero-carousel__playback,
+  .hero-carousel__dot::after {
+    transition: none;
+  }
+}

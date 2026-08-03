@@ -1,0 +1,295 @@
+{% comment %}
+  Pairing Products Section
+  Version: 1.0
+  Description: A section that displays complementary products that pair well together
+{% endcomment %}
+
+{{ 'pairing-products.css' | asset_url | stylesheet_tag }}
+
+<div class="pairing-products" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="pairing-products"
+     role="region"
+     aria-label="{{ section.settings.aria_label | escape }}">
+  
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="pairing-products__header">
+        <h2 class="pairing-products__heading">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="pairing-products__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="pairing-products__wrapper">
+      {%- if section.settings.main_product != blank -%}
+        {%- assign main_product = section.settings.main_product -%}
+        
+        <div class="pairing-products__main">
+          <div class="pairing-products__main-card">
+            <div class="pairing-products__main-image-wrapper">
+              <img
+                src="{{ main_product.featured_image | image_url: width: 600, height: 600, crop: 'center' }}"
+                srcset="{{ main_product.featured_image | image_url: width: 600, height: 600, crop: 'center' }} 1x, {{ main_product.featured_image | image_url: width: 1200, height: 1200, crop: 'center' }} 2x"
+                alt="{{ main_product.featured_image.alt | default: main_product.title | escape }}"
+                loading="lazy"
+                width="600"
+                height="600"
+                class="pairing-products__main-image"
+              >
+            </div>
+            <div class="pairing-products__main-info">
+              <h3 class="pairing-products__main-title">{{ main_product.title }}</h3>
+              <div class="pairing-products__main-price">
+                <span class="pairing-products__main-price-current">{{ main_product.price | money }}</span>
+                {%- if main_product.compare_at_price > main_product.price -%}
+                  <span class="pairing-products__main-price-compare">{{ main_product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+              <p class="pairing-products__main-description">{{ main_product.description | strip_html | truncate: 120 }}</p>
+              <a href="{{ main_product.url }}" class="pairing-products__main-link">
+                {{ section.settings.view_product_text | default: 'View Product' | escape }}
+                <span class="pairing-products__main-link-arrow">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pairing-products__pairings">
+          <div class="pairing-products__pairings-header">
+            <span class="pairing-products__pairings-label">{{ section.settings.pairings_label | default: 'Pairs Perfectly With' | escape }}</span>
+            <div class="pairing-products__pairings-controls">
+              <button class="pairing-products__control pairing-products__control--prev" type="button" aria-label="{{ 'sections.pairing_products.previous_pairing' | t }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+              </button>
+              <button class="pairing-products__control pairing-products__control--next" type="button" aria-label="{{ 'sections.pairing_products.next_pairing' | t }}">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="pairing-products__pairings-track">
+            {%- for block in section.blocks -%}
+              {%- assign product = block.settings.product -%}
+              {%- if product != blank -%}
+                <div class="pairing-products__pairing" data-product-id="{{ product.id }}" {{ block.shopify_attributes }}>
+                  <div class="pairing-products__pairing-card">
+                    <a href="{{ product.url }}" class="pairing-products__pairing-link">
+                      <div class="pairing-products__pairing-image-wrapper">
+                        <img
+                          src="{{ product.featured_image | image_url: width: 300, height: 300, crop: 'center' }}"
+                          srcset="{{ product.featured_image | image_url: width: 300, height: 300, crop: 'center' }} 1x, {{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' }} 2x"
+                          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                          loading="lazy"
+                          width="300"
+                          height="300"
+                          class="pairing-products__pairing-image"
+                        >
+                        {%- if section.settings.show_plus_icon -%}
+                          <span class="pairing-products__pairing-plus">+</span>
+                        {%- endif -%}
+                      </div>
+
+                      <div class="pairing-products__pairing-info">
+                        <h4 class="pairing-products__pairing-title">{{ product.title }}</h4>
+                        
+                        {%- if section.settings.show_rating -%}
+                          <div class="pairing-products__pairing-rating">
+                            <span class="pairing-products__stars">
+                              {%- assign rating = product.metafields.reviews.rating.value | round -%}
+                              {%- for i in (1..5) -%}
+                                {%- if i <= rating -%}
+                                  ★
+                                {%- else -%}
+                                  ☆
+                                {%- endif -%}
+                              {%- endfor -%}
+                            </span>
+                          </div>
+                        {%- endif -%}
+
+                        <div class="pairing-products__pairing-price">
+                          <span class="pairing-products__pairing-price-current">{{ product.price | money }}</span>
+                          {%- if product.compare_at_price > product.price -%}
+                            <span class="pairing-products__pairing-price-compare">{{ product.compare_at_price | money }}</span>
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    </a>
+
+                    <div class="pairing-products__pairing-actions">
+                      {%- if product.available -%}
+                        <button class="pairing-products__add-to-cart btn btn--primary btn--small" 
+                                data-product-id="{{ product.id }}" 
+                                data-variant-id="{{ product.first_available_variant.id }}"
+                                type="button">
+                          {{ 'products.product.add_to_cart' | t }}
+                        </button>
+                      {%- else -%}
+                        <button class="pairing-products__sold-out btn btn--disabled btn--small" disabled>
+                          {{ 'products.product.sold_out' | t }}
+                        </button>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <div class="pairing-products__bundle">
+          <div class="pairing-products__bundle-card">
+            <div class="pairing-products__bundle-info">
+              <span class="pairing-products__bundle-label">{{ section.settings.bundle_label | default: 'Complete the Set' | escape }}</span>
+              <div class="pairing-products__bundle-items">
+                <span class="pairing-products__bundle-item">{{ main_product.title }}</span>
+                <span class="pairing-products__bundle-plus">+</span>
+                <span class="pairing-products__bundle-item-count">
+                  {{ section.blocks.size }} {{ 'products.product.products' | t | downcase }}
+                </span>
+              </div>
+              <div class="pairing-products__bundle-price">
+                <span class="pairing-products__bundle-price-label">{{ section.settings.bundle_price_label | default: 'Bundle Price' | escape }}:</span>
+                <span class="pairing-products__bundle-price-amount" id="bundle-total-price">
+                  {%- assign bundle_price = main_product.price -%}
+                  {%- for block in section.blocks -%}
+                    {%- assign product = block.settings.product -%}
+                    {%- if product != blank -%}
+                      {%- assign bundle_price = bundle_price | plus: product.price -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {{ bundle_price | money }}
+                </span>
+              </div>
+              {%- comment -%}
+                No bundle discount is currently configured for this section (there's
+                no discount-percentage setting), so the bundle price always equals
+                the sum of individual prices and there's nothing to display here.
+                If you want real bundle savings, add a discount setting and apply
+                it to bundle_price above, then this block can show the difference.
+              {%- endcomment -%}
+            </div>
+
+            <button class="pairing-products__add-bundle btn btn--primary" type="button">
+              {{ section.settings.add_bundle_text | default: 'Add Bundle to Cart' | escape }}
+            </button>
+          </div>
+        </div>
+
+      {%- else -%}
+        <div class="pairing-products__empty">
+          <p>{{ 'sections.pairing_products.empty' | t | default: 'Select a main product to display pairings.' }}</p>
+          {%- if shop.editor_mode -%}
+            <p><small>Select a main product in section settings</small></p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'pairing-products.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.pairing_products.name",
+  "tag": "section",
+  "class": "pairing-products-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.pairing_products.settings.heading.label",
+      "default": "Complete Your Look"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.pairing_products.settings.subheading.label",
+      "default": "Perfect pairings for your style"
+    },
+    {
+      "type": "product",
+      "id": "main_product",
+      "label": "t:sections.pairing_products.settings.main_product.label"
+    },
+    { "type": "header", "content": "t:sections.pairing_products.settings.header__1.content" },
+    {
+      "type": "text",
+      "id": "pairings_label",
+      "label": "t:sections.pairing_products.settings.pairings_label.label",
+      "default": "Pairs Perfectly With"
+    },
+    {
+      "type": "text",
+      "id": "bundle_label",
+      "label": "t:sections.pairing_products.settings.bundle_label.label",
+      "default": "Complete the Set"
+    },
+    {
+      "type": "text",
+      "id": "bundle_price_label",
+      "label": "t:sections.pairing_products.settings.bundle_price_label.label",
+      "default": "Bundle Price"
+    },
+    {
+      "type": "text",
+      "id": "add_bundle_text",
+      "label": "t:sections.pairing_products.settings.add_bundle_text.label",
+      "default": "Add Bundle to Cart"
+    },
+    {
+      "type": "text",
+      "id": "view_product_text",
+      "label": "t:sections.pairing_products.settings.view_product_text.label",
+      "default": "View Product"
+    },
+    { "type": "header", "content": "t:sections.pairing_products.settings.header__2.content" },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "t:sections.pairing_products.settings.show_rating.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_plus_icon",
+      "label": "t:sections.pairing_products.settings.show_plus_icon.label",
+      "default": true
+    },
+    { "type": "header", "content": "t:sections.pairing_products.settings.header__3.content" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "t:sections.pairing_products.settings.aria_label.label",
+      "default": "Product pairings and bundle"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pairing",
+      "name": "t:sections.pairing_products.blocks.pairing.name",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.pairing_products.blocks.pairing.settings.product.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.pairing_products.presets.name",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,278 @@
+/* Featured Collections Tabs */
+
+/* ── Section header ── */
+.featured-collections-tabs .section-header {
+  margin-bottom: 2rem;
+}
+
+.featured-collections-tabs .text-left {
+  text-align: left;
+}
+.featured-collections-tabs .text-center {
+  text-align: center;
+}
+.featured-collections-tabs .text-right {
+  text-align: right;
+}
+
+.featured-collections-tabs .section-heading {
+  margin: 0;
+  line-height: 1.2;
+  color: var(--color-foreground, #1a1a1a);
+}
+
+.featured-collections-tabs .heading--small {
+  font-size: 1.5rem;
+}
+.featured-collections-tabs .heading--medium {
+  font-size: 2rem;
+}
+.featured-collections-tabs .heading--large {
+  font-size: 2.6rem;
+}
+
+.featured-collections-tabs .subheading {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 65%, transparent);
+}
+
+/* ── Tabs nav ── */
+.featured-collections-tabs .tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: var(--tabs-justify, center);
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-foreground, #1a1a1a) 8%, transparent);
+}
+
+.featured-collections-tabs .tab-button {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--color-foreground, #1a1a1a);
+  font-size: 1.05rem;
+}
+
+.featured-collections-tabs .tab-button:hover,
+.featured-collections-tabs .tab-button.active {
+  border-bottom-color: var(--color-accent-background, #121212);
+  color: var(--color-accent-background, #121212);
+}
+
+.featured-collections-tabs .tab-button:focus-visible {
+  outline: 2px solid var(--color-foreground, #1a1a1a);
+  outline-offset: 2px;
+}
+
+.featured-collections-tabs .tab-button[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── Panels ── */
+.featured-collections-tabs .tab-panel {
+  display: none;
+}
+
+.featured-collections-tabs .tab-panel.active {
+  display: block;
+  animation: tabFadeIn 0.35s ease forwards;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-collections-tabs .tab-panel.active {
+    animation: none;
+  }
+}
+
+/* ── Products grid (mobile-first, driven by section settings) ── */
+.featured-collections-tabs .products-grid {
+  display: grid;
+  width: 100%;
+  gap: 1rem;
+  grid-template-columns: repeat(var(--cols-mobile, 1), minmax(0, 1fr));
+}
+
+@media screen and (min-width: 750px) {
+  .featured-collections-tabs .products-grid {
+    gap: 2rem;
+    grid-template-columns: repeat(var(--cols-tablet, 2), minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .featured-collections-tabs .products-grid {
+    grid-template-columns: repeat(var(--cols-desktop, 4), minmax(0, 1fr));
+  }
+}
+
+/* ── Product card ──
+   NOTE: previously used rgb(var(--color-foreground)) / rgba(var(--color-foreground), X),
+   which only works if --color-foreground holds bare RGB numbers ("26, 26, 26").
+   css-variables.liquid sets it as a full hex string ("#1a1a1a"), so rgb(#1a1a1a)
+   was invalid CSS and every rule below was silently ignored by the browser.
+   Switched to var(--color-foreground) directly + color-mix() for opacity variants.
+   Also replaced the undefined --color-button with --color-accent-background/foreground,
+   which are the actual button/accent palette variables defined in this theme. */
+.card-wrapper {
+  height: 100%;
+  min-width: 0;
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.card__title {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+  font-weight: 500;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  color: var(--color-foreground, #1a1a1a);
+}
+
+.card__price {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-weight: 600;
+  color: var(--color-foreground, #1a1a1a);
+}
+
+.card__media {
+  position: relative;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 4%, transparent);
+}
+
+.card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card__image {
+  transform: scale(1.03);
+}
+
+.card__media .placeholder-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card__content {
+  padding: 1.5rem 0 0.5rem;
+}
+
+.card__vendor {
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 60%, transparent);
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Sale price uses the accent color (a real button-role color) rather
+   than the undefined --color-button */
+.price-item--sale {
+  color: var(--color-accent-background, #121212);
+}
+
+.price-item--sale s {
+  font-weight: 400;
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 50%, transparent);
+}
+
+.price-item--compare s {
+  font-weight: 400;
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 50%, transparent);
+}
+
+/* ── Rating ── */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.product-rating__stars {
+  display: flex;
+  gap: 0.1rem;
+  flex-shrink: 0;
+}
+
+.product-rating__count {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 60%, transparent);
+}
+
+.star {
+  font-size: 1rem;
+}
+
+/* Star gold kept as conventional review color, uses status variable */
+.star--filled {
+  color: var(--color-star, #b8860b);
+}
+
+.star--empty {
+  color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 20%, transparent);
+}
+
+/* ── Utilities / buttons ── */
+.text-center {
+  text-align: center;
+}
+
+.view-all-wrapper {
+  margin-top: 2.5rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+}
+
+.button--secondary {
+  background: transparent;
+  color: var(--color-accent-background, #121212);
+  border: 2px solid var(--color-accent-background, #121212);
+}
+
+.button--secondary:hover {
+  background: var(--color-accent-background, #121212);
+  color: var(--color-accent-foreground, #ffffff);
+}

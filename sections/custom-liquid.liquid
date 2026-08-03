@@ -1,0 +1,91 @@
+{{ 'section-custom-liquid.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="custom-liquid custom-liquid--{{ section.settings.layout }} custom-liquid--align-{{ section.settings.alignment }}"
+  data-section-id="{{ section.id }}"
+  data-layout="{{ section.settings.layout }}"
+  data-alignment="{{ section.settings.alignment }}"
+  style="--custom-liquid-padding-top: {{ section.settings.padding_top }}px; --custom-liquid-padding-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="custom-liquid__container">
+    {% if section.settings.title != blank %}
+      <h2 class="custom-liquid__title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="custom-liquid__content">
+      {{ section.settings.custom_code }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.custom_liquid.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.custom_liquid.settings.title.label",
+      "info": "t:sections.custom_liquid.settings.title.info",
+      "default": "Custom Content"
+    },
+    { "type": "header", "content": "t:sections.custom_liquid.settings.header__1.content" },
+    {
+      "type": "liquid",
+      "id": "custom_code",
+      "label": "t:sections.custom_liquid.settings.custom_code.label",
+      "info": "t:sections.custom_liquid.settings.custom_code.info",
+      "default": "<h3>Welcome to Custom Liquid Section</h3><p>Add your custom HTML, Liquid code, or JavaScript here.</p>"
+    },
+    { "type": "header", "content": "t:sections.custom_liquid.settings.header__2.content" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.custom_liquid.settings.layout.label",
+      "options": [
+        { "value": "full", "label": "t:sections.custom_liquid.settings.layout.options__1.label" },
+        { "value": "contained", "label": "t:sections.custom_liquid.settings.layout.options__2.label" },
+        { "value": "narrow", "label": "t:sections.custom_liquid.settings.layout.options__3.label" }
+      ],
+      "default": "contained"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.custom_liquid.settings.alignment.label",
+      "options": [
+        { "value": "left", "label": "t:sections.custom_liquid.settings.alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.custom_liquid.settings.alignment.options__2.label" },
+        { "value": "right", "label": "t:sections.custom_liquid.settings.alignment.options__3.label" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "t:sections.custom_liquid.settings.header__3.content" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.custom_liquid.settings.padding_top.label",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "t:sections.custom_liquid.settings.padding_bottom.label",
+      "default": 40
+    }
+  ],
+  "presets": [
+    { "name": "t:sections.custom_liquid.presets.name" }
+  ]
+}
+{% endschema %}

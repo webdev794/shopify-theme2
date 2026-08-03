@@ -1,0 +1,27 @@
+{%- comment -%}
+  Single Quick View modal, shared by every product card on the page.
+  Opened via [data-quick-view-open] buttons (see snippets/featured-products.liquid,
+  card-product.liquid). Content is fetched from /products/{handle}.js and
+  built by assets/quick-view.js — includes rich media (video, external video,
+  3D model), matching the product template and featured product section.
+  Render this once, e.g. near the end of theme.liquid.
+{%- endcomment -%}
+
+<dialog id="QuickViewModal" class="quick-view-modal">
+  <div class="quick-view-modal__overlay" data-quick-view-close></div>
+  <div class="quick-view-modal__dialog" role="document">
+    <button type="button" class="quick-view-modal__close" data-quick-view-close aria-label="{{ 'general.close' | t | default: 'Close' }}">
+      &times;
+    </button>
+
+    <div class="quick-view-modal__loading" data-quick-view-loading>
+      <div class="quick-view-modal__spinner"></div>
+    </div>
+
+    <div class="quick-view-modal__content" data-quick-view-content hidden></div>
+  </div>
+</dialog>
+
+<script src="{{ 'quick-view.js' | asset_url }}" defer></script>
+<link rel="preload" href="{{ 'quick-view.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>{{ 'quick-view.css' | asset_url | stylesheet_tag }}</noscript>

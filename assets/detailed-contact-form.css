@@ -1,0 +1,471 @@
+/* Detailed Contact Form Styles
+   Recolored to use the theme palette (--color-background, --color-foreground,
+   --color-background-secondary, --color-accent-background/foreground) instead
+   of a hardcoded indigo/purple/pink scheme with no tie to merchant settings.
+   The separate hardcoded dark-mode media query has been removed — it fought
+   the merchant's own light/dark theme settings rather than following them.
+   
+   v2.1 — Added status color variables for validation and form status messages.
+*/
+.detailed-contact-form {
+  background-color: var(--section-bg, var(--color-background, #ffffff));
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  padding: 5rem 0;
+  position: relative;
+}
+
+.detailed-contact-form__wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Header Styles */
+.detailed-contact-form__header {
+  margin-bottom: 3.5rem;
+  text-align: center;
+}
+
+.detailed-contact-form__heading {
+  font-size: 2.75rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.2;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  position: relative;
+  display: inline-block;
+}
+
+.detailed-contact-form__heading::after {
+  content: '';
+  position: absolute;
+  bottom: -0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--color-accent-background, #1a1a2e);
+  border-radius: 2px;
+}
+
+.detailed-contact-form__subheading {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  margin: 1rem auto 0;
+  opacity: 0.75;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  max-width: 550px;
+}
+
+/* Grid Layout */
+.detailed-contact-form__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+@media screen and (max-width: 968px) {
+  .detailed-contact-form__grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+/* Form Wrapper */
+.detailed-contact-form__form-wrapper {
+  background: var(--color-background, #ffffff);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid color-mix(in srgb, var(--color-foreground, #1a1a2e) 6%, transparent);
+}
+
+.detailed-contact-form__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.detailed-contact-form__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.field-group {
+  position: relative;
+}
+
+.field-group--full {
+  flex: 0 0 100%;
+}
+
+.field-group--half {
+  flex: 0 0 calc(50% - 0.625rem);
+}
+
+@media screen and (max-width: 640px) {
+  .field-group--half {
+    flex: 0 0 100%;
+  }
+}
+
+/* Field Labels */
+.field__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+}
+
+/* Required-field asterisk uses error color variable */
+.field__required {
+  color: var(--color-error, #c62828);
+  margin-left: 0.2rem;
+}
+
+/* Field Inputs */
+.field__input {
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  background: var(--color-background-secondary, #f8fafc);
+  border: 2px solid color-mix(in srgb, var(--color-foreground, #1a1a2e) 12%, transparent);
+  border-radius: var(--style-border-radius-inputs, 0.75rem);
+  transition: all 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--color-accent-background, #1a1a2e);
+  background: var(--color-background, #ffffff);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-background, #1a1a2e) 10%, transparent);
+}
+
+.field__input:hover {
+  border-color: color-mix(in srgb, var(--color-foreground, #1a1a2e) 35%, transparent);
+  background: var(--color-background, #ffffff);
+}
+
+.field__input::placeholder {
+  color: color-mix(in srgb, var(--color-foreground, #1a1a2e) 40%, transparent);
+  opacity: 1;
+}
+
+/* Validation states use status color variables */
+.field__input.error {
+  border-color: var(--color-error, #c62828);
+  background: var(--color-error-bg, #fef2f2);
+}
+
+.field__input.valid {
+  border-color: var(--color-success, #2e7d32);
+  background: var(--color-success-bg, #f0fdf4);
+}
+
+.field__textarea {
+  min-height: 140px;
+  resize: vertical;
+  padding-top: 1rem;
+}
+
+.field__select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a1a2e' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.125rem center;
+  padding-right: 2.75rem;
+}
+
+/* Character Count */
+.field__character-count {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  font-weight: 500;
+}
+
+/* Checkbox Styles */
+.field__checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.field__checkbox {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  accent-color: var(--color-accent-background, #1a1a2e);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.field__checkbox-label {
+  font-size: 0.95rem;
+  cursor: pointer;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.field__checkbox-label:hover {
+  color: var(--color-accent-background, #1a1a2e);
+}
+
+/* Submit Button */
+.detailed-contact-form__submit {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-accent-foreground, #ffffff);
+  background: var(--color-accent-background, #1a1a2e);
+  border: none;
+  border-radius: var(--style-border-radius-inputs, 0.75rem);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.detailed-contact-form__submit:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--color-accent-background, #1a1a2e) 35%, transparent);
+}
+
+.detailed-contact-form__submit:active {
+  transform: translateY(0);
+}
+
+.detailed-contact-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.button__spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--color-accent-foreground, #ffffff);
+  animation: spin 0.8s linear infinite;
+}
+
+.button__spinner.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Contact Information Sidebar */
+.detailed-contact-form__info {
+  background: var(--color-background-secondary, #f8fafc);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--color-accent-background, #1a1a2e) 10%, transparent);
+}
+
+.detailed-contact-form__info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detailed-contact-form__info-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detailed-contact-form__info-heading::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 28px;
+  background: var(--color-accent-background, #1a1a2e);
+  border-radius: 2px;
+}
+
+.detailed-contact-form__info-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+}
+
+.detailed-contact-form__info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.detailed-contact-form__info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent-background, #1a1a2e) 8%, transparent);
+}
+
+.detailed-contact-form__info-item:last-child {
+  border-bottom: none;
+}
+
+.detailed-contact-form__info-item .icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--color-accent-background, #1a1a2e);
+  margin-top: 0.125rem;
+}
+
+.detailed-contact-form__info-link {
+  color: var(--text-color, var(--color-foreground, #1a1a2e));
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.detailed-contact-form__info-link:hover {
+  color: var(--color-accent-background, #1a1a2e);
+}
+
+/* Form Status Messages use status color variables */
+.form-status {
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-status--success {
+  background: var(--color-success-bg, #d1fae5);
+  border: 1px solid var(--color-success, #2e7d32);
+  color: var(--color-success-text, #065f46);
+}
+
+.form-status--error {
+  background: var(--color-error-bg, #fee2e2);
+  border: 1px solid var(--color-error, #c62828);
+  color: var(--color-error-text, #991b1b);
+}
+
+.form-status ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.5rem;
+}
+
+.form-status a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 1024px) {
+  .detailed-contact-form {
+    padding: 4rem 0;
+  }
+
+  .detailed-contact-form__heading {
+    font-size: 2.25rem;
+  }
+
+  .detailed-contact-form__form-wrapper {
+    padding: 2rem;
+  }
+
+  .detailed-contact-form__info {
+    padding: 2rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .detailed-contact-form {
+    padding: 3rem 0;
+  }
+
+  .detailed-contact-form__heading {
+    font-size: 2rem;
+  }
+
+  .detailed-contact-form__form-wrapper {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+
+  .detailed-contact-form__info {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .detailed-contact-form {
+    padding: 2.5rem 0;
+  }
+
+  .detailed-contact-form__heading {
+    font-size: 1.75rem;
+  }
+
+  .detailed-contact-form__form-wrapper {
+    padding: 1.25rem;
+  }
+
+  .detailed-contact-form__fields {
+    gap: 1rem;
+  }
+
+  .field__input {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .detailed-contact-form__submit {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+    min-height: 50px;
+  }
+}

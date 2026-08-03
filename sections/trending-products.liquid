@@ -1,0 +1,187 @@
+{% comment %}
+  Trending Products Section
+  Version: 1.0
+{% endcomment %}
+
+{{ 'trending-products.css' | asset_url | stylesheet_tag }}
+
+<div class="trending-products" data-section-id="{{ section.id }}" data-section-type="trending-products">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="trending-products__header">
+        <h2 class="trending-products__heading">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="trending-products__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="trending-products__grid">
+      {%- for product in collections[section.settings.collection].products limit: section.settings.products_to_show -%}
+        {%- assign index = forloop.index0 -%}
+        <div class="trending-products__item" data-index="{{ index }}" style="animation-delay: {{ index | times: 0.1 }}s">
+          <div class="trending-products__card">
+            {%- if product.featured_image -%}
+              <a href="{{ product.url }}" class="trending-products__image-wrapper">
+                <img
+                  src="{{ product.featured_image | image_url: width: 500, height: 500, crop: 'center' }}"
+                  srcset="{{ product.featured_image | image_url: width: 500, height: 500, crop: 'center' }} 1x, {{ product.featured_image | image_url: width: 1000, height: 1000, crop: 'center' }} 2x"
+                  alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                  loading="lazy"
+                  width="500"
+                  height="500"
+                  class="trending-products__image"
+                >
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="trending-products__badge">{{ 'products.product.on_sale' | t }}</span>
+                {%- endif -%}
+              </a>
+            {%- endif -%}
+
+            <div class="trending-products__info">
+              {%- if section.settings.show_vendor and product.vendor != blank -%}
+                <p class="trending-products__vendor">{{ product.vendor }}</p>
+              {%- endif -%}
+
+              <h3 class="trending-products__title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              {%- if section.settings.show_rating -%}
+                <div class="trending-products__rating">
+                    <span class="trending-products__stars">
+                    {%- assign rating = product.metafields.reviews.rating.value | round -%}
+                    {%- for i in (1..5) -%}
+                        {%- if i <= rating -%}
+                        ★
+                        {%- else -%}
+                        ☆
+                        {%- endif -%}
+                    {%- endfor -%}
+                    </span>
+                    <span class="trending-products__review-count">
+                    ({{ product.metafields.reviews.rating_count.value | default: 0 }})
+                    </span>
+                </div>
+              {%- endif -%}
+
+              <div class="trending-products__price">
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="trending-products__price--compare">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+                <span class="trending-products__price--current">{{ product.price | money }}</span>
+              </div>
+
+              <div class="trending-products__actions">
+                {%- if product.available -%}
+                  <button
+                    class="trending-products__add-to-cart btn btn--primary"
+                    data-product-id="{{ product.id }}"
+                    data-variant-id="{{ product.first_available_variant.id }}"
+                    type="button"
+                  >
+                    {{ 'products.product.add_to_cart' | t }}
+                  </button>
+                {%- else -%}
+                  <button class="trending-products__sold-out btn btn--disabled" disabled>
+                    {{ 'products.product.sold_out' | t }}
+                  </button>
+                {%- endif -%}
+
+                <button
+                  class="trending-products__quick-view"
+                  data-product-id="{{ product.id }}"
+                  aria-label="{{ 'products.product.quick_view' | t }}"
+                  type="button"
+                >
+                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path d="M12 9a3 3 0 100 6 3 3 0 000-6zm-5 3a5 5 0 1110 0 5 5 0 01-10 0z" />
+                    <path d="M12 3C7 3 2.73 6.11 1 10.5 2.73 14.89 7 18 12 18s9.27-3.11 11-7.5C21.27 6.11 17 3 12 3zm0 13c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="trending-products__empty">
+          <p>{{ 'sections.trending_products.empty' | t }}</p>
+          {%- if shop.editor_mode -%}
+            <p><small>Select a collection in section settings</small></p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_view_all and section.settings.collection != blank -%}
+      <div class="trending-products__footer">
+        <a href="{{ collections[section.settings.collection].url }}" class="btn btn--secondary">
+          {{ 'sections.trending_products.view_all' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script src="{{ 'trending-products.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.trending_products.name",
+  "tag": "section",
+  "class": "trending-products-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.trending_products.settings.heading.label",
+      "default": "Trending Now"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.trending_products.settings.subheading.label",
+      "default": "Our most popular products this week"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.trending_products.settings.collection.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "t:sections.trending_products.settings.products_to_show.label",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    { "type": "header", "content": "t:sections.trending_products.settings.header__1.content" },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:sections.trending_products.settings.show_vendor.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "t:sections.trending_products.settings.show_rating.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "t:sections.trending_products.settings.show_view_all.label",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.trending_products.presets.name",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

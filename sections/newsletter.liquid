@@ -1,0 +1,229 @@
+<link rel="preload" href="{{ 'section-newsletter.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>{{ 'section-newsletter.css' | asset_url | stylesheet_tag }}</noscript>
+<script src="{{ 'newsletter.js' | asset_url }}" defer></script>
+
+<div 
+  class="newsletter" 
+  data-section-id="{{ section.id }}"
+  data-style="{{ section.settings.style }}"
+  data-bg-color="{{ section.settings.background_color }}"
+  data-text-color="{{ section.settings.section_text_color }}"
+  {%- if section.settings.background_image != blank %}
+  data-background-image="{{ section.settings.background_image | image_url }}"
+  {%- endif %}
+>
+  <div class="newsletter__container">
+    <div class="newsletter__content">
+      {% if section.settings.subheading != blank %}
+        <span class="newsletter__subheading">{{ section.settings.subheading }}</span>
+      {% endif %}
+      
+      {% if section.settings.heading != blank %}
+        <h2 class="newsletter__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <div class="newsletter__description">{{ section.settings.description }}</div>
+      {% endif %}
+      
+      {% form 'customer', id: 'newsletter-form' %}
+        {{ form.errors | default_errors }}
+        
+        {% if form.posted_successfully? %}
+          <div class="newsletter__success">
+            <svg class="newsletter__success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <p>{{ section.settings.success_message }}</p>
+          </div>
+        {% else %}
+          <div class="newsletter__form">
+            <input 
+              type="hidden" 
+              name="contact[tags]" 
+              value="newsletter"
+            >
+            <div class="newsletter__field-group">
+              <input
+                type="email"
+                name="contact[email]"
+                id="NewsletterForm-{{ section.id }}"
+                class="newsletter__input"
+                placeholder="{{ section.settings.placeholder }}"
+                required
+                aria-required="true"
+                autocorrect="off"
+                autocapitalize="off"
+                autocomplete="email"
+                {% if form.errors %}
+                  autofocus
+                  aria-invalid="true"
+                  aria-describedby="Newsletter-error-{{ section.id }}"
+                {% elsif form.posted_successfully? %}
+                  aria-describedby="Newsletter-success-{{ section.id }}"
+                {% endif %}
+              >
+              <button 
+                type="submit" 
+                class="newsletter__button newsletter__button--{{ section.settings.button_style }}"
+                name="commit"
+                id="Subscribe-{{ section.id }}"
+              >
+                <span class="newsletter__button-text">
+                  {{ section.settings.button_label }}
+                </span>
+                
+                {% if section.settings.show_icon %}
+                  <svg class="newsletter__button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                {% endif %}
+              </button>
+            </div>
+            
+            {% if section.settings.show_note %}
+              <p class="newsletter__note">{{ section.settings.note_text }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endform %}
+      
+      {% if section.settings.show_social %}
+        <div class="newsletter__social">
+          <span class="newsletter__social-label">{{ section.settings.social_label }}</span>
+          {%- render 'social-icon', wrapper_class: 'newsletter__social-icons', link_class: 'newsletter__social-link' -%}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.newsletter.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "t:sections.newsletter.settings.header__1.content" },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.newsletter.settings.subheading.label",
+      "default": "Subscribe Now"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.newsletter.settings.heading.label",
+      "default": "Join Our Newsletter"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.newsletter.settings.description.label",
+      "default": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "t:sections.newsletter.settings.placeholder.label",
+      "default": "Enter your email"
+    },
+    { "type": "header", "content": "t:sections.newsletter.settings.header__2.content" },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.newsletter.settings.button_label.label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:sections.newsletter.settings.button_style.label",
+      "options": [
+        { "value": "primary", "label": "t:sections.newsletter.settings.button_style.options__1.label" },
+        { "value": "gradient", "label": "t:sections.newsletter.settings.button_style.options__2.label" },
+        { "value": "outline", "label": "t:sections.newsletter.settings.button_style.options__3.label" },
+        { "value": "pill", "label": "t:sections.newsletter.settings.button_style.options__4.label" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "t:sections.newsletter.settings.show_icon.label",
+      "default": true
+    },
+    { "type": "header", "content": "t:sections.newsletter.settings.header__3.content" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:sections.newsletter.settings.style.label",
+      "options": [
+        { "value": "default", "label": "t:sections.newsletter.settings.style.options__1.label" },
+        { "value": "minimal", "label": "t:sections.newsletter.settings.style.options__2.label" },
+        { "value": "bordered", "label": "t:sections.newsletter.settings.style.options__3.label" },
+        { "value": "shadow", "label": "t:sections.newsletter.settings.style.options__4.label" },
+        { "value": "background", "label": "t:sections.newsletter.settings.style.options__5.label" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:sections.newsletter.settings.background_image.label",
+      "info": "t:sections.newsletter.settings.background_image.info"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.newsletter.settings.background_color.label",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "section_text_color",
+      "label": "t:sections.newsletter.settings.section_text_color.label",
+      "default": "#1a1a2e"
+    },
+    { "type": "header", "content": "t:sections.newsletter.settings.header__4.content" },
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "t:sections.newsletter.settings.show_note.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "t:sections.newsletter.settings.note_text.label",
+      "default": "No spam. Unsubscribe anytime."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "t:sections.newsletter.settings.success_message.label",
+      "default": "Thanks for subscribing!"
+    },
+    { "type": "header", "content": "t:sections.newsletter.settings.header__5.content" },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "t:sections.newsletter.settings.show_social.label",
+      "default": true,
+      "info": "t:sections.newsletter.settings.show_social.info"
+    },
+    {
+      "type": "text",
+      "id": "social_label",
+      "label": "t:sections.newsletter.settings.social_label.label",
+      "default": "Follow us:"
+    }
+  ],
+  "presets": [
+    { "name": "t:sections.newsletter.presets.name" }
+  ]
+}
+{% endschema %}

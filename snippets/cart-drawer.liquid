@@ -1,0 +1,29 @@
+{% comment %} Global cart drawer {% endcomment %}
+{{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer></script>
+<div class="cart-drawer" data-cart-drawer data-item-count="{{ cart.item_count }}" data-money-format="{{ shop.money_format | escape }}" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'cart.drawer_title' | t | default: 'Your cart' }}">
+  <div class="cart-drawer__overlay" data-cart-drawer-close></div>
+  <div class="cart-drawer__panel" data-cart-drawer-panel>
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title">{{ 'cart.drawer_title' | t | default: 'Your cart' }}
+        <span class="cart-drawer__count" data-cart-drawer-count>{%- if cart.item_count > 0 -%}({{ cart.item_count }}){%- endif -%}</span>
+      </h2>
+      <button type="button" class="cart-drawer__close" data-cart-drawer-close aria-label="{{ 'general.close' | t | default: 'Close' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body" data-cart-drawer-body>
+      <div class="cart-drawer__empty" data-cart-drawer-empty {% if cart.item_count > 0 %}hidden{% endif %}>
+        <p>{{ 'cart.empty' | t | default: 'Your cart is empty' }}</p>
+        <a href="{{ routes.all_products_collection_url }}" class="button button--secondary" data-cart-drawer-close>{{ 'cart.continue_shopping' | t | default: 'Continue shopping' }}</a>
+      </div>
+      <ul class="cart-drawer__items" data-cart-drawer-items role="list" {% if cart.item_count == 0 %}hidden{% endif %}></ul>
+    </div>
+    <div class="cart-drawer__footer" data-cart-drawer-footer {% if cart.item_count == 0 %}hidden{% endif %}>
+      <div class="cart-drawer__subtotal"><span>{{ 'cart.subtotal' | t | default: 'Subtotal' }}</span><span data-cart-drawer-subtotal>{{ cart.total_price | money }}</span></div>
+      <p class="cart-drawer__note">{{ 'cart.taxes_and_shipping' | t | default: 'Taxes and shipping calculated at checkout' }}</p>
+      <form action="{{ routes.cart_url }}" method="post"><button type="submit" name="checkout" class="cart-drawer__checkout">{{ 'cart.checkout' | t | default: 'Checkout' }}</button></form>
+      <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart">{{ 'cart.view_cart' | t | default: 'View cart' }}</a>
+    </div>
+  </div>
+</div>

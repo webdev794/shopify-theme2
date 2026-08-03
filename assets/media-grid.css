@@ -1,0 +1,303 @@
+/* ========== MEDIA GRID STYLES ========== */
+/* This file contains all styles for the media grid section */
+
+/* ---- Base ---- */
+.media-grid {
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
+}
+
+.media-grid--full-width {
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.media-grid--full-width .media-grid__heading {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* ---- Heading ---- */
+.media-grid__heading {
+  margin: 0 0 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.media-grid__heading--small {
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+}
+
+.media-grid__heading--medium {
+  font-size: clamp(1.625rem, 1.2rem + 1.75vw, 2.375rem);
+}
+
+.media-grid__heading--large {
+  font-size: clamp(2rem, 1.3rem + 2.75vw, 3.25rem);
+}
+
+.media-grid__heading--align-left { text-align: left; }
+.media-grid__heading--align-center { text-align: center; }
+.media-grid__heading--align-right { text-align: right; }
+
+/* ---- Grid ---- */
+.media-grid__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
+  grid-auto-flow: dense;
+  gap: var(--grid-gap, 16px);
+}
+
+.media-grid__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--grid-radius, 8px);
+}
+
+/* Tiles clip their media; captions below the media sit outside the clip */
+.media-grid__media {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: var(--grid-radius, 8px);
+  aspect-ratio: var(--grid-aspect, 1 / 1);
+  background: #f0f0f0;
+}
+
+/* ---- Media ---- */
+.media-grid__image,
+.media-grid__video,
+.media-grid__video video,
+.media-grid__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-grid__placeholder {
+  fill: #a0a0a0;
+  background: #e7e7e7;
+}
+
+.media-grid--zoom .media-grid__image,
+.media-grid--zoom .media-grid__video,
+.media-grid--zoom .media-grid__placeholder {
+  transition: transform 0.4s ease;
+}
+
+@media (hover: hover) {
+  .media-grid--zoom .media-grid__item:hover .media-grid__image,
+  .media-grid--zoom .media-grid__item:hover .media-grid__video,
+  .media-grid--zoom .media-grid__item:hover .media-grid__placeholder {
+    transform: scale(1.05);
+  }
+}
+
+/* ---- Desktop spans ---- */
+@media (min-width: 750px) {
+  .media-grid__item--span-2 {
+    grid-column: span 2;
+  }
+
+  .media-grid__item--tall {
+    grid-row: span 2;
+  }
+
+  /* Spanning tiles stretch to fill their grid area instead of
+     forcing their own aspect ratio */
+  .media-grid__item--tall .media-grid__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+}
+
+/* ---- Captions: overlay ---- */
+.media-grid--caption-overlay .media-grid__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 2.25rem 1.25rem 1.125rem;
+  color: var(--grid-overlay-text, #ffffff);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0));
+  border-bottom-left-radius: var(--grid-radius, 8px);
+  border-bottom-right-radius: var(--grid-radius, 8px);
+  pointer-events: none;
+}
+
+/* Optional hover reveal — hover-capable pointers only, and keyboard
+   focus always reveals the caption */
+@media (hover: hover) {
+  .media-grid--caption-hover .media-grid__caption {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .media-grid--caption-hover .media-grid__item:hover .media-grid__caption,
+  .media-grid--caption-hover .media-grid__item:focus-within .media-grid__caption {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Captions: below ---- */
+.media-grid--caption-below .media-grid__caption {
+  padding: 0.75rem 0.25rem 0;
+}
+
+.media-grid__caption-heading {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.media-grid__caption-text {
+  margin: 0.25rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* ---- Stretched link (whole tile clickable) ---- */
+.media-grid__link-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: var(--grid-radius, 8px);
+}
+
+.media-grid__link-overlay:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.media-grid__visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Video pause/play control ---- */
+.media-grid__video-toggle {
+  position: absolute;
+  bottom: 0.625rem;
+  right: 0.625rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.media-grid__video-toggle:hover,
+.media-grid__video-toggle:focus-visible {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.media-grid__video-toggle:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.media-grid__video-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.media-grid__video-icon--play {
+  display: none;
+}
+
+.media-grid__item--video-paused .media-grid__video-icon--pause {
+  display: none;
+}
+
+.media-grid__item--video-paused .media-grid__video-icon--play {
+  display: block;
+}
+
+/* ---- Mobile layouts ---- */
+@media (max-width: 749px) {
+  .media-grid {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .media-grid--mobile-one-column .media-grid__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media-grid--mobile-two-column .media-grid__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* CSS-only scroll-snap slider */
+  .media-grid--mobile-slider .media-grid__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 1.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-left: -1.25rem;
+    margin-right: -1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .media-grid--mobile-slider .media-grid__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .media-grid--mobile-slider .media-grid__item {
+    flex: 0 0 80%;
+    max-width: 80%;
+    scroll-snap-align: start;
+  }
+
+  .media-grid--full-width.media-grid--mobile-slider .media-grid__grid {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .media-grid--zoom .media-grid__image,
+  .media-grid--zoom .media-grid__video,
+  .media-grid--zoom .media-grid__placeholder,
+  .media-grid--caption-hover .media-grid__caption,
+  .media-grid__video-toggle {
+    transition: none;
+  }
+
+  .media-grid--zoom .media-grid__item:hover .media-grid__image,
+  .media-grid--zoom .media-grid__item:hover .media-grid__video,
+  .media-grid--zoom .media-grid__item:hover .media-grid__placeholder {
+    transform: none;
+  }
+}

@@ -1,0 +1,25 @@
+{% comment %}
+  Renders unit pricing (e.g. "$4.99/100mL") when the given object has unit
+  price measurement data set in the admin. Silently renders nothing when
+  a product/variant has no unit pricing configured — this is optional data,
+  not every product needs it.
+
+  Works with a variant or a cart line item — both expose unit_price and
+  unit_price_measurement with the same field names, so either can be passed.
+
+  Usage:
+    {% render 'unit-price', object: current_variant %}
+    {% render 'unit-price', object: product.selected_or_first_available_variant %}
+    {% render 'unit-price', object: item %}
+{% endcomment %}
+
+{%- if object.unit_price_measurement -%}
+  {%- liquid
+    assign reference_value = object.unit_price_measurement.reference_value
+    assign reference_unit = object.unit_price_measurement.reference_unit
+  -%}
+  <div class="unit-price">
+    <span class="visually-hidden">{{ 'products.product.unit_price_label' | t }}</span>
+    <span class="unit-price__price">{{ object.unit_price | money }}</span>/<span class="unit-price__unit">{%- if reference_value != 1 -%}{{ reference_value }}{%- endif -%}{{ reference_unit }}</span>
+  </div>
+{%- endif -%}

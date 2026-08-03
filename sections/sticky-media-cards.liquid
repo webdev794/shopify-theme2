@@ -1,0 +1,253 @@
+{% comment %}
+  Sticky Media Cards Section
+  Version: 1.0
+  Description: A section with sticky media cards that reveal content as you scroll
+{% endcomment %}
+
+{{ 'sticky-media-cards.css' | asset_url | stylesheet_tag }}
+
+<div class="sticky-media-cards" data-section-id="{{ section.id }}" data-section-type="sticky-media-cards">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="sticky-media-cards__header">
+        <h2 class="sticky-media-cards__heading">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="sticky-media-cards__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="sticky-media-cards__container">
+    {%- for block in section.blocks -%}
+      <div class="sticky-media-cards__section" {{ block.shopify_attributes }}>
+        <div class="sticky-media-cards__wrapper page-width">
+          <div class="sticky-media-cards__media{% if block.settings.media_position == 'right' %} sticky-media-cards__media--right{% endif %}">
+            {%- if block.settings.media_type == 'image' -%}
+              {%- if block.settings.image != blank -%}
+                <div class="sticky-media-cards__image-wrapper">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="{{ block.settings.image | image_url: width: 800 }} 1x, {{ block.settings.image | image_url: width: 1600 }} 2x"
+                    alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                    loading="lazy"
+                    width="800"
+                    height="600"
+                    class="sticky-media-cards__image"
+                  >
+                </div>
+              {%- else -%}
+                <div class="sticky-media-cards__placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'sticky-media-cards__placeholder-svg' }}
+                </div>
+              {%- endif -%}
+            {%- else -%}
+              {%- if block.settings.video_url != blank -%}
+                <div class="sticky-media-cards__video-wrapper">
+                  <video
+                    class="sticky-media-cards__video"
+                    src="{{ block.settings.video_url }}"
+                    poster="{{ block.settings.image | image_url: width: 800 }}"
+                    muted
+                    loop
+                    playsinline
+                    autoplay
+                  ></video>
+                  <button class="sticky-media-cards__video-control" aria-label="{{ 'sections.sticky_media_cards.play_pause_video' | t }}" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </button>
+                </div>
+              {%- else -%}
+                <div class="sticky-media-cards__placeholder">
+                  {{ 'video' | placeholder_svg_tag: 'sticky-media-cards__placeholder-svg' }}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div class="sticky-media-cards__content{% if block.settings.text_alignment != 'left' %} sticky-media-cards__content--{{ block.settings.text_alignment }}{% endif %}">
+            <div class="sticky-media-cards__card">
+              <div class="sticky-media-cards__card-inner">
+                {%- if block.settings.icon != 'none' -%}
+                  <div class="sticky-media-cards__icon-wrapper">
+                    {%- render 'icon', icon: block.settings.icon -%}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.title != blank -%}
+                  <h3 class="sticky-media-cards__title">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <div class="sticky-media-cards__text rte">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.button_text != blank and block.settings.button_link != blank -%}
+                  <a href="{{ block.settings.button_link }}" class="sticky-media-cards__button btn">
+                    {{ block.settings.button_text | escape }}
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="sticky-media-cards__empty page-width">
+        <p>{{ 'sections.sticky_media_cards.empty' | t }}</p>
+        {%- if shop.editor_mode -%}
+          <p><small>Click "Add block" to add content</small></p>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script src="{{ 'sticky-media-cards.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.sticky_media_cards.name",
+  "tag": "section",
+  "class": "sticky-media-cards-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.sticky_media_cards.settings.heading.label",
+      "default": "How It Works"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.sticky_media_cards.settings.subheading.label",
+      "default": "A step-by-step guide to get started"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "media_card",
+      "name": "t:sections.sticky_media_cards.blocks.media_card.name",
+      "settings": [
+        { "type": "header", "content": "t:sections.sticky_media_cards.blocks.media_card.settings.header__1.content" },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_type.label",
+          "options": [
+            { "value": "image", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_type.options__1.label" },
+            { "value": "video", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_type.options__2.label" }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.image.label"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.video_url.label",
+          "info": "t:sections.sticky_media_cards.blocks.media_card.settings.video_url.info"
+        },
+        {
+          "type": "select",
+          "id": "media_position",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_position.label",
+          "options": [
+            { "value": "left", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_position.options__1.label" },
+            { "value": "right", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.media_position.options__2.label" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "info": "Position of the text card within its column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        { "type": "header", "content": "t:sections.sticky_media_cards.blocks.media_card.settings.header__2.content" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.label",
+          "options": [
+            { "value": "none", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__1.label" },
+            { "value": "star", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__2.label" },
+            { "value": "heart", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__3.label" },
+            { "value": "check", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__4.label" },
+            { "value": "truck", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__5.label" },
+            { "value": "shield", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__6.label" },
+            { "value": "clock", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__7.label" },
+            { "value": "gift", "label": "t:sections.sticky_media_cards.blocks.media_card.settings.icon.options__8.label" }
+          ],
+          "default": "star"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.title.label",
+          "default": "Step Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.text.label",
+          "default": "<p>Describe this step in the process.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.button_text.label",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.sticky_media_cards.blocks.media_card.settings.button_link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.sticky_media_cards.presets.name",
+      "blocks": [
+        {
+          "type": "media_card",
+          "settings": {
+            "title": "Discover Our Products",
+            "text": "<p>Browse our curated collection of premium products.</p>",
+            "icon": "star"
+          }
+        },
+        {
+          "type": "media_card",
+          "settings": {
+            "title": "Add to Cart",
+            "text": "<p>Select your items and add them to your shopping cart.</p>",
+            "icon": "check"
+          }
+        },
+        {
+          "type": "media_card",
+          "settings": {
+            "title": "Fast Delivery",
+            "text": "<p>Get your order delivered quickly to your doorstep.</p>",
+            "icon": "truck"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+{% comment %}
+  Standalone layout for the gift card page. No header/footer — gift card
+  links are opened from an email, not site navigation, and the page needs
+  to work well when printed or shared. Shopify auto-applies this layout
+  to templates/gift_card.liquid by filename convention.
+
+  content_for_header must stay in <head> or the gift card template won't
+  appear in the theme editor's template picker.
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/gift-card-liquid
+{% endcomment %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ shop.name }} &middot; {{ 'gift_card.card' | t }}</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    {% render 'css-variables' %}
+    {{ 'critical.css' | asset_url | stylesheet_tag }}
+    {{ 'gift-card.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="gift-card-layout">
+    {{ content_for_layout }}
+  </body>
+</html>

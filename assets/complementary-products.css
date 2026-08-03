@@ -1,0 +1,24 @@
+.product__complementary {
+  margin-block: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-foreground, #1a1a1a) 10%, transparent);
+}
+
+.product__complementary-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: var(--color-foreground, #1a1a1a);
+}
+
+.product__complementary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+@media screen and (max-width: 480px) {
+  .product__complementary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

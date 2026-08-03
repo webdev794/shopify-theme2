@@ -1,0 +1,136 @@
+/* Wavy Marquee Styles
+   ============================================ */
+
+/* Base Container */
+.wavy-marquee {
+  background-color: var(--marquee-bg, var(--color-accent-background, #1a1a1a));
+  color: var(--marquee-color, var(--color-accent-foreground, #ffffff));
+  padding: var(--marquee-padding, 16px 0);
+  overflow: hidden;
+  position: relative;
+  font-size: var(--marquee-font-size, 24px);
+  line-height: 1.2;
+  width: 100%;
+}
+
+.wavy-marquee--full {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Track Container */
+.wavy-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: var(--marquee-gap, 40px);
+  animation: marquee-scroll var(--marquee-speed, 15s) linear infinite;
+  width: max-content;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.wavy-marquee__track--reverse {
+  animation-direction: reverse;
+}
+
+/* Individual Items */
+.wavy-marquee__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--marquee-gap, 40px);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* SVG Icons */
+.wavy-marquee__item svg {
+  width: var(--marquee-icon-size, 24px);
+  height: var(--marquee-icon-size, 24px);
+  fill: currentColor;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Text Elements */
+.wavy-marquee__item-text {
+  display: inline;
+}
+
+/* Wavy Text Effect */
+.wavy-marquee__item-text--wavy {
+  display: inline-block;
+  animation: wavy-text var(--marquee-wave-speed, 1.2s) ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+/* Separator */
+.wavy-marquee__separator {
+  display: inline-block;
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes wavy-text {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+  75% {
+    transform: translateY(8px) rotate(-2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* Pause on Hover for Accessibility */
+.wavy-marquee:hover .wavy-marquee__track {
+  animation-play-state: paused;
+}
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  .wavy-marquee__track {
+    animation-duration: 60s !important;
+  }
+  
+  .wavy-marquee__item-text--wavy {
+    animation-duration: 5s !important;
+  }
+  
+  .wavy-marquee:hover .wavy-marquee__track {
+    animation-play-state: running;
+  }
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 749px) {
+  .wavy-marquee {
+    font-size: var(--marquee-mobile-font-size, 16px);
+  }
+}
+
+/* Touch Device Optimization */
+@media (hover: none) {
+  .wavy-marquee:hover .wavy-marquee__track {
+    animation-play-state: running;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .wavy-marquee {
+    display: none;
+  }
+}

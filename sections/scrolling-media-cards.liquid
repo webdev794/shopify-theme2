@@ -1,0 +1,252 @@
+{% comment %}
+  Scrolling Media Cards Section
+  Version: 1.0
+  Description: A horizontally scrolling gallery of media cards with images, titles, and descriptions
+{% endcomment %}
+
+{{ 'scrolling-media-cards.css' | asset_url | stylesheet_tag }}
+
+<div class="scrolling-media-cards" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="scrolling-media-cards"
+     data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+     role="region"
+     aria-label="{{ section.settings.aria_label | escape }}"
+     style="--smc-duration: {{ section.settings.scroll_speed | default: 30 }}s;">
+  
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="scrolling-media-cards__header">
+        <h2 class="scrolling-media-cards__heading">{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.subheading != blank -%}
+          <p class="scrolling-media-cards__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="scrolling-media-cards__wrapper">
+    <div class="scrolling-media-cards__track">
+      {%- assign repeat_count = 2 -%}
+      {%- for i in (1..repeat_count) -%}
+        {%- for block in section.blocks -%}
+          <div class="scrolling-media-cards__card" {{ block.shopify_attributes }}>
+            <div class="scrolling-media-cards__card-inner">
+              {%- if block.settings.image != blank -%}
+                <div class="scrolling-media-cards__image-wrapper">
+                  <img
+                    src="{{ block.settings.image | image_url: width: 400, height: 400, crop: 'center' }}"
+                    srcset="{{ block.settings.image | image_url: width: 400, height: 400, crop: 'center' }} 1x, {{ block.settings.image | image_url: width: 800, height: 800, crop: 'center' }} 2x"
+                    alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                    loading="lazy"
+                    width="400"
+                    height="400"
+                    class="scrolling-media-cards__image"
+                  >
+                </div>
+              {%- else -%}
+                <div class="scrolling-media-cards__placeholder">
+                  {{ 'product-1' | placeholder_svg_tag: 'scrolling-media-cards__placeholder-svg' }}
+                </div>
+              {%- endif -%}
+
+              <div class="scrolling-media-cards__content">
+                {%- if block.settings.tag != blank -%}
+                  <span class="scrolling-media-cards__tag">{{ block.settings.tag | escape }}</span>
+                {%- endif -%}
+
+                {%- if block.settings.title != blank -%}
+                  <h3 class="scrolling-media-cards__title">{{ block.settings.title | escape }}</h3>
+                {%- endif -%}
+
+                {%- if block.settings.text != blank -%}
+                  <p class="scrolling-media-cards__text">{{ block.settings.text | escape }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.button_text != blank and block.settings.button_link != blank -%}
+                  <a href="{{ block.settings.button_link }}" class="scrolling-media-cards__button">
+                    {{ block.settings.button_text | escape }}
+                    <span class="scrolling-media-cards__button-arrow">→</span>
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.blocks.size > 3 -%}
+      <div class="scrolling-media-cards__controls">
+        <button class="scrolling-media-cards__control scrolling-media-cards__control--prev" type="button" aria-label="{{ 'sections.scrolling_media_cards.scroll_left' | t }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <button class="scrolling-media-cards__control scrolling-media-cards__control--next" type="button" aria-label="{{ 'sections.scrolling_media_cards.scroll_right' | t }}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+          </svg>
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_view_all and section.settings.view_all_link != blank -%}
+    <div class="scrolling-media-cards__footer page-width">
+      <a href="{{ section.settings.view_all_link }}" class="scrolling-media-cards__view-all btn btn--secondary">
+        {{ section.settings.view_all_text | default: 'View All' | escape }}
+      </a>
+    </div>
+  {%- endif -%}
+</div>
+
+<script src="{{ 'scrolling-media-cards.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.scrolling_media_cards.name",
+  "tag": "section",
+  "class": "scrolling-media-cards-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.scrolling_media_cards.settings.heading.label",
+      "default": "Featured Products"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.scrolling_media_cards.settings.subheading.label",
+      "default": "Discover our curated collection"
+    },
+    { "type": "header", "content": "t:sections.scrolling_media_cards.settings.header__1.content" },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Auto-scroll speed",
+      "info": "Lower is faster",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:sections.scrolling_media_cards.settings.pause_on_hover.label",
+      "default": true
+    },
+    { "type": "header", "content": "t:sections.scrolling_media_cards.settings.header__2.content" },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "t:sections.scrolling_media_cards.settings.show_view_all.label",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "t:sections.scrolling_media_cards.settings.view_all_text.label",
+      "default": "View All"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "t:sections.scrolling_media_cards.settings.view_all_link.label"
+    },
+    { "type": "header", "content": "t:sections.scrolling_media_cards.settings.header__3.content" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "t:sections.scrolling_media_cards.settings.aria_label.label",
+      "default": "Scrolling media cards"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "t:sections.scrolling_media_cards.blocks.card.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.image.label",
+          "info": "t:sections.scrolling_media_cards.blocks.card.settings.image.info"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.tag.label",
+          "default": "New"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.title.label",
+          "default": "Product Title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.text.label",
+          "default": "A brief description of this product"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.button_text.label",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.scrolling_media_cards.blocks.card.settings.button_link.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.scrolling_media_cards.presets.name",
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "tag": "Best Seller",
+            "title": "Premium Product",
+            "text": "Discover our most popular item"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "tag": "New",
+            "title": "Latest Collection",
+            "text": "Shop our newest arrivals"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "tag": "Sale",
+            "title": "Limited Edition",
+            "text": "Don't miss out on this exclusive offer"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "tag": "Trending",
+            "title": "Customer Favorite",
+            "text": "Loved by thousands of customers"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,78 @@
+{% comment %}
+  Renders a product card with responsive images and lazy loading.
+{% endcomment %}
+
+{%- assign product = card_product -%}
+
+<div class="card-wrapper">
+  <a href="{{ product.url }}" class="card">
+    <div class="card__media">
+      {%- if product.featured_image -%}
+        {%- assign image = product.featured_image -%}
+
+        {%- case media_aspect_ratio -%}
+          {%- when 'portrait' -%}
+            {%- assign img_width = 500 -%}
+            {%- assign img_height = 667 -%}
+          {%- when 'square' -%}
+            {%- assign img_width = 500 -%}
+            {%- assign img_height = 500 -%}
+          {%- when 'landscape' -%}
+            {%- assign img_width = 500 -%}
+            {%- assign img_height = 375 -%}
+          {%- else -%}
+            {%- assign img_width = 500 -%}
+            {%- assign img_height = 500 -%}
+        {%- endcase -%}
+
+        {%- assign focal_style = '' -%}
+        {%- if image.presentation.focal_point -%}
+          {%- assign focal_style = 'object-position: ' | append: image.presentation.focal_point | append: ';' -%}
+        {%- endif -%}
+
+        {%- assign img_style = 'aspect-ratio: ' | append: img_width | append: ' / ' | append: img_height | append: '; object-fit: cover; width: 100%; height: auto; ' | append: focal_style -%}
+
+        {{
+          image
+          | image_url: width: 1000
+          | image_tag:
+            class: 'card__image',
+            loading: 'lazy',
+            widths: '250, 350, 500, 750, 1000',
+            sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, (min-width: 750px) 33vw, 50vw',
+            alt: image.alt | default: product.title,
+            width: img_width,
+            height: img_height,
+            style: img_style
+        }}
+      {%- else -%}
+        <div class="card__placeholder">
+          {{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="card__content">
+      {%- if show_vendor and product.vendor != blank -%}
+        <p class="card__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+
+      <h3 class="card__title">{{ product.title }}</h3>
+
+      {%- if show_rating -%}
+        {% render 'product-rating', product: product %}
+      {%- endif -%}
+
+      <div class="card__price">
+        <span class="price-item price-item--regular">
+          {{ product.price | money }}
+        </span>
+        {%- if product.compare_at_price > product.price -%}
+          <span class="price-item price-item--sale">
+            <s>{{ product.compare_at_price | money }}</s>
+          </span>
+        {%- endif -%}
+      </div>
+    </div>
+  </a>
+</div>

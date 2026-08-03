@@ -1,0 +1,250 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Suvara v2",
+    "theme_version": "2.0.0",
+    "theme_author": "Caresort Technologies",
+    "theme_documentation_url": "https://www.caresortsolutions.com/suvara-theme-documentation/",
+    "theme_support_url": "https://www.caresortsolutions.com/suvara-theme-support/"
+  },
+  {
+    "name": "t:general.typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:general.fonts"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_primary_font",
+        "default": "work_sans_n4",
+        "label": "t:general.primary"
+      }
+    ]
+  },
+  {
+    "name": "t:general.layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "max_page_width",
+        "label": "t:labels.page_width",
+        "options": [
+          {
+            "value": "90rem",
+            "label": "t:options.page_width.narrow"
+          },
+          {
+            "value": "110rem",
+            "label": "t:options.page_width.wide"
+          }
+        ],
+        "default": "90rem"
+      },
+      {
+        "type": "range",
+        "id": "min_page_margin",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.page_margin",
+        "default": 20
+      }
+    ]
+  },
+  {
+    "name": "t:general.favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:labels.favicon",
+        "info": "t:info.favicon"
+      }
+    ]
+  },
+  {
+    "name": "t:general.colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary colors"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "default": "#FFFFFF",
+        "label": "t:labels.background"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color",
+        "default": "#333333",
+        "label": "t:labels.foreground"
+      },
+      {
+        "type": "header",
+        "content": "Secondary colors"
+      },
+      {
+        "type": "color",
+        "id": "background_color_secondary",
+        "default": "#F5F5F5",
+        "label": "Secondary background"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color_secondary",
+        "default": "#1A1A1A",
+        "label": "Secondary foreground"
+      },
+      {
+        "type": "header",
+        "content": "Accent / Buttons"
+      },
+      {
+        "type": "color",
+        "id": "accent_background",
+        "default": "#121212",
+        "label": "Accent background"
+      },
+      {
+        "type": "color",
+        "id": "accent_foreground",
+        "default": "#FFFFFF",
+        "label": "Accent foreground"
+      },
+      {
+        "type": "range",
+        "id": "input_corner_radius",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "t:labels.input_corner_radius",
+        "default": 4
+      },
+      {
+        "type": "header",
+        "content": "Status colors"
+      },
+      {
+        "type": "color",
+        "id": "color_sale",
+        "default": "#c62828",
+        "label": "Sale color",
+        "info": "Used for sale badges and discount prices."
+      },
+      {
+        "type": "color",
+        "id": "color_sold_out",
+        "default": "#767676",
+        "label": "Sold-out color",
+        "info": "Used for sold-out badges and unavailable products."
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "default": "#2e7d32",
+        "label": "Success color",
+        "info": "Used for success messages and valid form fields."
+      },
+      {
+        "type": "color",
+        "id": "color_success_bg",
+        "default": "#e6f4ea",
+        "label": "Success background",
+        "info": "Background color for success messages."
+      },
+      {
+        "type": "color",
+        "id": "color_success_text",
+        "default": "#1e4620",
+        "label": "Success text color",
+        "info": "Text color for success messages."
+      },
+      {
+        "type": "color",
+        "id": "color_error",
+        "default": "#c62828",
+        "label": "Error color",
+        "info": "Used for error messages and invalid form fields."
+      },
+      {
+        "type": "color",
+        "id": "color_error_bg",
+        "default": "#fee2e2",
+        "label": "Error background",
+        "info": "Background color for error messages."
+      },
+      {
+        "type": "color",
+        "id": "color_error_text",
+        "default": "#991b1b",
+        "label": "Error text color",
+        "info": "Text color for error messages."
+      },
+      {
+        "type": "color",
+        "id": "color_star",
+        "default": "#b8860b",
+        "label": "Star rating color",
+        "info": "Color for product review stars."
+      },
+      {
+        "type": "color",
+        "id": "color_disabled",
+        "default": "#888",
+        "label": "Disabled color",
+        "info": "Color for disabled buttons and inactive elements."
+      },
+      {
+        "type": "color",
+        "id": "color_disabled_dark",
+        "default": "#aaa",
+        "label": "Disabled dark color",
+        "info": "Darker shade for disabled elements."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Leave a URL blank to hide that icon. Icons only appear for platforms with a URL entered."
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "Twitter / X URL"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok_link",
+        "label": "TikTok URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube URL"
+      },
+      {
+        "type": "text",
+        "id": "social_linkedin_link",
+        "label": "LinkedIn URL"
+      }
+    ]
+  }
+]

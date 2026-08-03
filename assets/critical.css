@@ -1,0 +1,343 @@
+/** Critical CSS for the theme. This file is included on every page. */
+
+/* Reset styles inspired by https://www.joshwcomeau.com/css/custom-css-reset/ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100svh;
+}
+
+html:has(dialog[scroll-lock][open], details[scroll-lock][open]) {
+  overflow: hidden;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  border-radius: var(--style-border-radius-inputs);
+}
+
+select {
+  background-color: var(--color-background);
+  color: currentcolor;
+}
+
+dialog {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+p {
+  text-wrap: pretty;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+p:empty {
+  display: none;
+}
+
+:is(p, h1, h2, h3, h4, h5, h6):first-child,
+:empty:first-child + :where(p, h1, h2, h3, h4, h5, h6) {
+  margin-block-start: 0;
+}
+
+:is(p, h1, h2, h3, h4, h5, h6):last-child,
+:where(p, h1, h2, h3, h4, h5, h6) + :has(+ :empty:last-child) {
+  margin-block-end: 0;
+}
+
+/** Theme styles below */
+body {
+  font-family: var(--font-primary--family);
+  font-weight: var(--font-primary--weight);
+  font-style: var(--font-primary--style);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/** Section layout utilities */
+
+/**
+ * Setup a grid that enables both full-width and constrained layouts
+ * depending on the class of the child elements.
+ *
+ * By default, a minimum content margin is set on the left and right
+ * sides of the section and the content is centered in the viewport to
+ * not exceed the maximum page width.
+ *
+ * When a child element is given the `full-width` class, it will span
+ * the entire viewport.
+ */
+.shopify-section {
+  --content-width: min(
+    calc(var(--page-width) - var(--page-margin) * 2),
+    calc(100% - var(--page-margin) * 2)
+  );
+  --content-margin: minmax(var(--page-margin), 1fr);
+  --content-grid: var(--content-margin) var(--content-width) var(--content-margin);
+
+  /* This is required to make <img> elements work as background images */
+  position: relative;
+  grid-template-columns: var(--content-grid);
+  display: grid;
+  width: 100%;
+}
+
+/* Child elements, by default, are constrained to the central column of the grid. */
+.shopify-section > * {
+  grid-column: 2;
+}
+
+/* Child elements that use the full-width utility class span the entire viewport. */
+.shopify-section > .full-width {
+  grid-column: 1 / -1;
+}
+
+/**
+ * ---------- Rich text content (.rte) ----------
+ * Shared class for all Shopify RTE-generated content (page.content,
+ * product.description, collection.description, article.content, and
+ * any richtext/liquid setting rendered via {{ ... }}), so headings,
+ * lists, blockquotes, tables, etc. render identically no matter which
+ * template or section outputs them. Do not duplicate these rules under
+ * a section-local class — always apply .rte alongside it instead
+ * (e.g. class="product__description rte").
+ */
+.rte {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--color-foreground, #1a1a1a);
+}
+
+.rte > * + * {
+  margin-top: 1.25rem;
+}
+
+.rte h1,
+.rte h2,
+.rte h3,
+.rte h4,
+.rte h5,
+.rte h6 {
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.rte h1 {
+  font-size: 1.8rem;
+}
+
+.rte h2 {
+  font-size: 1.5rem;
+}
+
+.rte h3 {
+  font-size: 1.25rem;
+}
+
+.rte h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.rte h5 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.rte h6 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-foreground-secondary, #555);
+}
+
+.rte p {
+  margin: 0;
+}
+
+.rte a {
+  color: var(--color-foreground, #1a1a1a);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rte a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.rte ul,
+.rte ol {
+  padding-left: 1.5rem;
+}
+
+.rte li + li {
+  margin-top: 0.4rem;
+}
+
+.rte blockquote {
+  border-left: 3px solid var(--color-border, #ddd);
+  padding-left: 1.25rem;
+  color: var(--color-foreground-secondary, #555);
+  font-style: italic;
+}
+
+.rte img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  display: block;
+}
+
+.rte hr {
+  border: none;
+  border-top: 1px solid var(--color-border, #e5e5e5);
+  margin: 2rem 0;
+}
+
+.rte code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--color-background-secondary, #f4f4f4);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.9em;
+}
+
+.rte pre {
+  background: var(--color-background-secondary, #f4f4f4);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.rte pre code {
+  background: none;
+  padding: 0;
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.rte th,
+.rte td {
+  border: 1px solid var(--color-border, #e5e5e5);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+}
+
+.rte th {
+  background: var(--color-background-secondary, #f4f4f4);
+  font-weight: 600;
+}
+
+@media screen and (max-width: 749px) {
+  .rte table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.collection__pagination,
+.collections-story__pagination,
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.collection__pagination .page,
+.collection__pagination .prev,
+.collection__pagination .next,
+.collections-story__pagination .page,
+.collections-story__pagination .prev,
+.collections-story__pagination .next,
+.pagination .page,
+.pagination .prev,
+.pagination .next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border-radius: var(--style-border-radius-inputs, 0.4rem);
+  font-size: 0.9rem;
+}
+
+.collection__pagination .page a,
+.collection__pagination .prev a,
+.collection__pagination .next a,
+.collections-story__pagination .page a,
+.collections-story__pagination .prev a,
+.collections-story__pagination .next a,
+.pagination .page a,
+.pagination .prev a,
+.pagination .next a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: inherit;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.collection__pagination .page a:hover,
+.collection__pagination .prev a:hover,
+.collection__pagination .next a:hover,
+.collections-story__pagination .page a:hover,
+.collections-story__pagination .prev a:hover,
+.collections-story__pagination .next a:hover,
+.pagination .page a:hover,
+.pagination .prev a:hover,
+.pagination .next a:hover {
+  background: var(--color-accent-background, #121212);
+  color: var(--color-accent-foreground, #fff);
+  border-color: var(--color-accent-background, #121212);
+}
+
+.collection__pagination .current,
+.collections-story__pagination .current,
+.pagination .current {
+  background: var(--color-accent-background, #121212);
+  color: var(--color-accent-foreground, #fff);
+  font-weight: 600;
+  border-radius: var(--style-border-radius-inputs, 0.4rem);
+}

@@ -1,0 +1,105 @@
+{% comment %}
+  Renders a customer's gift card: balance, code, expiry/scheduled-send state,
+  a QR code linking back to the store, and an Apple Wallet button when
+  available. This template can't be JSON — Shopify requires gift_card to
+  stay Liquid.
+
+  Wrapped automatically by layout/gift_card.liquid (no header/footer; that
+  layout already provides <html>/<head>/<body>, css-variables, critical.css,
+  gift-card.css, and the QR code library via shopify_asset_url). Do not add
+  {% layout none %} or a full HTML document here — that would double the
+  page shell.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/gift-card-liquid
+  https://shopify.dev/docs/api/liquid/objects/gift_card
+{% endcomment %}
+
+<div class="gift-card">
+  <div class="gift-card__card{% if gift_card.expired or gift_card.enabled == false %} gift-card__card--disabled{% endif %}">
+    <p class="gift-card__shop-name">{{ shop.name }}</p>
+    <p class="gift-card__label">{{ 'gift_card.card' | t }}</p>
+
+    <p class="gift-card__balance">{{ gift_card.balance | money }}</p>
+
+    {% if gift_card.enabled == false %}
+      <p class="gift-card__status">{{ 'gift_card.disabled' | t }}</p>
+    {% elsif gift_card.expired %}
+      <p class="gift-card__status">{{ 'gift_card.expired' | t }}</p>
+    {% elsif gift_card.expires_on %}
+      <p class="gift-card__status">
+        {{ 'gift_card.expires_on' | t: expires_on: gift_card.expires_on }}
+      </p>
+    {% endif %}
+
+    {%- if gift_card.send_on -%}
+      {%- assign formatted_send_on = gift_card.send_on | date: '%B %d, %Y' -%}
+      <p class="gift-card__send-on">
+        {{ 'gift_card.send_on' | t: send_on: formatted_send_on }}
+      </p>
+    {%- endif -%}
+
+    <div class="gift-card__code-wrapper">
+      <code class="gift-card__code" id="gift-card-code">{{ gift_card.code }}</code>
+      <button
+        type="button"
+        class="gift-card__copy-button"
+        data-copy-code
+        data-code="{{ gift_card.code }}"
+        aria-label="{{ 'gift_card.copy_code' | t }}"
+      >
+        {{ 'gift_card.copy_code' | t }}
+      </button>
+    </div>
+
+    {% unless gift_card.expired or gift_card.enabled == false %}
+      <a href="{{ shop.url }}" class="button button--primary gift-card__redeem-button">
+        {{ 'gift_card.use_at_checkout' | t }}
+      </a>
+    {% endunless %}
+  </div>
+
+  <div class="gift-card__details">
+    {% if gift_card.pass_url %}
+      <a href="{{ gift_card.pass_url }}" class="gift-card__apple-wallet">
+        <img
+          id="apple-wallet-badge"
+          src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}"
+          width="120"
+          height="40"
+          alt="{{ 'gift_card.add_to_apple_wallet' | t }}"
+        >
+      </a>
+    {% endif %}
+
+    {% comment %} QR code library is loaded by layout/gift_card.liquid via shopify_asset_url. {% endcomment %}
+    <div id="qr-code" class="gift-card__qr"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const qrEl = document.getElementById('qr-code');
+        if (typeof QRCode !== 'undefined' && qrEl) {
+          new QRCode(qrEl, {
+            text: '{{ shop.url }}',
+            width: 120,
+            height: 120
+          });
+        }
+      });
+    </script>
+
+    <button type="button" class="gift-card__print-button" onclick="window.print()">
+      {{ 'gift_card.print' | t }}
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-copy-code]');
+    if (!button) return;
+
+    navigator.clipboard.writeText(button.dataset.code).then(() => {
+      button.classList.add('is-copied');
+      setTimeout(() => button.classList.remove('is-copied'), 1500);
+    });
+  });
+</script>

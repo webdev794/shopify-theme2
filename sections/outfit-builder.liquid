@@ -1,0 +1,70 @@
+{{ 'outfit-builder.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'outfit-builder.js' | asset_url }}" defer></script>
+<div class="outfit-builder" data-section-type="outfit-builder" data-section-id="{{ section.id }}" data-max-items="{{ section.settings.max_items }}"
+  style="--ob-bg: {{ section.settings.background_color }}; --ob-text: {{ section.settings.text_color }}; --ob-accent: {{ section.settings.accent_color }};">
+  <div class="outfit-builder__container">
+    {% if section.settings.heading != blank %}<div class="outfit-builder__header">
+      {% if section.settings.subheading != blank %}<p class="outfit-builder__subheading">{{ section.settings.subheading | escape }}</p>{% endif %}
+      <h2 class="outfit-builder__heading">{{ section.settings.heading | escape }}</h2>
+    </div>{% endif %}
+    <div class="outfit-builder__layout">
+      <div class="outfit-builder__catalog" data-ob-catalog>
+        {% for block in section.blocks %}
+          {% assign product = block.settings.product %}
+          {% if product != blank %}
+            {% assign variant = product.selected_or_first_available_variant %}
+            <article class="outfit-builder__card" data-ob-product data-product-id="{{ product.id }}" data-variant-id="{{ variant.id }}" data-price="{{ variant.price }}" data-title="{{ product.title | escape }}" {{ block.shopify_attributes }}>
+              <div class="outfit-builder__card-media">
+                {% if product.featured_image %}{{ product.featured_image | image_url: width: 400 | image_tag: class: 'outfit-builder__card-image', loading: 'lazy' }}
+                {% else %}{{ 'product-1' | placeholder_svg_tag }}{% endif %}
+              </div>
+              <div class="outfit-builder__card-info">
+                <h3 class="outfit-builder__card-title">{{ product.title }}</h3>
+                <p class="outfit-builder__card-price">{{ variant.price | money }}</p>
+                {% if product.variants.size > 1 and section.settings.show_variant_selector %}
+                  <select class="outfit-builder__variant-select" data-ob-variant>
+                    {% for v in product.variants %}<option value="{{ v.id }}" data-price="{{ v.price }}" data-available="{{ v.available }}" {% unless v.available %}disabled{% endunless %} {% if v.id == variant.id %}selected{% endif %}>{{ v.title }} — {{ v.price | money }}</option>{% endfor %}
+                  </select>
+                {% endif %}
+                <button type="button" class="outfit-builder__select-btn button button--secondary" data-ob-select {% unless variant.available %}disabled{% endunless %}>{{ section.settings.select_button_text | default: 'Add to outfit' }}</button>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <aside class="outfit-builder__summary" data-ob-summary>
+        <h3 class="outfit-builder__summary-title">{{ section.settings.selection_label | default: 'Your outfit' }}</h3>
+        <ul class="outfit-builder__selection" data-ob-selection role="list"></ul>
+        <p class="outfit-builder__empty-msg" data-ob-empty>{{ section.settings.empty_text | default: 'Select items to build your outfit' }}</p>
+        <div class="outfit-builder__totals" data-ob-totals hidden>
+          <div class="outfit-builder__total-row"><span>{{ section.settings.total_label | default: 'Total' }}</span><strong data-ob-total-price>{{ 0 | money }}</strong></div>
+          <button type="button" class="outfit-builder__add-btn button button--primary" data-ob-add-all disabled>{{ section.settings.add_outfit_text | default: 'Add outfit to cart' }}</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Outfit Builder",
+  "tag": "section",
+  "class": "section-outfit-builder",
+  "max_blocks": 16,
+  "settings": [
+    {"type":"text","id":"heading","label":"Heading","default":"Build your outfit"},
+    {"type":"text","id":"subheading","label":"Subheading","default":"Mix and match"},
+    {"type":"range","id":"max_items","label":"Max items","min":2,"max":8,"step":1,"default":4},
+    {"type":"text","id":"selection_label","label":"Selection label","default":"Your outfit"},
+    {"type":"text","id":"total_label","label":"Total label","default":"Total"},
+    {"type":"text","id":"select_button_text","label":"Select button","default":"Add to outfit"},
+    {"type":"text","id":"add_outfit_text","label":"Add outfit button","default":"Add outfit to cart"},
+    {"type":"text","id":"empty_text","label":"Empty text","default":"Select items to build your outfit"},
+    {"type":"checkbox","id":"show_variant_selector","label":"Show variant selector","default":true},
+    {"type":"color","id":"background_color","label":"Background","default":"#f8f7f5"},
+    {"type":"color","id":"text_color","label":"Text","default":"#1a1a1a"},
+    {"type":"color","id":"accent_color","label":"Accent","default":"#121212"}
+  ],
+  "blocks": [{"type":"product","name":"Product","settings":[{"type":"product","id":"product","label":"Product"}]}],
+  "presets": [{"name":"Outfit Builder","category":"Product","blocks":[{"type":"product"},{"type":"product"},{"type":"product"},{"type":"product"}]}]
+}
+{% endschema %}

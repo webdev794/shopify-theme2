@@ -1,0 +1,344 @@
+{%- comment -%}
+  Images with Text Carousel
+  - Slides are blocks: image + caption, heading, text, and a button
+  - CSS scroll-snap slider: swipe works natively, JS adds arrows, dots,
+    wrap-around, and optional autoplay
+  - Accessible carousel pattern: region + slide roles, translated labels,
+    pausable autorotation (WCAG 2.2.2), aria-live announcements when manual
+  - Autoplay pauses on hover, focus, interaction, off-screen, and is
+    disabled entirely under prefers-reduced-motion
+  - LCP-aware: the first slide's image loads eagerly when this is the
+    first section on the page
+{%- endcomment -%}
+
+{%- liquid
+  assign carousel_label = section.settings.carousel_label
+  if carousel_label == blank
+    assign carousel_label = 'sections.iwt_carousel.carousel_label' | t
+  endif
+-%}
+
+{{ 'images-with-text-carousel.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'images-with-text-carousel.js' | asset_url }}" defer></script>
+
+<div
+  class="iwt-carousel iwt-carousel--image-{{ section.settings.image_position }}{% if section.settings.full_width %} iwt-carousel--full-width{% endif %}"
+  style="
+    --iwt-background: {{ section.settings.color_background }};
+    --iwt-foreground: {{ section.settings.color_foreground }};
+    --iwt-accent: {{ section.settings.color_accent }};
+    --iwt-aspect: {{ section.settings.aspect_ratio }};
+  "
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="{{ carousel_label | escape }}"
+  data-iwt-carousel
+  {% if section.settings.autoplay %}
+    data-autoplay
+    data-autoplay-speed="{{ section.settings.autoplay_speed }}"
+  {% endif %}
+>
+  <div class="iwt-carousel__scroller" data-iwt-scroller tabindex="0">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign image = block.settings.image
+        assign focal_style = nil
+        if image.presentation.focal_point
+          assign focal_style = 'object-position: ' | append: image.presentation.focal_point
+        endif
+
+        if section.index == 1 and forloop.first
+          assign loading = 'eager'
+          assign fetchpriority = 'high'
+        else
+          assign loading = 'lazy'
+          assign fetchpriority = 'auto'
+        endif
+      -%}
+
+      <div
+        class="iwt-carousel__slide"
+        role="group"
+        aria-roledescription="slide"
+        aria-label="{{ 'sections.iwt_carousel.slide_label' | t: index: forloop.index, count: forloop.length }}"
+        {{ block.shopify_attributes }}
+        data-iwt-slide
+      >
+        <div class="iwt-carousel__media">
+          {%- if image != blank -%}
+            {{
+              image
+              | image_url: width: 2000
+              | image_tag:
+                class: 'iwt-carousel__image',
+                widths: '550, 750, 1100, 1500, 2000',
+                sizes: '(max-width: 989px) 100vw, 60vw',
+                loading: loading,
+                fetchpriority: fetchpriority,
+                alt: image.alt,
+                style: focal_style
+            }}
+          {%- else -%}
+            {%- assign placeholder_index = forloop.index0 | modulo: 2 | plus: 1 -%}
+            {{ 'lifestyle-' | append: placeholder_index | placeholder_svg_tag: 'iwt-carousel__placeholder' }}
+          {%- endif -%}
+        </div>
+
+        <div class="iwt-carousel__content">
+          {%- if block.settings.caption != blank -%}
+            <p class="iwt-carousel__caption">{{ block.settings.caption | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}
+            <h2 class="iwt-carousel__heading iwt-carousel__heading--{{ section.settings.heading_size }}">
+              {{ block.settings.heading }}
+            </h2>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="iwt-carousel__text">{{ block.settings.text }}</div>
+          {%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a
+              {% if block.settings.button_link != blank %}href="{{ block.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+              class="iwt-carousel__button button {% if block.settings.button_style == 'secondary' %}button--secondary iwt-carousel__button--secondary{% else %}button--primary iwt-carousel__button--primary{% endif %}"
+            >
+              {{ block.settings.button_label | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.blocks.size > 1 -%}
+    <div class="iwt-carousel__controls">
+      {%- if section.settings.show_arrows -%}
+        <button
+          type="button"
+          class="iwt-carousel__arrow iwt-carousel__arrow--prev"
+          aria-label="{{ 'sections.iwt_carousel.previous_slide' | t }}"
+          data-iwt-prev
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.show_dots -%}
+        <div class="iwt-carousel__dots" data-iwt-dots>
+          {%- for block in section.blocks -%}
+            <button
+              type="button"
+              class="iwt-carousel__dot"
+              aria-label="{{ 'sections.iwt_carousel.go_to_slide' | t: index: forloop.index }}"
+              {% if forloop.first %}aria-current="true"{% endif %}
+              data-iwt-dot="{{ forloop.index0 }}"
+            ></button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_arrows -%}
+        <button
+          type="button"
+          class="iwt-carousel__arrow iwt-carousel__arrow--next"
+          aria-label="{{ 'sections.iwt_carousel.next_slide' | t }}"
+          data-iwt-next
+        >
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.autoplay -%}
+        <button
+          type="button"
+          class="iwt-carousel__playback"
+          aria-label="{{ 'sections.iwt_carousel.pause_carousel' | t }}"
+          data-play-label="{{ 'sections.iwt_carousel.play_carousel' | t }}"
+          data-iwt-playback
+        >
+          <svg class="iwt-carousel__playback-icon iwt-carousel__playback-icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <svg class="iwt-carousel__playback-icon iwt-carousel__playback-icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M7 4.5v15l13-7.5-13-7.5z"/>
+          </svg>
+        </button>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.iwt_carousel.name",
+  "tag": "section",
+  "class": "section-iwt-carousel",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "carousel_label",
+      "label": "t:sections.iwt_carousel.settings.carousel_label.label",
+      "info": "t:sections.iwt_carousel.settings.carousel_label.info"
+    },
+    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__1.content" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:sections.iwt_carousel.settings.image_position.label",
+      "options": [
+        { "value": "left", "label": "t:sections.iwt_carousel.settings.image_position.options__1.label" },
+        { "value": "right", "label": "t:sections.iwt_carousel.settings.image_position.options__2.label" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:sections.iwt_carousel.settings.aspect_ratio.label",
+      "options": [
+        { "value": "1 / 1", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__1.label" },
+        { "value": "4 / 3", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__2.label" },
+        { "value": "3 / 4", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__3.label" },
+        { "value": "16 / 9", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__4.label" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.iwt_carousel.settings.heading_size.label",
+      "options": [
+        { "value": "small", "label": "t:sections.iwt_carousel.settings.heading_size.options__1.label" },
+        { "value": "medium", "label": "t:sections.iwt_carousel.settings.heading_size.options__2.label" },
+        { "value": "large", "label": "t:sections.iwt_carousel.settings.heading_size.options__3.label" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.iwt_carousel.settings.full_width.label",
+      "default": false
+    },
+    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__2.content" },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:sections.iwt_carousel.settings.show_arrows.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "t:sections.iwt_carousel.settings.show_dots.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:sections.iwt_carousel.settings.autoplay.label",
+      "default": false,
+      "info": "t:sections.iwt_carousel.settings.autoplay.info"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "t:sections.iwt_carousel.settings.autoplay_speed.label",
+      "min": 3,
+      "max": 9,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__3.content" },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:sections.iwt_carousel.settings.color_background.label",
+      "default": "#f5f4f2"
+    },
+    {
+      "type": "color",
+      "id": "color_foreground",
+      "label": "t:sections.iwt_carousel.settings.color_foreground.label",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "t:sections.iwt_carousel.settings.color_accent.label",
+      "default": "#121212"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:sections.iwt_carousel.blocks.slide.name",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.image.label",
+          "info": "t:sections.iwt_carousel.blocks.slide.settings.image.info"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.caption.label",
+          "default": "New in"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.heading.label",
+          "default": "Image with text"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.text.label",
+          "default": "<p>Pair an image with a short story, collection highlight, or campaign message.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_label.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_link.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__1.label" },
+            { "value": "secondary", "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__2.label" }
+          ],
+          "default": "primary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.iwt_carousel.presets.name",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

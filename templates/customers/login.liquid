@@ -1,0 +1,33 @@
+{{ 'customer-accounts.css' | asset_url | stylesheet_tag }}
+<div class="customer customer--login">
+  <div class="customer__container">
+    <h1 class="customer__heading">{{ 'customer.login_page.title' | t | default: 'Login' }}</h1>
+    <div class="customer__tabs">
+      <button type="button" class="customer__tab is-active" data-tab="login">{{ 'customer.login_page.title' | t | default: 'Login' }}</button>
+      <button type="button" class="customer__tab" data-tab="recover">{{ 'customer.recover_password.title' | t | default: 'Forgot password?' }}</button>
+    </div>
+    <div class="customer__panel is-active" data-panel="login">
+      {% form 'customer_login', class: 'customer__form' %}
+        {% if form.errors %}<div class="customer__errors" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+        <div class="customer__field"><label for="CustomerEmail">{{ 'customer.login_page.email' | t | default: 'Email' }}</label>
+          <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required></div>
+        <div class="customer__field"><label for="CustomerPassword">{{ 'customer.login_page.password' | t | default: 'Password' }}</label>
+          <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required></div>
+        <button type="submit" class="button button--primary customer__submit">{{ 'customer.login_page.sign_in' | t | default: 'Sign in' }}</button>
+      {% endform %}
+      <p class="customer__footer-link">{{ 'customer.login_page.create_account' | t | default: "Don't have an account?" }} <a href="{{ routes.account_register_url }}">{{ 'customer.login_page.create_account_link' | t | default: 'Create account' }}</a></p>
+    </div>
+    <div class="customer__panel" data-panel="recover" hidden>
+      <p>{{ 'customer.recover_password.subtext' | t | default: 'Enter your email to receive a password reset link.' }}</p>
+      {% form 'recover_customer_password', class: 'customer__form' %}
+        {% if form.errors %}<div class="customer__errors" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+        {% if form.posted_successfully? %}<div class="customer__success" role="status">{{ 'customer.recover_password.success' | t | default: 'Check your email for a reset link.' }}</div>{% endif %}
+        <div class="customer__field"><label for="RecoverEmail">Email</label><input type="email" name="email" id="RecoverEmail" required></div>
+        <button type="submit" class="button button--primary customer__submit">{{ 'customer.recover_password.submit' | t | default: 'Submit' }}</button>
+      {% endform %}
+    </div>
+  </div>
+</div>
+<script>
+document.querySelectorAll("[data-tab]").forEach(function(tab){tab.addEventListener("click",function(){var t=tab.dataset.tab;document.querySelectorAll("[data-tab]").forEach(function(x){x.classList.toggle("is-active",x.dataset.tab===t);});document.querySelectorAll("[data-panel]").forEach(function(p){var on=p.dataset.panel===t;p.hidden=!on;p.classList.toggle("is-active",on);});});});
+</script>

@@ -1,0 +1,294 @@
+{%- comment -%}
+  Highlight Text with Images
+  - One large statement sentence composed from alternating blocks:
+    text phrases and small inline images woven between the words
+  - Text phrases can be styled: regular, accent color, italic, highlighted
+  - Images are sized in em so they scale perfectly with the text, with a
+    per-image tilt for an editorial, hand-placed feel
+  - Optional staggered reveal on scroll (tiny JS, only loaded when enabled,
+    disabled under prefers-reduced-motion)
+  - Empty image blocks render placeholders so the section always looks
+    composed in the editor and demo store
+{%- endcomment -%}
+
+{%- liquid
+  if section.index == 1
+    assign loading = 'eager'
+  else
+    assign loading = 'lazy'
+  endif
+-%}
+
+<link rel="preload" href="{{ 'highlight-text-with-images.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>{{ 'highlight-text-with-images.css' | asset_url | stylesheet_tag }}</noscript>
+{%- if section.settings.enable_animation -%}
+  <script src="{{ 'highlight-text-with-images.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+<div
+  class="hlt hlt--{{ section.settings.text_size }} hlt--align-{{ section.settings.alignment }} hlt--shape-{{ section.settings.image_shape }}{% if section.settings.enable_animation %} hlt--animated{% endif %}"
+  style="
+    --hlt-background: {{ section.settings.color_background }};
+    --hlt-foreground: {{ section.settings.color_foreground }};
+    --hlt-accent: {{ section.settings.color_accent }};
+    --hlt-image-scale: {{ section.settings.image_size | divided_by: 100.0 }};
+  "
+  {% if section.settings.enable_animation %}data-hlt{% endif %}
+>
+  <div class="hlt__inner">
+    {%- if section.settings.caption != blank -%}
+      <p class="hlt__caption">{{ section.settings.caption | escape }}</p>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <h2 class="hlt__statement">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              {%- if block.settings.text != blank -%}
+                <span
+                  class="hlt__word{% if block.settings.style != 'regular' %} hlt__word--{{ block.settings.style }}{% endif %}"
+                  style="--i: {{ forloop.index0 }};"
+                  {{ block.shopify_attributes }}
+                >{{ block.settings.text | escape }}</span>
+                {{- ' ' -}}
+              {%- endif -%}
+
+            {%- when 'image' -%}
+              <span
+                class="hlt__media"
+                style="--i: {{ forloop.index0 }}; --hlt-tilt: {{ block.settings.tilt }}deg;"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.image != blank -%}
+                  {%- liquid
+                    assign focal_style = nil
+                    if block.settings.image.presentation.focal_point
+                      assign focal_style = 'object-position: ' | append: block.settings.image.presentation.focal_point
+                    endif
+                    assign image_alt = block.settings.image.alt | default: section.settings.caption | default: 'Decorative image'
+                  -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 320
+                    | image_tag:
+                      class: 'hlt__image',
+                      widths: '160, 320',
+                      sizes: '160px',
+                      loading: loading,
+                      alt: image_alt,
+                      style: focal_style
+                  }}
+                {%- else -%}
+                  {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+                  {{ 'product-' | append: placeholder_index | placeholder_svg_tag: 'hlt__image hlt__image--placeholder' }}
+                {%- endif -%}
+              </span>
+              {{- ' ' -}}
+          {%- endcase -%}
+        {%- endfor -%}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="hlt__actions">
+        <a
+          {% if section.settings.button_link != blank %}href="{{ section.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+          class="hlt__button button {% if section.settings.button_style == 'secondary' %}button--secondary hlt__button--secondary{% else %}button--primary hlt__button--primary{% endif %}"
+        >
+          {{ section.settings.button_label | escape }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.highlight_text_with_images.name",
+  "tag": "section",
+  "class": "section-hlt",
+  "max_blocks": 16,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "t:sections.highlight_text_with_images.settings.caption.label",
+      "default": "Our story"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:sections.highlight_text_with_images.settings.text_size.label",
+      "options": [
+        { "value": "medium", "label": "t:sections.highlight_text_with_images.settings.text_size.options__1.label" },
+        { "value": "large", "label": "t:sections.highlight_text_with_images.settings.text_size.options__2.label" },
+        { "value": "huge", "label": "t:sections.highlight_text_with_images.settings.text_size.options__3.label" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.highlight_text_with_images.settings.alignment.label",
+      "options": [
+        { "value": "left", "label": "t:sections.highlight_text_with_images.settings.alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.highlight_text_with_images.settings.alignment.options__2.label" }
+      ],
+      "default": "center"
+    },
+    { "type": "header", "content": "t:sections.highlight_text_with_images.settings.header__1.content" },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "t:sections.highlight_text_with_images.settings.image_size.label",
+      "min": 80,
+      "max": 160,
+      "step": 10,
+      "unit": "%",
+      "default": 110,
+      "info": "t:sections.highlight_text_with_images.settings.image_size.info"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "label": "t:sections.highlight_text_with_images.settings.image_shape.label",
+      "options": [
+        { "value": "rounded", "label": "t:sections.highlight_text_with_images.settings.image_shape.options__1.label" },
+        { "value": "pill", "label": "t:sections.highlight_text_with_images.settings.image_shape.options__2.label" },
+        { "value": "circle", "label": "t:sections.highlight_text_with_images.settings.image_shape.options__3.label" },
+        { "value": "square", "label": "t:sections.highlight_text_with_images.settings.image_shape.options__4.label" }
+      ],
+      "default": "pill"
+    },
+    { "type": "header", "content": "t:sections.highlight_text_with_images.settings.header__2.content" },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.highlight_text_with_images.settings.button_label.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.highlight_text_with_images.settings.button_link.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:sections.highlight_text_with_images.settings.button_style.label",
+      "options": [
+        { "value": "primary", "label": "t:sections.highlight_text_with_images.settings.button_style.options__1.label" },
+        { "value": "secondary", "label": "t:sections.highlight_text_with_images.settings.button_style.options__2.label" }
+      ],
+      "default": "primary"
+    },
+    { "type": "header", "content": "t:sections.highlight_text_with_images.settings.header__3.content" },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "t:sections.highlight_text_with_images.settings.enable_animation.label",
+      "default": true,
+      "info": "t:sections.highlight_text_with_images.settings.enable_animation.info"
+    },
+    { "type": "header", "content": "t:sections.highlight_text_with_images.settings.header__4.content" },
+    {
+      "type": "color",
+      "id": "color_background",
+      "label": "t:sections.highlight_text_with_images.settings.color_background.label",
+      "default": "#f5f4f2"
+    },
+    {
+      "type": "color",
+      "id": "color_foreground",
+      "label": "t:sections.highlight_text_with_images.settings.color_foreground.label",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "color_accent",
+      "label": "t:sections.highlight_text_with_images.settings.color_accent.label",
+      "default": "#b4552d",
+      "info": "t:sections.highlight_text_with_images.settings.color_accent.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "t:sections.highlight_text_with_images.blocks.text.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.highlight_text_with_images.blocks.text.settings.text.label",
+          "default": "your words"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "t:sections.highlight_text_with_images.blocks.text.settings.style.label",
+          "options": [
+            { "value": "regular", "label": "t:sections.highlight_text_with_images.blocks.text.settings.style.options__1.label" },
+            { "value": "accent", "label": "t:sections.highlight_text_with_images.blocks.text.settings.style.options__2.label" },
+            { "value": "italic", "label": "t:sections.highlight_text_with_images.blocks.text.settings.style.options__3.label" },
+            { "value": "highlighted", "label": "t:sections.highlight_text_with_images.blocks.text.settings.style.options__4.label" }
+          ],
+          "default": "regular"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "t:sections.highlight_text_with_images.blocks.image.name",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.highlight_text_with_images.blocks.image.settings.image.label",
+          "info": "t:sections.highlight_text_with_images.blocks.image.settings.image.info"
+        },
+        {
+          "type": "range",
+          "id": "tilt",
+          "label": "t:sections.highlight_text_with_images.blocks.image.settings.tilt.label",
+          "min": -8,
+          "max": 8,
+          "step": 1,
+          "unit": "deg",
+          "default": 0,
+          "info": "t:sections.highlight_text_with_images.blocks.image.settings.tilt.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.highlight_text_with_images.presets.name",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": { "text": "Crafted with care," }
+        },
+        {
+          "type": "image",
+          "settings": { "tilt": -4 }
+        },
+        {
+          "type": "text",
+          "settings": { "text": "made for", "style": "italic" }
+        },
+        {
+          "type": "image",
+          "settings": { "tilt": 3 }
+        },
+        {
+          "type": "text",
+          "settings": { "text": "every day.", "style": "accent" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

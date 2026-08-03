@@ -1,0 +1,231 @@
+{% comment %}
+  Wavy Marquee Section - Main Section File
+  Version: 2.0 (Modular)
+{% endcomment %}
+
+{{ 'wavy-marquee.css' | asset_url | stylesheet_tag }}
+
+<div class="wavy-marquee{% if section.settings.full_width %} wavy-marquee--full{% endif %}" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="wavy-marquee"
+     style="
+       --marquee-speed: {{ section.settings.speed | times: 0.1 | round: 1 }}s;
+       --marquee-gap: {{ section.settings.gap }}px;
+       --marquee-font-size: {{ section.settings.font_size }}px;
+       --marquee-font-size-mobile: {{ section.settings.mobile_font_size }}px;
+       --marquee-color: {{ section.settings.text_color }};
+       --marquee-bg: {{ section.settings.background_color }};
+       --marquee-padding: {{ section.settings.padding }}px 0;
+       --marquee-icon-size: {{ section.settings.icon_size }}px;
+       --marquee-wave-speed: {{ section.settings.wave_speed | times: 0.1 | round: 1 }}s;
+     ">
+  <div class="wavy-marquee__track{% if section.settings.reverse %} wavy-marquee__track--reverse{% endif %}" 
+       role="marquee" 
+       aria-label="{{ section.settings.aria_label | default: 'Scrolling announcement' }}">
+    {%- for i in (1..section.settings.repeats) -%}
+      <span class="wavy-marquee__item">
+        {%- if section.settings.show_icon -%}
+          {%- render 'wavy-marquee-icon', icon: section.settings.icon -%}
+        {%- endif -%}
+        <span class="wavy-marquee__item-text{% if section.settings.wavy_text %} wavy-marquee__item-text--wavy{% endif %}">
+          {{ section.settings.text | escape }}
+        </span>
+        {%- if section.settings.show_separator -%}
+          <span class="wavy-marquee__separator" aria-hidden="true">{{ section.settings.separator_symbol }}</span>
+        {%- endif -%}
+      </span>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.wavy_marquee.name",
+  "tag": "section",
+  "class": "section-wavy-marquee",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:sections.wavy_marquee.settings.text.label",
+      "default": "Welcome to our store! Free shipping on orders over $50",
+      "info": "t:sections.wavy_marquee.settings.text.info"
+    },
+    {
+      "type": "range",
+      "id": "repeats",
+      "label": "t:sections.wavy_marquee.settings.repeats.label",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "info": "t:sections.wavy_marquee.settings.repeats.info"
+    },
+    { "type": "header", "content": "t:sections.wavy_marquee.settings.header__1.content" },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:sections.wavy_marquee.settings.speed.label",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "default": 15,
+      "info": "t:sections.wavy_marquee.settings.speed.info"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:sections.wavy_marquee.settings.gap.label",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "t:sections.wavy_marquee.settings.reverse.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "wavy_text",
+      "label": "t:sections.wavy_marquee.settings.wavy_text.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "wave_speed",
+      "label": "t:sections.wavy_marquee.settings.wave_speed.label",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "default": 12,
+      "info": "t:sections.wavy_marquee.settings.wave_speed.info"
+    },
+    { "type": "header", "content": "t:sections.wavy_marquee.settings.header__2.content" },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.wavy_marquee.settings.text_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.wavy_marquee.settings.background_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "t:sections.wavy_marquee.settings.font_size.label",
+      "min": 14,
+      "max": 48,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "label": "t:sections.wavy_marquee.settings.mobile_font_size.label",
+      "min": 10,
+      "max": 36,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "t:sections.wavy_marquee.settings.padding.label",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.wavy_marquee.settings.full_width.label",
+      "default": true
+    },
+    { "type": "header", "content": "t:sections.wavy_marquee.settings.header__3.content" },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "t:sections.wavy_marquee.settings.show_icon.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:sections.wavy_marquee.settings.icon.label",
+      "default": "star",
+      "options": [
+        { "value": "star", "label": "t:sections.wavy_marquee.settings.icon.options__1.label" },
+        { "value": "heart", "label": "t:sections.wavy_marquee.settings.icon.options__2.label" },
+        { "value": "sparkle", "label": "t:sections.wavy_marquee.settings.icon.options__3.label" },
+        { "value": "arrow", "label": "t:sections.wavy_marquee.settings.icon.options__4.label" },
+        { "value": "cart", "label": "t:sections.wavy_marquee.settings.icon.options__5.label" },
+        { "value": "tag", "label": "t:sections.wavy_marquee.settings.icon.options__6.label" },
+        { "value": "truck", "label": "t:sections.wavy_marquee.settings.icon.options__7.label" },
+        { "value": "gift", "label": "t:sections.wavy_marquee.settings.icon.options__8.label" }
+      ],
+      "info": "t:sections.wavy_marquee.settings.icon.info"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "t:sections.wavy_marquee.settings.icon_size.label",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    { "type": "header", "content": "t:sections.wavy_marquee.settings.header__4.content" },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "t:sections.wavy_marquee.settings.show_separator.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "separator_symbol",
+      "label": "t:sections.wavy_marquee.settings.separator_symbol.label",
+      "default": "•",
+      "info": "t:sections.wavy_marquee.settings.separator_symbol.info"
+    },
+    { "type": "header", "content": "t:sections.wavy_marquee.settings.header__5.content" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "t:sections.wavy_marquee.settings.aria_label.label",
+      "default": "Scrolling announcement banner",
+      "info": "t:sections.wavy_marquee.settings.aria_label.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.wavy_marquee.presets.name",
+      "category": "Promotional",
+      "settings": {
+        "text": "Welcome to our store! Free shipping on orders over $50",
+        "show_icon": true,
+        "icon": "star",
+        "wavy_text": true
+      }
+    }
+  ]
+}
+{% endschema %}
+
+{% comment %}
+  JavaScript is loaded asynchronously for performance
+{% endcomment %}
+<script src="{{ 'wavy-marquee.js' | asset_url }}" defer></script>

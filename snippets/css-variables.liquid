@@ -1,0 +1,102 @@
+{% style %}
+  {% # Loads all font variants with display: swap %}
+  {{ settings.type_primary_font | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+
+  :root {
+    /* ============================================
+       TYPOGRAPHY
+       ============================================ */
+    --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
+    --font-primary--style: {{ settings.type_primary_font.style }};
+    --font-primary--weight: {{ settings.type_primary_font.weight }};
+ 
+    /* ============================================
+       LAYOUT
+       ============================================ */
+    --page-width: {{ settings.max_page_width }};
+    --page-margin: {{ settings.min_page_margin }}px;
+
+    /* ============================================
+       PRIMARY COLORS (Merchant Settings)
+       ============================================ */
+    --color-background: {{ settings.background_color }};
+    --color-foreground: {{ settings.foreground_color }};
+
+    /* ============================================
+       SECONDARY COLORS (Merchant Settings)
+       ============================================ */
+    --color-background-secondary: {{ settings.background_color_secondary }};
+    --color-foreground-secondary: {{ settings.foreground_color_secondary }};
+
+    /* ============================================
+       ACCENT / BUTTONS (Merchant Settings)
+       ============================================ */
+    --color-accent-background: {{ settings.accent_background }};
+    --color-accent-foreground: {{ settings.accent_foreground }};
+
+    /* ============================================
+       BORDER RADIUS
+       ============================================ */
+    --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
+
+    /* ============================================
+       STATUS COLORS
+       These are semantic colors used across the theme
+       for consistent status messaging, validation,
+       badges, and UI feedback.
+       ============================================ */
+
+    /* ── Sale / Discounts ──
+       Used for sale badges, sale prices, and promotional indicators */
+    --color-sale: {{ settings.color_sale }};
+
+    /* ── Sold Out / Unavailable ──
+       Used for sold-out badges and unavailable product states */
+    --color-sold-out: {{ settings.color_sold_out }};
+
+    /* ── Success States ──
+       Used for form success messages, valid inputs, and positive feedback */
+    --color-success: {{ settings.color_success }};
+    --color-success-bg: {{ settings.color_success_bg }};
+    --color-success-text: {{ settings.color_success_text }};
+
+    /* ── Error States ──
+       Used for form errors, invalid inputs, and negative feedback */
+    --color-error: {{ settings.color_error }};
+    --color-error-bg: {{ settings.color_error_bg }};
+    --color-error-text: {{ settings.color_error_text }};
+
+    /* ── Star Ratings ──
+       Used for product review stars (darkened for 3:1 non-text contrast) */
+    --color-star: {{ settings.color_star }};
+
+    /* ── Disabled States ──
+       Used for disabled UI elements and inactive states */
+    --color-disabled: {{ settings.color_disabled }};
+    --color-disabled-dark: {{ settings.color_disabled_dark }};
+
+    /* ============================================
+       HEADER FALLBACK VARIABLES
+       These ensure the header works even if section
+       settings aren't fully configured.
+       ============================================ */
+    --header-background: var(--color-background, #ffffff);
+    --header-foreground: var(--color-foreground, #1a1a1a);
+    --header-hover: var(--color-accent-background, #121212);
+
+    /* ============================================
+       HERO FALLBACK VARIABLES
+       Ensures hero sections work with minimal setup.
+       ============================================ */
+    --hero-foreground: var(--color-foreground, #1a1a1a);
+
+    /* ============================================
+       BORDER COLOR FALLBACK
+       Used across the theme for borders and dividers.
+       ============================================ */
+    --color-border: color-mix(in srgb, var(--color-foreground, #1a1a1a) 15%, transparent);
+  }
+{% endstyle %}

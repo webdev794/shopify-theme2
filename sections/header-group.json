@@ -1,0 +1,45 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify://shop_images/recently-generated-suvara-shopify-theme-logo.png",
+        "logo_width": 120,
+        "menu": "main-menu",
+        "open_on_hover": true,
+        "enable_sticky_header": false,
+        "sticky_hide_on_scroll": false,
+        "enable_mega_menu": false,
+        "mega_menu_parents": "catalog",
+        "mega_show_images": false,
+        "mega_show_featured": true,
+        "mega_featured_title": "Featured Collection",
+        "mega_featured_text": "Discover our latest arrivals and best sellers.",
+        "mega_featured_link": "",
+        "mega_featured_button_label": "Shop now",
+        "show_search": true,
+        "show_account_link": true,
+        "customer_account_menu": "customer-account-main-menu",
+        "show_country_selector": true,
+        "show_language_selector": true,
+        "color_background": "#ffffff",
+        "color_foreground": "#121212",
+        "color_hover": "#000000"
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

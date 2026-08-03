@@ -1,0 +1,594 @@
+{% comment %}
+  This section is used in the list-collections template to render a list of
+  collections as a full-bleed, scroll-driven editorial "story" — each
+  collection gets its own full-height panel instead of a grid card.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/list-collections
+{% endcomment %}
+
+{% assign romans = 'I,II,III,IV,V,VI,VII,VIII,IX,X,XI,XII,XIII,XIV,XV,XVI,XVII,XVIII,XIX,XX,XXI,XXII,XXIII,XXIV,XXV' | split: ',' %}
+
+{%- comment -%} Native Shopify fonts — no uploads, served from Shopify's CDN {%- endcomment -%}
+{% assign display_font = section.settings.story_display_font %}
+{% assign display_font_italic = display_font %}
+{% assign display_font_medium = display_font_italic | font_modify: 'weight', '500' %}
+{% assign display_font_roman = display_font_italic | font_modify: 'style', 'normal' %}
+{% assign body_font = section.settings.story_body_font %}
+{% assign body_font_bold = body_font | font_modify: 'weight', '600' %}
+
+<div class="collections-story" id="collections-story-{{ section.id }}">
+  {% style %}
+    {{ display_font | font_face: font_display: 'swap' }}
+    {{ display_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {{ display_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+    {{ display_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+    {{ display_font_medium | font_face: font_display: 'swap' }}
+    {{ display_font_roman | font_face: font_display: 'swap' }}
+
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {{ body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+    {{ body_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+    {{ body_font_bold | font_face: font_display: 'swap' }}
+
+    #collections-story-{{ section.id }} {
+      --story-font-display-italic: {{ display_font_italic.family }}, {{ display_font_italic.fallback_families }};
+      --story-font-display-medium: {{ display_font_medium.family }}, {{ display_font_medium.fallback_families }};
+      --story-font-display-roman: {{ display_font_roman.family }}, {{ display_font_roman.fallback_families }};
+      --story-font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
+    }
+  {% endstyle %}
+
+  <h1 class="visually-hidden">{{ 'collections.title' | t }}</h1>
+
+  {% if collections.size == 0 %}
+    <div class="collections-story__empty">
+      <p>{{ 'collections.general.no_collections' | t }}</p>
+    </div>
+  {% else %}
+  {% paginate collections by 20 %}
+    <nav class="collections-story__rail" aria-label="{{ 'collections.title' | t }}">
+      {% for collection in collections %}
+        {% assign roman = romans[forloop.index0] | default: forloop.index %}
+        <a
+          href="#story-{{ section.id }}-{{ forloop.index }}"
+          class="collections-story__rail-item"
+          data-story-rail="{{ forloop.index }}"
+          aria-label="{{ collection.title | escape }}"
+        >
+          <span class="collections-story__rail-numeral">{{ roman }}</span>
+          <span class="collections-story__rail-name">{{ collection.title }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+
+    <div class="collections-story__track">
+      {% for collection in collections %}
+        <section
+          class="collections-story__panel"
+          id="story-{{ section.id }}-{{ forloop.index }}"
+          data-story-panel="{{ forloop.index }}"
+        >
+          <div
+            class="collections-story__media{% if collection.featured_image == blank %} collections-story__media--placeholder{% endif %}"
+            {% if collection.featured_image %}
+              {% assign story_bg_url = collection.featured_image | image_url: width: 1400 %}
+              {% if forloop.first %}
+                style="background-image: url('{{ story_bg_url }}');"
+              {% else %}
+                data-story-bg="{{ story_bg_url }}"
+              {% endif %}
+            {% endif %}
+            role="img"
+            aria-label="{{ collection.featured_image.alt | default: collection.title | escape }}"
+          ></div>
+
+          <a href="{{ collection.url }}" class="collections-story__content">
+            <span class="collections-story__eyebrow">
+              {{ 'collections.title' | t }} {{ forloop.index }} — {{ forloop.length }}
+            </span>
+
+            <h2 class="collections-story__title">{{ collection.title }}</h2>
+
+            <span class="collections-story__rule" aria-hidden="true"></span>
+
+            {% if section.settings.show_description and collection.description != blank %}
+              <p class="collections-story__desc">
+                {{ collection.description | strip_html | truncatewords: 22 }}
+              </p>
+            {% endif %}
+
+            <span class="collections-story__meta">
+              <span class="collections-story__count">
+                {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+              </span>
+              <span class="collections-story__cta">
+                {{ 'collections.general.view_all' | t }}
+                <svg width="22" height="10" viewBox="0 0 22 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M0 5H21M21 5L16.5 0.5M21 5L16.5 9.5" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </span>
+            </span>
+          </a>
+
+          {% if forloop.first %}
+            <div class="collections-story__scrollcue" aria-hidden="true">
+              <span>{{ 'sections.collections_story.scroll_hint' | t }}</span>
+              <i></i>
+            </div>
+          {% endif %}
+        </section>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <div class="collections-story__pagination">
+        {{ paginate | default_pagination }}
+      </div>
+    {% endif %}
+  {% endpaginate %}
+  {% endif %}
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('collections-story-{{ section.id }}');
+    if (!root) return;
+
+    var panels = Array.prototype.slice.call(root.querySelectorAll('[data-story-panel]'));
+    var railItems = Array.prototype.slice.call(root.querySelectorAll('[data-story-rail]'));
+    if (!panels.length) return;
+
+    var setActive = function (index) {
+      railItems.forEach(function (item) {
+        var isActive = item.getAttribute('data-story-rail') === String(index);
+        item.classList.toggle('is-active', isActive);
+        if (isActive) {
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var index = entry.target.getAttribute('data-story-panel');
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+
+            var media = entry.target.querySelector('[data-story-bg]');
+            if (media) {
+              media.style.backgroundImage = 'url(' + media.getAttribute('data-story-bg') + ')';
+              media.removeAttribute('data-story-bg');
+            }
+
+            if (entry.intersectionRatio > 0.55) {
+              setActive(index);
+            }
+          }
+        });
+      },
+      { threshold: [0, 0.25, 0.55, 0.75, 1] }
+    );
+
+    panels.forEach(function (panel) {
+      observer.observe(panel);
+    });
+
+    if (railItems.length) {
+      setActive('1');
+    }
+
+    // Hide the fixed rail whenever the collections-story section itself
+    // isn't in view — whether the visitor has scrolled up to a section
+    // above it, down past it to another section, or reached the footer.
+    var rail = root.querySelector('.collections-story__rail');
+    if (rail) {
+      var railVisibility = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            rail.classList.toggle('is-hidden', !entry.isIntersecting);
+          });
+        },
+        { threshold: 0.15 }
+      );
+      railVisibility.observe(root);
+    }
+  })();
+</script>
+
+{% stylesheet %}
+  /*
+    Font families come in via CSS custom properties set in the style tag
+    above (--story-font-*), sourced from the font_picker settings.
+    This stylesheet block stays 100% static -- no Liquid runs here.
+  */
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .collections-story {
+    /* Uses theme CSS variables instead of hardcoded editorial palette */
+    --story-ink: var(--color-foreground, #171310);
+    --story-ivory: var(--color-background, #f3ece1);
+    --story-bronze: var(--color-accent-background, #c9a063);
+    --story-wine: var(--color-sale, #6e1f31);
+    --story-taupe: var(--color-foreground-secondary, #a79883);
+
+    position: relative;
+    background: var(--story-ink);
+    color: var(--story-ivory);
+  }
+
+  .collections-story * {
+    box-sizing: border-box;
+  }
+
+  /* Snap the document scroll to each panel, gently */
+  body:has(.collections-story) {
+    scroll-snap-type: y proximity;
+  }
+
+  .collections-story {
+    font-family: var(--story-font-body);
+  }
+
+  .collections-story__empty {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--story-taupe);
+    font-family: var(--story-font-display-roman);
+    font-size: 1.4rem;
+  }
+
+  .collections-story__pagination {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1rem;
+    color: var(--story-ivory);
+  }
+
+  .collections-story__pagination a,
+  .collections-story__pagination span {
+    color: inherit;
+  }
+
+  .collections-story__pagination a:hover {
+    color: var(--story-bronze);
+  }
+
+  /* ---------- Roman numeral rail ---------- */
+  .collections-story__rail {
+    position: fixed;
+    top: 50%;
+    right: 1.75rem;
+    transform: translateY(-50%);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.85rem;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .collections-story__rail.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .collections-story__rail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--story-taupe);
+    line-height: 1;
+  }
+
+  .collections-story__rail-numeral {
+    font-family: var(--story-font-display-italic);
+    font-size: 0.85rem;
+    font-style: italic;
+    min-width: 1.6rem;
+    text-align: right;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .collections-story__rail-name {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transition: max-width 0.35s ease, opacity 0.25s ease;
+  }
+
+  .collections-story__rail-item:hover .collections-story__rail-name,
+  .collections-story__rail-item:focus-visible .collections-story__rail-name,
+  .collections-story__rail-item.is-active .collections-story__rail-name {
+    max-width: 12rem;
+    opacity: 1;
+  }
+
+  .collections-story__rail-item.is-active .collections-story__rail-numeral {
+    color: var(--story-bronze);
+    transform: scale(1.15);
+  }
+
+  .collections-story__rail-item.is-active .collections-story__rail-name {
+    color: var(--story-ivory);
+  }
+
+  .collections-story__rail-item:focus-visible {
+    outline: 1px solid var(--story-bronze);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* ---------- Panels ---------- */
+  .collections-story__panel {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 3vh, 2.5rem);
+    padding: clamp(3rem, 8vh, 6rem) clamp(1.5rem, 6vw, 4rem);
+    scroll-snap-align: start;
+  }
+
+  .collections-story__media {
+    position: relative;
+    width: 100%;
+    max-width: 56rem;
+    height: clamp(16rem, 48vh, 30rem);
+    border-radius: 0.85rem;
+    overflow: hidden;
+    background-color: rgba(243, 236, 225, 0.05);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1px solid rgba(243, 236, 225, 0.1);
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+
+  .collections-story__media--placeholder {
+    background-image: linear-gradient(160deg, #2a2019 0%, var(--story-ink) 55%, #241318 100%) !important;
+    background-size: cover !important;
+  }
+
+  .collections-story__panel.is-visible .collections-story__media {
+    opacity: 1;
+  }
+
+  .collections-story__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 40rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .collections-story__eyebrow {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--story-bronze);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease 0.05s, transform 0.6s ease 0.05s;
+  }
+
+  .collections-story__title {
+    margin-block: 0.6rem 1rem;
+    font-family: var(--story-font-display-medium);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2.4rem, 6vw, 5.5rem);
+    line-height: 1.02;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease 0.12s, transform 0.7s ease 0.12s;
+  }
+
+  .collections-story__rule {
+    display: block;
+    width: 0;
+    height: 1px;
+    margin-inline: auto;
+    margin-bottom: 1.1rem;
+    background: var(--story-bronze);
+    transition: width 0.8s ease 0.3s;
+  }
+
+  .collections-story__desc {
+    max-width: 42ch;
+    margin-inline: auto;
+    margin-bottom: 1.4rem;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--story-taupe);
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+  }
+
+  .collections-story__meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.75rem;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.4s;
+  }
+
+  .collections-story__count {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--story-taupe);
+  }
+
+  .collections-story__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--story-ivory);
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid rgba(243, 236, 225, 0.4);
+    transition: border-color 0.3s ease, color 0.3s ease, gap 0.3s ease;
+  }
+
+  .collections-story__cta svg {
+    flex-shrink: 0;
+  }
+
+  .collections-story__content:hover .collections-story__cta,
+  .collections-story__content:focus-visible .collections-story__cta {
+    color: var(--story-bronze);
+    border-color: var(--story-bronze);
+    gap: 0.85rem;
+  }
+
+  .collections-story__content:focus-visible {
+    outline: 1px solid var(--story-bronze);
+    outline-offset: 6px;
+  }
+
+  /* Reveal sequence once panel enters view */
+  .collections-story__panel.is-visible .collections-story__eyebrow,
+  .collections-story__panel.is-visible .collections-story__title,
+  .collections-story__panel.is-visible .collections-story__desc,
+  .collections-story__panel.is-visible .collections-story__meta {
+    opacity: 1;
+    transform: none;
+  }
+
+  .collections-story__panel.is-visible .collections-story__rule {
+    width: 4.5rem;
+  }
+
+  /* ---------- Scroll cue ---------- */
+  .collections-story__scrollcue {
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--story-taupe);
+  }
+
+  .collections-story__scrollcue i {
+    display: block;
+    width: 1px;
+    height: 2.25rem;
+    background: linear-gradient(to bottom, var(--story-bronze), transparent);
+    animation: story-scrollcue 1.8s ease-in-out infinite;
+  }
+
+  @keyframes story-scrollcue {
+    0% { transform: scaleY(0.3); transform-origin: top; opacity: 0.4; }
+    50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+    100% { transform: scaleY(0.3); transform-origin: bottom; opacity: 0.4; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media screen and (max-width: 899px) {
+    .collections-story__rail-name {
+      display: none;
+    }
+
+    .collections-story__rail {
+      right: 1rem;
+      gap: 0.6rem;
+    }
+
+    .collections-story__media {
+      height: 45vh;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collections-story__media,
+    .collections-story__eyebrow,
+    .collections-story__title,
+    .collections-story__rule,
+    .collections-story__desc,
+    .collections-story__meta,
+    .collections-story__rail-numeral {
+      transition: none !important;
+      animation: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    body:has(.collections-story) {
+      scroll-snap-type: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.collections_grid",
+  "settings": [
+    { "type": "header", "content": "t:sections.collections_story.settings.header__1.content" },
+    {
+      "type": "font_picker",
+      "id": "story_display_font",
+      "label": "t:sections.collections_story.settings.story_display_font.label",
+      "default": "playfair_display_i4"
+    },
+    {
+      "type": "font_picker",
+      "id": "story_body_font",
+      "label": "t:sections.collections_story.settings.story_body_font.label",
+      "default": "jost_n4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "t:sections.collections_story.settings.show_description.label",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "t:general.collections_grid" }]
+}
+{% endschema %}

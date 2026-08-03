@@ -1,0 +1,115 @@
+/* ============================================
+   CUSTOM LIQUID SECTION
+   Fixed: padding CSS variables were being set inline but never
+   consumed anywhere in this file - now applied to .custom-liquid.
+   Reverted: an earlier pass incorrectly assumed this theme uses a
+   color_scheme_group / multi-scheme system (--color-text, --color-links,
+   a "color_scheme" section setting). This theme actually uses flat
+   global color settings (foreground_color, accent_background, etc.)
+   - reverted to --color-foreground / --color-accent-background to match,
+   and removed the color_scheme picker from the section schema, since it
+   requires a color_scheme_group that doesn't exist here.
+   Still worth confirming against snippets/css-variables.liquid directly.
+   ============================================ */
+
+.custom-liquid {
+  width: 100%;
+  background: var(--color-background, #ffffff);
+  padding-top: var(--custom-liquid-padding-top, 40px);
+  padding-bottom: var(--custom-liquid-padding-bottom, 40px);
+}
+
+.custom-liquid__container {
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Layout Widths */
+.custom-liquid[data-layout="full"] .custom-liquid__container {
+  max-width: 100%;
+}
+
+.custom-liquid[data-layout="contained"] .custom-liquid__container {
+  max-width: 1200px;
+}
+
+.custom-liquid[data-layout="narrow"] .custom-liquid__container {
+  max-width: 800px;
+}
+
+/* Alignment */
+.custom-liquid[data-alignment="left"] .custom-liquid__content {
+  text-align: left;
+}
+
+.custom-liquid[data-alignment="center"] .custom-liquid__content {
+  text-align: center;
+}
+
+.custom-liquid[data-alignment="right"] .custom-liquid__content {
+  text-align: right;
+}
+
+/* Title */
+.custom-liquid__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  color: var(--color-foreground, #1a1a2e);
+}
+
+/* Content */
+.custom-liquid__content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-foreground, #4a4a6a);
+  opacity: 0.85;
+}
+
+/* Content Styles */
+.custom-liquid__content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.custom-liquid__content a {
+  color: var(--color-accent-background, #1a1a2e);
+  text-decoration: none;
+}
+
+.custom-liquid__content a:hover {
+  text-decoration: underline;
+}
+
+.custom-liquid__content ul,
+.custom-liquid__content ol {
+  padding-left: 1.5rem;
+}
+
+.custom-liquid__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.custom-liquid__content table td,
+.custom-liquid__content table th {
+  border: 1px solid color-mix(in srgb, var(--color-foreground, #1a1a2e) 12%, transparent);
+  padding: 0.5rem 1rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media screen and (max-width: 768px) {
+  .custom-liquid__title {
+    font-size: 1.5rem;
+  }
+
+  .custom-liquid__container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

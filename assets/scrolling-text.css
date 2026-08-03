@@ -1,0 +1,123 @@
+.scrolling-text {
+  position: relative;
+  overflow: hidden;
+  background: var(--st-bg, #1a1a1a);
+  color: var(--st-text-color, #ffffff);
+  padding: 12px 0;
+  white-space: nowrap;
+}
+
+.scrolling-text__wrapper {
+  overflow: hidden;
+  width: 100%;
+}
+
+.scrolling-text__track {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--st-gap, 40px);
+  animation: stScroll var(--st-speed, 30s) linear infinite;
+  width: max-content;
+}
+
+@keyframes stScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.scrolling-text__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--st-font-size, 20px);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.scrolling-text__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: var(--st-text-color, #ffffff);
+}
+
+.scrolling-text__icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+.scrolling-text__text {
+  display: inline-block;
+  opacity: 0.95;
+}
+
+.scrolling-text__divider {
+  display: inline-block;
+  opacity: 0.4;
+  font-size: calc(var(--st-font-size, 20px) * 0.6);
+  margin: 0 4px;
+}
+
+/* Pause on hover */
+.scrolling-text--pause-on-hover:hover .scrolling-text__track {
+  animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 749px) {
+  .scrolling-text {
+    padding: 10px 0;
+  }
+
+  .scrolling-text__item {
+    font-size: calc(var(--st-font-size, 20px) * 0.8);
+    gap: 8px;
+  }
+
+  .scrolling-text__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .scrolling-text__gap {
+    gap: calc(var(--st-gap, 40px) * 0.7);
+  }
+
+  .scrolling-text__divider {
+    font-size: calc(var(--st-font-size, 20px) * 0.5);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .scrolling-text__track {
+    animation-duration: 60s !important;
+  }
+}
+
+/* Dark theme support */
+.scrolling-text--dark {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.scrolling-text--light {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+/* Was falling back to an unrelated hardcoded blue (#0066cc), disconnected
+   from the theme's real accent color. Now ties to --color-accent-background. */
+.scrolling-text--accent {
+  background: var(--st-accent-color, var(--color-accent-background, #1a1a1a));
+  color: var(--color-accent-foreground, #ffffff);
+}

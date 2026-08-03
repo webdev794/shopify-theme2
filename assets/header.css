@@ -1,0 +1,787 @@
+/* ========== HEADER STYLES ========== */
+/* This file contains all styles for the header section */
+
+/* ---- Base Header ---- */
+.header {
+  position: relative;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  border-bottom: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shopify-section:has(.header--sticky) {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+/* Shadow appears once the page is scrolled (set by JS), not on hover */
+.header--scrolled {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+}
+
+/* Hide-on-scroll-down, reveal-on-scroll-up (set by JS) */
+.header--hidden {
+  transform: translateY(-100%);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+}
+
+/* Body scroll lock while the mobile menu is open (class set by JS) */
+body.header-mobile-menu-open {
+  overflow: hidden;
+}
+
+/* ---- Shared open/close animation ----
+   <details> content is not rendered while closed, so transitions on
+   opacity/visibility never fire. Keyframes run reliably on open. */
+@keyframes header-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Logo ---- */
+.header__logo-wrapper {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: inherit;
+  line-height: 0;
+}
+
+.header__logo-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.header__logo-image {
+  width: var(--header-logo-width);
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.header__shop-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+/* ---- Navigation ---- */
+.header__nav {
+  display: none;
+}
+
+.list-unstyled {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header__menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.header__menu-item {
+  position: relative;
+}
+
+/* CRITICAL FIX: the mega panel uses left/right: 0 and must anchor to the
+   header, not the menu item. Both the <li> and the <details> need to be
+   static so .header (position: relative) becomes the positioning ancestor. */
+.header__menu-item--mega {
+  position: static;
+}
+
+.header__menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.header__menu-link:hover,
+.header__menu-link:focus-visible {
+  color: var(--header-hover);
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+.header__menu-link[aria-current='page'] {
+  color: var(--header-hover);
+  font-weight: 600;
+}
+
+/* Keep the trigger visually active while its panel is open */
+.header__dropdown[open] > .header__menu-trigger {
+  color: var(--header-hover);
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+.header__menu-trigger {
+  list-style: none;
+}
+
+.header__menu-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.header__caret {
+  display: inline-flex;
+  transition: transform 0.25s ease;
+}
+
+.header__dropdown[open] > .header__menu-trigger .header__caret {
+  transform: rotate(180deg);
+}
+
+/* ---- Standard Dropdown ---- */
+.header__submenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  min-width: 220px;
+  padding: 0.5rem;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  border: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.header__dropdown[open] .header__submenu {
+  animation: header-panel-in 0.18s ease;
+}
+
+.header__submenu-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.375rem 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header__submenu-link:hover,
+.header__submenu-link:focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+  color: var(--header-hover);
+}
+
+.header__submenu-link[aria-current='page'] {
+  color: var(--header-hover);
+  font-weight: 600;
+}
+
+.header__submenu-link--parent {
+  font-weight: 600;
+}
+
+.header__submenu-link--nested {
+  padding-left: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.header__submenu-nested {
+  padding-left: 0.5rem;
+}
+
+/* ---- Mega Menu ---- */
+.header__dropdown--mega {
+  position: static;
+}
+
+/* Full-bleed panel flush against the header: no side borders or radius,
+   so it reads as an extension of the header rather than a floating card. */
+.header__mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 2rem 1.25rem 2.25rem;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  border-top: 1px solid color-mix(in srgb, var(--header-foreground) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.1);
+}
+
+.header__dropdown--mega[open] .header__mega-menu {
+  animation: header-panel-in 0.22s ease;
+}
+
+.header__mega-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+}
+
+/* Link columns: auto-fill keeps column width stable regardless of count.
+   The featured card lives outside this grid, so no more span-2 overflow. */
+.header__mega-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.75rem 2rem;
+  align-content: start;
+}
+
+.header__mega-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+/* Column heading as a quiet uppercase label with a hairline rule */
+.header__mega-heading {
+  display: block;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.375rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--header-foreground) 15%, transparent);
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.header__mega-heading:hover,
+.header__mega-heading:focus-visible {
+  color: var(--header-hover);
+  border-color: var(--header-hover);
+}
+
+.header__mega-heading[aria-current='page'] {
+  color: var(--header-hover);
+}
+
+/* Optional collection image above the column heading */
+.header__mega-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.625rem;
+  transition: opacity 0.2s ease;
+}
+
+.header__mega-heading:hover .header__mega-image {
+  opacity: 0.85;
+}
+
+.header__mega-sublist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.header__mega-link {
+  display: inline-block;
+  padding: 0.25rem 0;
+  font-size: 0.9375rem;
+  color: color-mix(in srgb, var(--header-foreground) 80%, transparent);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.header__mega-link:hover,
+.header__mega-link:focus-visible {
+  color: var(--header-hover);
+  transform: translateX(4px);
+}
+
+.header__mega-link[aria-current='page'] {
+  color: var(--header-hover);
+  font-weight: 500;
+}
+
+/* ---- Mega Menu Featured Content ---- */
+.header__mega-featured {
+  flex: 0 0 280px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--header-foreground) 5%, transparent);
+  border-radius: 10px;
+}
+
+.header__mega-featured-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.header__mega-featured-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+}
+
+.header__mega-featured-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.header__mega-featured-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  opacity: 0.8;
+}
+
+.header__mega-featured-button {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+
+/* ---- Utilities ---- */
+.header__utilities {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-left: auto;
+}
+
+.header__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  list-style: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header__icon-button::-webkit-details-marker {
+  display: none;
+}
+
+.header__icon-button:hover,
+.header__icon-button:focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+  color: var(--header-hover);
+}
+
+.header__icon-button svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---- Account (shopify-account web component) ----
+   Shopify controls the signed-in avatar and account sheet internally;
+   only the documented CSS variables and ::part(signed-out-avatar) are
+   stylable. See:
+   https://shopify.dev/docs/api/storefront-web-components/components/shopify-account */
+.header__account {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  --shopify-account-signed-in-avatar-size: 28px;
+  --shopify-account-signed-in-avatar-color-background: var(--header-foreground);
+  --shopify-account-signed-in-avatar-color-text: var(--header-background);
+}
+
+.header__account::part(signed-out-avatar) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 4px;
+  color: inherit;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.header__account::part(signed-out-avatar):hover,
+.header__account::part(signed-out-avatar):focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+  color: var(--header-hover);
+}
+
+.header__account-icon-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.header__account-icon-wrapper svg {
+  width:22px;
+  height:22px;
+}
+
+.header__account-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* ---- Search ---- */
+.header__search {
+  position: relative;
+}
+
+.header__search-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 15;
+  width: min(400px, calc(100vw - 2rem));
+  padding: 0.75rem;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  border: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.header__search[open] .header__search-panel {
+  animation: header-panel-in 0.18s ease;
+}
+
+.header__search-form {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.header__search-input {
+  flex: 1;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: inherit;
+  background-color: transparent;
+  border: 1px solid color-mix(in srgb, var(--header-foreground) 35%, transparent);
+  border-radius: 4px;
+  transition: border-color 0.2s ease;
+}
+
+.header__search-input:focus {
+  outline: none;
+  border-color: var(--header-hover);
+}
+
+.header__search-results:not(:empty) {
+  margin-top: 0.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  padding-top: 0.5rem;
+}
+
+.header__search-empty {
+  display: block;
+  padding: 0.5rem;
+  font-size: 0.9375rem;
+  opacity: 0.7;
+}
+
+.header__search-result-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  padding: 0.375rem 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.header__search-result-link:hover,
+.header__search-result-link:focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+.header__search-result-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.header__search-view-all {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.375rem 0.5rem;
+  color: var(--header-hover);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.header__search-view-all:hover,
+.header__search-view-all:focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+/* ---- Localization ---- */
+.header__localization-form {
+  display: none;
+}
+
+.header__localization-select {
+  min-height: 44px;
+  max-width: 180px;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  color: inherit;
+  background-color: transparent;
+  border: 1px solid color-mix(in srgb, var(--header-foreground) 35%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.header__localization-select:hover,
+.header__localization-select:focus {
+  border-color: var(--header-hover);
+  outline: none;
+}
+
+.header__localization-submit {
+  min-height: 44px;
+  padding: 0.375rem 0.75rem;
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--header-foreground) 35%, transparent);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.header__localization-submit:hover {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+/* ---- Cart ---- */
+.header__cart-link {
+  position: relative;
+}
+
+.header__cart-count {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--header-background);
+  background-color: var(--header-foreground);
+  border-radius: 9px;
+}
+
+.header__cart-count.hidden {
+  display: none;
+}
+
+@keyframes header-cart-bump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.header__cart-count--bump {
+  animation: header-cart-bump 0.3s ease;
+}
+
+/* ---- Focus States ---- */
+.header :is(a, button, summary, input, select):focus-visible {
+  outline: 2px solid var(--header-hover);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Mobile Menu ---- */
+.header__mobile-toggle {
+  display: inline-flex;
+}
+
+.header__mobile-nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 15;
+  max-height: calc(100vh - 100%);
+  max-height: calc(100dvh - 100%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.75rem 1.25rem 1.5rem;
+  background-color: var(--header-background);
+  color: var(--header-foreground);
+  border-bottom: 1px solid color-mix(in srgb, var(--header-foreground) 12%, transparent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.header__mobile-menu[open] .header__mobile-nav {
+  animation: header-panel-in 0.2s ease;
+}
+
+.header__mobile-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 0.25rem;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  list-style: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.header__mobile-link::-webkit-details-marker {
+  display: none;
+}
+
+.header__mobile-link:hover,
+.header__mobile-link:focus-visible {
+  background-color: color-mix(in srgb, var(--header-foreground) 8%, transparent);
+}
+
+.header__mobile-link[aria-current='page'] {
+  font-weight: 600;
+}
+
+.header__mobile-link--nested {
+  padding-left: 1rem;
+  font-size: 0.9375rem;
+}
+
+.header__mobile-dropdown[open] > .header__mobile-link .header__caret {
+  transform: rotate(180deg);
+}
+
+.header__mobile-sublist {
+  padding-left: 1rem;
+}
+
+.header__mobile-sublist--nested {
+  padding-left: 1.5rem;
+}
+
+.header__localization-form--mobile {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.header__localization-form--mobile .header__localization-select {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ---- Tablet / small desktop: featured card narrows before wrapping ---- */
+@media (min-width: 990px) and (max-width: 1199px) {
+  .header__mega-featured {
+    flex-basis: 240px;
+  }
+}
+
+/* ---- Desktop ---- */
+@media (min-width: 990px) {
+  .header__nav {
+    display: block;
+    flex: 1;
+  }
+
+  .header__mobile-menu {
+    display: none;
+  }
+
+  .header__localization-form {
+    display: block;
+  }
+
+  .header__localization-form--mobile {
+    display: none;
+  }
+}
+
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .header__caret,
+  .header__mega-image {
+    transition: none;
+  }
+
+  .header__submenu,
+  .header__mega-menu,
+  .header__search-panel,
+  .header__mobile-nav,
+  .header__cart-count--bump {
+    animation: none;
+  }
+
+  .header__mega-link:hover {
+    transform: none;
+  }
+}

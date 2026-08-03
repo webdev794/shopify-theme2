@@ -1,0 +1,11 @@
+extends: theme-check:recommended
+
+checks:
+  UnusedAssign:
+    enabled: true
+
+  UndefinedObject:
+    enabled: true
+
+  MissingAsset:
+    enabled: true

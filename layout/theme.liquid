@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% render 'meta-tags' %}
+    {% render 'css-variables' %}
+    {% unless settings.type_primary_font.system? %}
+      <!-- theme-check-disable RemoteAsset -->
+      <link rel="preconnect" href="//fonts.shopifycdn.com" crossorigin>
+      <!-- /theme-check-disable RemoteAsset -->
+    {% endunless %}
+    {{ 'critical.css' | asset_url | stylesheet_tag }}
+    {{ 'buttons.css' | asset_url | stylesheet_tag }}
+    {{ 'unit-price.css' | asset_url | stylesheet_tag }}
+    {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+    <!-- theme-check-disable RemoteAsset -->
+    <script src="//cdn.shopify.com/shopifycloud/shop-js/shop-installments.js" defer></script>
+    <!-- /theme-check-disable RemoteAsset -->
+    <script>
+      window.theme = window.theme || {};
+      window.theme.moneyFormat = {{ shop.money_format | json }};
+    </script>
+    <script src="{{ 'theme-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
+    <style>
+      html, body { min-height: 100vh !important; min-height: 100dvh !important; }
+      .shopify-section-group-footer-group { position: relative !important; }
+      #PBarNextFrameWrapper { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link visually-hidden-focusable" href="#MainContent">
+      {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
+    </a>
+    {% sections 'header-group' %}
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    {% sections 'footer-group' %}
+    {% render 'quick-view-modal' %}
+    {% render 'cart-drawer' %}
+  </body>
+</html>

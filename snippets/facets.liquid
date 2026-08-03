@@ -1,0 +1,138 @@
+{% comment %}
+  Faceted filtering UI — works on collection and search pages.
+  Usage: {% render 'facets', filters: collection.filters, clear_url: collection.url %}
+         {% render 'facets', filters: search.filters, clear_url: search_clear_url %}
+
+  Renders list, boolean, and price_range filter types using Shopify's native
+  filter/URL API (works with JS off; JS just auto-submits on change so
+  shoppers don't have to click a separate "Apply" button).
+{% endcomment %}
+
+{%- if filters.size > 0 -%}
+  {{ 'facets.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'facets.js' | asset_url }}" defer></script>
+
+  {%- liquid
+    assign has_active_filters = false
+    for filter in filters
+      if filter.type == 'price_range'
+        if filter.min_value.value != nil or filter.max_value.value != nil
+          assign has_active_filters = true
+        endif
+      else
+        for value in filter.values
+          if value.active
+            assign has_active_filters = true
+          endif
+        endfor
+      endif
+    endfor
+  -%}
+
+  <div class="facets" data-facets>
+    <details class="facets__mobile-toggle" data-facets-mobile open>
+      <summary class="facets__mobile-summary">
+        {{ 'filters.title' | t }}
+        {%- if has_active_filters -%}
+          <span class="facets__active-count" data-facets-active-count></span>
+        {%- endif -%}
+      </summary>
+
+      <div class="facets__panel">
+        <div class="facets__header">
+          <h2 class="facets__heading">{{ 'filters.title' | t }}</h2>
+          {%- if has_active_filters -%}
+            <a href="{{ clear_url }}" class="facets__clear-all">{{ 'filters.clear_all' | t }}</a>
+          {%- endif -%}
+        </div>
+
+        <form id="FacetFiltersForm-{{ section.id }}" class="facets__form" data-facets-form>
+          {%- for filter in filters -%}
+            <details class="facets__group" open>
+              <summary class="facets__group-heading">
+                {{ filter.label | escape }}
+              </summary>
+
+              {%- case filter.type -%}
+                {%- when 'list' -%}
+                  <ul class="facets__list list-unstyled">
+                    {%- for value in filter.values -%}
+                      <li class="facets__list-item">
+                        <label class="facets__checkbox-label{% if value.count == 0 and value.active == false %} facets__checkbox-label--disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                            data-facet-checkbox
+                          >
+                          <span class="facets__checkbox-text">{{ value.label | escape }}</span>
+                          <span class="facets__count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- when 'boolean' -%}
+                  <ul class="facets__list list-unstyled">
+                    {%- for value in filter.values -%}
+                      <li class="facets__list-item">
+                        <label class="facets__checkbox-label">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            data-facet-checkbox
+                          >
+                          <span class="facets__checkbox-text">{{ value.label | escape }}</span>
+                          <span class="facets__count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- when 'price_range' -%}
+                  {%- liquid
+                    assign price_min_id = 'FacetPriceMin-' | append: section.id
+                    assign price_max_id = 'FacetPriceMax-' | append: section.id
+                  -%}
+                  <div class="facets__price-range">
+                    <div class="facets__price-field">
+                      <label for="{{ price_min_id }}">{{ 'filters.price_from' | t }}</label>
+                      <input
+                        type="number"
+                        id="{{ price_min_id }}"
+                        name="{{ filter.min_value.param_name }}"
+                        value="{{ filter.min_value.value }}"
+                        placeholder="0"
+                        min="0"
+                        inputmode="decimal"
+                      >
+                    </div>
+                    <div class="facets__price-field">
+                      <label for="{{ price_max_id }}">{{ 'filters.price_to' | t }}</label>
+                      <input
+                        type="number"
+                        id="{{ price_max_id }}"
+                        name="{{ filter.max_value.param_name }}"
+                        value="{{ filter.max_value.value }}"
+                        placeholder="{{ filter.range_max }}"
+                        min="0"
+                        inputmode="decimal"
+                      >
+                    </div>
+                  </div>
+              {%- endcase -%}
+            </details>
+          {%- endfor -%}
+
+          <button type="submit" class="button button--primary facets__submit" data-facets-submit>
+            {{ 'filters.apply' | t }}
+          </button>
+        </form>
+      </div>
+    </details>
+  </div>
+{%- endif -%}

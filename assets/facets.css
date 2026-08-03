@@ -1,0 +1,160 @@
+.facets {
+  margin-bottom: 1.5rem;
+}
+
+.facets__mobile-toggle {
+  border: 1px solid var(--color-border, #ddd);
+  border-radius: 0.4rem;
+}
+
+.facets__mobile-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  list-style: none;
+}
+
+.facets__mobile-summary::-webkit-details-marker {
+  display: none;
+}
+
+.facets__active-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.35rem;
+  border-radius: 999px;
+  background: var(--color-foreground, #1a1a1a);
+  color: var(--color-background, #fff);
+  font-size: 0.7rem;
+}
+
+.facets__panel {
+  padding: 1rem;
+  border-top: 1px solid var(--color-border, #ddd);
+}
+
+.facets__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.facets__heading {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.facets__clear-all {
+  font-size: 0.85rem;
+  color: var(--color-foreground-secondary, #666);
+  text-decoration: underline;
+}
+
+.facets__group {
+  border-bottom: 1px solid var(--color-border, #eee);
+  padding-block: 0.75rem;
+}
+
+.facets__group-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  list-style: none;
+}
+
+.facets__group-heading::-webkit-details-marker {
+  display: none;
+}
+
+.facets__list {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.facets__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.facets__checkbox-label--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.facets__count {
+  color: var(--color-foreground-secondary, #888);
+  font-size: 0.8rem;
+}
+
+.facets__price-range {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.facets__price-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.facets__price-field label {
+  font-size: 0.75rem;
+  color: var(--color-foreground-secondary, #666);
+}
+
+.facets__price-field input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: var(--style-border-radius-inputs, 0.3rem);
+  font-size: 0.9rem;
+}
+
+.facets__submit {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* JS marks the form as auto-submitting; hide the manual button once JS confirms it works */
+[data-facets-form].facets__form--js-enabled .facets__submit {
+  display: none;
+}
+
+@media screen and (min-width: 990px) {
+  .facets__mobile-toggle {
+    border: none;
+  }
+
+  .facets__mobile-summary {
+    display: none;
+  }
+
+  /* The details element now defaults to [open] in the markup, so this isn't
+     load-bearing anymore — kept as a safety net in case a merchant's own
+     CSS or an app ever adds a closed state back in on desktop. */
+  .facets__mobile-toggle .facets__panel {
+    display: block !important;
+    border-top: none;
+    padding: 0;
+  }
+}

@@ -99,7 +99,7 @@
       "contact": "Contact",
       "settings": {
         "header__brand": {
-          "content": "Brand"
+          "content": "Brand"                                                                      
         },
         "logo": {
           "label": "Logo"
@@ -137,11 +137,11 @@
           "info": "Links are set in Theme Settings"
         },
         "header__payment": {
-          "content": "Payment Icons"
+          "content": "Payment"
         },
         "show_payment_icons": {
           "label": "Show payment icons"
-        }
+        }                                                       
       }
     },
     "header": {

@@ -9,108 +9,289 @@
  */
 {
   "sections": {
-    "build_pet_ritual_imDqTq": {
-      "type": "build-pet-ritual",
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "text_with_icons": {
+      "type": "text-with-icons",
       "blocks": {
-        "step_3LVYRJ": {
-          "type": "step",
+        "item_1": {
+          "type": "item",
           "settings": {
-            "title": "Morning Meal",
-            "description": "Fuel the day with balanced nutrition",
-            "option_1_label": "Chicken & Brown Rice",
-            "option_1_price": 2899,
-            "option_1_product": "active-wear",
-            "option_2_label": "Salmon & Sweet Potato",
-            "option_2_price": 3199,
-            "option_2_product": "navy-blue-jeans",
-            "option_3_label": "",
-            "option_3_product": "tshirt-navy"
+            "icon": "truck",
+            "title": "Free Shipping",
+            "text": "<p>Enjoy free shipping on all orders over $50</p>"
           }
         },
-        "step_wGaWJy": {
-          "type": "step",
+        "item_2": {
+          "type": "item",
           "settings": {
-            "title": "Daily Treat",
-            "description": "A little something special",
-            "option_1_label": "Dental Chews",
-            "option_1_price": 1499,
-            "option_1_product": "",
-            "option_2_label": "Soft Training Bites",
-            "option_2_price": 1299,
-            "option_2_product": "",
-            "option_3_label": "",
-            "option_3_product": ""
+            "icon": "shield",
+            "title": "Secure Payments",
+            "text": "<p>Your payment information is always secure</p>"
           }
         },
-        "step_GNjQm7": {
-          "type": "step",
+        "item_3": {
+          "type": "item",
           "settings": {
-            "title": "Playtime",
-            "description": "Enrichment and fun",
-            "option_1_label": "Durable Rope Toy",
-            "option_1_price": 1899,
-            "option_1_product": "blouse",
-            "option_2_label": "Puzzle Feeder",
-            "option_2_price": 2499,
-            "option_2_product": "",
-            "option_3_label": "",
-            "option_3_product": ""
-          }
-        },
-        "step_UimVxX": {
-          "type": "step",
-          "settings": {
-            "title": "Evening Comfort",
-            "description": "Wind down in style",
-            "option_1_label": "Orthopedic Bed",
-            "option_1_price": 7999,
-            "option_1_product": "",
-            "option_2_label": "Calming Blanket",
-            "option_2_price": 3499,
-            "option_2_product": "",
-            "option_3_label": "",
-            "option_3_product": ""
+            "icon": "star",
+            "title": "Premium Quality",
+            "text": "<p>Handpicked products from trusted brands</p>"
           }
         }
       },
       "block_order": [
-        "step_3LVYRJ",
-        "step_wGaWJy",
-        "step_GNjQm7",
-        "step_UimVxX"
+        "item_1",
+        "item_2",
+        "item_3"
       ],
-      "name": "Build Pet Ritual",
       "settings": {
-        "heading": "Build Your Pet’s Daily Ritual",
-        "subheading": "Create a complete care routine in a few clicks. Your pet will thank you.",
-        "button_label": "Add Complete Ritual to Cart",
-        "note": "Free shipping on rituals over $75"
+        "heading": "Why Choose Us",
+        "subheading": "Discover what makes us different",
+        "columns": "3",
+        "alignment": "center"
       }
     },
-    "newsletter_phQKPk": {
-      "type": "newsletter",
-      "name": "Newsletter",
+    "featured_products": {
+      "type": "featured-products",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
       "settings": {
-        "subheading": "Subscribe Now",
+        "layout": "grid",
+        "products_per_row": "4",
+        "heading": "Featured Products",
+        "subheading": "Our Best Sellers",
+        "show_vendor": true,
+        "show_rating": true,
+        "show_quick_add": true,
+        "show_compare_at": true
+      }
+    },
+    "outfit_builder": {
+      "type": "outfit-builder",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
+      "settings": {
+        "heading": "Build your outfit",
+        "subheading": "Mix and match"
+      }
+    },
+    "lookbook_gallery": {
+      "type": "lookbook-gallery",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {}
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2"
+      ],
+      "settings": {
+        "heading": "Shop the looks",
+        "subheading": "Lookbook"
+      }
+    },
+    "lookbook": {
+      "type": "lookbook",
+      "blocks": {
+        "hotspot_1": {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 36,
+            "position_y": 64
+          }
+        },
+        "hotspot_2": {
+          "type": "hotspot",
+          "settings": {
+            "position_x": 58,
+            "position_y": 45
+          }
+        }
+      },
+      "block_order": [
+        "hotspot_1",
+        "hotspot_2"
+      ],
+      "settings": {
+        "heading": "Shop the look"
+      }
+    },
+    "blog_posts": {
+      "type": "blog-posts",
+      "settings": {
+        "heading": "Latest Articles",
+        "subheading": "From our blog",
+        "posts_limit": 3,
+        "layout": "grid",
+        "columns": "3"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer free returns within 30 days of purchase.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Standard shipping takes 3\u20137 business days.</p>"
+          }
+        },
+        "q3": {
+          "type": "item",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes, we ship to most countries worldwide.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "heading": "Frequently asked questions",
+        "subheading": "Help center"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "blocks": {
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
+            "rating": 5,
+            "author": "Sarah Johnson",
+            "position": "Regular Customer"
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Best customer service I've ever experienced.",
+            "rating": 5,
+            "author": "Michael Chen",
+            "position": "Business Owner"
+          }
+        },
+        "t3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The products are exactly as described and the quality is premium.",
+            "rating": 4,
+            "author": "Emily Davis",
+            "position": "Designer"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "settings": {
+        "heading": "What Our Customers Say",
+        "subheading": "Real reviews from real customers",
+        "columns": "3",
+        "show_rating": true
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
         "heading": "Join Our Newsletter",
+        "subheading": "Subscribe Now",
         "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
-        "button_style": "gradient",
-        "show_icon": true,
-        "style": "default",
-        "background_color": "#121212",
-        "section_text_color": "#ffffff",
-        "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
-        "show_social": true,
-        "social_label": "Follow us:"
+        "button_label": "Subscribe"
       }
     }
   },
   "order": [
-    "build_pet_ritual_imDqTq",
-    "newsletter_phQKPk"
+    "hero",
+    "text_with_icons",
+    "featured_products",
+    "outfit_builder",
+    "lookbook_gallery",
+    "lookbook",
+    "blog_posts",
+    "faq",
+    "testimonials",
+    "newsletter"
   ]
 }

@@ -9,34 +9,42 @@
  */
 {
   "sections": {
-    "detailed_contact_form_ncpBfL": {
-      "type": "detailed-contact-form",
-      "name": "Detailed Contact Form",
-      "settings": {
-        "heading": "Get in Touch",
-        "subheading": "We'd love to hear from you. Please fill out the form below.",
-        "button_text": "Send Message",
-        "show_contact_info": true,
-        "info_heading": "Contact Information",
-        "info_text": "<p>Reach out to us through any of these channels</p>",
-        "phone": "+1 (555) 123-4567",
-        "email": "contact@example.com",
-        "address": "123 Main Street, City, State 12345",
-        "hours": "Mon-Fri 9:00 AM - 6:00 PM",
-        "background_color": "#ffffff",
-        "text_color": "#333333"
-      }
-    },
     "main": {
       "type": "page",
-      "disabled": true,
       "settings": {
         "content_width": "medium"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "How can I contact support?",
+            "answer": "<p>Email us anytime and we will respond within 1 business day.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "Where is your store located?",
+            "answer": "<p>Find our full address on this page.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
+      "settings": {
+        "heading": "Contact FAQs",
+        "subheading": "Quick answers"
       }
     }
   },
   "order": [
-    "detailed_contact_form_ncpBfL",
-    "main"
+    "main",
+    "faq"
   ]
 }

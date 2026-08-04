@@ -1,0 +1,156 @@
+{% comment %}
+  Live Pet Impact Counter
+{% endcomment %}
+
+{{ 'live-pet-impact-counter.css' | asset_url | stylesheet_tag }}
+
+<section class="live-pet-impact section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <div class="impact__header">
+        <h2 class="impact__heading">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="impact__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="impact__grid">
+      {% for block in section.blocks %}
+        <div class="impact__card" {{ block.shopify_attributes }} data-counter>
+          <div class="impact__icon">
+            {% if block.settings.icon != blank %}
+              {{ block.settings.icon }}
+            {% else %}
+              🐾
+            {% endif %}
+          </div>
+          <div class="impact__number" 
+               data-target="{{ block.settings.number | default: 0 }}"
+               data-prefix="{{ block.settings.prefix }}"
+               data-suffix="{{ block.settings.suffix }}">
+            0
+          </div>
+          <div class="impact__label">{{ block.settings.label }}</div>
+          {% if block.settings.note != blank %}
+            <div class="impact__note">{{ block.settings.note }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'live-pet-impact-counter.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Live Pet Impact Counter",
+  "tag": "section",
+  "class": "section-live-impact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real Impact. Real Tails."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Every order helps animals and the planet. Here’s what we’ve achieved together."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Impact Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Emoji / Icon",
+          "default": "🏠"
+        },
+        {
+          "type": "number",
+          "id": "number",
+          "label": "Number to count to",
+          "default": 1247
+        },
+        {
+          "type": "text",
+          "id": "prefix",
+          "label": "Prefix (e.g. $)"
+        },
+        {
+          "type": "text",
+          "id": "suffix",
+          "label": "Suffix (e.g. kg, +)",
+          "default": "+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Meals donated to shelters"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Small note",
+          "default": "Updated daily"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Live Pet Impact Counter",
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "🏠",
+            "number": 3842,
+            "suffix": "+",
+            "label": "Shelter pets helped",
+            "note": "This year"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "🍖",
+            "number": 12850,
+            "suffix": "+",
+            "label": "Meals donated",
+            "note": "And counting"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "♻️",
+            "number": 2.4,
+            "suffix": " tons",
+            "label": "Plastic packaging saved",
+            "note": "Since launch"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "icon": "💛",
+            "number": 97,
+            "suffix": "%",
+            "label": "Happy pet parents",
+            "note": "From reviews"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

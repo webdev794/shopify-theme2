@@ -1,0 +1,205 @@
+{% comment %}
+  Find the Perfect Match - Interactive Pet Quiz
+{% endcomment %}
+
+{{ 'pet-match-quiz.css' | asset_url | stylesheet_tag }}
+
+<section class="pet-match-quiz section-{{ section.id }}" data-section-id="{{ section.id }}" id="pet-quiz-{{ section.id }}">
+  <div class="page-width">
+    <div class="pet-quiz__inner">
+      <div class="pet-quiz__intro" data-quiz-intro>
+        {% if section.settings.heading != blank %}
+          <h2 class="pet-quiz__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="pet-quiz__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+        <button type="button" class="pet-quiz__start-btn" data-start-quiz>
+          {{ section.settings.start_button_label | default: 'Start the Quiz' }}
+        </button>
+      </div>
+
+      <div class="pet-quiz__questions" data-quiz-questions hidden>
+        {% for block in section.blocks %}
+          {% if block.type == 'question' %}
+            <div class="pet-quiz__question" data-question="{{ forloop.index0 }}" {{ block.shopify_attributes }} hidden>
+              <div class="pet-quiz__progress">
+                <div class="pet-quiz__progress-bar" style="width: {{ forloop.index | times: 25 }}%"></div>
+                <span class="pet-quiz__step">Question {{ forloop.index }} of {{ section.blocks.size }}</span>
+              </div>
+              <h3 class="pet-quiz__q-title">{{ block.settings.question }}</h3>
+              <div class="pet-quiz__options">
+                {% if block.settings.option_1 != blank %}
+                  <button type="button" class="pet-quiz__option" data-value="{{ block.settings.option_1 | handleize }}" data-label="{{ block.settings.option_1 }}">
+                    {{ block.settings.option_1 }}
+                  </button>
+                {% endif %}
+                {% if block.settings.option_2 != blank %}
+                  <button type="button" class="pet-quiz__option" data-value="{{ block.settings.option_2 | handleize }}" data-label="{{ block.settings.option_2 }}">
+                    {{ block.settings.option_2 }}
+                  </button>
+                {% endif %}
+                {% if block.settings.option_3 != blank %}
+                  <button type="button" class="pet-quiz__option" data-value="{{ block.settings.option_3 | handleize }}" data-label="{{ block.settings.option_3 }}">
+                    {{ block.settings.option_3 }}
+                  </button>
+                {% endif %}
+                {% if block.settings.option_4 != blank %}
+                  <button type="button" class="pet-quiz__option" data-value="{{ block.settings.option_4 | handleize }}" data-label="{{ block.settings.option_4 }}">
+                    {{ block.settings.option_4 }}
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="pet-quiz__results" data-quiz-results hidden>
+        <div class="pet-quiz__results-inner">
+          <div class="pet-quiz__results-icon">🐾</div>
+          <h3 class="pet-quiz__results-title">{{ section.settings.results_heading | default: 'Your Perfect Matches' }}</h3>
+          <p class="pet-quiz__results-text" data-results-text></p>
+          <div class="pet-quiz__results-products" data-results-products>
+            <!-- Products will be injected or linked via collection -->
+          </div>
+          <a href="{{ section.settings.results_collection | default: '/collections/all' }}" class="pet-quiz__shop-btn">
+            {{ section.settings.results_button_label | default: 'Shop Recommended Products' }}
+          </a>
+          <button type="button" class="pet-quiz__restart" data-restart-quiz>Retake Quiz</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'pet-match-quiz.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Pet Match Quiz",
+  "tag": "section",
+  "class": "section-pet-quiz",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find the Perfect Match for Your Pet"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Answer 4 quick questions and we’ll recommend products your furry friend will love."
+    },
+    {
+      "type": "text",
+      "id": "start_button_label",
+      "label": "Start button label",
+      "default": "Start the Quiz 🐾"
+    },
+    {
+      "type": "text",
+      "id": "results_heading",
+      "label": "Results heading",
+      "default": "Your Perfect Matches"
+    },
+    {
+      "type": "text",
+      "id": "results_button_label",
+      "label": "Results button label",
+      "default": "Shop Recommended Products"
+    },
+    {
+      "type": "url",
+      "id": "results_collection",
+      "label": "Results collection / page URL",
+      "default": "/collections/all"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question text",
+          "default": "What kind of pet do you have?"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "Option 1",
+          "default": "Dog"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "Option 2",
+          "default": "Cat"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "Option 3",
+          "default": "Both"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "Option 4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Match Quiz",
+      "blocks": [
+        {
+          "type": "question",
+          "settings": {
+            "question": "What kind of pet do you have?",
+            "option_1": "Dog",
+            "option_2": "Cat",
+            "option_3": "Both / Other"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How old is your pet?",
+            "option_1": "Puppy / Kitten",
+            "option_2": "Adult",
+            "option_3": "Senior"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What’s their personality?",
+            "option_1": "Playful & energetic",
+            "option_2": "Calm & cuddly",
+            "option_3": "Anxious or sensitive",
+            "option_4": "Food-obsessed"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What do they need most right now?",
+            "option_1": "Better nutrition",
+            "option_2": "More fun & enrichment",
+            "option_3": "Comfort & sleep",
+            "option_4": "Health & joint support"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

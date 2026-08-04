@@ -1,0 +1,158 @@
+{% comment %}
+  Pet Journey Timeline - Unique section for pet shops
+  Shows emotional product/pet journey with milestones
+{% endcomment %}
+
+{{ 'pet-journey-timeline.css' | asset_url | stylesheet_tag }}
+
+<section class="pet-journey-timeline section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <div class="pet-journey__header">
+        <h2 class="pet-journey__heading">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="pet-journey__subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="pet-journey__track" data-timeline>
+      {% for block in section.blocks %}
+        <div class="pet-journey__milestone" {{ block.shopify_attributes }} data-index="{{ forloop.index0 }}">
+          <div class="pet-journey__marker">
+            <span class="pet-journey__dot"></span>
+            {% unless forloop.last %}
+              <span class="pet-journey__line"></span>
+            {% endunless %}
+          </div>
+          <div class="pet-journey__content">
+            {% if block.settings.image != blank %}
+              <div class="pet-journey__image-wrap">
+                {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'pet-journey__image' }}
+              </div>
+            {% endif %}
+            <div class="pet-journey__text">
+              {% if block.settings.badge != blank %}
+                <span class="pet-journey__badge">{{ block.settings.badge }}</span>
+              {% endif %}
+              <h3 class="pet-journey__title">{{ block.settings.title }}</h3>
+              {% if block.settings.description != blank %}
+                <div class="pet-journey__desc">{{ block.settings.description }}</div>
+              {% endif %}
+              {% if block.settings.link_text != blank and block.settings.link_url != blank %}
+                <a href="{{ block.settings.link_url }}" class="pet-journey__link">
+                  {{ block.settings.link_text }}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'pet-journey-timeline.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Pet Journey Timeline",
+  "tag": "section",
+  "class": "section-pet-journey",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Journey Behind Every Tail Wag"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "From our hands to your pet’s heart — follow the story of care, quality and love."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "milestone",
+      "name": "Milestone",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text",
+          "default": "Step 1"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Sourced with Care"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>We partner with trusted farms and ethical suppliers so every ingredient is pure and pet-safe.</p>"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Journey Timeline",
+      "blocks": [
+        {
+          "type": "milestone",
+          "settings": {
+            "badge": "Day 1",
+            "title": "Thoughtfully Sourced",
+            "description": "<p>Only the finest ingredients and materials make it into our products — because your pet deserves the best.</p>"
+          }
+        },
+        {
+          "type": "milestone",
+          "settings": {
+            "badge": "Day 7",
+            "title": "Crafted with Love",
+            "description": "<p>Every batch is made in small runs with strict quality checks and zero shortcuts.</p>"
+          }
+        },
+        {
+          "type": "milestone",
+          "settings": {
+            "badge": "Day 14",
+            "title": "Arrives at Your Door",
+            "description": "<p>Fast, eco-friendly packaging designed to keep products fresh and the planet happier.</p>"
+          }
+        },
+        {
+          "type": "milestone",
+          "settings": {
+            "badge": "Forever",
+            "title": "Happy Tails & Purrs",
+            "description": "<p>Watch your pet thrive — and know you’re part of a story that cares for animals and the earth.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,259 @@
+{% comment %}
+  Build Your Pet’s Daily Ritual - Interactive configurator
+{% endcomment %}
+
+{{ 'build-pet-ritual.css' | asset_url | stylesheet_tag }}
+
+<section class="build-pet-ritual section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    <div class="ritual__header">
+      {% if section.settings.heading != blank %}
+        <h2 class="ritual__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="ritual__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ritual__layout">
+      <div class="ritual__steps" data-steps>
+        {% for block in section.blocks %}
+          <div class="ritual__step" {{ block.shopify_attributes }} data-step-index="{{ forloop.index0 }}">
+            <div class="ritual__step-header">
+              <span class="ritual__step-num">{{ forloop.index }}</span>
+              <h3 class="ritual__step-title">{{ block.settings.title }}</h3>
+            </div>
+            {% if block.settings.description != blank %}
+              <p class="ritual__step-desc">{{ block.settings.description }}</p>
+            {% endif %}
+
+            <div class="ritual__options">
+              {% if block.settings.option_1_label != blank %}
+                <label class="ritual__option">
+                  <input type="radio" 
+                         name="step-{{ forloop.index0 }}" 
+                         value="{{ block.settings.option_1_label | handleize }}"
+                         data-label="{{ block.settings.option_1_label }}"
+                         data-price="{{ block.settings.option_1_price | default: 0 }}"
+                         data-product="{{ block.settings.option_1_product }}">
+                  <span class="ritual__option-content">
+                    <span class="ritual__option-label">{{ block.settings.option_1_label }}</span>
+                    {% if block.settings.option_1_price != blank %}
+                      <span class="ritual__option-price">{{ block.settings.option_1_price | money }}</span>
+                    {% endif %}
+                  </span>
+                </label>
+              {% endif %}
+              {% if block.settings.option_2_label != blank %}
+                <label class="ritual__option">
+                  <input type="radio" 
+                         name="step-{{ forloop.index0 }}" 
+                         value="{{ block.settings.option_2_label | handleize }}"
+                         data-label="{{ block.settings.option_2_label }}"
+                         data-price="{{ block.settings.option_2_price | default: 0 }}"
+                         data-product="{{ block.settings.option_2_product }}">
+                  <span class="ritual__option-content">
+                    <span class="ritual__option-label">{{ block.settings.option_2_label }}</span>
+                    {% if block.settings.option_2_price != blank %}
+                      <span class="ritual__option-price">{{ block.settings.option_2_price | money }}</span>
+                    {% endif %}
+                  </span>
+                </label>
+              {% endif %}
+              {% if block.settings.option_3_label != blank %}
+                <label class="ritual__option">
+                  <input type="radio" 
+                         name="step-{{ forloop.index0 }}" 
+                         value="{{ block.settings.option_3_label | handleize }}"
+                         data-label="{{ block.settings.option_3_label }}"
+                         data-price="{{ block.settings.option_3_price | default: 0 }}"
+                         data-product="{{ block.settings.option_3_product }}">
+                  <span class="ritual__option-content">
+                    <span class="ritual__option-label">{{ block.settings.option_3_label }}</span>
+                    {% if block.settings.option_3_price != blank %}
+                      <span class="ritual__option-price">{{ block.settings.option_3_price | money }}</span>
+                    {% endif %}
+                  </span>
+                </label>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="ritual__summary" data-summary>
+        <div class="ritual__summary-card">
+          <div class="ritual__avatar">🐕</div>
+          <h3 class="ritual__summary-title">Your Pet’s Ritual</h3>
+          <ul class="ritual__selected" data-selected-list>
+            <li class="ritual__empty">Select options to build the ritual</li>
+          </ul>
+          <div class="ritual__total">
+            <span>Total</span>
+            <strong data-total-price>{{ 0 | money }}</strong>
+          </div>
+          <button type="button" class="ritual__add-btn" data-add-ritual disabled>
+            {{ section.settings.button_label | default: 'Add Complete Ritual to Cart' }}
+          </button>
+          <p class="ritual__note">{{ section.settings.note | default: 'You can edit quantities in cart' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'build-pet-ritual.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Build Pet Ritual",
+  "tag": "section",
+  "class": "section-pet-ritual",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Your Pet’s Daily Ritual"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Create a complete care routine in a few clicks. Your pet will thank you."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Add to cart button",
+      "default": "Add Complete Ritual to Cart"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Small note under button",
+      "default": "Free shipping on rituals over $75"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Ritual Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step title",
+          "default": "Morning Meal"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Short description",
+          "default": "Start the day with the right nutrition"
+        },
+        {
+          "type": "text",
+          "id": "option_1_label",
+          "label": "Option 1 label",
+          "default": "Chicken & Rice Adult"
+        },
+        {
+          "type": "number",
+          "id": "option_1_price",
+          "label": "Option 1 price (cents)",
+          "default": 2999
+        },
+        {
+          "type": "product",
+          "id": "option_1_product",
+          "label": "Option 1 product (optional)"
+        },
+        {
+          "type": "text",
+          "id": "option_2_label",
+          "label": "Option 2 label",
+          "default": "Salmon Sensitive"
+        },
+        {
+          "type": "number",
+          "id": "option_2_price",
+          "label": "Option 2 price (cents)",
+          "default": 3299
+        },
+        {
+          "type": "product",
+          "id": "option_2_product",
+          "label": "Option 2 product (optional)"
+        },
+        {
+          "type": "text",
+          "id": "option_3_label",
+          "label": "Option 3 label"
+        },
+        {
+          "type": "number",
+          "id": "option_3_price",
+          "label": "Option 3 price (cents)"
+        },
+        {
+          "type": "product",
+          "id": "option_3_product",
+          "label": "Option 3 product (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Build Pet Ritual",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Morning Meal",
+            "description": "Fuel the day with balanced nutrition",
+            "option_1_label": "Chicken & Brown Rice",
+            "option_1_price": 2899,
+            "option_2_label": "Salmon & Sweet Potato",
+            "option_2_price": 3199
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Daily Treat",
+            "description": "A little something special",
+            "option_1_label": "Dental Chews",
+            "option_1_price": 1499,
+            "option_2_label": "Soft Training Bites",
+            "option_2_price": 1299
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Playtime",
+            "description": "Enrichment and fun",
+            "option_1_label": "Durable Rope Toy",
+            "option_1_price": 1899,
+            "option_2_label": "Puzzle Feeder",
+            "option_2_price": 2499
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Evening Comfort",
+            "description": "Wind down in style",
+            "option_1_label": "Orthopedic Bed",
+            "option_1_price": 7999,
+            "option_2_label": "Calming Blanket",
+            "option_2_price": 3499
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

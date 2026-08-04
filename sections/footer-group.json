@@ -9,13 +9,15 @@
  */
 {
   "type": "footer",
-  "name": "t:general.footer",
+  "name": "Footer",
   "sections": {
     "footer": {
       "type": "footer",
       "settings": {
         "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
         "tagline": "Curating exceptional pieces for the discerning few.",
+        "menu": "footer",
+        "show_contact_link": true,
         "show_newsletter": true,
         "newsletter_heading": "Subscribe",
         "show_social": true,

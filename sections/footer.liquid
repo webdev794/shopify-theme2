@@ -32,7 +32,7 @@
     </div>
 
     <!-- ── Navigation ── -->
-    <nav class="footer__nav" aria-label="{{ 'sections.footer.nav_label' | t | default: 'Footer navigation' }}">
+    <nav class="footer__nav" aria-label="{{ 'sections.footer.nav_label' | t }}">
       <ul class="footer__menu" role="list">
         {%- for link in section.settings.menu.links -%}
           <li>
@@ -45,7 +45,7 @@
         {%- if section.settings.show_contact_link -%}
           <li>
             <a href="{{ routes.page_url | append: '/pages/contact' }}" class="footer__link">
-              {{ 'sections.footer.contact' | t | default: 'Contact' }}
+              {{ 'sections.footer.contact' | t }}
             </a>
           </li>
         {%- endif -%}
@@ -59,7 +59,7 @@
         {%- form 'customer', class: 'footer__newsletter-form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           <label for="FooterNewsletterEmail" class="visually-hidden">
-            {{ 'general.newsletter.email_label' | t | default: 'Email' }}
+            {{ 'general.newsletter.email_label' | t }}
           </label>
           <input
             id="FooterNewsletterEmail"
@@ -67,11 +67,11 @@
             name="contact[email]"
             class="footer__newsletter-input"
             value="{{ form.email }}"
-            placeholder="{{ 'general.newsletter.email_placeholder' | t | default: 'Your email' }}"
+            placeholder="{{ 'general.newsletter.email_placeholder' | t }}"
             required
             autocomplete="email"
           >
-          <button type="submit" class="footer__newsletter-submit" aria-label="{{ 'general.newsletter.submit' | t | default: 'Subscribe' }}">
+          <button type="submit" class="footer__newsletter-submit" aria-label="{{ 'general.newsletter.submit' | t }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6"/>
             </svg>
@@ -84,7 +84,7 @@
         {%- endif -%}
         {%- if form.posted_successfully? -%}
           <p class="footer__form-message footer__form-message--success" role="status">
-            {{ 'general.newsletter.success' | t | default: 'Thanks for subscribing!' }}
+            {{ 'general.newsletter.success' | t }}
           </p>
         {%- endif -%}
       </div>
@@ -140,7 +140,7 @@
 
     <!-- ── Payment Icons ── -->
     {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-      <ul class="footer__payment" role="list" aria-label="{{ 'general.payment_methods' | t | default: 'Payment methods' }}">
+      <ul class="footer__payment" role="list" aria-label="{{ 'general.payment_methods' | t }}">
         {%- for type in shop.enabled_payment_types -%}
           <li>{{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}</li>
         {%- endfor -%}

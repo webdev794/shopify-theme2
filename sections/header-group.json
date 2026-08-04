@@ -17,7 +17,7 @@
         "logo_width": 120,
         "menu": "main-menu",
         "open_on_hover": true,
-        "enable_sticky_header": false,
+        "enable_sticky_header": true,
         "sticky_hide_on_scroll": false,
         "enable_mega_menu": false,
         "mega_menu_parents": "catalog",

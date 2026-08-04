@@ -95,87 +95,52 @@
   "sections": {
     "footer": {
       "name": "Footer",
+      "nav_label": "Footer navigation",
+      "contact": "Contact",
       "settings": {
-        "header__1": {
+        "header__brand": {
           "content": "Brand"
         },
         "logo": {
           "label": "Logo"
         },
         "tagline": {
-          "label": "Tagline"
+          "label": "Tagline",
+          "info": "A short description of your brand"
         },
-        "header__contact": {
-          "content": "Contact Information"
+        "header__navigation": {
+          "content": "Navigation"
         },
-        "show_contact_info": {
-          "label": "Show contact information"
+        "menu": {
+          "label": "Main menu",
+          "info": "Select the menu to display in the footer"
         },
-        "phone": {
-          "label": "Phone number"
+        "show_contact_link": {
+          "label": "Show contact link",
+          "info": "Adds a contact link to the navigation"
         },
-        "email": {
-          "label": "Email address"
-        },
-        "address": {
-          "label": "Address"
-        },
-        "header__2": {
+        "header__newsletter": {
           "content": "Newsletter"
         },
         "show_newsletter": {
           "label": "Show newsletter signup"
         },
         "newsletter_heading": {
-          "label": "Heading"
+          "label": "Heading",
+          "default": "Subscribe"
         },
-        "newsletter_text": {
-          "label": "Text"
-        },
-        "header__3": {
-          "content": "Social"
+        "header__social": {
+          "content": "Social Links"
         },
         "show_social": {
           "label": "Show social media links",
           "info": "Links are set in Theme Settings"
         },
-        "header__4": {
-          "content": "Payment"
+        "header__payment": {
+          "content": "Payment Icons"
         },
         "show_payment_icons": {
           "label": "Show payment icons"
-        },
-        "header__bottom": {
-          "content": "Bottom Bar"
-        },
-        "show_bottom_links": {
-          "label": "Show bottom links"
-        },
-        "bottom_menu": {
-          "label": "Bottom menu",
-          "info": "Displayed in the bottom bar next to copyright"
-        }
-      },
-      "blocks": {
-        "link_list": {
-          "name": "Link list",
-          "settings": {
-            "heading": {
-              "label": "Heading",
-              "info": "Leave blank to use menu title"
-            }
-          }
-        },
-        "text": {
-          "name": "Text",
-          "settings": {
-            "heading": {
-              "label": "Heading"
-            },
-            "text": {
-              "label": "Text"
-            }
-          }
         }
       }
     },

@@ -14,14 +14,12 @@
     "footer": {
       "type": "footer",
       "settings": {
-        "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
         "tagline": "Curating exceptional pieces for the discerning few.",
-        "menu": "footer",
-        "show_contact_link": true,
         "show_newsletter": true,
         "newsletter_heading": "Subscribe",
+        "newsletter_text": "",
         "show_social": true,
-        "show_payment_icons": true
+        "show_payment_icons": false
       }
     }
   },

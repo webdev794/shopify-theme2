@@ -1,14 +1,18 @@
 {%- comment -%}
-  Footer — upgraded design
-  • Brand column with optional tagline
-  • Up to 4 menu columns (merchant-configurable blocks)
-  • Newsletter signup (Shopify customer form)
-  • Social icons, payment icons, localized copyright bar
+  Footer — Premium redesign
+  • Refined brand column with gradient logo text
+  • Elegant menu columns with hover animations
+  • Premium newsletter with underline-only field
+  • Decorative elements and refined spacing
 {%- endcomment -%}
 
+{{ 'footer.css' | asset_url | stylesheet_tag }}
+
 <footer class="footer color-scheme-{{ section.settings.color_scheme | default: 'default' }}">
-  {%- comment -%} Stitched seam: the signature transition from page content into the footer, echoing the header's tag mark. {%- endcomment -%}
-  <div class="footer__seam" aria-hidden="true"><span class="footer__seam-tag"></span></div>
+  {%- comment -%} Signature ornament: hairline with diamond mark {%- endcomment -%}
+  <div class="footer__ornament" aria-hidden="true">
+    <span class="footer__ornament-mark"></span>
+  </div>
 
   <div class="footer__inner page-width">
 
@@ -18,9 +22,9 @@
       <div class="footer__brand">
         <a href="{{ routes.root_url }}" class="footer__logo">
           {%- if section.settings.logo -%}
-            {{ section.settings.logo | image_url: width: 300 | image_tag: alt: shop.name, widths: '150, 300', sizes: '150px', class: 'footer__logo-img' }}  
+            {{ section.settings.logo | image_url: width: 300 | image_tag: alt: shop.name, widths: '150, 300', sizes: '150px', class: 'footer__logo-img' }}
           {%- else -%}
-            <span class="footer__logo-text"><span class="footer__logo-tag" aria-hidden="true"></span>{{ shop.name }}</span>
+            <span class="footer__logo-text">{{ shop.name }}</span>
           {%- endif -%}
         </a>
 
@@ -29,7 +33,7 @@
         {%- endif -%}
 
         {%- if section.settings.show_social -%}
-          {%- render 'social-icon', wrapper_class: 'footer__social', link_class: 'footer__social-link' -%}
+          {%- render 'social-icons', wrapper_class: 'footer__social', link_class: 'footer__social-link' -%}
         {%- endif -%}
       </div>
 
@@ -82,7 +86,9 @@
                 autocomplete="email"
               >
               <button type="submit" class="footer__submit" aria-label="{{ 'general.newsletter.submit' | t | default: 'Subscribe' }}">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
               </button>
             </div>
 
@@ -104,7 +110,10 @@
     {%- comment -%} ── Bottom bar: copyright / payments ── {%- endcomment -%}
     <div class="footer__bottom">
       <div class="footer__copyright">
-        <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}</span>
+        <span>&copy; {{ 'now' | date: '%Y' }}</span>
+        <span class="footer__copyright-separator">|</span>
+        <span>{{ shop.name | link_to: routes.root_url }}</span>
+        <span class="footer__copyright-separator">|</span>
         <span class="footer__powered">{{ powered_by_link }}</span>
       </div>
 
@@ -118,306 +127,3 @@
     </div>
   </div>
 </footer>
-
-{% stylesheet %}
-  .footer {
-    --footer-bg: var(--color-background, #ffffff);
-    --footer-fg: var(--color-foreground, #121212);
-    --footer-accent: var(--color-accent-background, #E2A63B);
-    --footer-accent-contrast: var(--color-accent-foreground, #1c1712);
-    --footer-muted: color-mix(in srgb, var(--footer-fg) 70%, var(--footer-bg));
-    --footer-line: color-mix(in srgb, var(--footer-fg) 14%, var(--footer-bg));
-    position: relative;
-    background: var(--footer-bg);
-    color: var(--footer-fg);
-    margin-top: 3rem;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    font-family: var(--font-primary--family, inherit);
-  }
-
-  /* ── Signature seam: dashed stitch with a hanging tag at center ── */
-  .footer__seam {
-    position: relative;
-    height: 1px;
-    background-image: repeating-linear-gradient(
-      to right,
-      var(--footer-line) 0 6px,
-      transparent 6px 12px
-    );
-  }
-  .footer__seam-tag {
-    position: absolute;
-    top: -0.4rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0.85rem;
-    height: 0.85rem;
-    background: var(--footer-accent);
-    clip-path: polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%);
-  }
-  .footer__seam-tag::after {
-    content: "";
-    position: absolute;
-    width: 0.16rem;
-    height: 0.16rem;
-    margin: 0.34rem;
-    border-radius: 50%;
-    background: var(--footer-bg);
-  }
-
-  .footer__inner {
-    max-width: 1200px;
-    margin-inline: auto;
-    padding: 3.5rem 1.5rem 1.5rem;
-  }
-
-  /* ── Top grid ── */
-  .footer__top {
-    display: grid;
-    grid-template-columns: 1.3fr 2fr 1.2fr;
-    gap: 3rem;
-    padding-bottom: 2.5rem;
-  }
-  @media (max-width: 900px) {
-    .footer__top { grid-template-columns: 1fr; gap: 2.5rem; }
-  }
-
-  .footer__brand { display: grid; gap: 0.9rem; align-content: start; }
-  .footer__logo { text-decoration: none; color: var(--footer-fg); }
-  .footer__logo-img { max-width: 150px; height: auto; display: block; }
-  .footer__logo-text {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-weight: 700;
-    font-size: 1.2rem;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-  }
-  .footer__logo-tag {
-    width: 0.8rem;
-    height: 0.8rem;
-    flex: none;
-    background: var(--footer-accent);
-    clip-path: polygon(30% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%, 0% 30%);
-  }
-  .footer__tagline {
-    margin: 0;
-    max-width: 30ch;
-    color: var(--footer-muted);
-  }
-
-  .footer__social { display: flex; gap: 0.6rem; margin-top: 0.3rem; list-style: none; padding: 0; }
-  .footer__social-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.1rem;
-    height: 2.1rem;
-    border-radius: 2px 8px 2px 2px;
-    border: 1px solid var(--footer-line);
-    color: var(--footer-fg);
-    text-decoration: none;
-  }
-  .footer__social-link:hover {
-    background: var(--footer-accent);
-    color: var(--footer-accent-contrast);
-    border-color: var(--footer-accent);
-  }
-
-  .footer__menus {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-    gap: 2rem;
-  }
-  .footer__heading {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin: 0 0 0.9rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px dashed var(--footer-line);
-  }
-  .footer__menu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
-  .footer__link {
-    color: var(--footer-muted);
-    text-decoration: none;
-    font-size: 0.875rem;
-    position: relative;
-  }
-  .footer__link:hover { color: var(--footer-fg); }
-  .footer__richtext { color: var(--footer-muted); font-size: 0.875rem; }
-  .footer__richtext p { margin: 0 0 0.5rem; }
-
-  /* ── Newsletter: tag-shaped input, one clipped corner ── */
-  .footer__newsletter { display: grid; gap: 0.6rem; align-content: start; }
-  .footer__newsletter-text { margin: 0; color: var(--footer-muted); font-size: 0.875rem; }
-  .footer__newsletter-form { margin-top: 0.4rem; }
-  .footer__field {
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--footer-line);
-    border-radius: 2px 10px 2px 2px;
-    overflow: hidden;
-    background: var(--footer-bg);
-  }
-  .footer__input {
-    flex: 1;
-    border: none;
-    background: none;
-    padding: 0.75rem 0.9rem;
-    font-size: 0.9rem;
-    color: var(--footer-fg);
-    outline: none;
-    min-width: 0;
-  }
-  .footer__submit {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    border: none;
-    background: var(--footer-accent);
-    color: var(--footer-accent-contrast);
-    cursor: pointer;
-  }
-  .footer__submit:hover { filter: brightness(0.95); }
-  .footer__form-message { margin: 0.5rem 0 0; font-size: 0.8rem; }
-  .footer__form-message--error { color: color-mix(in srgb, red 55%, var(--footer-fg)); }
-  .footer__form-message--success { color: color-mix(in srgb, green 45%, var(--footer-fg)); }
-
-  /* ── Bottom bar ── */
-  .footer__bottom {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px dashed var(--footer-line);
-    font-size: 0.8rem;
-    color: var(--footer-muted);
-  }
-  .footer__copyright { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-  .footer__copyright a { color: inherit; }
-  .footer__powered { position: relative; padding-left: 0.85rem; }
-  .footer__powered::before {
-    content: "";
-    position: absolute;
-    left: 0.3rem;
-    top: 50%;
-    width: 0.2rem;
-    height: 0.2rem;
-    border-radius: 50%;
-    background: currentColor;
-    transform: translateY(-50%);
-  }
-
-  .footer__payment {
-    display: flex;
-    gap: 0.5rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .footer__payment-icon { width: 2.1rem; height: auto; border-radius: 3px; }
-{% endstylesheet %}
-
-{% schema %}
-{
-  "name": "t:general.footer",
-  "class": "shopify-section--footer",
-  "settings": [
-    { "type": "header", "content": "t:sections.footer.settings.header__1.content" },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "t:sections.footer.settings.logo.label"
-    },
-    {
-      "type": "textarea",
-      "id": "tagline",
-      "label": "t:sections.footer.settings.tagline.label",
-      "default": "Quality products, thoughtfully made."
-    },
-    { "type": "header", "content": "t:sections.footer.settings.header__2.content" },
-    {
-      "type": "checkbox",
-      "id": "show_newsletter",
-      "label": "t:sections.footer.settings.show_newsletter.label",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "newsletter_heading",
-      "label": "t:sections.footer.settings.newsletter_heading.label",
-      "default": "Stay in the loop"
-    },
-    {
-      "type": "textarea",
-      "id": "newsletter_text",
-      "label": "t:sections.footer.settings.newsletter_text.label",
-      "default": "New arrivals, exclusive offers, and more — straight to your inbox."
-    },
-    { "type": "header", "content": "t:sections.footer.settings.header__3.content" },
-    {
-      "type": "checkbox",
-      "id": "show_social",
-      "label": "t:sections.footer.settings.show_social.label",
-      "default": true,
-      "info": "t:sections.footer.settings.show_social.info"
-    },
-    { "type": "header", "content": "t:sections.footer.settings.header__4.content" },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
-    }
-  ],
-  "blocks": [
-    {
-      "type": "link_list",
-      "name": "t:sections.footer.blocks.link_list.name",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "t:sections.footer.blocks.link_list.settings.heading.label",
-          "info": "t:sections.footer.blocks.link_list.settings.heading.info"
-        },
-        {
-          "type": "link_list",
-          "id": "menu",
-          "label": "t:labels.menu",
-          "default": "footer"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "name": "t:sections.footer.blocks.text.name",
-      "settings": [
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "t:sections.footer.blocks.text.settings.heading.label",
-          "default": "About"
-        },
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "t:sections.footer.blocks.text.settings.text.label",
-          "default": "<p>Share store details, contact info, or brand values with your customers.</p>"
-        }
-      ]
-    }
-  ],
-  "max_blocks": 4,
-  "enabled_on": {
-    "groups": ["footer"]
-  }
-}
-{% endschema %}

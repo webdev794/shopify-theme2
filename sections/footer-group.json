@@ -34,17 +34,12 @@
         "menu-2"
       ],
       "settings": {
-        "logo": "shopify://shop_images/recently-generated-suvara-shopify-theme-logo.png",
+        "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
         "tagline": "Quality products, thoughtfully made.",
         "show_newsletter": true,
         "newsletter_heading": "Stay in the loop",
         "newsletter_text": "New arrivals, exclusive offers, and more — straight to your inbox.",
         "show_social": true,
-        "social_instagram": "",
-        "social_facebook": "",
-        "social_tiktok": "",
-        "social_youtube": "",
-        "social_x": "",
         "show_payment_icons": false
       }
     }

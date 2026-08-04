@@ -40,7 +40,7 @@
     "content_for_index": []
   },
   "presets": {
-    "Suvara": {
+    "Petlio": {
       "type_primary_font": "work_sans_n4",
       "max_page_width": "90rem",
       "min_page_margin": 20,

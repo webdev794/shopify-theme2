@@ -56,6 +56,11 @@
     {%- if section.settings.show_newsletter -%}
       <div class="footer__newsletter-wrapper">
         <h3 class="footer__newsletter-title">{{ section.settings.newsletter_heading | default: 'Subscribe' }}</h3>
+        
+        {%- if section.settings.newsletter_text != blank -%}
+          <p class="footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+        {%- endif -%}
+
         {%- form 'customer', class: 'footer__newsletter-form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           <label for="FooterNewsletterEmail" class="visually-hidden">
@@ -72,7 +77,7 @@
             autocomplete="email"
           >
           <button type="submit" class="footer__newsletter-submit" aria-label="Subscribe">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6"/>
             </svg>
           </button>
@@ -187,17 +192,21 @@
     {
       "type": "checkbox",
       "id": "show_newsletter",
-      "label": "Show newsletter signup"
+      "label": "Show newsletter signup",
+      "default": true
     },
     {
       "type": "text",
       "id": "newsletter_heading",
-      "label": "Newsletter heading"
+      "label": "Heading",
+      "default": "Subscribe"
     },
     {
       "type": "textarea",
       "id": "newsletter_text",
-      "label": "Newsletter text"
+      "label": "Text",
+      "info": "Optional text below the heading",
+      "default": "Get exclusive updates and offers straight to your inbox."
     },
     {
       "type": "header",
@@ -207,6 +216,7 @@
       "type": "checkbox",
       "id": "show_social",
       "label": "Show social icons",
+      "default": true,
       "info": "Set your social media URLs in Theme settings → Social media."
     },
     {
@@ -216,7 +226,8 @@
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "Show payment icons"
+      "label": "Show payment icons",
+      "default": true
     }
   ],
   "blocks": [
@@ -254,6 +265,7 @@
       ]
     }
   ],
+  "max_blocks": 4,
   "enabled_on": {
     "groups": ["footer"]
   }

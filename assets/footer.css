@@ -197,8 +197,17 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--footer-muted);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   font-weight: 400;
+}
+
+/* Newsletter text description */
+.footer__newsletter-text {
+  font-size: 0.85rem;
+  color: var(--footer-muted);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  font-weight: 300;
 }
 
 .footer__newsletter-form {
@@ -361,6 +370,11 @@
 
   .footer__payment {
     flex-wrap: wrap;
+  }
+
+  .footer__newsletter-wrapper {
+    max-width: 100%;
+    padding: 0 0.5rem;
   }
 }
 

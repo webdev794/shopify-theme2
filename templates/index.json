@@ -9,6 +9,84 @@
  */
 {
   "sections": {
+    "build_pet_ritual_imDqTq": {
+      "type": "build-pet-ritual",
+      "blocks": {
+        "step_3LVYRJ": {
+          "type": "step",
+          "settings": {
+            "title": "Morning Meal",
+            "description": "Fuel the day with balanced nutrition",
+            "option_1_label": "Chicken & Brown Rice",
+            "option_1_price": 2899,
+            "option_1_product": "active-wear",
+            "option_2_label": "Salmon & Sweet Potato",
+            "option_2_price": 3199,
+            "option_2_product": "navy-blue-jeans",
+            "option_3_label": "",
+            "option_3_product": "tshirt-navy"
+          }
+        },
+        "step_wGaWJy": {
+          "type": "step",
+          "settings": {
+            "title": "Daily Treat",
+            "description": "A little something special",
+            "option_1_label": "Dental Chews",
+            "option_1_price": 1499,
+            "option_1_product": "",
+            "option_2_label": "Soft Training Bites",
+            "option_2_price": 1299,
+            "option_2_product": "",
+            "option_3_label": "",
+            "option_3_product": ""
+          }
+        },
+        "step_GNjQm7": {
+          "type": "step",
+          "settings": {
+            "title": "Playtime",
+            "description": "Enrichment and fun",
+            "option_1_label": "Durable Rope Toy",
+            "option_1_price": 1899,
+            "option_1_product": "blouse",
+            "option_2_label": "Puzzle Feeder",
+            "option_2_price": 2499,
+            "option_2_product": "",
+            "option_3_label": "",
+            "option_3_product": ""
+          }
+        },
+        "step_UimVxX": {
+          "type": "step",
+          "settings": {
+            "title": "Evening Comfort",
+            "description": "Wind down in style",
+            "option_1_label": "Orthopedic Bed",
+            "option_1_price": 7999,
+            "option_1_product": "",
+            "option_2_label": "Calming Blanket",
+            "option_2_price": 3499,
+            "option_2_product": "",
+            "option_3_label": "",
+            "option_3_product": ""
+          }
+        }
+      },
+      "block_order": [
+        "step_3LVYRJ",
+        "step_wGaWJy",
+        "step_GNjQm7",
+        "step_UimVxX"
+      ],
+      "name": "Build Pet Ritual",
+      "settings": {
+        "heading": "Build Your Pet’s Daily Ritual",
+        "subheading": "Create a complete care routine in a few clicks. Your pet will thank you.",
+        "button_label": "Add Complete Ritual to Cart",
+        "note": "Free shipping on rituals over $75"
+      }
+    },
     "newsletter_phQKPk": {
       "type": "newsletter",
       "name": "Newsletter",
@@ -32,6 +110,7 @@
     }
   },
   "order": [
+    "build_pet_ritual_imDqTq",
     "newsletter_phQKPk"
   ]
 }

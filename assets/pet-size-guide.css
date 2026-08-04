@@ -1,0 +1,117 @@
+.pet-size-guide {
+  background: var(--psg-bg, #fff);
+  color: var(--psg-text, #1a1a1a);
+  padding: 3.5rem 0;
+}
+
+.pet-size-guide__container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.pet-size-guide__header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.pet-size-guide__subheading {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.pet-size-guide__heading {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 700;
+}
+
+.pet-size-guide__text {
+  max-width: 36rem;
+  margin: 0 auto;
+  opacity: 0.85;
+}
+
+.pet-size-guide__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.pet-size-guide__tab {
+  min-height: 44px;
+  padding: 0.55rem 1.15rem;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--psg-text, #1a1a1a) 16%, transparent);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.pet-size-guide__tab:hover {
+  border-color: var(--psg-accent, #1a1a1a);
+}
+
+.pet-size-guide__tab.is-active {
+  background: var(--psg-accent, #1a1a1a);
+  border-color: var(--psg-accent, #1a1a1a);
+  color: #fff;
+}
+
+.pet-size-guide__howto {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.pet-size-guide__table-wrap {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--psg-text, #1a1a1a) 12%, transparent);
+}
+
+.pet-size-guide__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.pet-size-guide__table th,
+.pet-size-guide__table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, var(--psg-text, #1a1a1a) 8%, transparent);
+}
+
+.pet-size-guide__table th {
+  background: var(--color-background-secondary, #f6f5f2);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.pet-size-guide__table tr:last-child td {
+  border-bottom: none;
+}
+
+.pet-size-guide__table tbody tr:hover td {
+  background: color-mix(in srgb, var(--psg-accent, #1a1a1a) 4%, transparent);
+}
+
+.pet-size-guide__note {
+  margin: 1rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  line-height: 1.5;
+}

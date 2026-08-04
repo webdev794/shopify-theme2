@@ -1,42 +1,51 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "detailed_contact_form_ncpBfL": {
-      "type": "detailed-contact-form",
-      "name": "Detailed Contact Form",
+    "contact": {
+      "type": "contact",
       "settings": {
-        "heading": "Get in Touch",
-        "subheading": "We'd love to hear from you. Please fill out the form below.",
-        "button_text": "Send Message",
-        "show_contact_info": true,
-        "info_heading": "Contact Information",
-        "info_text": "<p>Reach out to us through any of these channels</p>",
-        "phone": "+1 (555) 123-4567",
-        "email": "contact@example.com",
-        "address": "123 Main Street, City, State 12345",
-        "hours": "Mon-Fri 9:00 AM - 6:00 PM",
-        "background_color": "#ffffff",
-        "text_color": "#333333"
+        "eyebrow": "Contact",
+        "heading": "We're here to help",
+        "text": "<p>Questions about orders, shipping, or products for your pets? Send a message and our team will reply within one business day.</p>",
+        "show_channels": true,
+        "email": "hello@example.com",
+        "hours": "Mon\u2013Fri, 9am\u20136pm",
+        "show_phone": true,
+        "show_topic": true,
+        "topics": "Orders,Shipping,Returns,Product help,Other",
+        "button_label": "Send message",
+        "privacy_note": "We only use your details to reply to this message."
       }
     },
-    "main": {
-      "type": "page",
-      "disabled": true,
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "How fast do you reply?",
+            "answer": "<p>We respond to most messages within one business day.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "Can I change or cancel an order?",
+            "answer": "<p>Contact us as soon as possible with your order number and we will help.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
       "settings": {
-        "content_width": "medium"
+        "heading": "Before you write",
+        "subheading": "Quick answers"
       }
     }
   },
   "order": [
-    "detailed_contact_form_ncpBfL",
-    "main"
+    "contact",
+    "faq"
   ]
 }

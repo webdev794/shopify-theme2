@@ -1,0 +1,231 @@
+{% comment %}
+  Shop by pet — visual entry points by pet type (dog, cat, etc.).
+  Each block links to a collection or URL with optional icon + image.
+{% endcomment %}
+
+{{ 'shop-by-pet.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="shop-by-pet"
+  data-section-type="shop-by-pet"
+  style="
+    --sbp-bg: {{ section.settings.background_color }};
+    --sbp-text: {{ section.settings.text_color }};
+    --sbp-accent: {{ section.settings.accent_color }};
+    --sbp-columns: {{ section.settings.columns }};
+  "
+>
+  <div class="shop-by-pet__container">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="shop-by-pet__header">
+        {%- if section.settings.subheading != blank -%}
+          <p class="shop-by-pet__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="shop-by-pet__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="shop-by-pet__text">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="shop-by-pet__grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign link_url = block.settings.link
+          if block.settings.collection != blank
+            assign link_url = block.settings.collection.url
+          endif
+          assign pet_label = block.settings.title | default: 'Pet'
+          assign pet_down = pet_label | downcase
+        -%}
+        <a
+          class="shop-by-pet__card"
+          href="{{ link_url | default: '#' }}"
+          role="listitem"
+          {{ block.shopify_attributes }}
+        >
+          <div class="shop-by-pet__media">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 800
+                | image_tag:
+                  class: 'shop-by-pet__image',
+                  loading: 'lazy',
+                  widths: '300, 400, 600, 800',
+                  sizes: '(max-width: 768px) 50vw, 25vw',
+                  alt: pet_label
+              }}
+            {%- else -%}
+              <span class="shop-by-pet__emoji" aria-hidden="true">
+                {%- case block.settings.pet_icon -%}
+                  {%- when 'dog' -%}🐕
+                  {%- when 'cat' -%}🐈
+                  {%- when 'bird' -%}🦜
+                  {%- when 'fish' -%}🐟
+                  {%- when 'rabbit' -%}🐇
+                  {%- when 'reptile' -%}🦎
+                  {%- when 'horse' -%}🐴
+                  {%- else -%}🐾
+                {%- endcase -%}
+              </span>
+            {%- endif -%}
+          </div>
+          <div class="shop-by-pet__body">
+            <h3 class="shop-by-pet__title">{{ pet_label | escape }}</h3>
+            {%- if block.settings.caption != blank -%}
+              <p class="shop-by-pet__caption">{{ block.settings.caption | escape }}</p>
+            {%- endif -%}
+            <span class="shop-by-pet__cta">
+              {{ block.settings.button_label | default: 'Shop now' | escape }}
+              <span aria-hidden="true">→</span>
+            </span>
+          </div>
+        </a>
+      {%- else -%}
+        {%- for pet in (1..4) -%}
+          <div class="shop-by-pet__card shop-by-pet__card--placeholder" role="listitem">
+            <div class="shop-by-pet__media">
+              <span class="shop-by-pet__emoji" aria-hidden="true">🐾</span>
+            </div>
+            <div class="shop-by-pet__body">
+              <h3 class="shop-by-pet__title">Pet type</h3>
+              <p class="shop-by-pet__caption">Add a collection or link</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.shop_by_pet.name",
+  "tag": "section",
+  "class": "section-shop-by-pet",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.shop_by_pet.settings.heading.label",
+      "default": "Shop by pet"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.shop_by_pet.settings.subheading.label",
+      "default": "Find the right fit"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.shop_by_pet.settings.text.label"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "t:sections.shop_by_pet.settings.columns.label",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shop_by_pet.settings.header__colors.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.shop_by_pet.settings.background_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.shop_by_pet.settings.text_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:sections.shop_by_pet.settings.accent_color.label",
+      "default": "#1a1a1a"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pet",
+      "name": "t:sections.shop_by_pet.blocks.pet.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.title.label",
+          "default": "Dogs"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.caption.label",
+          "default": "Food, toys & gear"
+        },
+        {
+          "type": "select",
+          "id": "pet_icon",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.label",
+          "default": "dog",
+          "options": [
+            { "value": "dog", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__1.label" },
+            { "value": "cat", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__2.label" },
+            { "value": "bird", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__3.label" },
+            { "value": "fish", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__4.label" },
+            { "value": "rabbit", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__5.label" },
+            { "value": "reptile", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__6.label" },
+            { "value": "horse", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__7.label" },
+            { "value": "paw", "label": "t:sections.shop_by_pet.blocks.pet.settings.pet_icon.options__8.label" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.image.label"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.collection.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.link.label",
+          "info": "t:sections.shop_by_pet.blocks.pet.settings.link.info"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:sections.shop_by_pet.blocks.pet.settings.button_label.label",
+          "default": "Shop now"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.shop_by_pet.presets.name",
+      "category": "Collection",
+      "blocks": [
+        { "type": "pet", "settings": { "title": "Dogs", "pet_icon": "dog", "caption": "Food, toys & gear" } },
+        { "type": "pet", "settings": { "title": "Cats", "pet_icon": "cat", "caption": "Treats & essentials" } },
+        { "type": "pet", "settings": { "title": "Birds", "pet_icon": "bird", "caption": "Cages & care" } },
+        { "type": "pet", "settings": { "title": "Small pets", "pet_icon": "rabbit", "caption": "Habitat & feed" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

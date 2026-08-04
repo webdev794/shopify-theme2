@@ -1,432 +1,42 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "slideshow_with_marquee_FNTTcB": {
-      "type": "slideshow-with-marquee",
-      "blocks": {
-        "slide_qDLmdH": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/photo-1599968785168-4603c0afec56.avif",
-            "heading": "New Collection",
-            "subheading": "Discover our latest arrivals",
-            "button_text": "Shop Now",
-            "button_link": ""
-          }
-        },
-        "slide_qpx74X": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/photo-1599968785168-4603c0afec56.avif",
-            "heading": "New Collection",
-            "subheading": "Discover our latest arrivals",
-            "button_text": "Shop Now",
-            "button_link": ""
-          }
-        },
-        "slide_4EDpqr": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/photo-1776127839720-c0ab710d9d37.avif",
-            "heading": "Limited Time Offer",
-            "subheading": "Up to 50% off select items",
-            "button_text": "View Deals",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_qDLmdH",
-        "slide_qpx74X",
-        "slide_4EDpqr"
-      ],
-      "name": "Slideshow with Marquee",
-      "settings": {
-        "autoplay": true,
-        "autoplay_speed": 5000,
-        "slide_height": 600,
-        "show_marquee": true,
-        "marquee_text": "Free Shipping • 30-Day Returns • Subscribe and Save 10% • Shop Now",
-        "marquee_speed": 30,
-        "marquee_bg": "#1a1a1a",
-        "marquee_text_color": "#ffffff",
-        "overlay_color": "#0000004d",
-        "text_color": "#ffffff",
-        "aria_label": "Slideshow with marquee"
-      }
+    "hero": {
+      "type": "hero",
+      "settings": {}
     },
-    "shop_the_kit_NLcrJy": {
-      "type": "shop-the-kit",
-      "blocks": {
-        "product_V7nRVz": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_KNzkU8": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_RYKm6r": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_jpKEDz": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_V7nRVz",
-        "product_KNzkU8",
-        "product_RYKm6r",
-        "product_jpKEDz"
-      ],
-      "name": "Shop the Kit",
-      "settings": {
-        "heading": "Shop the Kit",
-        "subheading": "Everything you need in one complete bundle",
-        "image": "shopify://shop_images/0b9df414a67ce75e1dd01aea1f311961.jpg",
-        "kit_title": "The Complete Starter Kit",
-        "kit_description": "<p>This curated bundle includes everything you need to get started. Save 20% compared to buying items separately.</p>",
-        "show_variant_selector": true,
-        "add_to_cart_text": "Add Kit to Cart",
-        "total_label": "Total",
-        "free_shipping_text": "Free shipping on this kit",
-        "aria_label": "Shop the kit"
-      }
-    },
-    "highlight_text_with_images_APQhQN": {
-      "type": "highlight-text-with-images",
-      "blocks": {
-        "text_iHidJB": {
-          "type": "text",
-          "settings": {
-            "text": "Crafted with care,",
-            "style": "regular"
-          }
-        },
-        "image_gLgaHb": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/photo-1613089222731-8841ac989caa.avif",
-            "tilt": -4
-          }
-        },
-        "text_VTtDgx": {
-          "type": "text",
-          "settings": {
-            "text": "made for",
-            "style": "italic"
-          }
-        },
-        "image_EnXP7D": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/photo-1565945887714-d5139f4eb0ce.avif",
-            "tilt": 3
-          }
-        },
-        "text_F4DFGH": {
-          "type": "text",
-          "settings": {
-            "text": "every day.",
-            "style": "accent"
-          }
-        }
-      },
-      "block_order": [
-        "text_iHidJB",
-        "image_gLgaHb",
-        "text_VTtDgx",
-        "image_EnXP7D",
-        "text_F4DFGH"
-      ],
-      "name": "Highlight text and images",
-      "settings": {
-        "caption": "Our story",
-        "text_size": "large",
-        "alignment": "center",
-        "image_size": 110,
-        "image_shape": "pill",
-        "button_label": "",
-        "button_link": "",
-        "button_style": "primary",
-        "enable_animation": true,
-        "color_background": "#f5f4f2",
-        "color_foreground": "#121212",
-        "color_accent": "#b4552d"
-      }
-    },
-    "mix_match_pack_NmakBm": {
-      "type": "mix-match-pack",
-      "blocks": {
-        "product_CnPgeg": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_c76iPJ": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_3X4iLM": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_FmTMzn": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_pLwcJQ": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_QWBjdi": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_jajyDY": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_GMCDGH": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_CnPgeg",
-        "product_c76iPJ",
-        "product_3X4iLM",
-        "product_FmTMzn",
-        "product_pLwcJQ",
-        "product_QWBjdi",
-        "product_jajyDY",
-        "product_GMCDGH"
-      ],
-      "name": "Mix and Match Pack",
-      "settings": {
-        "heading": "Build Your Own Pack",
-        "subheading": "Mix and match your favorite items",
-        "max_items": 4,
-        "selection_label": "Your Selection",
-        "total_label": "Total",
-        "add_pack_text": "Add Pack to Cart",
-        "select_button_text": "Select",
-        "free_shipping_text": "Free shipping on this pack",
-        "show_vendor": true,
-        "show_variant_selector": true,
-        "aria_label": "Mix and match pack builder"
-      }
-    },
-    "scrolling_text_rmFJfM": {
-      "type": "scrolling-text",
-      "blocks": {
-        "text_item_mn8Jnc": {
-          "type": "text_item",
-          "settings": {
-            "text": "Free shipping available",
-            "icon": "truck"
-          }
-        },
-        "text_item_AykxxL": {
-          "type": "text_item",
-          "settings": {
-            "text": "Easy returns",
-            "icon": "shield"
-          }
-        },
-        "text_item_VTycPV": {
-          "type": "text_item",
-          "settings": {
-            "text": "Exclusive offers for subscribers",
-            "icon": "star"
-          }
-        },
-        "text_item_XAbkdf": {
-          "type": "text_item",
-          "settings": {
-            "text": "Here to help",
-            "icon": "chat"
-          }
-        }
-      },
-      "block_order": [
-        "text_item_mn8Jnc",
-        "text_item_AykxxL",
-        "text_item_VTycPV",
-        "text_item_XAbkdf"
-      ],
-      "name": "Scrolling Text",
-      "settings": {
-        "speed": 30,
-        "gap": 40,
-        "repeat_count": 3,
-        "show_divider": true,
-        "divider_symbol": "•",
-        "font_size": 20,
-        "background_color": "#1a1a1a",
-        "text_color": "#ffffff",
-        "pause_on_hover": true,
-        "aria_label": "Scrolling announcement bar"
-      }
-    },
-    "featured_products_teK6M3": {
-      "type": "featured-products",
-      "blocks": {
-        "product_fC6EgV": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_YAyiAe": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_bXmh4V": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_Jh4LYF": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_fC6EgV",
-        "product_YAyiAe",
-        "product_bXmh4V",
-        "product_Jh4LYF"
-      ],
-      "name": "t:sections.featured_products.presets.name",
-      "settings": {
-        "layout": "grid",
-        "products_per_row": "4",
-        "gap": 20,
-        "border_radius": 8,
-        "full_width": true,
-        "heading": "Featured Products",
-        "subheading": "Our Best Sellers",
-        "description": "<p>Discover our most popular products loved by our customers</p>",
-        "show_view_all": true,
-        "view_all_text": "View All",
-        "view_all_link": "",
-        "show_vendor": true,
-        "show_rating": true,
-        "show_quick_add": true,
-        "show_compare_at": true,
-        "image_size": "large",
-        "card_style": "standard",
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "heading_color": "#1a1a1a",
-        "card_background": "#ffffff",
-        "card_shadow": "#0000001a",
-        "aria_label": "Featured products"
-      }
-    },
-    "blog_posts_TUtF9Y": {
-      "type": "blog-posts",
-      "name": "Blog Posts",
-      "settings": {
-        "blog": "news",
-        "posts_limit": 3,
-        "layout": "grid",
-        "columns": "3",
-        "card_style": "default",
-        "heading": "Latest Articles",
-        "subheading": "From our blog",
-        "description": "<p>Discover insights, tips, and stories from our community.</p>",
-        "show_image": true,
-        "show_category": true,
-        "show_author": true,
-        "show_date": true,
-        "date_position": "meta",
-        "show_excerpt": true,
-        "excerpt_words": 20,
-        "read_more_label": "Read More",
-        "show_view_all": true,
-        "view_all_label": "View All Articles"
-      }
-    },
-    "text_with_icons_DtVBgt": {
+    "text_with_icons": {
       "type": "text-with-icons",
       "blocks": {
-        "item_y6VVrw": {
+        "item_1": {
           "type": "item",
           "settings": {
             "icon": "truck",
             "title": "Free Shipping",
-            "text": "<p>Enjoy free shipping on all orders over $50</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Enjoy free shipping on all orders over $50</p>"
           }
         },
-        "item_w76LiD": {
+        "item_2": {
           "type": "item",
           "settings": {
             "icon": "shield",
             "title": "Secure Payments",
-            "text": "<p>Your payment information is always secure</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Your payment information is always secure</p>"
           }
         },
-        "item_Vwnmq7": {
+        "item_3": {
           "type": "item",
           "settings": {
             "icon": "star",
             "title": "Premium Quality",
-            "text": "<p>Handpicked products from trusted brands</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Handpicked products from trusted brands</p>"
           }
         }
       },
       "block_order": [
-        "item_y6VVrw",
-        "item_w76LiD",
-        "item_Vwnmq7"
+        "item_1",
+        "item_2",
+        "item_3"
       ],
-      "name": "Text with Icons",
       "settings": {
         "heading": "Why Choose Us",
         "subheading": "Discover what makes us different",
@@ -434,116 +44,186 @@
         "alignment": "center"
       }
     },
-    "lookbook_PJk88J": {
+    "featured_products": {
+      "type": "featured-products",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
+      "settings": {
+        "layout": "grid",
+        "products_per_row": "4",
+        "heading": "Featured Products",
+        "subheading": "Our Best Sellers",
+        "show_vendor": true,
+        "show_rating": true,
+        "show_quick_add": true,
+        "show_compare_at": true
+      }
+    },
+    "outfit_builder": {
+      "type": "outfit-builder",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
+      "settings": {
+        "heading": "Build your outfit",
+        "subheading": "Mix and match"
+      }
+    },
+    "lookbook_gallery": {
+      "type": "lookbook-gallery",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {}
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2"
+      ],
+      "settings": {
+        "heading": "Shop the looks",
+        "subheading": "Lookbook"
+      }
+    },
+    "lookbook": {
       "type": "lookbook",
       "blocks": {
-        "hotspot_mJ8zd9": {
+        "hotspot_1": {
           "type": "hotspot",
           "settings": {
-            "product": "",
             "position_x": 36,
             "position_y": 64
           }
         },
-        "hotspot_4ycDmf": {
+        "hotspot_2": {
           "type": "hotspot",
           "settings": {
-            "product": "",
-            "position_x": 38,
+            "position_x": 58,
             "position_y": 45
           }
         }
       },
       "block_order": [
-        "hotspot_mJ8zd9",
-        "hotspot_4ycDmf"
+        "hotspot_1",
+        "hotspot_2"
       ],
-      "name": "Lookbook",
       "settings": {
-        "heading": "Shop the look",
-        "heading_size": "medium",
-        "text": "<p>Tap the dots to shop every piece in this look.</p>",
-        "content_position": "top",
-        "image": "shopify://shop_images/pexels-mart-production-7679862.jpg",
-        "full_width": false,
-        "color_dot": "#ffffff",
-        "color_card_background": "#ffffff",
-        "color_card_foreground": "#121212"
+        "heading": "Shop the look"
       }
     },
-    "social_media_gallery_mTtQC4": {
-      "type": "social-media-gallery",
+    "blog_posts": {
+      "type": "blog-posts",
+      "settings": {
+        "heading": "Latest Articles",
+        "subheading": "From our blog",
+        "posts_limit": 3,
+        "layout": "grid",
+        "columns": "3"
+      }
+    },
+    "faq": {
+      "type": "faq",
       "blocks": {
-        "post_DyEXFr": {
-          "type": "post",
+        "q1": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/photo-1565945887714-d5139f4eb0ce.avif",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Beautiful sunset views 🌅",
-            "likes": "2.4k",
-            "comments": "156",
-            "link": ""
+            "question": "What is your return policy?",
+            "answer": "<p>We offer free returns within 30 days of purchase.</p>"
           }
         },
-        "post_WX3UAB": {
-          "type": "post",
+        "q2": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/0b9df414a67ce75e1dd01aea1f311961.jpg",
-            "platform": "instagram",
-            "username": "",
-            "caption": "New collection just dropped ✨",
-            "likes": "1.8k",
-            "comments": "89",
-            "link": ""
+            "question": "How long does shipping take?",
+            "answer": "<p>Standard shipping takes 3\u20137 business days.</p>"
           }
         },
-        "post_FY78Xd": {
-          "type": "post",
+        "q3": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/photo-1599968785168-4603c0afec56.avif",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Behind the scenes 🎬",
-            "likes": "3.1k",
-            "comments": "234",
-            "link": ""
-          }
-        },
-        "post_pgTGRz": {
-          "type": "post",
-          "settings": {
-            "image": "shopify://shop_images/photo-1718351041906-d1086f502f8a.avif",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Customer favorites 💕",
-            "likes": "967",
-            "comments": "43",
-            "link": ""
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes, we ship to most countries worldwide.</p>"
           }
         }
       },
       "block_order": [
-        "post_DyEXFr",
-        "post_WX3UAB",
-        "post_FY78Xd",
-        "post_pgTGRz"
+        "q1",
+        "q2",
+        "q3"
       ],
-      "name": "Social Media Gallery",
       "settings": {
-        "heading": "Follow Us on Social Media",
-        "subheading": "Join our community and stay updated",
-        "show_follow_button": true,
-        "follow_platform": "instagram",
-        "follow_text": "Follow Us",
-        "follow_link": "",
-        "aria_label": "Social media gallery"
+        "heading": "Frequently asked questions",
+        "subheading": "Help center"
       }
     },
-    "testimonials_wwx7nK": {
+    "testimonials": {
       "type": "testimonials",
       "blocks": {
-        "testimonial_YQWt4M": {
+        "t1": {
           "type": "testimonial",
           "settings": {
             "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
@@ -552,19 +232,19 @@
             "position": "Regular Customer"
           }
         },
-        "testimonial_KkiRj8": {
+        "t2": {
           "type": "testimonial",
           "settings": {
-            "quote": "Best customer service I've ever experienced. They went above and beyond to help me.",
+            "quote": "Best customer service I've ever experienced.",
             "rating": 5,
             "author": "Michael Chen",
             "position": "Business Owner"
           }
         },
-        "testimonial_mULPyW": {
+        "t3": {
           "type": "testimonial",
           "settings": {
-            "quote": "The products are exactly as described and the quality is premium. Will definitely buy again.",
+            "quote": "The products are exactly as described and the quality is premium.",
             "rating": 4,
             "author": "Emily Davis",
             "position": "Designer"
@@ -572,55 +252,89 @@
         }
       },
       "block_order": [
-        "testimonial_YQWt4M",
-        "testimonial_KkiRj8",
-        "testimonial_mULPyW"
+        "t1",
+        "t2",
+        "t3"
       ],
-      "name": "Testimonials",
       "settings": {
         "heading": "What Our Customers Say",
         "subheading": "Real reviews from real customers",
         "columns": "3",
-        "show_rating": true,
-        "show_view_all": false,
-        "view_all_text": "View All Testimonials",
-        "view_all_link": ""
+        "show_rating": true
       }
     },
-    "newsletter_phQKPk": {
+    "newsletter": {
       "type": "newsletter",
-      "name": "Newsletter",
       "settings": {
-        "subheading": "Subscribe Now",
         "heading": "Join Our Newsletter",
+        "subheading": "Subscribe Now",
         "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
-        "button_style": "gradient",
-        "show_icon": true,
-        "style": "default",
-        "background_color": "#121212",
-        "section_text_color": "#ffffff",
-        "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
-        "show_social": true,
-        "social_label": "Follow us:"
+        "button_label": "Subscribe"
+      }
+    },
+    "shop_by_pet": {
+      "type": "shop-by-pet",
+      "blocks": {
+        "dog": {
+          "type": "pet",
+          "settings": {
+            "title": "Dogs",
+            "pet_icon": "dog",
+            "caption": "Food, toys & gear",
+            "button_label": "Shop dogs"
+          }
+        },
+        "cat": {
+          "type": "pet",
+          "settings": {
+            "title": "Cats",
+            "pet_icon": "cat",
+            "caption": "Treats & essentials",
+            "button_label": "Shop cats"
+          }
+        },
+        "bird": {
+          "type": "pet",
+          "settings": {
+            "title": "Birds",
+            "pet_icon": "bird",
+            "caption": "Cages & care",
+            "button_label": "Shop birds"
+          }
+        },
+        "small": {
+          "type": "pet",
+          "settings": {
+            "title": "Small pets",
+            "pet_icon": "rabbit",
+            "caption": "Habitat & feed",
+            "button_label": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "dog",
+        "cat",
+        "bird",
+        "small"
+      ],
+      "settings": {
+        "heading": "Shop by pet",
+        "subheading": "Find the right fit"
       }
     }
   },
   "order": [
-    "slideshow_with_marquee_FNTTcB",
-    "shop_the_kit_NLcrJy",
-    "highlight_text_with_images_APQhQN",
-    "mix_match_pack_NmakBm",
-    "scrolling_text_rmFJfM",
-    "featured_products_teK6M3",
-    "blog_posts_TUtF9Y",
-    "text_with_icons_DtVBgt",
-    "lookbook_PJk88J",
-    "social_media_gallery_mTtQC4",
-    "testimonials_wwx7nK",
-    "newsletter_phQKPk"
+    "hero",
+    "shop_by_pet",
+    "text_with_icons",
+    "featured_products",
+    "outfit_builder",
+    "lookbook_gallery",
+    "lookbook",
+    "blog_posts",
+    "faq",
+    "testimonials",
+    "newsletter"
   ]
 }

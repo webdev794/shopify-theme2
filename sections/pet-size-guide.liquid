@@ -1,0 +1,235 @@
+{% comment %}
+  Pet size guide — tabbed size charts by pet type (e.g. dogs / cats).
+  Useful on product pages or a dedicated size-guide page.
+{% endcomment %}
+
+{{ 'pet-size-guide.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pet-size-guide.js' | asset_url }}" defer></script>
+
+<div
+  class="pet-size-guide"
+  data-section-type="pet-size-guide"
+  data-section-id="{{ section.id }}"
+  style="
+    --psg-bg: {{ section.settings.background_color }};
+    --psg-text: {{ section.settings.text_color }};
+    --psg-accent: {{ section.settings.accent_color }};
+  "
+>
+  <div class="pet-size-guide__container">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="pet-size-guide__header">
+        {%- if section.settings.subheading != blank -%}
+          <p class="pet-size-guide__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="pet-size-guide__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="pet-size-guide__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="pet-size-guide__tabs" role="tablist" aria-label="{{ section.settings.heading | default: 'Size guide' | escape }}">
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            class="pet-size-guide__tab{% if forloop.first %} is-active{% endif %}"
+            role="tab"
+            id="psg-tab-{{ section.id }}-{{ block.id }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="psg-panel-{{ section.id }}-{{ block.id }}"
+            data-psg-tab
+            data-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ block.settings.title | default: 'Size chart' | escape }}
+          </button>
+        {%- endfor -%}
+      </div>
+
+      <div class="pet-size-guide__panels">
+        {%- for block in section.blocks -%}
+          <div
+            class="pet-size-guide__panel{% if forloop.first %} is-active{% endif %}"
+            role="tabpanel"
+            id="psg-panel-{{ section.id }}-{{ block.id }}"
+            aria-labelledby="psg-tab-{{ section.id }}-{{ block.id }}"
+            data-psg-panel
+            data-index="{{ forloop.index0 }}"
+            {% unless forloop.first %}hidden{% endunless %}
+          >
+            {%- if block.settings.howto != blank -%}
+              <div class="pet-size-guide__howto rte">{{ block.settings.howto }}</div>
+            {%- endif -%}
+
+            <div class="pet-size-guide__table-wrap">
+              <table class="pet-size-guide__table">
+                <thead>
+                  <tr>
+                    <th>{{ block.settings.col_size | default: 'Size' | escape }}</th>
+                    <th>{{ block.settings.col_measure | default: 'Measurement' | escape }}</th>
+                    {%- if block.settings.col_extra != blank -%}
+                      <th>{{ block.settings.col_extra | escape }}</th>
+                    {%- endif -%}
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- assign rows = block.settings.rows | newline_to_br | split: '<br />' -%}
+                  {%- for row in rows -%}
+                    {%- assign cells = row | strip | split: '|' -%}
+                    {%- if cells.size >= 2 -%}
+                      <tr>
+                        <td>{{ cells[0] | strip | escape }}</td>
+                        <td>{{ cells[1] | strip | escape }}</td>
+                        {%- if block.settings.col_extra != blank -%}
+                          <td>{{ cells[2] | default: '—' | strip | escape }}</td>
+                        {%- endif -%}
+                      </tr>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+
+            {%- if block.settings.note != blank -%}
+              <p class="pet-size-guide__note">{{ block.settings.note | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.pet_size_guide.name",
+  "tag": "section",
+  "class": "section-pet-size-guide",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.pet_size_guide.settings.heading.label",
+      "default": "Pet size guide"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.pet_size_guide.settings.subheading.label",
+      "default": "Find the right size"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.pet_size_guide.settings.text.label",
+      "default": "<p>Measure your pet and match the chart below. When between sizes, size up for comfort.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.pet_size_guide.settings.header__colors.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.pet_size_guide.settings.background_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.pet_size_guide.settings.text_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:sections.pet_size_guide.settings.accent_color.label",
+      "default": "#1a1a1a"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chart",
+      "name": "t:sections.pet_size_guide.blocks.chart.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.title.label",
+          "default": "Dogs"
+        },
+        {
+          "type": "richtext",
+          "id": "howto",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.howto.label",
+          "default": "<p>Measure around the widest part of the chest and the neck base.</p>"
+        },
+        {
+          "type": "text",
+          "id": "col_size",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.col_size.label",
+          "default": "Size"
+        },
+        {
+          "type": "text",
+          "id": "col_measure",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.col_measure.label",
+          "default": "Chest (cm)"
+        },
+        {
+          "type": "text",
+          "id": "col_extra",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.col_extra.label",
+          "default": "Neck (cm)"
+        },
+        {
+          "type": "textarea",
+          "id": "rows",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.rows.label",
+          "default": "XS | 30–38 | 24–28\nS | 38–46 | 28–32\nM | 46–56 | 32–38\nL | 56–68 | 38–44\nXL | 68–80 | 44–50",
+          "info": "t:sections.pet_size_guide.blocks.chart.settings.rows.info"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "t:sections.pet_size_guide.blocks.chart.settings.note.label",
+          "default": "Charts are approximate. Check the product description for brand-specific fit."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.pet_size_guide.presets.name",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "chart",
+          "settings": {
+            "title": "Dogs",
+            "col_size": "Size",
+            "col_measure": "Chest (cm)",
+            "col_extra": "Neck (cm)",
+            "rows": "XS | 30–38 | 24–28\nS | 38–46 | 28–32\nM | 46–56 | 32–38\nL | 56–68 | 38–44\nXL | 68–80 | 44–50"
+          }
+        },
+        {
+          "type": "chart",
+          "settings": {
+            "title": "Cats",
+            "col_size": "Size",
+            "col_measure": "Chest (cm)",
+            "col_extra": "Neck (cm)",
+            "rows": "S | 28–34 | 20–24\nM | 34–40 | 24–28\nL | 40–46 | 28–32"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

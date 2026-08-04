@@ -9,10 +9,20 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "page",
+    "contact": {
+      "type": "contact",
       "settings": {
-        "content_width": "medium"
+        "eyebrow": "Contact",
+        "heading": "We're here to help",
+        "text": "<p>Questions about orders, shipping, or products for your pets? Send a message and our team will reply within one business day.</p>",
+        "show_channels": true,
+        "email": "hello@example.com",
+        "hours": "Mon\u2013Fri, 9am\u20136pm",
+        "show_phone": true,
+        "show_topic": true,
+        "topics": "Orders,Shipping,Returns,Product help,Other",
+        "button_label": "Send message",
+        "privacy_note": "We only use your details to reply to this message."
       }
     },
     "faq": {
@@ -21,15 +31,15 @@
         "q1": {
           "type": "item",
           "settings": {
-            "question": "How can I contact support?",
-            "answer": "<p>Email us anytime and we will respond within 1 business day.</p>"
+            "question": "How fast do you reply?",
+            "answer": "<p>We respond to most messages within one business day.</p>"
           }
         },
         "q2": {
           "type": "item",
           "settings": {
-            "question": "Where is your store located?",
-            "answer": "<p>Find our full address on this page.</p>"
+            "question": "Can I change or cancel an order?",
+            "answer": "<p>Contact us as soon as possible with your order number and we will help.</p>"
           }
         }
       },
@@ -38,13 +48,13 @@
         "q2"
       ],
       "settings": {
-        "heading": "Contact FAQs",
+        "heading": "Before you write",
         "subheading": "Quick answers"
       }
     }
   },
   "order": [
-    "main",
+    "contact",
     "faq"
   ]
 }

@@ -11,19 +11,7 @@
   "sections": {
     "hero": {
       "type": "hero",
-      "settings": {
-        "height": "medium",
-        "full_width": true,
-        "content_position": "middle-center",
-        "content_alignment": "center",
-        "content_max_width": 650,
-        "stack_on_mobile": false,
-        "color_overlay": "#000000",
-        "overlay_opacity": 25,
-        "color_foreground": "#ffffff",
-        "show_content_box": false,
-        "color_box_background": "#00000080"
-      }
+      "settings": {}
     },
     "text_with_icons": {
       "type": "text-with-icons",
@@ -33,9 +21,7 @@
           "settings": {
             "icon": "truck",
             "title": "Free Shipping",
-            "text": "<p>Enjoy free shipping on all orders over $50</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Enjoy free shipping on all orders over $50</p>"
           }
         },
         "item_2": {
@@ -43,9 +29,7 @@
           "settings": {
             "icon": "shield",
             "title": "Secure Payments",
-            "text": "<p>Your payment information is always secure</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Your payment information is always secure</p>"
           }
         },
         "item_3": {
@@ -53,9 +37,7 @@
           "settings": {
             "icon": "star",
             "title": "Premium Quality",
-            "text": "<p>Handpicked products from trusted brands</p>",
-            "button_text": "",
-            "button_link": ""
+            "text": "<p>Handpicked products from trusted brands</p>"
           }
         }
       },
@@ -108,27 +90,12 @@
       "settings": {
         "layout": "grid",
         "products_per_row": "4",
-        "gap": 20,
-        "border_radius": 8,
-        "full_width": false,
         "heading": "Featured Products",
         "subheading": "Our Best Sellers",
-        "description": "<p>Discover our most popular products loved by our customers</p>",
-        "show_view_all": true,
-        "view_all_text": "View All",
-        "view_all_link": "",
         "show_vendor": true,
         "show_rating": true,
         "show_quick_add": true,
-        "show_compare_at": true,
-        "image_size": "medium",
-        "card_style": "standard",
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "heading_color": "#1a1a1a",
-        "card_background": "#ffffff",
-        "card_shadow": "#0000001a",
-        "aria_label": "Featured products"
+        "show_compare_at": true
       }
     },
     "outfit_builder": {
@@ -137,25 +104,25 @@
         "product_1": {
           "type": "product",
           "settings": {
-            "product": "active-wear"
+            "product": ""
           }
         },
         "product_2": {
           "type": "product",
           "settings": {
-            "product": "blouse"
+            "product": ""
           }
         },
         "product_3": {
           "type": "product",
           "settings": {
-            "product": "yellow-hat"
+            "product": ""
           }
         },
         "product_4": {
           "type": "product",
           "settings": {
-            "product": "flower-sandals"
+            "product": ""
           }
         }
       },
@@ -167,17 +134,7 @@
       ],
       "settings": {
         "heading": "Build your outfit",
-        "subheading": "Mix and match",
-        "max_items": 4,
-        "selection_label": "Your outfit",
-        "total_label": "Total",
-        "select_button_text": "Add to outfit",
-        "add_outfit_text": "Add outfit to cart",
-        "empty_text": "Select items to build your outfit",
-        "show_variant_selector": true,
-        "background_color": "#f8f7f5",
-        "text_color": "#1a1a1a",
-        "accent_color": "#121212"
+        "subheading": "Mix and match"
       }
     },
     "lookbook_gallery": {
@@ -185,33 +142,11 @@
       "blocks": {
         "look_1": {
           "type": "look",
-          "settings": {
-            "caption": "",
-            "product_1": "",
-            "x1": 30,
-            "y1": 40,
-            "product_2": "",
-            "x2": 60,
-            "y2": 55,
-            "product_3": "",
-            "x3": 45,
-            "y3": 70
-          }
+          "settings": {}
         },
         "look_2": {
           "type": "look",
-          "settings": {
-            "caption": "",
-            "product_1": "",
-            "x1": 30,
-            "y1": 40,
-            "product_2": "",
-            "x2": 60,
-            "y2": 55,
-            "product_3": "",
-            "x3": 45,
-            "y3": 70
-          }
+          "settings": {}
         }
       },
       "block_order": [
@@ -220,11 +155,7 @@
       ],
       "settings": {
         "heading": "Shop the looks",
-        "subheading": "Lookbook",
-        "full_width": false,
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "dot_color": "#ffffff"
+        "subheading": "Lookbook"
       }
     },
     "lookbook": {
@@ -233,7 +164,6 @@
         "hotspot_1": {
           "type": "hotspot",
           "settings": {
-            "product": "",
             "position_x": 36,
             "position_y": 64
           }
@@ -241,7 +171,6 @@
         "hotspot_2": {
           "type": "hotspot",
           "settings": {
-            "product": "",
             "position_x": 58,
             "position_y": 45
           }
@@ -252,37 +181,17 @@
         "hotspot_2"
       ],
       "settings": {
-        "heading": "Shop the look",
-        "heading_size": "medium",
-        "text": "<p>Tap the dots to shop every piece in this look.</p>",
-        "content_position": "top",
-        "full_width": false,
-        "color_dot": "#ffffff",
-        "color_card_background": "#ffffff",
-        "color_card_foreground": "#121212"
+        "heading": "Shop the look"
       }
     },
     "blog_posts": {
       "type": "blog-posts",
       "settings": {
-        "blog": "",
-        "posts_limit": 3,
-        "layout": "grid",
-        "columns": "3",
-        "card_style": "default",
         "heading": "Latest Articles",
         "subheading": "From our blog",
-        "description": "<p>Discover insights, tips, and stories from our community.</p>",
-        "show_image": true,
-        "show_category": true,
-        "show_author": true,
-        "show_date": true,
-        "date_position": "meta",
-        "show_excerpt": true,
-        "excerpt_words": 20,
-        "read_more_label": "Read More",
-        "show_view_all": true,
-        "view_all_label": "View All Articles"
+        "posts_limit": 3,
+        "layout": "grid",
+        "columns": "3"
       }
     },
     "faq": {
@@ -299,7 +208,7 @@
           "type": "item",
           "settings": {
             "question": "How long does shipping take?",
-            "answer": "<p>Standard shipping takes 3–7 business days.</p>"
+            "answer": "<p>Standard shipping takes 3\u20137 business days.</p>"
           }
         },
         "q3": {
@@ -317,13 +226,7 @@
       ],
       "settings": {
         "heading": "Frequently asked questions",
-        "subheading": "Help center",
-        "description": "",
-        "layout": "narrow",
-        "open_first": true,
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "accent_color": "#121212"
+        "subheading": "Help center"
       }
     },
     "testimonials": {
@@ -366,35 +269,73 @@
         "heading": "What Our Customers Say",
         "subheading": "Real reviews from real customers",
         "columns": "3",
-        "show_rating": true,
-        "show_view_all": false,
-        "view_all_text": "View All Testimonials",
-        "view_all_link": ""
+        "show_rating": true
       }
     },
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "subheading": "Subscribe Now",
         "heading": "Join Our Newsletter",
+        "subheading": "Subscribe Now",
         "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
-        "button_style": "primary",
-        "show_icon": true,
-        "style": "default",
-        "background_color": "#f8f9fa",
-        "section_text_color": "#1a1a2e",
-        "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
-        "show_social": true,
-        "social_label": "Follow us:"
+        "button_label": "Subscribe"
+      }
+    },
+    "shop_by_pet": {
+      "type": "shop-by-pet",
+      "blocks": {
+        "dog": {
+          "type": "pet",
+          "settings": {
+            "title": "Dogs",
+            "pet_icon": "dog",
+            "caption": "Food, toys & gear",
+            "button_label": "Shop dogs"
+          }
+        },
+        "cat": {
+          "type": "pet",
+          "settings": {
+            "title": "Cats",
+            "pet_icon": "cat",
+            "caption": "Treats & essentials",
+            "button_label": "Shop cats"
+          }
+        },
+        "bird": {
+          "type": "pet",
+          "settings": {
+            "title": "Birds",
+            "pet_icon": "bird",
+            "caption": "Cages & care",
+            "button_label": "Shop birds"
+          }
+        },
+        "small": {
+          "type": "pet",
+          "settings": {
+            "title": "Small pets",
+            "pet_icon": "rabbit",
+            "caption": "Habitat & feed",
+            "button_label": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "dog",
+        "cat",
+        "bird",
+        "small"
+      ],
+      "settings": {
+        "heading": "Shop by pet",
+        "subheading": "Find the right fit"
       }
     }
   },
   "order": [
     "hero",
+    "shop_by_pet",
     "text_with_icons",
     "featured_products",
     "outfit_builder",

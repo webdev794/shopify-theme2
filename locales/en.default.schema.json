@@ -3542,6 +3542,224 @@
         "name": "Lookbook Gallery",
         "category": "Image"
       }
+    },
+    "contact": {
+      "name": "Contact",
+      "settings": {
+        "eyebrow": {
+          "label": "Eyebrow"
+        },
+        "heading": {
+          "label": "Heading"
+        },
+        "text": {
+          "label": "Text"
+        },
+        "header__channels": {
+          "content": "Direct channels"
+        },
+        "show_channels": {
+          "label": "Show contact channels"
+        },
+        "email": {
+          "label": "Email"
+        },
+        "phone": {
+          "label": "Phone"
+        },
+        "hours": {
+          "label": "Hours"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "header__form": {
+          "content": "Form"
+        },
+        "show_phone": {
+          "label": "Show phone field"
+        },
+        "show_topic": {
+          "label": "Show topic dropdown"
+        },
+        "topics": {
+          "label": "Topic options",
+          "info": "Comma-separated list"
+        },
+        "button_label": {
+          "label": "Button label"
+        },
+        "success_heading": {
+          "label": "Success heading"
+        },
+        "success_text": {
+          "label": "Success message"
+        },
+        "privacy_note": {
+          "label": "Privacy note"
+        },
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background"
+        },
+        "card_background": {
+          "label": "Card background"
+        },
+        "text_color": {
+          "label": "Text"
+        },
+        "accent_color": {
+          "label": "Accent"
+        }
+      },
+      "presets": {
+        "name": "Contact"
+      }
+    },
+    "shop_by_pet": {
+      "name": "Shop by pet",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "text": {
+          "label": "Text"
+        },
+        "columns": {
+          "label": "Columns"
+        },
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background"
+        },
+        "text_color": {
+          "label": "Text"
+        },
+        "accent_color": {
+          "label": "Accent"
+        }
+      },
+      "blocks": {
+        "pet": {
+          "name": "Pet type",
+          "settings": {
+            "title": {
+              "label": "Title"
+            },
+            "caption": {
+              "label": "Caption"
+            },
+            "pet_icon": {
+              "label": "Icon",
+              "options__1": {
+                "label": "Dog"
+              },
+              "options__2": {
+                "label": "Cat"
+              },
+              "options__3": {
+                "label": "Bird"
+              },
+              "options__4": {
+                "label": "Fish"
+              },
+              "options__5": {
+                "label": "Rabbit"
+              },
+              "options__6": {
+                "label": "Reptile"
+              },
+              "options__7": {
+                "label": "Horse"
+              },
+              "options__8": {
+                "label": "Paw"
+              }
+            },
+            "image": {
+              "label": "Image"
+            },
+            "collection": {
+              "label": "Collection"
+            },
+            "link": {
+              "label": "Link",
+              "info": "Used if no collection is selected"
+            },
+            "button_label": {
+              "label": "Button label"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Shop by pet"
+      }
+    },
+    "pet_size_guide": {
+      "name": "Pet size guide",
+      "settings": {
+        "heading": {
+          "label": "Heading"
+        },
+        "subheading": {
+          "label": "Subheading"
+        },
+        "text": {
+          "label": "Text"
+        },
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background"
+        },
+        "text_color": {
+          "label": "Text"
+        },
+        "accent_color": {
+          "label": "Accent"
+        }
+      },
+      "blocks": {
+        "chart": {
+          "name": "Size chart",
+          "settings": {
+            "title": {
+              "label": "Tab title"
+            },
+            "howto": {
+              "label": "How to measure"
+            },
+            "col_size": {
+              "label": "Column 1 heading"
+            },
+            "col_measure": {
+              "label": "Column 2 heading"
+            },
+            "col_extra": {
+              "label": "Column 3 heading"
+            },
+            "rows": {
+              "label": "Rows",
+              "info": "One row per line. Separate columns with |"
+            },
+            "note": {
+              "label": "Note"
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Pet size guide"
+      }
     }
   }
 }

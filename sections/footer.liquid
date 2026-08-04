@@ -32,25 +32,27 @@
     </div>
 
     <!-- ── Navigation ── -->
-    <nav class="footer__nav" aria-label="Footer navigation">
-      <ul class="footer__menu" role="list">
-        {%- for link in section.settings.menu.links -%}
-          <li>
-            <a href="{{ link.url }}" class="footer__link" {% if link.current %}aria-current="page"{% endif %}>
-              {{ link.title | escape }}
-            </a>
-          </li>
-        {%- endfor -%}
-        
-        {%- if section.settings.show_contact_link -%}
-          <li>
-            <a href="{{ routes.page_url | append: '/pages/contact' }}" class="footer__link">
-              Contact
-            </a>
-          </li>
-        {%- endif -%}
-      </ul>
-    </nav>
+    {%- if section.settings.footer_menu != blank -%}
+      <nav class="footer__nav" aria-label="Footer navigation">
+        <ul class="footer__menu" role="list">
+          {%- for link in section.settings.footer_menu.links -%}
+            <li>
+              <a href="{{ link.url }}" class="footer__link" {% if link.current %}aria-current="page"{% endif %}>
+                {{ link.title | escape }}
+              </a>
+            </li>
+          {%- endfor -%}
+          
+          {%- if section.settings.show_contact_link -%}
+            <li>
+              <a href="{{ routes.page_url | append: '/pages/contact' }}" class="footer__link">
+                Contact
+              </a>
+            </li>
+          {%- endif -%}
+        </ul>
+      </nav>
+    {%- endif -%}
 
     <!-- ── Newsletter (optional) ── -->
     {%- if section.settings.show_newsletter -%}
@@ -187,6 +189,23 @@
     },
     {
       "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu",
+      "label": "Footer menu",
+      "info": "Select the menu to display in the footer",
+      "default": "footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_link",
+      "label": "Show contact link",
+      "default": true
+    },
+    {
+      "type": "header",
       "content": "Newsletter"
     },
     {
@@ -233,7 +252,7 @@
   "blocks": [
     {
       "type": "link_list",
-      "name": "Footer menu",
+      "name": "Additional menu",
       "settings": [
         {
           "type": "text",

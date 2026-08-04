@@ -24,10 +24,43 @@
   transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 
+/* ── Sticky Header ── */
 .header--sticky {
   position: sticky;
   top: 0;
-  box-shadow: var(--header-shadow);
+  backdrop-filter: saturate(140%) blur(10px);
+  background: color-mix(in srgb, var(--header-bg) 92%, transparent);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  z-index: 50;
+}
+
+.header--sticky.header--scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: color-mix(in srgb, var(--header-bg) 98%, transparent);
+}
+
+.header[data-hide-on-scroll] {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.header.header--hidden {
+  transform: translateY(-100%);
+}
+
+/* Animation for header when it becomes sticky */
+@keyframes headerSlideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.header--sticky:not(.header--hidden) {
+  animation: headerSlideDown 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .header.header--scrolled {

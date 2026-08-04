@@ -146,6 +146,12 @@
     },
     "header": {
       "name": "Header",
+      "open_menu": "Open menu",
+      "nav_label": "Main navigation",
+      "country_label": "Country/region",
+      "cart": "Cart",
+      "cart_count": "{{ count }} items in cart",
+      "update_localization": "Update",
       "settings": {
         "header__1": {
           "content": "Logo"

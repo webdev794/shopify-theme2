@@ -72,9 +72,12 @@
     const hideOnScroll = header.hasAttribute('data-hide-on-scroll');
     let lastY = window.scrollY;
     let ticking = false;
+    let isHidden = false;
 
     const onScroll = () => {
       const y = window.scrollY;
+      
+      // Toggle scrolled class for shadow effect
       header.classList.toggle('header--scrolled', y > 4);
 
       if (hideOnScroll) {
@@ -82,10 +85,19 @@
         const panelOpen = header.querySelector('details[open]');
         const focusWithin = header.contains(document.activeElement);
 
+        // Hide when scrolling down past 150px, no panels open, and no focus
         if (scrollingDown && y > 150 && !panelOpen && !focusWithin) {
-          header.classList.add('header--hidden');
-        } else if (!scrollingDown || y <= 150) {
-          header.classList.remove('header--hidden');
+          if (!isHidden) {
+            header.classList.add('header--hidden');
+            isHidden = true;
+          }
+        } 
+        // Show when scrolling up or at top
+        else if (!scrollingDown || y <= 150) {
+          if (isHidden) {
+            header.classList.remove('header--hidden');
+            isHidden = false;
+          }
         }
       }
 
@@ -103,6 +115,8 @@
       },
       { passive: true }
     );
+    
+    // Initial check on page load
     onScroll();
   }
 

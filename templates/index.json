@@ -11,7 +11,19 @@
   "sections": {
     "hero": {
       "type": "hero",
-      "settings": {}
+      "settings": {
+        "height": "medium",
+        "full_width": true,
+        "content_position": "middle-center",
+        "content_alignment": "center",
+        "content_max_width": 650,
+        "stack_on_mobile": false,
+        "color_overlay": "#000000",
+        "overlay_opacity": 25,
+        "color_foreground": "#ffffff",
+        "show_content_box": false,
+        "color_box_background": "#00000080"
+      }
     },
     "text_with_icons": {
       "type": "text-with-icons",
@@ -21,7 +33,9 @@
           "settings": {
             "icon": "truck",
             "title": "Free Shipping",
-            "text": "<p>Enjoy free shipping on all orders over $50</p>"
+            "text": "<p>Enjoy free shipping on all orders over $50</p>",
+            "button_text": "",
+            "button_link": ""
           }
         },
         "item_2": {
@@ -29,7 +43,9 @@
           "settings": {
             "icon": "shield",
             "title": "Secure Payments",
-            "text": "<p>Your payment information is always secure</p>"
+            "text": "<p>Your payment information is always secure</p>",
+            "button_text": "",
+            "button_link": ""
           }
         },
         "item_3": {
@@ -37,7 +53,9 @@
           "settings": {
             "icon": "star",
             "title": "Premium Quality",
-            "text": "<p>Handpicked products from trusted brands</p>"
+            "text": "<p>Handpicked products from trusted brands</p>",
+            "button_text": "",
+            "button_link": ""
           }
         }
       },
@@ -90,12 +108,27 @@
       "settings": {
         "layout": "grid",
         "products_per_row": "4",
+        "gap": 20,
+        "border_radius": 8,
+        "full_width": false,
         "heading": "Featured Products",
         "subheading": "Our Best Sellers",
+        "description": "<p>Discover our most popular products loved by our customers</p>",
+        "show_view_all": true,
+        "view_all_text": "View All",
+        "view_all_link": "",
         "show_vendor": true,
         "show_rating": true,
         "show_quick_add": true,
-        "show_compare_at": true
+        "show_compare_at": true,
+        "image_size": "medium",
+        "card_style": "standard",
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "heading_color": "#1a1a1a",
+        "card_background": "#ffffff",
+        "card_shadow": "#0000001a",
+        "aria_label": "Featured products"
       }
     },
     "outfit_builder": {
@@ -104,25 +137,25 @@
         "product_1": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "active-wear"
           }
         },
         "product_2": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "blouse"
           }
         },
         "product_3": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "yellow-hat"
           }
         },
         "product_4": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "flower-sandals"
           }
         }
       },
@@ -134,7 +167,17 @@
       ],
       "settings": {
         "heading": "Build your outfit",
-        "subheading": "Mix and match"
+        "subheading": "Mix and match",
+        "max_items": 4,
+        "selection_label": "Your outfit",
+        "total_label": "Total",
+        "select_button_text": "Add to outfit",
+        "add_outfit_text": "Add outfit to cart",
+        "empty_text": "Select items to build your outfit",
+        "show_variant_selector": true,
+        "background_color": "#f8f7f5",
+        "text_color": "#1a1a1a",
+        "accent_color": "#121212"
       }
     },
     "lookbook_gallery": {
@@ -142,11 +185,33 @@
       "blocks": {
         "look_1": {
           "type": "look",
-          "settings": {}
+          "settings": {
+            "caption": "",
+            "product_1": "",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "",
+            "x3": 45,
+            "y3": 70
+          }
         },
         "look_2": {
           "type": "look",
-          "settings": {}
+          "settings": {
+            "caption": "",
+            "product_1": "",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "",
+            "x3": 45,
+            "y3": 70
+          }
         }
       },
       "block_order": [
@@ -155,7 +220,11 @@
       ],
       "settings": {
         "heading": "Shop the looks",
-        "subheading": "Lookbook"
+        "subheading": "Lookbook",
+        "full_width": false,
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "dot_color": "#ffffff"
       }
     },
     "lookbook": {
@@ -164,6 +233,7 @@
         "hotspot_1": {
           "type": "hotspot",
           "settings": {
+            "product": "",
             "position_x": 36,
             "position_y": 64
           }
@@ -171,6 +241,7 @@
         "hotspot_2": {
           "type": "hotspot",
           "settings": {
+            "product": "",
             "position_x": 58,
             "position_y": 45
           }
@@ -181,17 +252,37 @@
         "hotspot_2"
       ],
       "settings": {
-        "heading": "Shop the look"
+        "heading": "Shop the look",
+        "heading_size": "medium",
+        "text": "<p>Tap the dots to shop every piece in this look.</p>",
+        "content_position": "top",
+        "full_width": false,
+        "color_dot": "#ffffff",
+        "color_card_background": "#ffffff",
+        "color_card_foreground": "#121212"
       }
     },
     "blog_posts": {
       "type": "blog-posts",
       "settings": {
-        "heading": "Latest Articles",
-        "subheading": "From our blog",
+        "blog": "",
         "posts_limit": 3,
         "layout": "grid",
-        "columns": "3"
+        "columns": "3",
+        "card_style": "default",
+        "heading": "Latest Articles",
+        "subheading": "From our blog",
+        "description": "<p>Discover insights, tips, and stories from our community.</p>",
+        "show_image": true,
+        "show_category": true,
+        "show_author": true,
+        "show_date": true,
+        "date_position": "meta",
+        "show_excerpt": true,
+        "excerpt_words": 20,
+        "read_more_label": "Read More",
+        "show_view_all": true,
+        "view_all_label": "View All Articles"
       }
     },
     "faq": {
@@ -208,7 +299,7 @@
           "type": "item",
           "settings": {
             "question": "How long does shipping take?",
-            "answer": "<p>Standard shipping takes 3\u20137 business days.</p>"
+            "answer": "<p>Standard shipping takes 3–7 business days.</p>"
           }
         },
         "q3": {
@@ -226,7 +317,13 @@
       ],
       "settings": {
         "heading": "Frequently asked questions",
-        "subheading": "Help center"
+        "subheading": "Help center",
+        "description": "",
+        "layout": "narrow",
+        "open_first": true,
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "accent_color": "#121212"
       }
     },
     "testimonials": {
@@ -269,16 +366,30 @@
         "heading": "What Our Customers Say",
         "subheading": "Real reviews from real customers",
         "columns": "3",
-        "show_rating": true
+        "show_rating": true,
+        "show_view_all": false,
+        "view_all_text": "View All Testimonials",
+        "view_all_link": ""
       }
     },
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "heading": "Join Our Newsletter",
         "subheading": "Subscribe Now",
+        "heading": "Join Our Newsletter",
         "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "button_label": "Subscribe"
+        "placeholder": "Enter your email",
+        "button_label": "Subscribe",
+        "button_style": "primary",
+        "show_icon": true,
+        "style": "default",
+        "background_color": "#f8f9fa",
+        "section_text_color": "#1a1a2e",
+        "show_note": true,
+        "note_text": "No spam. Unsubscribe anytime.",
+        "success_message": "Thanks for subscribing!",
+        "show_social": true,
+        "social_label": "Follow us:"
       }
     }
   },

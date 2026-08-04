@@ -21,7 +21,8 @@
   style="--header-background: {{ section.settings.color_background }}; 
          --header-foreground: {{ section.settings.color_foreground }}; 
          --header-hover: {{ section.settings.color_hover | default: section.settings.color_foreground }};
-         --header-logo-width: {{ section.settings.logo_width }}px;"
+         --header-logo-width: {{ section.settings.logo_width }}px;
+         --header-bg: {{ section.settings.color_background }};"
   data-predictive-search-url="{{ routes.predictive_search_url }}"
   data-search-url="{{ routes.search_url }}"
   {% if section.settings.open_on_hover %}data-hover-menus{% endif %}
@@ -246,7 +247,7 @@
                         {%- endfor -%}
                         </div>
 
-                        <!-- Optional Featured Content (sits beside the link grid) -->
+                        <!-- Optional Featured Content -->
                         {%- if section.settings.mega_show_featured -%}
                           <aside class="header__mega-featured">
                             {%- if section.settings.mega_featured_image != blank -%}
@@ -454,7 +455,10 @@
   "name": "t:sections.header.name",
   "class": "section-header",
   "settings": [
-    { "type": "header", "content": "t:sections.header.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__1.content"
+    },
     {
       "type": "image_picker",
       "id": "logo",
@@ -471,7 +475,10 @@
       "unit": "px",
       "default": 120
     },
-    { "type": "header", "content": "t:sections.header.settings.header__2.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__2.content"
+    },
     {
       "type": "link_list",
       "id": "menu",
@@ -490,7 +497,7 @@
       "type": "checkbox",
       "id": "enable_sticky_header",
       "label": "t:sections.header.settings.enable_sticky_header.label",
-      "default": false
+      "default": true
     },
     {
       "type": "checkbox",
@@ -499,7 +506,10 @@
       "default": false,
       "info": "t:sections.header.settings.sticky_hide_on_scroll.info"
     },
-    { "type": "header", "content": "t:sections.header.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__3.content"
+    },
     {
       "type": "checkbox",
       "id": "enable_mega_menu",
@@ -558,7 +568,10 @@
       "label": "t:sections.header.settings.mega_featured_button_label.label",
       "default": "Shop now"
     },
-    { "type": "header", "content": "t:sections.header.settings.header__4.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__4.content"
+    },
     {
       "type": "checkbox",
       "id": "show_search",
@@ -593,7 +606,10 @@
       "info": "t:sections.header.settings.show_language_selector.info",
       "default": true
     },
-    { "type": "header", "content": "t:sections.header.settings.header__5.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__5.content"
+    },
     {
       "type": "color",
       "id": "color_background",

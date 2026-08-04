@@ -14,11 +14,11 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo": "shopify://shop_images/recently-generated-suvara-shopify-theme-logo.png",
+        "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
         "logo_width": 120,
         "menu": "main-menu",
         "open_on_hover": true,
-        "enable_sticky_header": false,
+        "enable_sticky_header": true,
         "sticky_hide_on_scroll": false,
         "enable_mega_menu": false,
         "mega_menu_parents": "catalog",

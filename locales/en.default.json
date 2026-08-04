@@ -93,19 +93,165 @@
     "no_results": "No results found"
   },
   "sections": {
+    "footer": {
+      "name": "Footer",
+      "nav_label": "Footer navigation",
+      "contact": "Contact",
+      "settings": {
+        "header__brand": {
+          "content": "Brand"                                                                      
+        },
+        "logo": {
+          "label": "Logo"
+        },
+        "tagline": {
+          "label": "Tagline",
+          "info": "A short description of your brand"
+        },
+        "header__navigation": {
+          "content": "Navigation"
+        },
+        "menu": {
+          "label": "Main menu",
+          "info": "Select the menu to display in the footer"
+        },
+        "show_contact_link": {
+          "label": "Show contact link",
+          "info": "Adds a contact link to the navigation"
+        },
+        "header__newsletter": {
+          "content": "Newsletter"
+        },
+        "show_newsletter": {
+          "label": "Show newsletter signup"
+        },
+        "newsletter_heading": {
+          "label": "Heading",
+          "default": "Subscribe"
+        },
+        "header__social": {
+          "content": "Social Links"
+        },
+        "show_social": {
+          "label": "Show social media links",
+          "info": "Links are set in Theme Settings"
+        },
+        "header__payment": {
+          "content": "Payment"
+        },
+        "show_payment_icons": {
+          "label": "Show payment icons"
+        }                                                       
+      }
+    },
     "header": {
-      "nav_label": "Main menu",
+      "name": "Header",
       "open_menu": "Open menu",
-      "account": "Account",
-      "log_in": "Log in",
-      "cart": "Cart",
-      "cart_count": {
-        "one": "{{ count }} item in cart",
-        "other": "{{ count }} items in cart"
-      },
+      "nav_label": "Main navigation",
       "country_label": "Country/region",
-      "language_label": "Language",
-      "update_localization": "Update"
+      "cart": "Cart",
+      "cart_count": "{{ count }} items in cart",
+      "update_localization": "Update",
+      "settings": {
+        "header__1": {
+          "content": "Logo"
+        },
+        "logo": {
+          "label": "Logo",
+          "info": "Recommended size: 120px height"
+        },
+        "logo_width": {
+          "label": "Logo width"
+        },
+        "header__2": {
+          "content": "Navigation"
+        },
+        "menu": {
+          "label": "Menu",
+          "info": "Select the menu for main navigation"
+        },
+        "open_on_hover": {
+          "label": "Open dropdowns on hover",
+          "info": "For desktop users"
+        },
+        "enable_sticky_header": {
+          "label": "Enable sticky header"
+        },
+        "sticky_hide_on_scroll": {
+          "label": "Hide on scroll down",
+          "info": "Only works when sticky is enabled"
+        },
+        "header__3": {
+          "content": "Mega Menu"
+        },
+        "enable_mega_menu": {
+          "label": "Enable mega menu",
+          "info": "Replaces standard dropdown with mega menu for selected parent items"
+        },
+        "mega_menu_parents": {
+          "label": "Mega menu parents",
+          "info": "Enter menu item titles separated by commas (e.g., Catalog, About us)"
+        },
+        "mega_show_images": {
+          "label": "Show collection images",
+          "info": "Displays featured image for collection links"
+        },
+        "mega_show_featured": {
+          "label": "Show featured content",
+          "info": "Displays a featured section in the mega menu"
+        },
+        "mega_featured_image": {
+          "label": "Featured image",
+          "info": "Recommended size: 600x400px"
+        },
+        "mega_featured_title": {
+          "label": "Featured title"
+        },
+        "mega_featured_text": {
+          "label": "Featured text"
+        },
+        "mega_featured_link": {
+          "label": "Featured link"
+        },
+        "mega_featured_button_label": {
+          "label": "Button label"
+        },
+        "header__4": {
+          "content": "Utilities"
+        },
+        "show_search": {
+          "label": "Show search"
+        },
+        "show_account_link": {
+          "label": "Show account link",
+          "info": "Requires customer accounts to be enabled"
+        },
+        "customer_account_menu": {
+          "label": "Customer account menu",
+          "info": "Menu used for customer account links"
+        },
+        "show_country_selector": {
+          "label": "Show country selector",
+          "info": "When multiple countries are available"
+        },
+        "show_language_selector": {
+          "label": "Show language selector",
+          "info": "When multiple languages are available"
+        },
+        "header__5": {
+          "content": "Colors"
+        },
+        "color_background": {
+          "label": "Background"
+        },
+        "color_foreground": {
+          "label": "Text"
+        },
+        "color_hover": {
+          "label": "Hover",
+          "info": "Color for hover states"
+        }
+      }
     },
     "hero": {
       "pause_video": "Pause video",

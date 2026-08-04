@@ -1,5 +1,5 @@
 // ========== HEADER JAVASCRIPT ==========
-// This file contains all functionality for the header section
+// Premium header functionality with enhanced interactions
 
 (() => {
   const header = document.querySelector('.header');
@@ -62,7 +62,7 @@
       item.addEventListener('pointerleave', (event) => {
         if (!desktopHover.matches || event.pointerType === 'touch') return;
         clearTimeout(closeTimer);
-        closeTimer = setTimeout(() => details.removeAttribute('open'), 150);
+        closeTimer = setTimeout(() => details.removeAttribute('open'), 200);
       });
     });
   }
@@ -72,9 +72,12 @@
     const hideOnScroll = header.hasAttribute('data-hide-on-scroll');
     let lastY = window.scrollY;
     let ticking = false;
+    let isHidden = false;
 
     const onScroll = () => {
       const y = window.scrollY;
+      
+      // Toggle scrolled class for shadow effect
       header.classList.toggle('header--scrolled', y > 4);
 
       if (hideOnScroll) {
@@ -82,10 +85,19 @@
         const panelOpen = header.querySelector('details[open]');
         const focusWithin = header.contains(document.activeElement);
 
+        // Hide when scrolling down past 150px, no panels open, and no focus
         if (scrollingDown && y > 150 && !panelOpen && !focusWithin) {
-          header.classList.add('header--hidden');
-        } else if (!scrollingDown || y <= 150) {
-          header.classList.remove('header--hidden');
+          if (!isHidden) {
+            header.classList.add('header--hidden');
+            isHidden = true;
+          }
+        } 
+        // Show when scrolling up or at top
+        else if (!scrollingDown || y <= 150) {
+          if (isHidden) {
+            header.classList.remove('header--hidden');
+            isHidden = false;
+          }
         }
       }
 
@@ -103,6 +115,8 @@
       },
       { passive: true }
     );
+    
+    // Initial check on page load
     onScroll();
   }
 
@@ -129,7 +143,14 @@
     search.addEventListener('toggle', () => {
       if (search.open) {
         const searchInput = search.querySelector('[data-predictive-search-input]');
-        if (searchInput) searchInput.focus();
+        if (searchInput) {
+          searchInput.focus();
+          // Add subtle animation class
+          searchInput.parentElement.classList.add('header__search-form--active');
+        }
+      } else {
+        const searchForm = search.querySelector('.header__search-form');
+        if (searchForm) searchForm.classList.remove('header__search-form--active');
       }
     });
   }
@@ -144,32 +165,42 @@
   const renderResults = (products, query) => {
     if (!results) return;
     results.innerHTML = '';
+    results.classList.remove('header__search-results--empty');
 
     if (!products || !products.length) {
       const emptyLabel = input && input.form ? input.form.dataset.noResultsLabel : '';
       if (emptyLabel) {
-        const empty = document.createElement('span');
+        const empty = document.createElement('div');
         empty.className = 'header__search-empty';
-        empty.textContent = emptyLabel;
+        empty.innerHTML = `
+          <span class="header__search-empty-icon">🔍</span>
+          <p>${emptyLabel}</p>
+        `;
         results.appendChild(empty);
+        results.classList.add('header__search-results--empty');
       }
       return;
     }
 
     const list = document.createElement('ul');
-    list.className = 'list-unstyled';
+    list.className = 'header__search-list list-unstyled';
 
-    products.forEach((product) => {
+    products.forEach((product, index) => {
       const item = document.createElement('li');
+      item.className = 'header__search-item';
+      
       const link = document.createElement('a');
       link.className = 'header__search-result-link';
       link.href = product.url;
+      
+      // Add subtle delay for staggered animation
+      link.style.animationDelay = (index * 50) + 'ms';
 
       if (product.featured_image && product.featured_image.url) {
         const image = document.createElement('img');
         image.className = 'header__search-result-image';
         const separator = product.featured_image.url.includes('?') ? '&' : '?';
-        image.src = product.featured_image.url + separator + 'width=80';
+        image.src = product.featured_image.url + separator + 'width=80&height=80&crop=center';
         image.alt = product.featured_image.alt || product.title || '';
         image.width = 40;
         image.height = 40;
@@ -177,23 +208,45 @@
         link.appendChild(image);
       }
 
+      const info = document.createElement('span');
+      info.className = 'header__search-result-info';
+      
       const title = document.createElement('span');
+      title.className = 'header__search-result-title';
       title.textContent = product.title || '';
-      link.appendChild(title);
+      
+      if (product.price) {
+        const price = document.createElement('span');
+        price.className = 'header__search-result-price';
+        price.textContent = product.price;
+        info.appendChild(title);
+        info.appendChild(price);
+      } else {
+        info.appendChild(title);
+      }
 
+      link.appendChild(info);
       item.appendChild(link);
       list.appendChild(item);
     });
 
     const viewAllItem = document.createElement('li');
+    viewAllItem.className = 'header__search-item header__search-item--view-all';
     const viewAll = document.createElement('a');
     viewAll.className = 'header__search-view-all';
     viewAll.href = (header.dataset.searchUrl || '/search') + '?q=' + encodeURIComponent(query);
-    viewAll.textContent = input ? input.form.dataset.viewAllLabel || 'View all results' : 'View all results';
+    viewAll.textContent = input ? input.form.dataset.viewAllLabel || 'View all results →' : 'View all results →';
     viewAllItem.appendChild(viewAll);
     list.appendChild(viewAllItem);
 
     results.appendChild(list);
+    
+    // Trigger animation
+    requestAnimationFrame(() => {
+      results.querySelectorAll('.header__search-item').forEach((item, i) => {
+        item.style.animation = `searchItemFadeIn 0.4s ease ${i * 0.05}s forwards`;
+      });
+    });
   };
 
   if (input && results && predictiveUrl) {
@@ -203,8 +256,11 @@
 
       if (query.length < 2) {
         results.innerHTML = '';
+        results.classList.remove('header__search-results--loading');
         return;
       }
+
+      results.classList.add('header__search-results--loading');
 
       debounceTimer = setTimeout(() => {
         if (abortController) abortController.abort();
@@ -213,7 +269,7 @@
         const params = new URLSearchParams({
           q: query,
           'resources[type]': 'product',
-          'resources[limit]': '5',
+          'resources[limit]': '6',
           'resources[options][unavailable_products]': 'last',
         });
 
@@ -225,10 +281,14 @@
           .then((data) => {
             const products = (data.resources && data.resources.results && data.resources.results.products) || [];
             renderResults(products, query);
+            results.classList.remove('header__search-results--loading');
           })
           .catch((error) => {
             if (error.name !== 'AbortError') {
-              if (results) results.innerHTML = '';
+              if (results) {
+                results.innerHTML = '';
+                results.classList.remove('header__search-results--loading');
+              }
             }
           });
       }, 300);
@@ -243,31 +303,35 @@
     });
   });
 
-  /* --- Cart count sync ---
-     The badge is server-rendered, so without JS it only changes on page
-     load. This block keeps it live for every way the cart can change:
-     1. `cart:updated` events dispatched by theme code (e.g. quick add)
-     2. ANY AJAX call to the cart endpoints — including from third-party
-        apps — by observing fetch/XHR and re-reading /cart.js
-     3. Back/forward-cache restores, which otherwise show a stale count */
+  /* --- Cart count sync with enhanced animation --- */
   const badge = header.querySelector('[data-cart-count]');
   const badgeText = header.querySelector('[data-cart-count-text]');
 
   const renderCartCount = (count) => {
     if (typeof count !== 'number') return;
     if (badge) {
+      const previousCount = parseInt(badge.textContent, 10) || 0;
       badge.textContent = count;
       badge.classList.toggle('hidden', count === 0);
-      if (count > 0) {
+      
+      // Enhanced bump animation
+      if (count > 0 && count !== previousCount) {
         badge.classList.remove('header__cart-count--bump');
-        // Force reflow so the animation can replay on consecutive updates
+        // Force reflow
         void badge.offsetWidth;
         badge.classList.add('header__cart-count--bump');
+        
+        // Show count change with color
+        if (count > previousCount) {
+          badge.style.color = '#4CAF50';
+          setTimeout(() => { badge.style.color = ''; }, 600);
+        } else if (count < previousCount) {
+          badge.style.color = '#ff6b6b';
+          setTimeout(() => { badge.style.color = ''; }, 600);
+        }
       }
     }
     if (badgeText) {
-      // Optional data-template="[count] items in cart" wins; otherwise
-      // swap the number inside the server-rendered text
       if (badgeText.dataset.template) {
         badgeText.textContent = badgeText.dataset.template.replace('[count]', count);
       } else {
@@ -289,7 +353,6 @@
   let cartSyncTimer = null;
   const syncCartFromServer = () => {
     clearTimeout(cartSyncTimer);
-    // Small debounce: batched cart operations trigger one refresh
     cartSyncTimer = setTimeout(() => {
       fetch('/cart.js', { headers: { Accept: 'application/json' } })
         .then((response) => (response.ok ? response.json() : null))
@@ -311,7 +374,7 @@
     }
   };
 
-  // Observe fetch-based cart calls (theme code and most apps)
+  // Observe fetch-based cart calls
   const originalFetch = window.fetch;
   window.fetch = function (...args) {
     const url = typeof args[0] === 'string' ? args[0] : args[0] && args[0].url;
@@ -322,7 +385,7 @@
     return result;
   };
 
-  // Observe XMLHttpRequest-based cart calls (older apps)
+  // Observe XMLHttpRequest-based cart calls
   const originalXhrOpen = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (method, url, ...rest) {
     if (isCartMutation(url)) {
@@ -331,8 +394,20 @@
     return originalXhrOpen.call(this, method, url, ...rest);
   };
 
-  // Pages restored from the back/forward cache can carry a stale badge
+  // Pages restored from bfcache
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) syncCartFromServer();
   });
+
+  /* --- Add subtle scroll indicator for mobile menu --- */
+  const mobileNav = header.querySelector('.header__mobile-nav');
+  if (mobileNav) {
+    const checkScroll = () => {
+      const isScrolled = mobileNav.scrollTop > 10;
+      mobileNav.classList.toggle('header__mobile-nav--scrolled', isScrolled);
+    };
+    mobileNav.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  }
+
 })();

@@ -1,51 +1,18 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "type": "footer",
-  "name": "t:general.footer",
+  "name": "Footer",
   "sections": {
     "footer": {
       "type": "footer",
-      "blocks": {
-        "menu-1": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Links",
-            "menu": "footer"
-          }
-        },
-        "menu-2": {
-          "type": "link_list",
-          "settings": {
-            "heading": "Pages",
-            "menu": "main-menu"
-          }
-        }
-      },
-      "block_order": [
-        "menu-1",
-        "menu-2"
-      ],
       "settings": {
-        "logo": "shopify://shop_images/recently-generated-suvara-shopify-theme-logo.png",
-        "tagline": "Quality products, thoughtfully made.",
+        "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
+        "tagline": "Curating exceptional pieces for the discerning few.",
+        "menu": "footer",
+        "show_contact_link": true,
         "show_newsletter": true,
-        "newsletter_heading": "Stay in the loop",
-        "newsletter_text": "New arrivals, exclusive offers, and more — straight to your inbox.",
+        "newsletter_heading": "Subscribe",
         "show_social": true,
-        "social_instagram": "",
-        "social_facebook": "",
-        "social_tiktok": "",
-        "social_youtube": "",
-        "social_x": "",
-        "show_payment_icons": false
+        "show_payment_icons": true
       }
     }
   },

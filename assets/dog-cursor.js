@@ -195,24 +195,20 @@
       }
       behindX += (desiredBehindX - behindX) * 0.04;
       behindY += (desiredBehindY - behindY) * 0.08;
+      var targetX = mouseX + behindX;
+      var targetY = mouseY + behindY;
     } else {
-      // Idle / eat: stand slightly to the LEFT of the toy by default,
-      // so when facing right the HEAD is toward the cursor.
-      // If dog is already on the right, stand to the RIGHT and face left.
-      var preferLeft = dogX <= mouseX;
-      desiredBehindX = preferLeft ? -40 : 40;
-      desiredBehindY = mode === 'sit' ? 22 : 12;
-      behindX += (desiredBehindX - behindX) * 0.1;
-      behindY += (desiredBehindY - behindY) * 0.12;
-    }
-
-    var targetX = mouseX + behindX;
-    var targetY = mouseY + behindY;
-
-    // Pull closer when interacting with the toy
-    if (mode === 'bite' || mode === 'sniff') {
-      targetX = mouseX + behindX * 0.55;
-      targetY = mouseY + 8;
+      // Idle / eat: place BODY so the SNOUT (not stomach) meets the cursor.
+      // Frame data: head/snout is around +68..+74 when facing right.
+      var snoutReach = 68 * DOG_SCALE; // distance from body origin to mouth
+      var preferLeft = dogX <= mouseX + 10;
+      var dirSide = preferLeft ? 1 : -1; // 1 = dog on left, face right toward toy
+      // Body sits snoutReach away from the toy, on the correct side
+      var targetX = mouseX - dirSide * snoutReach;
+      var targetY = mouseY + (mode === 'sit' ? 18 : 6);
+      // Keep behindX in sync for facing logic
+      behindX += ((preferLeft ? -snoutReach : snoutReach) - behindX) * 0.15;
+      behindY += ((mode === 'sit' ? 18 : 6) - behindY) * 0.12;
     }
 
     var dx = targetX - dogX;

@@ -115,7 +115,7 @@
       ],
       "settings": {
         "heading": "Find their world.",
-        "subheading": "",
+        "subheading": "PET WORLDS",
         "text": "<p><em>Every companion has their own way of living, playing and resting.</em></p>",
         "columns": 4,
         "background_color": "#ffffff",
@@ -163,7 +163,7 @@
         "gap": 20,
         "border_radius": 8,
         "full_width": false,
-        "heading": "Featured Products",
+        "heading": "PRODUCTS",
         "subheading": "",
         "description": "<p><em>Everything they need, for every day.</em></p>",
         "show_view_all": true,
@@ -271,8 +271,8 @@
         "look_2"
       ],
       "settings": {
-        "heading": "Shop the looks",
-        "subheading": "Lookbook",
+        "heading": "Lookbook",
+        "subheading": "Shop the looks",
         "full_width": false,
         "background_color": "#ffffff",
         "text_color": "#1a1a1a",
@@ -304,9 +304,9 @@
         "hotspot_2"
       ],
       "settings": {
-        "heading": "Shop the look",
+        "heading": "<strong>SHOPPABLE LOOKBOOK</strong>",
         "heading_size": "medium",
-        "text": "<p>Tap the dots to shop every piece in this look.</p>",
+        "text": "<p><em>Take the whole look home.</em></p>",
         "content_position": "top",
         "full_width": false,
         "color_dot": "#ffffff",
@@ -354,8 +354,8 @@
         "item_3"
       ],
       "settings": {
-        "heading": "Why Choose Us",
-        "subheading": "Discover what makes us different",
+        "heading": "CARE / STORIES",
+        "subheading": "Live better together.",
         "columns": "3",
         "alignment": "center"
       }
@@ -368,8 +368,8 @@
         "layout": "grid",
         "columns": "3",
         "card_style": "default",
-        "heading": "Latest Articles",
-        "subheading": "From our blog",
+        "heading": "CARE / STORIES",
+        "subheading": "Live better together.",
         "description": "<p>Discover insights, tips, and stories from our community.</p>",
         "show_image": true,
         "show_category": true,
@@ -461,8 +461,8 @@
         "t3"
       ],
       "settings": {
-        "heading": "What Our Customers Say",
-        "subheading": "Real reviews from real customers",
+        "heading": "TRUST / COMMUNITY",
+        "subheading": "Loved by people who get it.",
         "columns": "3",
         "show_rating": true,
         "show_view_all": false,
@@ -473,8 +473,8 @@
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "subheading": "Subscribe Now",
-        "heading": "Join Our Newsletter",
+        "subheading": "Stay close.",
+        "heading": "NEWSLETTER",
         "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
         "placeholder": "Enter your email",
         "button_label": "Subscribe",

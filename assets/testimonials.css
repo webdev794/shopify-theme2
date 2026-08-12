@@ -1,6 +1,6 @@
 .testimonials {
   padding: 60px 0;
-  background-color: var(--t-bg, #ffffff);
+  background-color: var(--t-bg, var(--petlio-paper, #f7f3eb));
 }
 
 .testimonials__header {
@@ -12,12 +12,12 @@
   font-size: 32px;
   font-weight: 700;
   margin: 0 0 12px;
-  color: var(--t-heading-color, #1a1a1a);
+  color: var(--t-heading-color, var(--petlio-ink, #273028));
 }
 
 .testimonials__subheading {
   font-size: 16px;
-  color: var(--t-subheading-color, #666666);
+  color: var(--t-subheading-color, var(--petlio-muted, #69736a));
   margin: 0;
 }
 
@@ -59,7 +59,8 @@
   flex-direction: column;
   height: 100%;
   padding: 30px;
-  background: var(--t-card-bg, #f8f8f8);
+  background: var(--t-card-bg, var(--petlio-paper-light, #faf7f0));
+  border: 1px solid var(--petlio-line, rgba(39,48,40,0.12));
   border-radius: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }

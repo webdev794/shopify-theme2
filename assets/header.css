@@ -135,14 +135,15 @@
 
 .header__shop-name {
   font-family: var(--font-secondary--family, 'Georgia', serif);
-  font-weight: 400;
-  font-size: 1.4rem;
-  letter-spacing: 0.15em;
+  font-weight: 500;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, var(--header-fg) 60%, var(--header-accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--header-fg);
+  /* Solid ink color for readability — no gradient fill */
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  background-clip: border-box;
 }
 
 .header__logo-divider {

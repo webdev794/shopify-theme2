@@ -9,7 +9,7 @@
 
 .blog-posts {
   padding: 4rem 0;
-  background: var(--color-background, #ffffff);
+  background: var(--bp-bg, var(--petlio-paper, var(--color-background, #f7f3eb)));
 }
 
 .blog-posts__container {
@@ -109,7 +109,7 @@
    ============================================ */
 
 .blog-posts__post {
-  background: var(--color-background, #ffffff);
+  background: var(--bp-bg, var(--petlio-paper, var(--color-background, #f7f3eb)));
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;

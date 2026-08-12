@@ -52,7 +52,10 @@
     "continue_shopping": "Continue shopping",
     "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
     "taxes_included": "Tax included.",
-    "recalculated_note": "Totals update instantly as an estimate. Discounts that depend on quantity (like tiered offers) are recalculated exactly when you click \"Update cart.\""
+    "recalculated_note": "Totals update instantly as an estimate. Discounts that depend on quantity (like tiered offers) are recalculated exactly when you click \"Update cart.\"",
+    "drawer_title": "Your cart",
+    "view_cart": "View cart",
+    "taxes_and_shipping": "Taxes and shipping calculated at checkout"
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",
@@ -99,7 +102,7 @@
       "contact": "Contact",
       "settings": {
         "header__brand": {
-          "content": "Brand"                                                                      
+          "content": "Brand"
         },
         "logo": {
           "label": "Logo"
@@ -141,7 +144,7 @@
         },
         "show_payment_icons": {
           "label": "Show payment icons"
-        }                                                       
+        }
       }
     },
     "header": {
@@ -498,5 +501,8 @@
     "price_from": "From",
     "price_to": "To",
     "apply": "Apply filters"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content"
   }
 }

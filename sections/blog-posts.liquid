@@ -8,6 +8,10 @@
   data-section-id="{{ section.id }}"
   data-layout="{{ section.settings.layout }}"
   data-columns="{{ section.settings.columns }}"
+  style="
+    --bp-bg: {{ section.settings.background_color | default: '#f7f3eb' }};
+    --color-background: {{ section.settings.background_color | default: '#f7f3eb' }};
+  "
 >
   <div class="blog-posts__container">
     
@@ -300,6 +304,16 @@
       "id": "view_all_label",
       "label": "t:sections.blog_posts.settings.view_all_label.label",
       "default": "View All Articles"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f7f3eb"
     }
   ],
   "presets": [

@@ -4,8 +4,7 @@
  * - Cursor = product SVG (bone / ball / food bowl)
  * - Exactly ONE dog (black dots) runs smoothly behind the cursor
  * - When cursor stops: sniff → sit → bite/chew/eat
- *
- * Fix: no left/right target jump (that was splitting the dog into two).
+ * - Idle/eat: dog faces TOWARD the cursor (head at the toy, not tail)
  */
 (function () {
   'use strict';
@@ -13,15 +12,12 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (window.matchMedia('(pointer: coarse)').matches) return;
 
-  const TOYS = ['bone', 'ball', 'plate'];
-  const TOY_CYCLE_MS = 14000;
-  const IDLE_AFTER_MS = 500;
-  const DOG_SCALE = 1.12;
+  var TOYS = ['bone', 'ball', 'plate'];
+  var TOY_CYCLE_MS = 14000;
+  var IDLE_AFTER_MS = 500;
+  var DOG_SCALE = 1.12;
 
-  // ---------------------------------------------------------------------------
-  // Product SVGs
-  // ---------------------------------------------------------------------------
-  const TOY_SVG = {
+  var TOY_SVG = {
     bone:
       '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
       '<path fill="#E8D5B5" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round" d="M14 28c-4-4-10-3-12 1s1 9 5 10c2.5.6 5-.2 7-2l6 6c-2 2-2.5 4.5-2 7 1 4 6 7 10 5s5-8 1-12l6-6c2 2 4.5 2.5 7 2 4-1 7-6 5-10s-8-4-12 0l-6 6-6-6c-2-2-4.5-2.5-7-2z"/>' +
@@ -48,75 +44,67 @@
       '</svg>'
   };
 
-  // ---------------------------------------------------------------------------
-  // Dog silhouettes – single set of points per frame (no trail, no second dog)
-  // ---------------------------------------------------------------------------
-  const RUN = [
+  // Dog faces +X (to the right) in all frame data. Head is at high X, tail at low X.
+  var RUN = [
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-6],[-14,-12],[-18,-8],[42,8],[44,16],[46,24],[50,8],[52,14],[54,20],[10,6],[8,14],[6,22],[18,6],[20,14],[22,22]],
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-4],[-12,-10],[-16,-6],[42,6],[40,12],[38,18],[50,8],[54,12],[58,16],[10,8],[14,14],[18,18],[18,4],[16,10],[12,16]],
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-6,-8],[-12,-14],[-16,-10],[44,6],[48,14],[52,22],[48,8],[46,16],[44,24],[8,4],[4,10],[0,16],[20,8],[24,14],[28,20]],
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-10,-5],[-15,-11],[-18,-7],[40,8],[38,14],[36,20],[52,6],[56,12],[60,18],[12,6],[16,12],[20,18],[16,6],[12,12],[8,18]]
   ];
 
-  const SIT = [
+  var SIT = [
     [[0,2],[8,0],[16,0],[24,1],[32,1],[40,0],[48,-2],[54,-6],[60,-10],[64,-8],[66,-4],[62,0],[56,-14],[52,-16],[60,-15],[70,-6],[72,-4],[-6,-2],[-10,-6],[-12,-2],[42,8],[44,14],[46,16],[50,6],[52,10],[10,10],[8,16],[6,18],[18,10],[20,16],[22,18]]
   ];
 
-  const SNIFF = [
+  var SNIFF = [
     [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-2],[64,-3],[70,-2],[74,0],[70,3],[58,-8],[54,-10],[62,-9],[78,0],[80,2],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
     [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-3],[64,-4],[70,-3],[74,-1],[70,2],[58,-9],[54,-11],[62,-10],[78,-1],[80,1],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]]
   ];
 
-  const BITE = [
+  var BITE = [
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-2],[60,-4],[64,-2],[66,2],[62,4],[56,-8],[52,-10],[60,-9],[70,0],[72,2],[-8,-4],[-12,-8],[-16,-5],[42,10],[44,16],[46,20],[50,10],[52,14],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,0],[58,-1],[62,1],[64,5],[60,7],[54,-5],[50,-7],[58,-6],[68,4],[70,6],[-8,-3],[-11,-6],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]],
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-3],[60,-5],[64,-2],[66,3],[62,5],[56,-8],[52,-10],[60,-9],[70,1],[72,3],[-8,-4],[-12,-8],[-15,-5],[42,10],[44,15],[46,19],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]],
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,-1],[58,-2],[62,0],[64,4],[60,6],[54,-6],[50,-8],[58,-7],[68,3],[70,5],[-8,-3],[-11,-7],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]]
   ];
 
-  // Fixed densify (seeded-style, no extra visual noise that looks like a second dog)
   function densify(frame) {
-    const out = [];
-    for (let i = 0; i < frame.length; i++) {
-      const x = frame[i][0];
-      const y = frame[i][1];
+    var out = [];
+    for (var i = 0; i < frame.length; i++) {
+      var x = frame[i][0];
+      var y = frame[i][1];
       out.push([x, y]);
-      // deterministic-ish extras from index (stable shape, not random scatter)
-      const a = (i * 2.4) % (Math.PI * 2);
+      var a = (i * 2.4) % (Math.PI * 2);
       out.push([x + Math.cos(a) * 1.6, y + Math.sin(a) * 1.6]);
     }
     return out;
   }
 
-  const FRAMES = {
+  var FRAMES = {
     run: RUN.map(densify),
     sit: SIT.map(densify),
     sniff: SNIFF.map(densify),
     bite: BITE.map(densify)
   };
 
-  // ---------------------------------------------------------------------------
-  // State – ONE dog, smooth lag (no side flip)
-  // ---------------------------------------------------------------------------
-  let canvas, ctx, toyEl;
-  let mouseX = -9999, mouseY = -9999;
-  let dogX = 0, dogY = 0;
-  let velX = 0, velY = 0;
+  var canvas, ctx, toyEl;
+  var mouseX = -9999, mouseY = -9999;
+  var dogX = 0, dogY = 0;
+  var velX = 0, velY = 0;
 
-  // Smooth “behind” offset – never jumps from left to right
-  let behindX = -48;
-  let behindY = 18;
-  let facing = 1; // 1 = right, -1 = left (smoothed)
+  var behindX = -48;
+  var behindY = 18;
+  var facing = 1; // 1 = head toward +X (right)
 
-  let mode = 'run';
-  let frameIndex = 0;
-  let frameTimer = 0;
-  let lastMoveTime = 0;
-  let lastTime = 0;
-  let idleTimer = 0;
+  var mode = 'run';
+  var frameIndex = 0;
+  var frameTimer = 0;
+  var lastMoveTime = 0;
+  var lastTime = 0;
+  var idleTimer = 0;
 
-  let toyIndex = 0;
-  let lastToySwitch = 0;
+  var toyIndex = 0;
+  var lastToySwitch = 0;
 
   function init() {
     canvas = document.createElement('canvas');
@@ -186,7 +174,6 @@
 
     if (now - lastToySwitch > TOY_CYCLE_MS) switchToy();
 
-    // Product SVG sticks to pointer
     toyEl.style.transform = 'translate(' + mouseX + 'px,' + mouseY + 'px)';
 
     var still = (now - lastMoveTime) > IDLE_AFTER_MS;
@@ -197,31 +184,40 @@
       frameTimer = 0;
     }
 
-    // --- Smooth behind offset (NO hard left/right flip) ---
-    // Dog always lags a bit behind the mouse along recent motion
+    // --- Position target ---
     var desiredBehindX = -48;
     var desiredBehindY = mode === 'sit' ? 26 : 16;
 
-    // If moving clearly left/right, ease the horizontal lag to the opposite side
-    if (Math.abs(velX) > 0.4) {
-      desiredBehindX = velX > 0 ? -48 : 48;
+    if (mode === 'run') {
+      // While running, lag opposite to movement (smooth, no snap)
+      if (Math.abs(velX) > 0.4) {
+        desiredBehindX = velX > 0 ? -48 : 48;
+      }
+      behindX += (desiredBehindX - behindX) * 0.04;
+      behindY += (desiredBehindY - behindY) * 0.08;
+    } else {
+      // Idle / eat: stand slightly to the LEFT of the toy by default,
+      // so when facing right the HEAD is toward the cursor.
+      // If dog is already on the right, stand to the RIGHT and face left.
+      var preferLeft = dogX <= mouseX;
+      desiredBehindX = preferLeft ? -40 : 40;
+      desiredBehindY = mode === 'sit' ? 22 : 12;
+      behindX += (desiredBehindX - behindX) * 0.1;
+      behindY += (desiredBehindY - behindY) * 0.12;
     }
-    // Ease offset so it never snaps (this was the split bug)
-    behindX += (desiredBehindX - behindX) * 0.04;
-    behindY += (desiredBehindY - behindY) * 0.08;
 
     var targetX = mouseX + behindX;
     var targetY = mouseY + behindY;
 
-    // When biting/sniffing, pull closer to the toy
+    // Pull closer when interacting with the toy
     if (mode === 'bite' || mode === 'sniff') {
-      targetX = mouseX + behindX * 0.45;
-      targetY = mouseY + 10;
+      targetX = mouseX + behindX * 0.55;
+      targetY = mouseY + 8;
     }
 
     var dx = targetX - dogX;
     var dy = targetY - dogY;
-    var stiff = (mode === 'bite' || mode === 'sniff') ? 0.11 : 0.06;
+    var stiff = (mode === 'bite' || mode === 'sniff') ? 0.12 : 0.06;
     var damp = 0.78;
 
     velX += dx * stiff;
@@ -231,10 +227,17 @@
     dogX += velX;
     dogY += velY;
 
-    // Smooth facing – only flip after sustained direction (avoids flicker / split look)
-    if (velX > 0.35) facing += (1 - facing) * 0.12;
-    else if (velX < -0.35) facing += (-1 - facing) * 0.12;
-    // snap near ends for clean drawing
+    // --- Facing ---
+    // Run: face direction of travel
+    // Idle/eat: ALWAYS face toward the cursor so head touches the product, not the tail
+    if (mode === 'run') {
+      if (velX > 0.35) facing += (1 - facing) * 0.12;
+      else if (velX < -0.35) facing += (-1 - facing) * 0.12;
+    } else {
+      // Face the toy: if dog is left of cursor → face right (1); if right → face left (-1)
+      var want = dogX < mouseX ? 1 : -1;
+      facing += (want - facing) * 0.2;
+    }
     if (facing > 0.85) facing = 1;
     if (facing < -0.85) facing = -1;
 
@@ -284,12 +287,10 @@
   }
 
   function drawDog() {
-    // Draw exactly one dog – one frame, one set of points
     var set = FRAMES[mode] || FRAMES.run;
     var pts = set[frameIndex % set.length] || set[0];
     var dir = facing >= 0 ? 1 : -1;
 
-    // Shadow
     ctx.beginPath();
     ctx.ellipse(dogX, dogY + 20, 26, 7, 0, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(0,0,0,0.1)';
@@ -301,12 +302,13 @@
       drawDot(x, y, 1.55 + (i % 3) * 0.3, 0.92);
     }
 
+    // Crumbs near the snout (toward the cursor)
     if (mode === 'bite') {
-      var sx = dogX + dir * 50 * DOG_SCALE * 0.75;
-      var sy = dogY + 3;
+      var sx = dogX + dir * 52 * DOG_SCALE * 0.78;
+      var sy = dogY + 2;
       for (var j = 0; j < 4; j++) {
         drawDot(
-          sx + (Math.random() - 0.5) * 12,
+          sx + (Math.random() - 0.5) * 10,
           sy + (Math.random() - 0.5) * 8,
           1 + Math.random(),
           0.28

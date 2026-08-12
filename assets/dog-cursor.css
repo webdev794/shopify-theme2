@@ -1,10 +1,7 @@
-/**
- * PETLIO — UNIVERSAL DOG CURSOR
- */
-
-/* ==========================================================
-   DOG CANVAS
-   ========================================================== */
+/* ==========================================================================
+   PETLIO — DOG CURSOR
+   Independent from homepage sections
+   ========================================================================== */
 
 #dog-cursor-canvas {
   position: fixed;
@@ -21,16 +18,9 @@
 
   mix-blend-mode: multiply;
 
-  opacity: 0.9;
-
-  transition:
-    opacity 450ms ease;
+  opacity: 0.82;
 }
 
-
-/* ==========================================================
-   TOY CURSOR
-   ========================================================== */
 
 #dog-cursor-toy {
   position: fixed;
@@ -55,7 +45,7 @@
   filter:
     drop-shadow(
       0 3px 4px
-      rgba(0, 0, 0, 0.22)
+      rgba(39, 48, 40, 0.18)
     );
 
   transition:
@@ -76,73 +66,10 @@
 }
 
 
-/* ==========================================================
-   CURSOR MODES
-   ========================================================== */
-
 /*
- * These are only subtle visual differences.
- *
- * The JavaScript controls movement and animation.
- */
-
-body[data-dog-cursor-mode="default"]
-  #dog-cursor-canvas {
-  opacity: 0.9;
-}
-
-
-body[data-dog-cursor-mode="explore"]
-  #dog-cursor-canvas {
-  opacity: 0.9;
-}
-
-
-body[data-dog-cursor-mode="shop"]
-  #dog-cursor-canvas {
-  opacity: 0.95;
-}
-
-
-body[data-dog-cursor-mode="build"]
-  #dog-cursor-canvas {
-  opacity: 0.92;
-}
-
-
-body[data-dog-cursor-mode="discover"]
-  #dog-cursor-canvas {
-  opacity: 0.88;
-}
-
-
-body[data-dog-cursor-mode="calm"]
-  #dog-cursor-canvas {
-  opacity: 0.72;
-}
-
-
-body[data-dog-cursor-mode="read"]
-  #dog-cursor-canvas {
-  opacity: 0.68;
-}
-
-
-body[data-dog-cursor-mode="minimal"]
-  #dog-cursor-canvas {
-  opacity: 0.58;
-}
-
-
-body[data-dog-cursor-mode="settle"]
-  #dog-cursor-canvas {
-  opacity: 0.48;
-}
-
-
-/* ==========================================================
-   NORMAL CURSOR
-   ========================================================== */
+  The custom cursor must never interfere with navigation,
+  menus, forms, product cards or buttons.
+*/
 
 body.dog-cursor-active,
 body.dog-cursor-active a,
@@ -156,10 +83,6 @@ body.dog-cursor-active label {
 }
 
 
-/* ==========================================================
-   TOUCH DEVICES
-   ========================================================== */
-
 @media (pointer: coarse) {
 
   #dog-cursor-canvas,
@@ -167,22 +90,8 @@ body.dog-cursor-active label {
     display: none !important;
   }
 
-  body.dog-cursor-active,
-  body.dog-cursor-active a,
-  body.dog-cursor-active button,
-  body.dog-cursor-active input,
-  body.dog-cursor-active textarea,
-  body.dog-cursor-active select,
-  body.dog-cursor-active [role="button"],
-  body.dog-cursor-active label {
-    cursor: auto;
-  }
 }
 
-
-/* ==========================================================
-   REDUCED MOTION
-   ========================================================== */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -191,6 +100,7 @@ body.dog-cursor-active label {
     display: none !important;
   }
 
+
   body.dog-cursor-active,
   body.dog-cursor-active a,
   body.dog-cursor-active button,
@@ -201,4 +111,5 @@ body.dog-cursor-active label {
   body.dog-cursor-active label {
     cursor: auto;
   }
+
 }

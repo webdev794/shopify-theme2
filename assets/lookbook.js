@@ -1,300 +1,423 @@
-// ========== LOOKBOOK JAVASCRIPT ==========
-// Hotspot popover behavior: one open at a time, close on outside click
-// and Escape, aria-expanded kept in sync. Popovers still work without
-// this file thanks to native <details> behavior.
-//
-// New: "Shop the whole look" batch add to cart using Shopify's
-// /cart/add.js endpoint with an items array.
+/* =========================================================
+   PETLIO — SHOPPABLE LOOKBOOK
+   Chapter 06 interactions
+   ========================================================= */
 
-(() => {
-  const initSection = (section) => {
-    if (section.dataset.lookbookInit) return;
-    section.dataset.lookbookInit = 'true';
+(function () {
+  'use strict';
 
-    const hotspots = section.querySelectorAll('[data-lookbook-hotspot]');
-    if (!hotspots.length) return;
+  var initializedSections = new WeakSet();
 
-    // ---- Popover behavior ----
-    const closeAll = (except) => {
-      hotspots.forEach((hotspot) => {
-        if (hotspot !== except) hotspot.removeAttribute('open');
-      });
-    };
+  function initLookbook(section) {
+    if (!section || initializedSections.has(section)) {
+      return;
+    }
 
-    hotspots.forEach((hotspot) => {
-      const summary = hotspot.querySelector(':scope > summary');
-      if (summary) summary.setAttribute('aria-expanded', String(hotspot.open));
+    initializedSections.add(section);
 
-      hotspot.addEventListener('toggle', () => {
-        if (summary) summary.setAttribute('aria-expanded', String(hotspot.open));
-        if (hotspot.open) closeAll(hotspot);
-      });
-    });
+    var hotspots = Array.from(
+      section.querySelectorAll('[data-hotspot]')
+    );
 
-    section.addEventListener('keydown', (event) => {
-      if (event.key !== 'Escape') return;
-      const openHotspot = event.target.closest('details[open]');
-      if (openHotspot) {
-        openHotspot.removeAttribute('open');
-        const summary = openHotspot.querySelector('summary');
-        if (summary) summary.focus();
-      }
-    });
+    if (!hotspots.length) {
+      return;
+    }
 
-    document.addEventListener('click', (event) => {
-      if (!section.contains(event.target)) closeAll();
-    });
+    /*
+     * -------------------------------------------------------
+     * CLOSE ALL
+     * -------------------------------------------------------
+     */
 
-    // ---- "Shop the Whole Look" batch add to cart ----
-    const wholeLookBtn = section.querySelector('[data-whole-look-btn]');
-    const addIndividualForms = section.querySelectorAll('[data-add-individual]');
-
-    if (wholeLookBtn) {
-      wholeLookBtn.addEventListener('click', async (event) => {
-        event.preventDefault();
-        const addToCartButtons = section.querySelectorAll('[data-add-to-cart]');
-        const items = [];
-        let hasMissingVariant = false;
-
-        addToCartButtons.forEach((btn) => {
-          const variantId = btn.dataset.variantId;
-          const quantity = parseInt(btn.dataset.quantity || '1', 10);
-          if (variantId) {
-            items.push({
-              id: parseInt(variantId, 10),
-              quantity: quantity,
-            });
-          } else {
-            hasMissingVariant = true;
-          }
-        });
-
-        if (items.length === 0 || hasMissingVariant) {
-          showFeedback(section, 'Please select a size for each product.', 'error');
+    function closeAll(except) {
+      hotspots.forEach(function (hotspot) {
+        if (hotspot === except) {
           return;
         }
 
-        try {
-          wholeLookBtn.disabled = true;
-          wholeLookBtn.textContent = 'Adding...';
+        var button = hotspot.querySelector(
+          '[data-hotspot-button]'
+        );
 
-          // Use the cart add endpoint with items array
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({ items: items }),
-          });
+        var card = hotspot.querySelector(
+          '[data-product-card]'
+        );
 
-          if (!response.ok) {
-            let errorMessage = 'Failed to add items to cart';
-            try {
-              const errorData = await response.json();
-              errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-              // If response isn't JSON, use status text
-              errorMessage = response.statusText || errorMessage;
-            }
-            throw new Error(errorMessage);
-          }
-
-          const cart = await response.json();
-          showFeedback(section, `Added ${items.length} items to your cart!`, 'success');
-          
-          // Update cart count if your theme has a cart count element
-          updateCartCount(cart);
-          
-          // Optional: Open cart drawer if your theme has one
-          const cartDrawer = document.querySelector('[data-cart-drawer]');
-          if (cartDrawer && typeof cartDrawer.open === 'function') {
-            cartDrawer.open();
-          }
-
-          // Dispatch a custom event for other scripts to listen to
-          document.dispatchEvent(new CustomEvent('lookbook:added-to-cart', {
-            detail: { cart, items }
-          }));
-
-          // Close all popovers after adding
-          closeAll();
-
-        } catch (error) {
-          console.error('Lookbook add to cart error:', error);
-          showFeedback(section, error.message || 'Something went wrong. Please try again.', 'error');
-        } finally {
-          wholeLookBtn.disabled = false;
-          wholeLookBtn.textContent = 'Shop the Whole Look';
+        if (button) {
+          button.setAttribute(
+            'aria-expanded',
+            'false'
+          );
         }
+
+        if (card) {
+          card.hidden = true;
+        }
+
+        hotspot.classList.remove('is-active');
       });
     }
 
-    // ---- Individual add-to-cart forms with variant selection ----
-    addIndividualForms.forEach((form) => {
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const variantId = formData.get('id');
+    /*
+     * -------------------------------------------------------
+     * TOGGLE HOTSPOT
+     * -------------------------------------------------------
+     */
 
-        if (!variantId) {
-          showFeedback(section, 'Please select a size.', 'error');
+    function toggleHotspot(hotspot) {
+      var button = hotspot.querySelector(
+        '[data-hotspot-button]'
+      );
+
+      var card = hotspot.querySelector(
+        '[data-product-card]'
+      );
+
+      if (!button || !card) {
+        return;
+      }
+
+      var isOpen =
+        button.getAttribute('aria-expanded') === 'true';
+
+      if (isOpen) {
+        button.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+
+        card.hidden = true;
+
+        hotspot.classList.remove(
+          'is-active'
+        );
+
+        return;
+      }
+
+      closeAll(hotspot);
+
+      button.setAttribute(
+        'aria-expanded',
+        'true'
+      );
+
+      card.hidden = false;
+
+      hotspot.classList.add(
+        'is-active'
+      );
+    }
+
+    /*
+     * -------------------------------------------------------
+     * EVENTS
+     * -------------------------------------------------------
+     */
+
+    hotspots.forEach(function (hotspot) {
+      var button = hotspot.querySelector(
+        '[data-hotspot-button]'
+      );
+
+      var closeButton = hotspot.querySelector(
+        '[data-product-close]'
+      );
+
+      if (button) {
+        button.addEventListener(
+          'click',
+          function (event) {
+            event.preventDefault();
+
+            toggleHotspot(hotspot);
+          }
+        );
+      }
+
+      if (closeButton) {
+        closeButton.addEventListener(
+          'click',
+          function (event) {
+            event.preventDefault();
+
+            var hotspotButton =
+              hotspot.querySelector(
+                '[data-hotspot-button]'
+              );
+
+            var card =
+              hotspot.querySelector(
+                '[data-product-card]'
+              );
+
+            if (hotspotButton) {
+              hotspotButton.setAttribute(
+                'aria-expanded',
+                'false'
+              );
+            }
+
+            if (card) {
+              card.hidden = true;
+            }
+
+            hotspot.classList.remove(
+              'is-active'
+            );
+          }
+        );
+      }
+    });
+
+    /*
+     * -------------------------------------------------------
+     * CLICK OUTSIDE
+     * -------------------------------------------------------
+     */
+
+    document.addEventListener(
+      'click',
+      function (event) {
+        if (
+          !section.contains(event.target)
+        ) {
           return;
         }
 
-        const submitBtn = form.querySelector('[type="submit"]');
-        const originalText = submitBtn.textContent;
-
-        try {
-          submitBtn.disabled = true;
-          submitBtn.textContent = 'Adding...';
-
-          const response = await fetch('/cart/add.js', {
-            method: 'POST',
-            body: formData,
-            headers: {
-              'Accept': 'application/json'
-            }
-          });
-
-          if (!response.ok) {
-            let errorMessage = 'Failed to add item to cart';
-            try {
-              const errorData = await response.json();
-              errorMessage = errorData.message || errorMessage;
-            } catch (e) {
-              errorMessage = response.statusText || errorMessage;
-            }
-            throw new Error(errorMessage);
-          }
-
-          const cart = await response.json();
-          showFeedback(section, 'Added to cart!', 'success');
-          updateCartCount(cart);
-
-          // Dispatch custom event
-          document.dispatchEvent(new CustomEvent('lookbook:added-to-cart', {
-            detail: { cart, items: [{ id: parseInt(variantId, 10), quantity: 1 }] }
-          }));
-
-        } catch (error) {
-          console.error('Individual add to cart error:', error);
-          showFeedback(section, error.message || 'Something went wrong.', 'error');
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-        }
-      });
-    });
-
-    // ---- Variant selection updates ----
-    const variantSelectors = section.querySelectorAll('[data-variant-select]');
-    variantSelectors.forEach((select) => {
-      select.addEventListener('change', (event) => {
-        const container = event.target.closest('[data-product-container]');
-        if (!container) return;
-
-        const addBtn = container.querySelector('[data-add-to-cart]');
-        const requiresVariant = container.querySelector('[data-requires-variant]');
-        const variantId = event.target.value;
-        const variantInput = container.querySelector('[data-variant-input]');
-
-        if (addBtn) {
-          addBtn.dataset.variantId = variantId;
-          addBtn.disabled = !variantId;
-          // Update button text based on selection
-          if (variantId) {
-            addBtn.textContent = 'Add to Cart';
-          } else {
-            addBtn.textContent = 'Select size first';
-          }
+        if (
+          event.target.closest(
+            '[data-hotspot]'
+          )
+        ) {
+          return;
         }
 
-        if (variantInput) {
-          variantInput.value = variantId || '';
+        closeAll();
+      }
+    );
+
+    /*
+     * -------------------------------------------------------
+     * ESCAPE KEY
+     * -------------------------------------------------------
+     */
+
+    section.addEventListener(
+      'keydown',
+      function (event) {
+        if (event.key !== 'Escape') {
+          return;
         }
 
-        if (requiresVariant) {
-          requiresVariant.style.display = variantId ? 'none' : 'block';
-        }
+        closeAll();
+      }
+    );
 
-        // Update price display if available
-        const priceDisplay = container.querySelector('[data-price-display]');
-        if (priceDisplay) {
-          const selectedOption = event.target.options[event.target.selectedIndex];
-          const price = selectedOption ? selectedOption.dataset.price : null;
-          if (price) {
-            priceDisplay.textContent = price;
-          }
-        }
-      });
+    /*
+     * -------------------------------------------------------
+     * KEYBOARD NAVIGATION
+     * -------------------------------------------------------
+     */
 
-      // Trigger initial state
-      select.dispatchEvent(new Event('change'));
-    });
+    hotspots.forEach(function (hotspot, index) {
+      var button = hotspot.querySelector(
+        '[data-hotspot-button]'
+      );
 
-    // ---- Helper: Show feedback message ----
-    function showFeedback(container, message, type = 'info') {
-      const existing = container.querySelector('[data-lookbook-feedback]');
-      if (existing) existing.remove();
-
-      const feedback = document.createElement('div');
-      feedback.dataset.lookbookFeedback = true;
-      feedback.className = `lookbook__feedback lookbook__feedback--${type}`;
-      feedback.textContent = message;
-      feedback.setAttribute('role', 'alert');
-
-      // Position feedback near the "Shop the Whole Look" button
-      const btn = container.querySelector('[data-whole-look-btn]');
-      if (btn) {
-        btn.parentNode.insertBefore(feedback, btn.nextSibling);
-      } else {
-        container.querySelector('.lookbook__actions')?.appendChild(feedback);
+      if (!button) {
+        return;
       }
 
-      // Auto-dismiss after 4 seconds
-      setTimeout(() => {
-        if (feedback.parentNode) feedback.remove();
-      }, 4000);
-    }
+      button.addEventListener(
+        'keydown',
+        function (event) {
+          if (
+            event.key !== 'ArrowRight' &&
+            event.key !== 'ArrowDown' &&
+            event.key !== 'ArrowLeft' &&
+            event.key !== 'ArrowUp'
+          ) {
+            return;
+          }
 
-    // ---- Helper: Update cart count ----
-    function updateCartCount(cart) {
-      const cartCountElements = document.querySelectorAll('[data-cart-count]');
-      const count = cart.item_count || 0;
-      cartCountElements.forEach((el) => {
-        el.textContent = count;
-        // Update aria-label if present
-        const label = el.getAttribute('aria-label');
-        if (label) {
-          el.setAttribute('aria-label', `${count} items in cart`);
+          event.preventDefault();
+
+          var nextIndex;
+
+          if (
+            event.key === 'ArrowRight' ||
+            event.key === 'ArrowDown'
+          ) {
+            nextIndex = index + 1;
+
+            if (
+              nextIndex >= hotspots.length
+            ) {
+              nextIndex = 0;
+            }
+          } else {
+            nextIndex = index - 1;
+
+            if (nextIndex < 0) {
+              nextIndex =
+                hotspots.length - 1;
+            }
+          }
+
+          var nextButton =
+            hotspots[nextIndex].querySelector(
+              '[data-hotspot-button]'
+            );
+
+          if (nextButton) {
+            nextButton.focus();
+          }
+        }
+      );
+    });
+
+    /*
+     * -------------------------------------------------------
+     * MOBILE CARD POSITIONING
+     * -------------------------------------------------------
+     *
+     * Prevents product cards from extending beyond
+     * the scene on smaller screens.
+     */
+
+    function positionCards() {
+      var isMobile =
+        window.matchMedia(
+          '(max-width: 749px)'
+        ).matches;
+
+      hotspots.forEach(function (hotspot) {
+        var card = hotspot.querySelector(
+          '[data-product-card]'
+        );
+
+        if (!card) {
+          return;
+        }
+
+        card.style.removeProperty(
+          'left'
+        );
+
+        card.style.removeProperty(
+          'right'
+        );
+
+        if (!isMobile) {
+          return;
+        }
+
+        var hotspotRect =
+          hotspot.getBoundingClientRect();
+
+        var sectionRect =
+          section.getBoundingClientRect();
+
+        var cardWidth =
+          card.offsetWidth || 280;
+
+        var leftEdge =
+          hotspotRect.left -
+          sectionRect.left;
+
+        var rightEdge =
+          sectionRect.right -
+          hotspotRect.right;
+
+        /*
+         * If the hotspot is on the right side,
+         * open the card toward the left.
+         */
+
+        if (
+          rightEdge < cardWidth + 30
+        ) {
+          card.style.left = 'auto';
+          card.style.right = '29px';
+        } else {
+          card.style.left = '29px';
+          card.style.right = 'auto';
         }
       });
     }
-  };
 
-  const initAll = (root) => {
-    const scope = root && typeof root.querySelectorAll === 'function' ? root : document;
-    scope.querySelectorAll('[data-lookbook]').forEach(initSection);
-  };
+    window.addEventListener(
+      'resize',
+      positionCards,
+      { passive: true }
+    );
 
-  initAll();
+    positionCards();
+  }
 
-  // Re-init when the merchant edits the section in the theme editor
-  document.addEventListener('shopify:section:load', (event) => {
-    initAll(event.target);
-  });
+  /*
+   * -------------------------------------------------------
+   * INITIALIZE ALL
+   * -------------------------------------------------------
+   */
 
-  // Open the popover of a hotspot block selected in the theme editor
-  document.addEventListener('shopify:block:select', (event) => {
-    const hotspot = event.target.closest && event.target.closest('[data-lookbook-hotspot]');
-    const target = hotspot || event.target.querySelector('[data-lookbook-hotspot]');
-    if (target) target.setAttribute('open', '');
-  });
+  function initAll(root) {
+    root = root || document;
 
-  document.addEventListener('shopify:block:deselect', (event) => {
-    const hotspot = event.target.closest && event.target.closest('[data-lookbook-hotspot]');
-    const target = hotspot || event.target.querySelector('[data-lookbook-hotspot]');
-    if (target) target.removeAttribute('open');
-  });
+    var sections = root.querySelectorAll(
+      '[data-section-type="lookbook"]'
+    );
+
+    sections.forEach(function (section) {
+      initLookbook(section);
+    });
+  }
+
+  /*
+   * -------------------------------------------------------
+   * PAGE LOAD
+   * -------------------------------------------------------
+   */
+
+  if (
+    document.readyState === 'loading'
+  ) {
+    document.addEventListener(
+      'DOMContentLoaded',
+      function () {
+        initAll(document);
+      }
+    );
+  } else {
+    initAll(document);
+  }
+
+  /*
+   * -------------------------------------------------------
+   * SHOPIFY THEME EDITOR
+   * -------------------------------------------------------
+   */
+
+  document.addEventListener(
+    'shopify:section:load',
+    function (event) {
+      initAll(event.target);
+    }
+  );
+
+  document.addEventListener(
+    'shopify:section:reorder',
+    function () {
+      initAll(document);
+    }
+  );
+
+  document.addEventListener(
+    'shopify:section:select',
+    function (event) {
+      initAll(event.target);
+    }
+  );
+
 })();

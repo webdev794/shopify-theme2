@@ -1,571 +1,722 @@
-/* ========== LOOKBOOK STYLES ========== */
-/* This file contains all styles for the lookbook section */
+/* =========================================================
+   PETLIO — SHOPPABLE LOOKBOOK
+   Chapter 06
+   Editorial shopping scene
+   ========================================================= */
 
-/* ---- Base ---- */
-.lookbook {
-  max-width: var(--page-width, 1200px);
-  margin: 0 auto;
-  padding: 3rem 1.25rem;
-}
+.petlio-lookbook {
+  --lookbook-bg: #f3eee6;
+  --lookbook-ink: #1d2921;
+  --lookbook-muted: #687068;
+  --lookbook-line: rgba(29, 41, 33, 0.12);
 
-.lookbook--full-width {
-  max-width: none;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.lookbook--full-width .lookbook__content {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
-/* ---- Content ---- */
-.lookbook__content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.75rem;
-}
-
-.lookbook__heading {
-  margin: 0;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
-.lookbook__heading--small {
-  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
-}
-
-.lookbook__heading--medium {
-  font-size: clamp(1.625rem, 1.2rem + 1.75vw, 2.375rem);
-}
-
-.lookbook__heading--large {
-  font-size: clamp(2rem, 1.3rem + 2.75vw, 3.25rem);
-}
-
-.lookbook__text {
-  line-height: 1.6;
-}
-
-.lookbook__text > p {
-  margin: 0 0 0.5em;
-}
-
-.lookbook__text > p:last-child {
-  margin-bottom: 0;
-}
-
-/* Side-by-side content on desktop */
-@media (min-width: 990px) {
-  .lookbook--content-left,
-  .lookbook--content-right {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .lookbook--content-right {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  }
-
-  .lookbook--content-left .lookbook__content,
-  .lookbook--content-right .lookbook__content {
-    margin-bottom: 0;
-  }
-
-  .lookbook--content-right .lookbook__content {
-    order: 2;
-  }
-
-  .lookbook--content-right .lookbook__image-wrapper {
-    order: 1;
-  }
-}
-
-/* ---- Image ---- */
-.lookbook__image-wrapper {
   position: relative;
-  overflow: visible;
-}
-
-.lookbook__image,
-.lookbook__placeholder {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: var(--lookbook-aspect-ratio, 4 / 5);
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.lookbook--full-width .lookbook__image,
-.lookbook--full-width .lookbook__placeholder {
-  border-radius: 0;
-}
-
-.lookbook__placeholder {
-  fill: #a0a0a0;
-  background: #e7e7e7;
-}
-
-/* ---- Hotspots ---- */
-.lookbook__hotspot {
-  position: absolute;
-  top: var(--y, 50%);
-  left: var(--x, 50%);
-  transform: translate(-50%, -50%);
-  z-index: 1;
-}
-
-.lookbook__hotspot[open] {
-  z-index: 2;
-}
-
-/* 44px tap target around an 18px visual dot */
-.lookbook__dot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  list-style: none;
-  border-radius: 50%;
-}
-
-.lookbook__dot::-webkit-details-marker {
-  display: none;
-}
-
-.lookbook__dot-inner {
-  position: relative;
-  display: block;
-  width: 18px;
-  height: 18px;
-  background: var(--lookbook-dot, #ffffff);
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s ease;
-}
-
-/* Idle pulse to signal interactivity */
-@keyframes lookbook-pulse {
-  0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--lookbook-dot, #ffffff) 60%, transparent);
-  }
-  70% {
-    box-shadow: 0 0 0 12px transparent;
-  }
-  100% {
-    box-shadow: 0 0 0 0 transparent;
-  }
-}
-
-.lookbook__hotspot:not([open]) .lookbook__dot-inner {
-  animation: lookbook-pulse 2.4s ease-out infinite;
-}
-
-.lookbook__dot:hover .lookbook__dot-inner,
-.lookbook__dot:focus-visible .lookbook__dot-inner {
-  transform: scale(1.2);
-}
-
-/* Dot becomes a close (x-style rotated plus) marker while open */
-.lookbook__hotspot[open] .lookbook__dot-inner::before,
-.lookbook__hotspot[open] .lookbook__dot-inner::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 2px;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.lookbook__hotspot[open] .lookbook__dot-inner::before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.lookbook__hotspot[open] .lookbook__dot-inner::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.lookbook__dot:focus-visible {
-  outline: 2px solid var(--lookbook-dot, #ffffff);
-  outline-offset: 2px;
-}
-
-/* ---- Product card popover ----
-   Opens away from the nearest image edge; direction classes are
-   computed in Liquid from the hotspot's position. */
-@keyframes lookbook-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.lookbook__card {
-  position: absolute;
-  width: min(300px, calc(100vw - 3.5rem));
-  animation: lookbook-card-in 0.18s ease;
-  background: var(--lookbook-card-background, #ffffff);
-  border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-  padding: 1rem;
-  color: var(--lookbook-card-foreground, #121212);
-}
-
-.lookbook__hotspot--right .lookbook__card {
-  left: calc(100% + 8px);
-}
-
-.lookbook__hotspot--left .lookbook__card {
-  right: calc(100% + 8px);
-}
-
-.lookbook__hotspot--down .lookbook__card {
-  top: 0;
-}
-
-.lookbook__hotspot--up .lookbook__card {
-  bottom: 0;
-}
-
-/* ---- Card Content ---- */
-.lookbook__card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.lookbook__card-header {
-  display: flex;
-  gap: 0.875rem;
-  align-items: flex-start;
-}
-
-.lookbook__card-image-wrapper {
-  flex-shrink: 0;
-}
-
-.lookbook__card-image {
-  width: 72px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.lookbook__card-image--placeholder {
-  fill: #a0a0a0;
-  background: #e7e7e7;
-}
-
-.lookbook__card-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
-  flex: 1;
-}
-
-.lookbook__card-title-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.lookbook__card-title {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-  color: var(--lookbook-card-foreground, #121212);
+  padding: clamp(5rem, 10vw, 9rem) 0;
+  color: var(--lookbook-ink);
+  background: var(--lookbook-bg);
+  isolation: isolate;
 }
 
-.lookbook__card-title-link:hover .lookbook__card-title {
-  text-decoration: underline;
+.petlio-lookbook__container {
+  width: min(1320px, calc(100% - 40px));
+  margin: 0 auto;
 }
 
-.lookbook__card-price {
-  font-size: 0.875rem;
-  opacity: 0.85;
-  color: var(--lookbook-card-foreground, #121212);
-}
+/* =========================================================
+   HEADER
+   ========================================================= */
 
-.lookbook__card-price-compare {
-  margin-right: 0.375rem;
-  opacity: 0.7;
-}
-
-.lookbook__card-price-sale {
-  font-weight: 600;
-}
-
-/* ---- Variant Selector ---- */
-.lookbook__variant-selector {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.lookbook__variant-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--lookbook-card-foreground, #121212);
-  opacity: 0.7;
-}
-
-.lookbook__variant-select {
-  width: 100%;
-  padding: 0.5rem;
-  font-size: 0.875rem;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 6px;
-  background: var(--lookbook-card-background, #ffffff);
-  color: var(--lookbook-card-foreground, #121212);
-  cursor: pointer;
-}
-
-.lookbook__variant-select:focus {
-  outline: 2px solid var(--lookbook-card-foreground, #121212);
-  outline-offset: 1px;
-}
-
-.lookbook__requires-variant {
-  font-size: 0.75rem;
-  color: #d32f2f;
-  margin-top: 0.25rem;
-}
-
-/* ---- Add to Cart Buttons ---- */
-.lookbook__add-form {
-  margin: 0;
-}
-
-.lookbook__add-btn {
-  width: 100%;
-  padding: 0.625rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.lookbook__add-btn--individual {
-  background: var(--lookbook-card-foreground, #121212);
-  color: var(--lookbook-card-background, #ffffff);
-}
-
-.lookbook__add-btn--individual:hover:not(:disabled) {
-  opacity: 0.85;
-  transform: translateY(-1px);
-}
-
-.lookbook__add-btn--individual:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.lookbook__add-btn--individual:focus-visible {
-  outline: 2px solid var(--lookbook-card-foreground, #121212);
-  outline-offset: 2px;
-}
-
-/* ---- Product Page Link ---- */
-.lookbook__product-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.8125rem;
-  color: var(--lookbook-card-foreground, #121212);
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.lookbook__product-link:hover {
-  opacity: 1;
-  text-decoration: underline;
-}
-
-/* ---- "Shop the Whole Look" Button ---- */
-.lookbook__actions {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
-  width: auto;
-  max-width: 90%;
-}
-
-.lookbook__whole-look-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 1.75rem;
-  font-size: 1rem;
-  font-weight: 700;
-  background: var(--lookbook-card-foreground, #121212);
-  color: var(--lookbook-card-background, #ffffff);
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  transition: all 0.3s ease;
-}
-
-.lookbook__whole-look-btn:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-}
-
-.lookbook__whole-look-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.lookbook__whole-look-btn:focus-visible {
-  outline: 2px solid var(--lookbook-card-foreground, #121212);
-  outline-offset: 2px;
-}
-
-.lookbook__whole-look-icon {
-  font-size: 1.25rem;
-}
-
-/* ---- Feedback Messages ---- */
-.lookbook__feedback {
-  padding: 0.625rem 1rem;
-  margin: 0.5rem 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-  border-radius: 6px;
-  animation: lookbook-card-in 0.2s ease;
+.petlio-lookbook__header {
+  position: relative;
+  z-index: 5;
+  max-width: 800px;
+  margin: 0 auto clamp(3.5rem, 7vw, 6rem);
   text-align: center;
 }
 
-.lookbook__feedback--success {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #a5d6a7;
+.petlio-lookbook__chapter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.3rem;
+  color: var(--lookbook-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-.lookbook__feedback--error {
-  background: #fce4ec;
-  color: #c62828;
-  border: 1px solid #ef9a9a;
+.petlio-lookbook__chapter-number {
+  opacity: 0.5;
 }
 
-.lookbook__feedback--info {
-  background: #e3f2fd;
-  color: #0d47a1;
-  border: 1px solid #90caf9;
+.petlio-lookbook__chapter-line {
+  width: 38px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
 }
 
-/* ---- Onboarding ---- */
-.lookbook__onboarding-hint {
-  font-size: 0.8125rem;
-  color: var(--lookbook-card-foreground, #121212);
-  opacity: 0.6;
+.petlio-lookbook__heading {
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 5.8rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.92;
+}
+
+.petlio-lookbook__heading p {
   margin: 0;
 }
 
-/* ---- Utility ---- */
-.lookbook__visually-hidden {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+.petlio-lookbook__heading strong {
+  font-weight: 500;
+}
+
+.petlio-lookbook__intro {
+  max-width: 420px;
+  margin: 1.5rem auto 0;
+  color: var(--lookbook-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.petlio-lookbook__intro p {
+  margin: 0;
+}
+
+.petlio-lookbook__intro em {
+  font-style: normal;
+}
+
+/* =========================================================
+   SCENE
+   ========================================================= */
+
+.petlio-lookbook__scene {
+  position: relative;
+  min-height: min(760px, 65vw);
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
+  border-radius: clamp(28px, 4vw, 54px);
+  background: #e9e1d6;
+  box-shadow:
+    0 35px 100px rgba(29, 41, 33, 0.09);
+  isolation: isolate;
+}
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+.petlio-lookbook__scene-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.petlio-lookbook__arch {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  width: min(52vw, 620px);
+  height: 76%;
+  transform: translateX(-50%);
+  border-radius: 50% 50% 0 0;
+  background: #ded3c4;
+}
+
+.petlio-lookbook__arch::after {
+  content: "";
+  position: absolute;
+  inset: 7%;
+  border-radius: 50% 50% 0 0;
+  background: #e8dfd3;
+}
+
+.petlio-lookbook__sun {
+  position: absolute;
+  top: 10%;
+  left: 28%;
+  width: 35%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  filter: blur(25px);
+}
+
+.petlio-lookbook__floor {
+  position: absolute;
+  right: -10%;
+  bottom: -25%;
+  left: -10%;
+  height: 50%;
+  border-radius: 50% 50% 0 0;
+  background: #d7cbbd;
+}
+
+.petlio-lookbook__shape {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(29, 41, 33, 0.09);
+}
+
+.petlio-lookbook__shape--one {
+  top: 12%;
+  left: 7%;
+  width: 100px;
+  height: 100px;
+}
+
+.petlio-lookbook__shape--two {
+  right: 8%;
+  bottom: 20%;
+  width: 55px;
+  height: 55px;
+}
+
+/* =========================================================
+   PLANTS
+   ========================================================= */
+
+.petlio-lookbook__plant {
+  position: absolute;
+  bottom: 14%;
+  z-index: 1;
+  width: 150px;
+  height: 250px;
+}
+
+.petlio-lookbook__plant--left {
+  left: 3%;
+}
+
+.petlio-lookbook__plant--right {
+  right: 3%;
+  transform: scaleX(-1);
+}
+
+.petlio-lookbook__plant::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 45px;
+  height: 70px;
+  transform: translateX(-50%);
+  border-radius: 10px 10px 22px 22px;
+  background: #b5a695;
+}
+
+.petlio-lookbook__plant span {
+  position: absolute;
+  bottom: 55px;
+  left: 50%;
+  width: 55px;
+  height: 115px;
+  border-radius: 100% 0 100% 0;
+  background: #71806d;
+  transform-origin: bottom center;
+}
+
+.petlio-lookbook__plant span:nth-child(1) {
+  transform: translateX(-50%) rotate(-28deg);
+}
+
+.petlio-lookbook__plant span:nth-child(2) {
+  transform: translateX(-50%) rotate(22deg);
+}
+
+.petlio-lookbook__plant span:nth-child(3) {
+  transform: translateX(-50%) rotate(-55deg) scale(0.8);
+}
+
+.petlio-lookbook__plant span:nth-child(4) {
+  transform: translateX(-50%) rotate(52deg) scale(0.75);
+}
+
+/* =========================================================
+   SCENE COPY
+   ========================================================= */
+
+.petlio-lookbook__scene-copy {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.petlio-lookbook__scene-kicker {
+  color: rgba(29, 41, 33, 0.42);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.petlio-lookbook__scene-title {
+  font-size: clamp(1rem, 1.7vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.petlio-lookbook__scene-note {
+  color: rgba(29, 41, 33, 0.48);
+  font-size: 0.68rem;
+}
+
+/* =========================================================
+   HOTSPOT
+   ========================================================= */
+
+.petlio-lookbook__hotspot-wrap {
+  position: absolute;
+  top: var(--hotspot-y);
+  left: var(--hotspot-x);
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+.petlio-lookbook__hotspot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  cursor: pointer;
+  border: 5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  background: var(--lookbook-dot, #fff);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.14);
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.petlio-lookbook__hotspot:hover,
+.petlio-lookbook__hotspot:focus-visible {
+  transform: scale(1.12);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+.petlio-lookbook__hotspot-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--lookbook-ink);
+}
+
+.petlio-lookbook__hotspot-plus {
+  position: absolute;
+  color: var(--lookbook-ink);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  opacity: 0;
+  transform: rotate(-90deg);
+  transition:
+    opacity 250ms ease,
+    transform 350ms ease;
+}
+
+.petlio-lookbook__hotspot[aria-expanded="true"] {
+  transform: rotate(45deg);
+}
+
+.petlio-lookbook__hotspot[aria-expanded="true"]
+.petlio-lookbook__hotspot-dot {
+  opacity: 0;
+}
+
+.petlio-lookbook__hotspot[aria-expanded="true"]
+.petlio-lookbook__hotspot-plus {
+  opacity: 1;
+  transform: rotate(0);
+}
+
+.petlio-lookbook__hotspot-ring {
+  position: absolute;
+  inset: -9px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 50%;
+  animation: petlio-lookbook-pulse 2.8s ease-out infinite;
+}
+
+@keyframes petlio-lookbook-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+
+  75% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   PRODUCT CARD
+   ========================================================= */
+
+.petlio-lookbook__product {
+  position: absolute;
+  top: 34px;
+  left: 34px;
+  display: grid;
+  grid-template-columns: 125px 1fr;
+  width: min(360px, 32vw);
+  overflow: hidden;
+  color: var(--lookbook-card-fg, #121212);
+  background: var(--lookbook-card-bg, #fff);
+  border-radius: 18px;
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.16);
+  animation: petlio-lookbook-card-in 280ms ease both;
+}
+
+.petlio-lookbook__hotspot-wrap:nth-of-type(even)
+.petlio-lookbook__product {
+  right: 34px;
+  left: auto;
+}
+
+@keyframes petlio-lookbook-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.petlio-lookbook__product-image {
+  min-height: 145px;
+  background: #f3f1ed;
+}
+
+.petlio-lookbook__product-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.petlio-lookbook__product-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 1rem 1rem 1rem 1.1rem;
+}
+
+.petlio-lookbook__product-vendor {
+  margin-bottom: 0.35rem;
+  color: rgba(18, 18, 18, 0.5);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.petlio-lookbook__product-title {
+  margin: 0;
+  padding-right: 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.petlio-lookbook__product-price {
+  margin-top: 0.45rem;
+  font-size: 0.72rem;
+  opacity: 0.65;
+}
+
+.petlio-lookbook__product-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+  margin-top: 0.8rem;
+  color: inherit;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.petlio-lookbook__product-link span {
+  transition: transform 200ms ease;
+}
+
+.petlio-lookbook__product-link:hover span {
+  transform: translateX(3px);
+}
+
+.petlio-lookbook__product-close {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  cursor: pointer;
   border: 0;
+  border-radius: 50%;
+  color: #121212;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  line-height: 1;
 }
 
-/* ---- Mobile ---- */
+/* =========================================================
+   SCENE FOOTER
+   ========================================================= */
+
+.petlio-lookbook__scene-footer {
+  position: absolute;
+  right: 2rem;
+  bottom: 1.7rem;
+  left: 2rem;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(29, 41, 33, 0.42);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.petlio-lookbook__footer-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(29, 41, 33, 0.12);
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.petlio-lookbook__empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.petlio-lookbook__empty span {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.35;
+}
+
+.petlio-lookbook__empty p {
+  margin: 0;
+  color: rgba(29, 41, 33, 0.5);
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   BOTTOM
+   ========================================================= */
+
+.petlio-lookbook__bottom {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  width: min(700px, 100%);
+  margin: 3rem auto 0;
+}
+
+.petlio-lookbook__bottom-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--lookbook-line);
+  border-radius: 50%;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.petlio-lookbook__bottom p {
+  flex: 1;
+  margin: 0;
+  color: var(--lookbook-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.petlio-lookbook__bottom p strong {
+  color: var(--lookbook-ink);
+  font-weight: 600;
+}
+
+.petlio-lookbook__bottom-arrow {
+  font-size: 1.2rem;
+  opacity: 0.4;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 749px) {
-  .lookbook {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+  .petlio-lookbook {
+    padding: 4.5rem 0;
   }
 
-  .lookbook__card {
-    width: min(280px, calc(100vw - 2rem));
-    padding: 0.875rem;
+  .petlio-lookbook__container {
+    width: min(100% - 28px, 620px);
   }
 
-  .lookbook__card-image {
-    width: 60px;
-    height: 75px;
+  .petlio-lookbook__header {
+    margin-bottom: 3rem;
   }
 
-  .lookbook__whole-look-btn {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-    width: 100%;
-    justify-content: center;
+  .petlio-lookbook__heading {
+    font-size: clamp(2.7rem, 13vw, 4.3rem);
   }
 
-  .lookbook__actions {
+  .petlio-lookbook__scene {
+    min-height: 610px;
+    border-radius: 28px;
+  }
+
+  .petlio-lookbook__arch {
+    top: 9%;
+    width: 85%;
+    height: 58%;
+  }
+
+  .petlio-lookbook__plant {
+    width: 85px;
+    height: 160px;
+    bottom: 14%;
+  }
+
+  .petlio-lookbook__plant::before {
+    width: 32px;
+    height: 48px;
+  }
+
+  .petlio-lookbook__plant span {
+    bottom: 35px;
+    width: 38px;
+    height: 80px;
+  }
+
+  .petlio-lookbook__scene-copy {
+    top: 1.2rem;
+    left: 1.2rem;
+  }
+
+  .petlio-lookbook__scene-title {
+    font-size: 0.95rem;
+  }
+
+  .petlio-lookbook__hotspot {
+    width: 44px;
+    height: 44px;
+  }
+
+  .petlio-lookbook__product {
+    top: 29px;
+    left: 29px;
+    grid-template-columns: 100px 1fr;
+    width: min(300px, 76vw);
+    border-radius: 15px;
+  }
+
+  .petlio-lookbook__hotspot-wrap:nth-of-type(even)
+  .petlio-lookbook__product {
+    right: 29px;
+    left: auto;
+  }
+
+  .petlio-lookbook__product-image {
+    min-height: 120px;
+  }
+
+  .petlio-lookbook__product-content {
+    padding: 0.8rem;
+  }
+
+  .petlio-lookbook__product-title {
+    font-size: 0.72rem;
+  }
+
+  .petlio-lookbook__scene-footer {
+    right: 1rem;
     bottom: 1rem;
-    width: calc(100% - 2rem);
-    max-width: none;
+    left: 1rem;
   }
 
-  /* On mobile, popovers should open at the bottom to avoid clipping */
-  .lookbook__hotspot--right .lookbook__card,
-  .lookbook__hotspot--left .lookbook__card {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-  }
-
-  .lookbook__hotspot--down .lookbook__card,
-  .lookbook__hotspot--up .lookbook__card {
-    top: 100%;
-    bottom: auto;
+  .petlio-lookbook__bottom {
+    margin-top: 2rem;
   }
 }
 
-/* ---- Reduced motion ---- */
+@media (max-width: 420px) {
+  .petlio-lookbook__scene {
+    min-height: 560px;
+  }
+
+  .petlio-lookbook__product {
+    grid-template-columns: 82px 1fr;
+    width: min(280px, 78vw);
+  }
+
+  .petlio-lookbook__product-image {
+    min-height: 105px;
+  }
+
+  .petlio-lookbook__product-link {
+    margin-top: 0.5rem;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
 @media (prefers-reduced-motion: reduce) {
-  .lookbook__hotspot:not([open]) .lookbook__dot-inner {
-    animation: none;
-  }
-
-  .lookbook__card {
-    animation: none;
-  }
-
-  .lookbook__dot-inner {
+  .petlio-lookbook__hotspot,
+  .petlio-lookbook__hotspot-plus,
+  .petlio-lookbook__product-link span {
     transition: none;
   }
 
-  .lookbook__dot:hover .lookbook__dot-inner,
-  .lookbook__dot:focus-visible .lookbook__dot-inner {
-    transform: none;
-  }
-
-  .lookbook__whole-look-btn {
-    transition: none;
+  .petlio-lookbook__hotspot-ring,
+  .petlio-lookbook__product {
+    animation: none;
   }
 }

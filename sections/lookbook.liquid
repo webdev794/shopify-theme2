@@ -1,385 +1,367 @@
-{%- comment -%}
-  Lookbook / Shoppable Image
-  - Lifestyle image with product hotspots placed via per-block X/Y sliders
-  - Each hotspot opens a product card with variant picker and add-to-cart
-  - "Shop the Whole Look" button adds all selected variants in one batch call
-  - Progressive enhancement: individual adds work without JavaScript
-{%- endcomment -%}
-
-{%- liquid
-  assign image = section.settings.image
-
-  if section.index == 1
-    assign loading = 'eager'
-    assign fetchpriority = 'high'
-  else
-    assign loading = 'lazy'
-    assign fetchpriority = 'auto'
-  endif
--%}
-
-<link rel="preload" href="{{ 'lookbook.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'lookbook.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'lookbook.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'lookbook.js' | asset_url }}" defer></script>
 
-<div
-  class="lookbook lookbook--content-{{ section.settings.content_position }}{% if section.settings.full_width %} lookbook--full-width{% endif %}"
+<section
+  class="petlio-lookbook"
+  data-section-type="lookbook"
+  data-section-id="{{ section.id }}"
   style="
     --lookbook-dot: {{ section.settings.color_dot }};
-    --lookbook-card-background: {{ section.settings.color_card_background }};
-    --lookbook-card-foreground: {{ section.settings.color_card_foreground }};
-    {%- if image != blank %} --lookbook-aspect-ratio: {{ image.aspect_ratio }};{% endif -%}
+    --lookbook-card-bg: {{ section.settings.color_card_background }};
+    --lookbook-card-fg: {{ section.settings.color_card_foreground }};
   "
-  data-lookbook
 >
-  {%- if section.settings.heading != blank or section.settings.text != blank -%}
-    <div class="lookbook__content">
-      {%- if section.settings.heading != blank -%}
-        <h2 class="lookbook__heading lookbook__heading--{{ section.settings.heading_size }}">
+  <div class="petlio-lookbook__container">
+
+    <header class="petlio-lookbook__header">
+
+      <div class="petlio-lookbook__chapter">
+        <span class="petlio-lookbook__chapter-number">06</span>
+        <span class="petlio-lookbook__chapter-line"></span>
+        <span class="petlio-lookbook__chapter-label">
+          SHOP / DISCOVER
+        </span>
+      </div>
+
+      {% if section.settings.heading != blank %}
+        <h2 class="petlio-lookbook__heading">
           {{ section.settings.heading }}
         </h2>
-      {%- endif -%}
-      {%- if section.settings.text != blank -%}
-        <div class="lookbook__text">{{ section.settings.text }}</div>
-      {%- endif -%}
-    </div>
-  {%- endif -%}
+      {% endif %}
 
-  <div class="lookbook__image-wrapper">
-    {%- if image != blank -%}
-      {%- liquid
-        assign lookbook_alt = section.settings.heading | default: 'Lookbook'
-        if image.alt != blank
-          assign lookbook_alt = image.alt
-        endif
-      -%}
-      {{
-        image
-        | image_url: width: 3000
-        | image_tag:
-          class: 'lookbook__image',
-          widths: '750, 1100, 1500, 2000, 3000',
-          sizes: '(max-width: 989px) 100vw, 66vw',
-          loading: loading,
-          fetchpriority: fetchpriority,
-          alt: lookbook_alt
-      }}
-    {%- else -%}
-      {{ 'lifestyle-1' | placeholder_svg_tag: 'lookbook__placeholder' }}
-    {%- endif -%}
-
-    {%- for block in section.blocks -%}
-      {%- liquid
-        assign product = block.settings.product
-        assign x = block.settings.position_x
-        assign y = block.settings.position_y
-
-        if x > 50
-          assign h_dir = 'left'
-        else
-          assign h_dir = 'right'
-        endif
-
-        if y > 50
-          assign v_dir = 'up'
-        else
-          assign v_dir = 'down'
-        endif
-
-        if product != blank
-          assign hotspot_label = 'sections.lookbook.view_product' | t: title: product.title
-        else
-          assign hotspot_label = 'sections.lookbook.view_product_fallback' | t
-        endif
-      -%}
-
-      <details
-        class="lookbook__hotspot lookbook__hotspot--{{ h_dir }} lookbook__hotspot--{{ v_dir }}"
-        style="--x: {{ x }}%; --y: {{ y }}%;"
-        {{ block.shopify_attributes }}
-        data-lookbook-hotspot
-      >
-        <summary class="lookbook__dot" aria-label="{{ hotspot_label }}">
-          <span class="lookbook__dot-inner" aria-hidden="true"></span>
-        </summary>
-
-        <div class="lookbook__card">
-          <div class="lookbook__card-content" data-product-container>
-            {%- if product != blank -%}
-              {%- assign product_has_variants = false -%}
-              {%- if product.variants.size > 1 -%}
-                {%- assign product_has_variants = true -%}
-              {%- endif -%}
-              
-              <!-- Product Image & Title -->
-              <div class="lookbook__card-header">
-                <div class="lookbook__card-image-wrapper">
-                  {%- if product.featured_image != blank -%}
-                    {{
-                      product.featured_image
-                      | image_url: width: 240
-                      | image_tag:
-                        class: 'lookbook__card-image',
-                        widths: '120, 240',
-                        sizes: '80px',
-                        loading: 'lazy',
-                        alt: product.featured_image.alt
-                    }}
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: 'lookbook__card-image lookbook__card-image--placeholder' }}
-                  {%- endif -%}
-                </div>
-                <div class="lookbook__card-details">
-                  <a href="{{ product.url }}" class="lookbook__card-title-link">
-                    <span class="lookbook__card-title">{{ product.title | escape }}</span>
-                  </a>
-                  <span class="lookbook__card-price" data-price-display>
-                    {%- if product.compare_at_price > product.price -%}
-                      <s class="lookbook__card-price-compare">{{ product.compare_at_price | money }}</s>
-                      <span class="lookbook__card-price-sale">{{ product.price | money }}</span>
-                      <span class="lookbook__visually-hidden">{{ 'sections.lookbook.on_sale' | t }}</span>
-                    {%- elsif product.price_varies -%}
-                      {%- assign min_price = product.price_min | money -%}
-                      {{ 'sections.lookbook.from_price' | t: price: min_price }}
-                    {%- else -%}
-                      {{ product.price | money }}
-                    {%- endif -%}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Variant Picker -->
-              {%- if product_has_variants -%}
-                <div class="lookbook__variant-selector">
-                  <label for="variant-{{ block.id }}" class="lookbook__variant-label">
-                    {{ 'sections.lookbook.select_size' | t }}
-                  </label>
-                  <select 
-                    id="variant-{{ block.id }}" 
-                    class="lookbook__variant-select" 
-                    data-variant-select
-                    aria-label="{{ 'sections.lookbook.select_size' | t }}"
-                  >
-                    <option value="">{{ 'sections.lookbook.choose_option' | t }}</option>
-                    {%- for variant in product.variants -%}
-                      <option 
-                        value="{{ variant.id }}" 
-                        data-price="{{ variant.price | money }}"
-                        {%- if variant.available == false %} disabled{% endif -%}
-                      >
-                        {{ variant.title }}
-                        {%- if variant.available == false -%}
-                          ({{ 'sections.lookbook.sold_out' | t }})
-                        {%- endif -%}
-                      </option>
-                    {%- endfor -%}
-                  </select>
-                  <div class="lookbook__requires-variant" data-requires-variant style="display: none;">
-                    {{ 'sections.lookbook.please_select_variant' | t }}
-                  </div>
-                </div>
-              {%- endif -%}
-
-              <!-- Add to Cart -->
-              <form 
-                class="lookbook__add-form" 
-                action="{{ routes.cart_add_url }}" 
-                method="post" 
-                enctype="multipart/form-data"
-                data-add-individual
-              >
-                <input 
-                  type="hidden" 
-                  name="id" 
-                  value="{%- if product_has_variants -%}{% else %}{{ product.variants.first.id }}{% endif -%}"
-                  data-variant-input
-                >
-                <input type="hidden" name="quantity" value="1">
-                
-                <button 
-                  type="submit" 
-                  class="lookbook__add-btn lookbook__add-btn--individual"
-                  data-add-to-cart
-                  data-variant-id="{%- if product_has_variants -%}{% else %}{{ product.variants.first.id }}{% endif -%}"
-                  data-quantity="1"
-                  {%- if product_has_variants %} disabled{% endif -%}
-                >
-                  {%- if product_has_variants -%}
-                    {{ 'sections.lookbook.select_size_first' | t }}
-                  {%- else -%}
-                    {{ 'sections.lookbook.add_to_cart' | t }}
-                  {%- endif -%}
-                </button>
-              </form>
-
-              <!-- Link to Product Page -->
-              <a href="{{ product.url }}" class="lookbook__product-link">
-                {{ 'sections.lookbook.view_product' | t }}
-                <span aria-hidden="true">→</span>
-              </a>
-
-            {%- else -%}
-              <!-- Onboarding: shown until the merchant selects a product -->
-              <div class="lookbook__card-header">
-                <div class="lookbook__card-image-wrapper">
-                  {{ 'product-2' | placeholder_svg_tag: 'lookbook__card-image lookbook__card-image--placeholder' }}
-                </div>
-                <div class="lookbook__card-details">
-                  <span class="lookbook__card-title">{{ 'sections.lookbook.example_product' | t }}</span>
-                  <span class="lookbook__card-price">{{ 1999 | money }}</span>
-                </div>
-              </div>
-              <div class="lookbook__variant-selector">
-                <p class="lookbook__onboarding-hint">
-                  {{ 'sections.lookbook.select_product_hint' | t }}
-                </p>
-              </div>
-            {%- endif -%}
-          </div>
+      {% if section.settings.text != blank %}
+        <div class="petlio-lookbook__intro">
+          {{ section.settings.text }}
         </div>
-      </details>
-    {%- endfor -%}
+      {% endif %}
 
-    <!-- "Shop the Whole Look" Button -->
-    <div class="lookbook__actions">
-      <button 
-        class="lookbook__whole-look-btn" 
-        data-whole-look-btn
-        aria-label="{{ 'sections.lookbook.shop_whole_look_aria' | t }}"
-      >
-        <span class="lookbook__whole-look-icon">🛒</span>
-        {{ 'sections.lookbook.shop_whole_look' | t }}
-      </button>
+    </header>
+
+
+    <div class="petlio-lookbook__scene">
+
+      <div class="petlio-lookbook__scene-background">
+
+        <div class="petlio-lookbook__arch"></div>
+
+        <div class="petlio-lookbook__sun"></div>
+
+        <div class="petlio-lookbook__floor"></div>
+
+        <div class="petlio-lookbook__shape petlio-lookbook__shape--one"></div>
+        <div class="petlio-lookbook__shape petlio-lookbook__shape--two"></div>
+
+        <div class="petlio-lookbook__plant petlio-lookbook__plant--left">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="petlio-lookbook__plant petlio-lookbook__plant--right">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+      </div>
+
+
+      <div class="petlio-lookbook__scene-copy">
+
+        <span class="petlio-lookbook__scene-kicker">
+          ONE LOOK
+        </span>
+
+        <span class="petlio-lookbook__scene-title">
+          Everything together.
+        </span>
+
+        <span class="petlio-lookbook__scene-note">
+          Tap a point to discover.
+        </span>
+
+      </div>
+
+
+      {% for block in section.blocks %}
+
+        {% assign product = block.settings.product %}
+
+        {% if product != blank %}
+
+          <div
+            class="petlio-lookbook__hotspot-wrap"
+            data-hotspot
+            data-product-id="{{ product.id }}"
+            data-hotspot-index="{{ forloop.index }}"
+            style="
+              --hotspot-x: {{ block.settings.position_x }}%;
+              --hotspot-y: {{ block.settings.position_y }}%;
+            "
+            {{ block.shopify_attributes }}
+          >
+
+            <button
+              type="button"
+              class="petlio-lookbook__hotspot"
+              data-hotspot-button
+              aria-expanded="false"
+              aria-controls="lookbook-product-{{ section.id }}-{{ forloop.index }}"
+              aria-label="View {{ product.title | escape }}"
+            >
+              <span class="petlio-lookbook__hotspot-ring"></span>
+              <span class="petlio-lookbook__hotspot-dot"></span>
+              <span class="petlio-lookbook__hotspot-plus">
+                +
+              </span>
+            </button>
+
+
+            <div
+              id="lookbook-product-{{ section.id }}-{{ forloop.index }}"
+              class="petlio-lookbook__product"
+              data-product-card
+              hidden
+            >
+
+              <div class="petlio-lookbook__product-image">
+
+                {% if product.featured_image %}
+
+                  {{
+                    product.featured_image
+                    | image_url: width: 700
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '300, 450, 600, 700',
+                      sizes: '(max-width: 749px) 72vw, 320px',
+                      alt: product.title
+                  }}
+
+                {% endif %}
+
+              </div>
+
+
+              <div class="petlio-lookbook__product-content">
+
+                {% if product.vendor != blank %}
+                  <span class="petlio-lookbook__product-vendor">
+                    {{ product.vendor }}
+                  </span>
+                {% endif %}
+
+                <h3 class="petlio-lookbook__product-title">
+                  {{ product.title }}
+                </h3>
+
+                <div class="petlio-lookbook__product-price">
+                  {{ product.price | money }}
+                </div>
+
+                <a
+                  class="petlio-lookbook__product-link"
+                  href="{{ product.url }}"
+                >
+                  View product
+                  <span aria-hidden="true">→</span>
+                </a>
+
+              </div>
+
+              <button
+                type="button"
+                class="petlio-lookbook__product-close"
+                data-product-close
+                aria-label="Close product"
+              >
+                ×
+              </button>
+
+            </div>
+
+          </div>
+
+        {% endif %}
+
+      {% endfor %}
+
+
+      {% if section.blocks.size == 0 %}
+
+        <div class="petlio-lookbook__empty">
+          <span>06</span>
+          <p>
+            Add products to create your shoppable look.
+          </p>
+        </div>
+
+      {% endif %}
+
+
+      <div class="petlio-lookbook__scene-footer">
+
+        <span class="petlio-lookbook__footer-line"></span>
+
+        <span>
+          Made for the moments in between.
+        </span>
+
+        <span class="petlio-lookbook__footer-line"></span>
+
+      </div>
+
     </div>
+
+
+    <footer class="petlio-lookbook__bottom">
+
+      <div class="petlio-lookbook__bottom-number">
+        06
+      </div>
+
+      <p>
+        Find something they love.
+        <strong>Make it part of their everyday.</strong>
+      </p>
+
+      <span class="petlio-lookbook__bottom-arrow">
+        ↓
+      </span>
+
+    </footer>
+
   </div>
-</div>
+</section>
+
 
 {% schema %}
 {
-  "name": "t:sections.lookbook.name",
+  "name": "Shoppable Lookbook",
   "tag": "section",
-  "class": "section-lookbook",
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  },
+  "class": "section-shoppable-lookbook",
+  "max_blocks": 8,
   "settings": [
     {
-      "type": "inline_richtext",
+      "type": "richtext",
       "id": "heading",
-      "label": "t:sections.lookbook.settings.heading.label",
-      "default": "Shop the look"
-    },
-    {
-      "type": "select",
-      "id": "heading_size",
-      "label": "t:sections.lookbook.settings.heading_size.label",
-      "options": [
-        { "value": "small", "label": "t:sections.lookbook.settings.heading_size.options__1.label" },
-        { "value": "medium", "label": "t:sections.lookbook.settings.heading_size.options__2.label" },
-        { "value": "large", "label": "t:sections.lookbook.settings.heading_size.options__3.label" }
-      ],
-      "default": "medium"
+      "label": "Heading",
+      "default": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>"
     },
     {
       "type": "richtext",
       "id": "text",
-      "label": "t:sections.lookbook.settings.text.label",
-      "default": "<p>Tap the dots to shop every piece in this look.</p>"
+      "label": "Text",
+      "default": "<p><em>Take the whole look home.</em></p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "medium"
     },
     {
       "type": "select",
       "id": "content_position",
-      "label": "t:sections.lookbook.settings.content_position.label",
+      "label": "Content position",
       "options": [
-        { "value": "top", "label": "t:sections.lookbook.settings.content_position.options__1.label" },
-        { "value": "left", "label": "t:sections.lookbook.settings.content_position.options__2.label" },
-        { "value": "right", "label": "t:sections.lookbook.settings.content_position.options__3.label" }
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
       ],
-      "default": "top",
-      "info": "t:sections.lookbook.settings.content_position.info"
-    },
-    { "type": "header", "content": "t:sections.lookbook.settings.header__1.content" },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "t:sections.lookbook.settings.image.label",
-      "info": "t:sections.lookbook.settings.image.info"
+      "default": "top"
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "t:sections.lookbook.settings.full_width.label",
+      "label": "Full width",
       "default": false
     },
-    { "type": "header", "content": "t:sections.lookbook.settings.header__2.content" },
     {
       "type": "color",
       "id": "color_dot",
-      "label": "t:sections.lookbook.settings.color_dot.label",
+      "label": "Hotspot color",
       "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "color_card_background",
-      "label": "t:sections.lookbook.settings.color_card_background.label",
+      "label": "Product card background",
       "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "color_card_foreground",
-      "label": "t:sections.lookbook.settings.color_card_foreground.label",
+      "label": "Product card text",
       "default": "#121212"
     }
   ],
   "blocks": [
     {
       "type": "hotspot",
-      "name": "t:sections.lookbook.blocks.hotspot.name",
-      "limit": 6,
+      "name": "Product hotspot",
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "t:sections.lookbook.blocks.hotspot.settings.product.label"
+          "label": "Product"
         },
         {
           "type": "range",
           "id": "position_x",
-          "label": "t:sections.lookbook.blocks.hotspot.settings.position_x.label",
-          "min": 0,
-          "max": 100,
+          "label": "Horizontal position",
+          "min": 5,
+          "max": 95,
           "step": 1,
           "unit": "%",
-          "default": 50
+          "default": 36
         },
         {
           "type": "range",
           "id": "position_y",
-          "label": "t:sections.lookbook.blocks.hotspot.settings.position_y.label",
-          "min": 0,
-          "max": 100,
+          "label": "Vertical position",
+          "min": 5,
+          "max": 95,
           "step": 1,
           "unit": "%",
-          "default": 50
+          "default": 64
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "t:sections.lookbook.presets.name",
+      "name": "Shoppable Lookbook",
       "blocks": [
         {
-          "type": "hotspot",
-          "settings": { "position_x": 30, "position_y": 35 }
+          "type": "hotspot"
         },
         {
-          "type": "hotspot",
-          "settings": { "position_x": 62, "position_y": 55 }
-        },
-        {
-          "type": "hotspot",
-          "settings": { "position_x": 45, "position_y": 80 }
+          "type": "hotspot"
         }
       ]
     }

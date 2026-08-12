@@ -94,6 +94,8 @@
             class="petlio-lookbook__hotspot-wrap"
             data-hotspot
             data-product-id="{{ product.id }}"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            data-available="{{ product.selected_or_first_available_variant.available }}"
             data-hotspot-index="{{ forloop.index }}"
             style="
               --hotspot-x: {{ block.settings.position_x }}%;
@@ -160,13 +162,28 @@
                   {{ product.price | money }}
                 </div>
 
-                <a
-                  class="petlio-lookbook__product-link"
-                  href="{{ product.url }}"
-                >
-                  View product
-                  <span aria-hidden="true">→</span>
-                </a>
+                <div class="petlio-lookbook__product-actions">
+                  <button
+                    type="button"
+                    class="petlio-lookbook__add-btn"
+                    data-lookbook-add
+                    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                    {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                  >
+                    {% if product.selected_or_first_available_variant.available %}
+                      Add to cart
+                    {% else %}
+                      Sold out
+                    {% endif %}
+                  </button>
+                  <a
+                    class="petlio-lookbook__product-link"
+                    href="{{ product.url }}"
+                  >
+                    View
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
 
               </div>
 
@@ -215,6 +232,19 @@
     </div>
 
 
+    {%- liquid
+      assign lookbook_items = ''
+      for block in section.blocks
+        assign p = block.settings.product
+        if p != blank and p.selected_or_first_available_variant.available
+          if lookbook_items != blank
+            assign lookbook_items = lookbook_items | append: ','
+          endif
+          assign lookbook_items = lookbook_items | append: p.selected_or_first_available_variant.id
+        endif
+      endfor
+    -%}
+
     <footer class="petlio-lookbook__bottom">
 
       <div class="petlio-lookbook__bottom-number">
@@ -225,6 +255,17 @@
         Find something they love.
         <strong>Make it part of their everyday.</strong>
       </p>
+
+      {%- if lookbook_items != blank -%}
+        <button
+          type="button"
+          class="petlio-lookbook__add-all"
+          data-lookbook-add-all
+          data-variant-ids="{{ lookbook_items }}"
+        >
+          Add all products to cart
+        </button>
+      {%- endif -%}
 
       <span class="petlio-lookbook__bottom-arrow">
         ↓

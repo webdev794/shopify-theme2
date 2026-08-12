@@ -94,19 +94,22 @@
 
             {% if product_1 != blank %}
 
-              <a
-                href="{{ product_1.url }}"
+              <button
+                type="button"
                 class="
                   lookbook-gallery__product
                   lookbook-gallery__product--one
                 "
                 data-look-product
+                data-look-add
                 data-product-id="{{ product_1.id }}"
+                data-variant-id="{{ product_1.selected_or_first_available_variant.id }}"
+                data-available="{{ product_1.selected_or_first_available_variant.available }}"
                 style="
                   --product-x: {{ block.settings.x1 }}%;
                   --product-y: {{ block.settings.y1 }}%;
                 "
-                aria-label="View {{ product_1.title | escape }}"
+                aria-label="Add {{ product_1.title | escape }} to cart"
               >
 
                 <span class="lookbook-gallery__product-image">
@@ -134,26 +137,29 @@
                   <small>{{ product_1.price | money }}</small>
                 </span>
 
-              </a>
+              </button>
 
             {% endif %}
 
 
             {% if product_2 != blank %}
 
-              <a
-                href="{{ product_2.url }}"
+              <button
+                type="button"
                 class="
                   lookbook-gallery__product
                   lookbook-gallery__product--two
                 "
                 data-look-product
+                data-look-add
                 data-product-id="{{ product_2.id }}"
+                data-variant-id="{{ product_2.selected_or_first_available_variant.id }}"
+                data-available="{{ product_2.selected_or_first_available_variant.available }}"
                 style="
                   --product-x: {{ block.settings.x2 }}%;
                   --product-y: {{ block.settings.y2 }}%;
                 "
-                aria-label="View {{ product_2.title | escape }}"
+                aria-label="Add {{ product_2.title | escape }} to cart"
               >
 
                 <span class="lookbook-gallery__product-image">
@@ -181,26 +187,29 @@
                   <small>{{ product_2.price | money }}</small>
                 </span>
 
-              </a>
+              </button>
 
             {% endif %}
 
 
             {% if product_3 != blank %}
 
-              <a
-                href="{{ product_3.url }}"
+              <button
+                type="button"
                 class="
                   lookbook-gallery__product
                   lookbook-gallery__product--three
                 "
                 data-look-product
+                data-look-add
                 data-product-id="{{ product_3.id }}"
+                data-variant-id="{{ product_3.selected_or_first_available_variant.id }}"
+                data-available="{{ product_3.selected_or_first_available_variant.available }}"
                 style="
                   --product-x: {{ block.settings.x3 }}%;
                   --product-y: {{ block.settings.y3 }}%;
                 "
-                aria-label="View {{ product_3.title | escape }}"
+                aria-label="Add {{ product_3.title | escape }} to cart"
               >
 
                 <span class="lookbook-gallery__product-image">
@@ -228,7 +237,7 @@
                   <small>{{ product_3.price | money }}</small>
                 </span>
 
-              </a>
+              </button>
 
             {% endif %}
 
@@ -255,6 +264,25 @@
 
           </div>
 
+          {%- liquid
+            assign look_variant_ids = ''
+            if product_1 != blank and product_1.selected_or_first_available_variant.available
+              assign look_variant_ids = product_1.selected_or_first_available_variant.id
+            endif
+            if product_2 != blank and product_2.selected_or_first_available_variant.available
+              if look_variant_ids != blank
+                assign look_variant_ids = look_variant_ids | append: ','
+              endif
+              assign look_variant_ids = look_variant_ids | append: product_2.selected_or_first_available_variant.id
+            endif
+            if product_3 != blank and product_3.selected_or_first_available_variant.available
+              if look_variant_ids != blank
+                assign look_variant_ids = look_variant_ids | append: ','
+              endif
+              assign look_variant_ids = look_variant_ids | append: product_3.selected_or_first_available_variant.id
+            endif
+          -%}
+
           <div class="lookbook-gallery__look-footer">
 
             <span>
@@ -265,9 +293,20 @@
               {% endif %}
             </span>
 
-            <span class="lookbook-gallery__discover">
-              Explore the look →
-            </span>
+            {%- if look_variant_ids != blank -%}
+              <button
+                type="button"
+                class="lookbook-gallery__add-look"
+                data-look-add-all
+                data-variant-ids="{{ look_variant_ids }}"
+              >
+                Add look to cart
+              </button>
+            {%- else -%}
+              <span class="lookbook-gallery__discover">
+                Explore the look →
+              </span>
+            {%- endif -%}
 
           </div>
 

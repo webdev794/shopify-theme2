@@ -21,7 +21,6 @@
       </span>
     </div>
 
-
     <div class="petlio-care__layout">
 
       <div class="petlio-care__visual">
@@ -51,7 +50,6 @@
 
         </div>
 
-
         <div class="petlio-care__image-note">
           <span class="petlio-care__image-note-dot"></span>
           Little moments matter.
@@ -59,13 +57,11 @@
 
       </div>
 
-
       <div class="petlio-care__content">
 
         <div class="petlio-care__eyebrow">
           THE EVERYDAY
         </div>
-
 
         {% if section.settings.heading != blank %}
           <h2 class="petlio-care__heading">
@@ -73,13 +69,11 @@
           </h2>
         {% endif %}
 
-
         {% if section.settings.text != blank %}
           <div class="petlio-care__text">
             {{ section.settings.text }}
           </div>
         {% endif %}
-
 
         {% if section.settings.button_label != blank %}
 
@@ -88,13 +82,16 @@
             class="petlio-care__button"
           >
             <span>{{ section.settings.button_label }}</span>
-            <span class="petlio-care__button-arrow" aria-hidden="true">
+
+            <span
+              class="petlio-care__button-arrow"
+              aria-hidden="true"
+            >
               →
             </span>
           </a>
 
         {% endif %}
-
 
         <div class="petlio-care__details">
 
@@ -119,7 +116,6 @@
 
     </div>
 
-
     <div class="petlio-care__closing">
 
       <span class="petlio-care__closing-line"></span>
@@ -141,53 +137,62 @@
   "name": "Care Ritual",
   "tag": "section",
   "class": "section-care-ritual",
+
   "settings": [
     {
       "type": "image_picker",
       "id": "image",
       "label": "Lifestyle image"
     },
+
     {
-      "type": "richtext",
+      "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "<p>For every little moment.</p>"
+      "default": "For every little moment."
     },
+
     {
       "type": "richtext",
       "id": "text",
       "label": "Text",
       "default": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>"
     },
+
     {
       "type": "text",
       "id": "button_label",
       "label": "Button label",
       "default": "Explore care"
     },
+
     {
       "type": "url",
       "id": "button_link",
       "label": "Button link"
     },
+
     {
       "type": "text",
       "id": "closing_text",
       "label": "Closing text",
       "default": "The best things are often the little things."
     },
+
     {
       "type": "color",
       "id": "background_color",
       "label": "Background",
       "default": "#e9e2d7"
     },
+
     {
       "type": "color",
       "id": "text_color",
       "label": "Text",
       "default": "#1d2921"
     },
+
     {
       "type": "color",
       "id": "accent_color",
@@ -195,6 +200,7 @@
       "default": "#71806d"
     }
   ],
+
   "presets": [
     {
       "name": "Care Ritual"

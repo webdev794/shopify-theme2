@@ -7,7 +7,7 @@
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 9990;
+  z-index: 2147483000; /* above header / menu */
   mix-blend-mode: multiply;
   opacity: 0.9;
 }
@@ -21,7 +21,7 @@
   height: 44px;
   margin: -22px 0 0 -22px;
   pointer-events: none;
-  z-index: 9991;
+  z-index: 2147483001; /* above canvas + header */
   overflow: visible;
   will-change: transform;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
@@ -38,15 +38,10 @@
   opacity: 0;
 }
 
-.shopify-section-group-header-group,
-.cart-drawer,
-.quick-view-modal,
-[role="dialog"],
-.modal,
-.drawer {
-  position: relative;
-  z-index: 9995;
-}
+/*
+  Do NOT raise header above the dog.
+  pointer-events: none on canvas/toy means menu stays clickable.
+*/
 
 body.dog-cursor-active,
 body.dog-cursor-active a,
@@ -75,3 +70,4 @@ body.dog-cursor-active label {
     cursor: auto;
   }
 }
+

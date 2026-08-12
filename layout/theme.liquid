@@ -8,6 +8,7 @@
       <link rel="preconnect" href="//fonts.shopifycdn.com" crossorigin>
       <!-- /theme-check-disable RemoteAsset -->
     {% endunless %}
+    {{ 'petlio-theme.css' | asset_url | stylesheet_tag }}
     {{ 'critical.css' | asset_url | stylesheet_tag }}
     {{ 'buttons.css' | asset_url | stylesheet_tag }}
     {{ 'unit-price.css' | asset_url | stylesheet_tag }}

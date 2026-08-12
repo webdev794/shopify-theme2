@@ -42,14 +42,27 @@
         }
       }
         function afterAdd(cart) {
+          // Update cart count / listeners without opening the drawer
           if (utils && utils.publishCart && cart) utils.publishCart(cart);
           document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
-          document.dispatchEvent(new CustomEvent('product:added', { detail: { cart: cart } }));
           document.dispatchEvent(new CustomEvent('cart:refresh', { detail: { cart: cart } }));
+          // Toast confirmation only (drawer was opening empty)
           if (window.PetlioToast && PetlioToast.show) {
-            var count = items && items.length > 1 ? items.length + ' items added to cart' : 'Added to cart';
-            PetlioToast.show(count, { withCartLink: true });
+            var msg = items && items.length > 1 ? (items.length + ' items added to cart') : 'Added to cart';
+            PetlioToast.show(msg, { withCartLink: true });
           }
+          // Update header cart count badge if present
+          try {
+            var n = cart && typeof cart.item_count === 'number' ? cart.item_count : null;
+            if (n !== null) {
+              document.querySelectorAll('[data-cart-count], [data-cart-drawer-count], .cart-count, .header__cart-count').forEach(function (el) {
+                el.textContent = n > 0 ? String(n) : '';
+                el.hidden = n <= 0;
+                if (n > 0) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+              });
+            }
+          } catch (err) {}
         }
         if (utils && typeof utils.getCart === 'function') {
           utils.getCart().then(afterAdd).catch(function () { afterAdd(null); });

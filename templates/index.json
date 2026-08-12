@@ -314,52 +314,6 @@
         "color_card_foreground": "#121212"
       }
     },
-    "text_with_icons": {
-      "type": "text-with-icons",
-      "blocks": {
-        "item_1": {
-          "type": "item",
-          "settings": {
-            "icon": "truck",
-            "title": "Free Shipping",
-            "text": "<p>Enjoy free shipping on all orders over $50</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "item_2": {
-          "type": "item",
-          "settings": {
-            "icon": "shield",
-            "title": "Secure Payments",
-            "text": "<p>Your payment information is always secure</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "item_3": {
-          "type": "item",
-          "settings": {
-            "icon": "star",
-            "title": "Premium Quality",
-            "text": "<p>Handpicked products from trusted brands</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "item_1",
-        "item_2",
-        "item_3"
-      ],
-      "settings": {
-        "heading": "CARE / STORIES",
-        "subheading": "Live better together.",
-        "columns": "3",
-        "alignment": "center"
-      }
-    },
     "blog_posts": {
       "type": "blog-posts",
       "settings": {
@@ -498,7 +452,6 @@
     "outfit_builder",
     "lookbook_gallery",
     "lookbook",
-    "text_with_icons",
     "blog_posts",
     "faq",
     "testimonials",

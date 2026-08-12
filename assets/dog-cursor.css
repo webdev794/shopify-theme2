@@ -1,0 +1,62 @@
+/* Petlio – 3D-style dotted dog + toy cursor
+   Dog runs behind the toy; sections get a soft depth/curve feel via blend + shadow */
+
+#dog-cursor-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9990;
+  /* Multiply darkens content under the dots → dog feels “behind” the UI */
+  mix-blend-mode: multiply;
+  opacity: 0.92;
+}
+
+/* Soft perspective hint on main content so the page feels slightly curved in depth */
+body.dog-cursor-active #MainContent {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+/* Keep chrome above the effect */
+.shopify-section-group-header-group,
+.cart-drawer,
+.quick-view-modal,
+[role="dialog"],
+.modal,
+.drawer {
+  position: relative;
+  z-index: 9995;
+}
+
+body.dog-cursor-active,
+body.dog-cursor-active a,
+body.dog-cursor-active button,
+body.dog-cursor-active input,
+body.dog-cursor-active textarea,
+body.dog-cursor-active select,
+body.dog-cursor-active [role="button"],
+body.dog-cursor-active label {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dog-cursor-canvas {
+    display: none !important;
+  }
+  body.dog-cursor-active,
+  body.dog-cursor-active a,
+  body.dog-cursor-active button,
+  body.dog-cursor-active input,
+  body.dog-cursor-active textarea,
+  body.dog-cursor-active select,
+  body.dog-cursor-active [role="button"],
+  body.dog-cursor-active label {
+    cursor: auto;
+  }
+  body.dog-cursor-active #MainContent {
+    perspective: none;
+  }
+}

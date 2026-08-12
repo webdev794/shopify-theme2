@@ -218,8 +218,14 @@
         "product_4"
       ],
       "settings": {
+        "chapter_label": "EVERYDAY / YOUR WAY",
         "heading": "OUTFIT BUILDER",
         "subheading": "Make it theirs.",
+        "description": "<p>Pick the pieces that belong together. Build a little everyday world that's made just for them.</p>",
+        "catalog_label": "Choose your pieces",
+        "selection_eyebrow": "YOUR COLLECTION",
+        "summary_note": "Choose a few things they’ll love.",
+        "footer_text": "Pick · mix · make it theirs",
         "max_items": 4,
         "selection_label": "Your outfit",
         "total_label": "Total",
@@ -304,14 +310,28 @@
         "hotspot_2"
       ],
       "settings": {
-        "heading": "<strong>SHOPPABLE LOOKBOOK</strong>",
-        "heading_size": "medium",
+        "heading": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>",
         "text": "<p><em>Take the whole look home.</em></p>",
+        "heading_size": "medium",
         "content_position": "top",
         "full_width": false,
         "color_dot": "#ffffff",
         "color_card_background": "#ffffff",
         "color_card_foreground": "#121212"
+      }
+    },
+    "care_ritual_WTwbiB": {
+      "type": "care-ritual",
+      "name": "Care Ritual",
+      "settings": {
+        "heading": "<p>For every little moment.</p>",
+        "text": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>",
+        "button_label": "Explore care",
+        "button_link": "",
+        "closing_text": "The best things are often the little things.",
+        "background_color": "#e9e2d7",
+        "text_color": "#1d2921",
+        "accent_color": "#71806d"
       }
     },
     "blog_posts": {
@@ -452,6 +472,7 @@
     "outfit_builder",
     "lookbook_gallery",
     "lookbook",
+    "care_ritual_WTwbiB",
     "blog_posts",
     "faq",
     "testimonials",

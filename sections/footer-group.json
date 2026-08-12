@@ -15,10 +15,20 @@
       "type": "footer",
       "settings": {
         "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
-        "tagline": "Curating exceptional pieces for the discerning few.",
+        "tagline": "Thoughtful things for the everyday moments you share.",
+        "closing_kicker": "FOR THE LOVE THEY GIVE",
+        "closing_heading": "Life with them is better.",
+        "closing_text": "Better care. Happier moments. Stronger together.",
+        "footer_menu": "footer",
+        "menu_heading": "Explore",
         "show_contact_link": true,
         "show_newsletter": true,
-        "newsletter_heading": "Subscribe",
+        "newsletter_heading": "Stay close",
+        "newsletter_text": "New finds, useful ideas, and little things worth knowing.",
+        "newsletter_placeholder": "Your email address",
+        "newsletter_button_label": "Join us",
+        "newsletter_note": "No noise. Just the good stuff.",
+        "newsletter_success_message": "You're in. Welcome to Petlio.",
         "show_social": true,
         "show_payment_icons": true
       }

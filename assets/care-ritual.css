@@ -1,0 +1,397 @@
+/* =========================================================
+   PETLIO — CARE RITUAL
+   Chapter 07
+   Editorial transition from shopping to relationship
+   ========================================================= */
+
+.petlio-care {
+  --care-bg: #e9e2d7;
+  --care-text: #1d2921;
+  --care-accent: #71806d;
+  --care-muted: rgba(29, 41, 33, 0.58);
+  --care-line: rgba(29, 41, 33, 0.14);
+
+  position: relative;
+  overflow: hidden;
+  padding: clamp(6rem, 11vw, 10rem) 0;
+  color: var(--care-text);
+  background: var(--care-bg);
+}
+
+.petlio-care__container {
+  width: min(1320px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   CHAPTER
+   ========================================================= */
+
+.petlio-care__chapter {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: clamp(3rem, 6vw, 5.5rem);
+  color: var(--care-muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.petlio-care__chapter-number {
+  opacity: 0.5;
+}
+
+.petlio-care__chapter-line {
+  width: 42px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.4;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.petlio-care__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  align-items: center;
+  gap: clamp(3rem, 8vw, 9rem);
+}
+
+/* =========================================================
+   IMAGE
+   ========================================================= */
+
+.petlio-care__visual {
+  position: relative;
+}
+
+.petlio-care__image-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1.08;
+  border-radius: clamp(28px, 4vw, 52px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.petlio-care__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.petlio-care__visual:hover .petlio-care__image {
+  transform: scale(1.035);
+}
+
+.petlio-care__placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(255, 255, 255, 0.5),
+      transparent 32%
+    ),
+    linear-gradient(
+      145deg,
+      #d7cdbf,
+      #b9ac9b
+    );
+}
+
+.petlio-care__placeholder span {
+  color: rgba(29, 41, 33, 0.35);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.petlio-care__image-note {
+  position: absolute;
+  right: -18px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  color: var(--care-text);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 100px;
+  box-shadow: 0 12px 30px rgba(29, 41, 33, 0.08);
+  backdrop-filter: blur(12px);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.petlio-care__image-note-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--care-accent);
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.petlio-care__content {
+  max-width: 500px;
+}
+
+.petlio-care__eyebrow {
+  margin-bottom: 1.4rem;
+  color: var(--care-accent);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.petlio-care__heading {
+  max-width: 600px;
+  margin: 0;
+  font-size: clamp(3rem, 5.5vw, 6.5rem);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.91;
+}
+
+.petlio-care__heading p {
+  margin: 0;
+}
+
+.petlio-care__text {
+  max-width: 430px;
+  margin-top: 2rem;
+  color: var(--care-muted);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.7;
+}
+
+.petlio-care__text p {
+  margin: 0;
+}
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.petlio-care__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 2.2rem;
+  padding: 0.9rem 0;
+  color: var(--care-text);
+  border-bottom: 1px solid var(--care-text);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    gap 250ms ease,
+    opacity 250ms ease;
+}
+
+.petlio-care__button:hover {
+  gap: 1.8rem;
+  opacity: 0.65;
+}
+
+.petlio-care__button-arrow {
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+/* =========================================================
+   DETAILS
+   ========================================================= */
+
+.petlio-care__details {
+  margin-top: clamp(3rem, 5vw, 4.5rem);
+  border-top: 1px solid var(--care-line);
+}
+
+.petlio-care__detail {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--care-line);
+  color: var(--care-muted);
+  font-size: 0.68rem;
+}
+
+.petlio-care__detail-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  border: 1px solid var(--care-line);
+  border-radius: 50%;
+  color: var(--care-text);
+  font-size: 0.52rem;
+}
+
+/* =========================================================
+   CLOSING STATEMENT
+   ========================================================= */
+
+.petlio-care__closing {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: clamp(5rem, 9vw, 8rem);
+}
+
+.petlio-care__closing-line {
+  flex: 1;
+  height: 1px;
+  background: var(--care-line);
+}
+
+.petlio-care__closing p {
+  max-width: 360px;
+  margin: 0;
+  color: var(--care-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* =========================================================
+   REVEAL
+   ========================================================= */
+
+.petlio-care__image-wrap,
+.petlio-care__content {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 800ms ease,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.petlio-care__content {
+  transition-delay: 120ms;
+}
+
+.petlio-care.is-visible .petlio-care__image-wrap,
+.petlio-care.is-visible .petlio-care__content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .petlio-care__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+    gap: 3rem;
+  }
+
+  .petlio-care__heading {
+    font-size: clamp(2.8rem, 6vw, 4.8rem);
+  }
+
+  .petlio-care__image-note {
+    right: 18px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 749px) {
+  .petlio-care {
+    padding: 5rem 0;
+  }
+
+  .petlio-care__container {
+    width: min(100% - 28px, 620px);
+  }
+
+  .petlio-care__chapter {
+    margin-bottom: 3rem;
+  }
+
+  .petlio-care__layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3.5rem;
+  }
+
+  .petlio-care__image-wrap {
+    aspect-ratio: 1 / 1.08;
+    border-radius: 28px;
+  }
+
+  .petlio-care__image-note {
+    right: 12px;
+    bottom: 14px;
+  }
+
+  .petlio-care__content {
+    max-width: none;
+  }
+
+  .petlio-care__heading {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+
+  .petlio-care__text {
+    margin-top: 1.5rem;
+  }
+
+  .petlio-care__details {
+    margin-top: 3rem;
+  }
+
+  .petlio-care__closing {
+    margin-top: 5rem;
+    gap: 0.8rem;
+  }
+
+  .petlio-care__closing p {
+    font-size: 0.62rem;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .petlio-care__image {
+    transition: none;
+  }
+
+  .petlio-care__image-wrap,
+  .petlio-care__content {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .petlio-care__button {
+    transition: none;
+  }
+}

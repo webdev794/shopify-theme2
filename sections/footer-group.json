@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "Footer",
@@ -7,7 +16,6 @@
       "settings": {
         "logo": "shopify://shop_images/recently-generated-petlio-shopify-theme-logo.png",
         "tagline": "Curating exceptional pieces for the discerning few.",
-        "menu": "footer",
         "show_contact_link": true,
         "show_newsletter": true,
         "newsletter_heading": "Subscribe",

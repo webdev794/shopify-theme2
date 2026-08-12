@@ -1,0 +1,73 @@
+/* Petlio – product SVG cursor + single dotted dog behind it */
+
+#dog-cursor-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2147483000; /* above header / menu */
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+/* Real product-style SVG cursor */
+#dog-cursor-toy {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  pointer-events: none;
+  z-index: 2147483001; /* above canvas + header */
+  overflow: visible;
+  will-change: transform;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+  transition: opacity 0.15s ease;
+}
+
+#dog-cursor-toy svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#dog-cursor-toy.is-hidden {
+  opacity: 0;
+}
+
+/*
+  Do NOT raise header above the dog.
+  pointer-events: none on canvas/toy means menu stays clickable.
+*/
+
+body.dog-cursor-active,
+body.dog-cursor-active a,
+body.dog-cursor-active button,
+body.dog-cursor-active input,
+body.dog-cursor-active textarea,
+body.dog-cursor-active select,
+body.dog-cursor-active [role="button"],
+body.dog-cursor-active label {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dog-cursor-canvas,
+  #dog-cursor-toy {
+    display: none !important;
+  }
+  body.dog-cursor-active,
+  body.dog-cursor-active a,
+  body.dog-cursor-active button,
+  body.dog-cursor-active input,
+  body.dog-cursor-active textarea,
+  body.dog-cursor-active select,
+  body.dog-cursor-active [role="button"],
+  body.dog-cursor-active label {
+    cursor: auto;
+  }
+}
+

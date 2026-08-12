@@ -12,6 +12,7 @@
     {{ 'buttons.css' | asset_url | stylesheet_tag }}
     {{ 'unit-price.css' | asset_url | stylesheet_tag }}
     {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
+    {{ 'dog-cursor.css' | asset_url | stylesheet_tag }}
     {{ content_for_header }}
     <!-- theme-check-disable RemoteAsset -->
     <script src="//cdn.shopify.com/shopifycloud/shop-js/shop-installments.js" defer></script>
@@ -22,6 +23,7 @@
     </script>
     <script src="{{ 'theme-utils.js' | asset_url }}" defer></script>
     <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'dog-cursor.js' | asset_url }}" defer></script>
     <style>
       html, body { min-height: 100vh !important; min-height: 100dvh !important; }
       .shopify-section-group-footer-group { position: relative !important; }
@@ -41,3 +43,4 @@
     {% render 'cart-drawer' %}
   </body>
 </html>
+

@@ -45,11 +45,11 @@
         "buttons_4j4kYY"
       ],
       "settings": {
-        "image": "shopify://shop_images/petlio_hero.png",
+        "image": "shopify://shop_images/hero.png",
         "height": "medium",
         "full_width": true,
-        "content_position": "middle-center",
-        "content_alignment": "center",
+        "content_position": "middle-left",
+        "content_alignment": "left",
         "content_max_width": 650,
         "stack_on_mobile": false,
         "color_overlay": "#000000",

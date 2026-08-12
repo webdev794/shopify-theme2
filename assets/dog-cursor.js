@@ -1,53 +1,74 @@
 /**
- * Petlio – Product SVG cursor + single dotted dog
+ * PETLIO — UNIVERSAL DOG CURSOR
+ * ============================================================
  *
- * CURSOR STORY
- * ------------------------------------------------------------
- * Hero            → playful / run
- * Shop by Pet     → explore
- * Products        → shop / sniff
- * Outfit Builder  → build
- * Lookbook        → discover
- * Care Ritual     → calm
- * Stories         → read
- * FAQ / Trust     → minimal
- * Newsletter      → settle
+ * Theme-level cursor system.
  *
- * Existing behavior intentionally preserved:
- * - Cursor = bone / ball / food bowl
- * - Exactly ONE dotted dog
- * - Dog follows smoothly behind cursor
- * - Stop → sniff → sit → bite
- * - Idle dog faces the toy with its snout touching it
+ * IMPORTANT:
+ * This file does NOT depend on:
+ * - index.json
+ * - specific section names
+ * - specific section IDs
+ * - a particular homepage structure
  *
- * New behavior:
- * - Current homepage section is detected automatically
- * - Each section adjusts dog movement / idle timing
- * - No section-specific duplicate cursor instances
+ * Sections may optionally use:
+ *
+ *   data-cursor-mode="explore"
+ *   data-cursor-mode="shop"
+ *   data-cursor-mode="build"
+ *   data-cursor-mode="discover"
+ *   data-cursor-mode="calm"
+ *   data-cursor-mode="read"
+ *   data-cursor-mode="minimal"
+ *   data-cursor-mode="settle"
+ *
+ * If no mode exists, "default" behavior is used.
+ *
+ * Therefore:
+ * - Remove a section → cursor still works.
+ * - Add a section → cursor still works.
+ * - Reorder sections → cursor still works.
+ * - Add a custom section → cursor still works.
+ *
+ * Existing dog behavior preserved:
+ * - bone / ball / food bowl
+ * - one dotted dog
+ * - smooth following
+ * - run
+ * - sniff
+ * - sit
+ * - bite
+ * - dog faces the toy when idle
  */
 
 (function () {
   'use strict';
 
-  /* =========================================================
-     BASIC SAFETY
-     ========================================================= */
 
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ) {
+  /* ==========================================================
+     SAFETY
+     ========================================================== */
+
+  var reduceMotion =
+    window.matchMedia &&
+    window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
+
+  var coarsePointer =
+    window.matchMedia &&
+    window.matchMedia(
+      '(pointer: coarse)'
+    ).matches;
+
+  if (reduceMotion || coarsePointer) {
     return;
   }
 
-  if (
-    window.matchMedia('(pointer: coarse)').matches
-  ) {
-    return;
-  }
 
-  /* =========================================================
-     CURSOR TOYS
-     ========================================================= */
+  /* ==========================================================
+     CONFIG
+     ========================================================== */
 
   var TOYS = [
     'bone',
@@ -57,18 +78,14 @@
 
   var TOY_CYCLE_MS = 14000;
 
-  /*
-   * Base idle time.
-   * Individual sections can make this faster/slower.
-   */
   var IDLE_AFTER_MS = 500;
 
   var DOG_SCALE = 1.12;
 
 
-  /* =========================================================
-     TOY SVG
-     ========================================================= */
+  /* ==========================================================
+     CURSOR TOYS
+     ========================================================== */
 
   var TOY_SVG = {
 
@@ -98,19 +115,15 @@
       '<circle cx="36" cy="30" r="1.6" fill="#F59E0B"/>' +
       '<circle cx="26" cy="35" r="1.5" fill="#D97706"/>' +
       '</svg>'
-
   };
 
 
-  /* =========================================================
+  /* ==========================================================
      DOG FRAME DATA
-     ========================================================= */
-
-  // Dog faces +X.
-  // Head is at high X.
-  // Tail is at low X.
+     ========================================================== */
 
   var RUN = [
+
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-6],[-14,-12],[-18,-8],[42,8],[44,16],[46,24],[50,8],[52,14],[54,20],[10,6],[8,14],[6,22],[18,6],[20,14],[22,22]],
 
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-4],[-12,-10],[-16,-6],[42,6],[40,12],[38,18],[50,8],[54,12],[58,16],[10,8],[14,14],[18,18],[18,4],[16,10],[12,16]],
@@ -120,43 +133,67 @@
     [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-10,-5],[-15,-11],[-18,-7],[40,8],[38,14],[36,20],[52,6],[56,12],[60,18],[12,6],[16,12],[20,18],[16,6],[12,12],[8,18]]
   ];
 
+
   var SIT = [
+
     [[0,2],[8,0],[16,0],[24,1],[32,1],[40,0],[48,-2],[54,-6],[60,-10],[64,-8],[66,-4],[62,0],[56,-14],[52,-16],[60,-15],[70,-6],[72,-4],[-6,-2],[-10,-6],[-12,-2],[42,8],[44,14],[46,16],[50,6],[52,10],[10,10],[8,16],[6,18],[18,10],[20,16],[22,18]]
   ];
 
-  var SNIFF = [
-    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-2],[64,-3],[70,-2],[74,0],[70,3],[58,-8],[54,-10],[62,-9],[78,0],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
 
-    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-3],[64,-4],[70,-3],[74,-1],[70,2],[58,-9],[54,-11],[62,-10],[78,-1],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]]
+  var SNIFF = [
+
+    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-2],[64,-3],[70,-2],[74,0],[70,3],[58,-8],[54,-10],[62,-9],[78,0],[80,2],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
+
+    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-3],[64,-4],[70,-3],[74,-1],[70,2],[58,-9],[54,-11],[62,-10],[78,-1],[80,1],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]]
   ];
 
+
   var BITE = [
+
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-2],[60,-4],[64,-2],[66,2],[62,4],[56,-8],[52,-10],[60,-9],[70,0],[72,2],[-8,-4],[-12,-8],[-16,-5],[42,10],[44,16],[46,20],[50,10],[52,14],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
 
     [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,0],[58,-1],[62,1],[64,5],[60,7],[54,-5],[50,-7],[58,-6],[68,4],[70,6],[-8,-3],[-11,-6],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]],
 
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-3],[60,-5],[64,-2],[66,3],[62,5],[56,-8],[52,-10],[60,-9],[70,1],[72,3],[-8,-4],[-12,-8],[-15,-5],[40,8],[38,14],[36,20],[52,6],[56,12],[60,18],[12,6],[16,12],[20,18],[16,6],[12,12],[8,18]],
+    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-3],[60,-5],[64,-2],[66,3],[62,5],[56,-8],[52,-10],[60,-9],[70,1],[72,3],[-8,-4],[-12,-8],[-15,-5],[42,10],[44,15],[46,19],[50,10],[52,14],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
 
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,-1],[58,-2],[62,0],[64,4],[60,6],[54,-6],[50,-8],[58,-7],[68,3],[70,5],[-8,-3],[-11,-6],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]]
+    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,-1],[58,-2],[62,0],[64,4],[60,6],[54,-6],[50,-8],[58,-7],[68,3],[70,5],[-8,-3],[-11,-7],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]]
   ];
 
 
   function densify(frame) {
+
     var out = [];
 
-    for (var i = 0; i < frame.length; i++) {
+    for (
+      var i = 0;
+      i < frame.length;
+      i++
+    ) {
+
       var x = frame[i][0];
       var y = frame[i][1];
 
-      out.push([x, y]);
+      out.push([
+        x,
+        y
+      ]);
 
       var a =
-        (i * 2.4) %
-        (Math.PI * 2);
+        (
+          i * 2.4
+        ) %
+        (
+          Math.PI * 2
+        );
 
       out.push([
-        x + Math.cos(a) * 1.6,
-        y + Math.sin(a) * 1.6
+        x +
+          Math.cos(a) *
+          1.6,
+
+        y +
+          Math.sin(a) *
+          1.6
       ]);
     }
 
@@ -172,13 +209,136 @@
   };
 
 
-  /* =========================================================
-     STATE
-     ========================================================= */
+  /* ==========================================================
+     SECTION MODES
+     ========================================================== */
 
-  var canvas;
-  var ctx;
-  var toyEl;
+  /*
+   * These are generic behaviors.
+   *
+   * They are NOT tied to section names.
+   */
+
+  var MODES = {
+
+    default: {
+      idleAfter: 500,
+      stiffness: 0.06,
+      damping: 0.78,
+      behindX: -48,
+      behindY: 16,
+      toyCycle: 14000,
+      scale: 1,
+      idleType: 'normal',
+      opacity: 0.90
+    },
+
+    explore: {
+      idleAfter: 750,
+      stiffness: 0.055,
+      damping: 0.80,
+      behindX: -52,
+      behindY: 18,
+      toyCycle: 12000,
+      scale: 1,
+      idleType: 'sniff',
+      opacity: 0.90
+    },
+
+    shop: {
+      idleAfter: 450,
+      stiffness: 0.065,
+      damping: 0.78,
+      behindX: -46,
+      behindY: 16,
+      toyCycle: 9000,
+      scale: 1.04,
+      idleType: 'normal',
+      opacity: 0.95
+    },
+
+    build: {
+      idleAfter: 600,
+      stiffness: 0.06,
+      damping: 0.79,
+      behindX: -50,
+      behindY: 17,
+      toyCycle: 10000,
+      scale: 1.02,
+      idleType: 'normal',
+      opacity: 0.92
+    },
+
+    discover: {
+      idleAfter: 750,
+      stiffness: 0.052,
+      damping: 0.81,
+      behindX: -55,
+      behindY: 19,
+      toyCycle: 13000,
+      scale: 1,
+      idleType: 'sniff',
+      opacity: 0.88
+    },
+
+    calm: {
+      idleAfter: 1000,
+      stiffness: 0.045,
+      damping: 0.83,
+      behindX: -60,
+      behindY: 20,
+      toyCycle: 18000,
+      scale: 0.97,
+      idleType: 'calm',
+      opacity: 0.72
+    },
+
+    read: {
+      idleAfter: 900,
+      stiffness: 0.048,
+      damping: 0.82,
+      behindX: -58,
+      behindY: 19,
+      toyCycle: 16000,
+      scale: 0.98,
+      idleType: 'calm',
+      opacity: 0.68
+    },
+
+    minimal: {
+      idleAfter: 1100,
+      stiffness: 0.042,
+      damping: 0.84,
+      behindX: -62,
+      behindY: 20,
+      toyCycle: 20000,
+      scale: 0.95,
+      idleType: 'calm',
+      opacity: 0.58
+    },
+
+    settle: {
+      idleAfter: 1250,
+      stiffness: 0.038,
+      damping: 0.85,
+      behindX: -64,
+      behindY: 21,
+      toyCycle: 22000,
+      scale: 0.93,
+      idleType: 'settle',
+      opacity: 0.48
+    }
+
+  };
+
+
+  /* ==========================================================
+     STATE
+     ========================================================== */
+
+  var canvas = null;
+  var ctx = null;
+  var toyEl = null;
 
   var mouseX = -9999;
   var mouseY = -9999;
@@ -206,447 +366,240 @@
   var toyIndex = 0;
   var lastToySwitch = 0;
 
-  var currentSection = 'hero';
-  var currentSectionElement = null;
+  var activeCursorMode = 'default';
+
+  var hoveredInteractive = false;
 
 
-  /* =========================================================
-     SECTION PROFILES
-     ========================================================= */
+  /* ==========================================================
+     HELPERS
+     ========================================================== */
 
-  var SECTION_PROFILES = {
+  function getProfile() {
 
-    hero: {
-      idleAfter: 650,
-      followStiffness: 0.065,
-      damping: 0.78,
-      behindDistance: 48,
-      behindY: 16,
-      toyCycle: 14000,
-      idleStyle: 'normal',
-      scale: 1.00
-    },
-
-    explore: {
-      idleAfter: 850,
-      followStiffness: 0.055,
-      damping: 0.80,
-      behindDistance: 54,
-      behindY: 18,
-      toyCycle: 12000,
-      idleStyle: 'sniff',
-      scale: 1.00
-    },
-
-    shop: {
-      idleAfter: 420,
-      followStiffness: 0.070,
-      damping: 0.77,
-      behindDistance: 46,
-      behindY: 15,
-      toyCycle: 9000,
-      idleStyle: 'normal',
-      scale: 1.04
-    },
-
-    build: {
-      idleAfter: 600,
-      followStiffness: 0.060,
-      damping: 0.79,
-      behindDistance: 50,
-      behindY: 17,
-      toyCycle: 10000,
-      idleStyle: 'normal',
-      scale: 1.02
-    },
-
-    discover: {
-      idleAfter: 760,
-      followStiffness: 0.052,
-      damping: 0.81,
-      behindDistance: 56,
-      behindY: 18,
-      toyCycle: 13000,
-      idleStyle: 'sniff',
-      scale: 1.00
-    },
-
-    calm: {
-      idleAfter: 1000,
-      followStiffness: 0.045,
-      damping: 0.83,
-      behindDistance: 60,
-      behindY: 20,
-      toyCycle: 18000,
-      idleStyle: 'calm',
-      scale: 0.96
-    },
-
-    read: {
-      idleAfter: 900,
-      followStiffness: 0.048,
-      damping: 0.82,
-      behindDistance: 58,
-      behindY: 19,
-      toyCycle: 16000,
-      idleStyle: 'calm',
-      scale: 0.97
-    },
-
-    minimal: {
-      idleAfter: 1100,
-      followStiffness: 0.042,
-      damping: 0.84,
-      behindDistance: 62,
-      behindY: 20,
-      toyCycle: 20000,
-      idleStyle: 'calm',
-      scale: 0.94
-    },
-
-    settle: {
-      idleAfter: 1250,
-      followStiffness: 0.038,
-      damping: 0.85,
-      behindDistance: 64,
-      behindY: 21,
-      toyCycle: 22000,
-      idleStyle: 'settle',
-      scale: 0.92
-    }
-
-  };
-
-
-  /* =========================================================
-     SECTION DETECTION
-     ========================================================= */
-
-  function getSectionProfile() {
-
-    /*
-     * Explicit attribute takes priority.
-     *
-     * Example:
-     * <section data-cursor-mode="shop">
-     */
-
-    var explicit =
-      document.elementFromPoint(
-        mouseX,
-        mouseY
-      );
-
-    if (explicit) {
-
-      var explicitSection =
-        explicit.closest(
-          '[data-cursor-mode]'
-        );
-
-      if (explicitSection) {
-
-        var explicitMode =
-          explicitSection.getAttribute(
-            'data-cursor-mode'
-          );
-
-        if (
-          explicitMode &&
-          SECTION_PROFILES[explicitMode]
-        ) {
-          return {
-            mode: explicitMode,
-            element: explicitSection,
-            profile:
-              SECTION_PROFILES[explicitMode]
-          };
-        }
-      }
-    }
-
-
-    /*
-     * Fallback:
-     * detect which homepage section occupies
-     * the center of the viewport.
-     */
-
-    var candidates = [
-      {
-        selector:
-          '#shopify-section-hero, [data-section-type="hero"]',
-        mode: 'hero'
-      },
-      {
-        selector:
-          '#shopify-section-shop_by_pet, [data-section-type="shop-by-pet"]',
-        mode: 'explore'
-      },
-      {
-        selector:
-          '#shopify-section-featured_products, [data-section-type="featured-products"]',
-        mode: 'shop'
-      },
-      {
-        selector:
-          '#shopify-section-outfit_builder, [data-section-type="outfit-builder"]',
-        mode: 'build'
-      },
-      {
-        selector:
-          '#shopify-section-lookbook_gallery, [data-section-type="lookbook-gallery"]',
-        mode: 'discover'
-      },
-      {
-        selector:
-          '#shopify-section-lookbook, [data-section-type="lookbook"]',
-        mode: 'discover'
-      },
-      {
-        selector:
-          '#shopify-section-care_ritual, [data-section-type="care-ritual"]',
-        mode: 'calm'
-      },
-      {
-        selector:
-          '#shopify-section-blog_posts, [data-section-type="blog-posts"]',
-        mode: 'read'
-      },
-      {
-        selector:
-          '#shopify-section-faq, [data-section-type="faq"]',
-        mode: 'minimal'
-      },
-      {
-        selector:
-          '#shopify-section-testimonials, [data-section-type="testimonials"]',
-        mode: 'minimal'
-      },
-      {
-        selector:
-          '#shopify-section-newsletter, [data-section-type="newsletter"]',
-        mode: 'settle'
-      }
-    ];
-
-
-    var centerY =
-      window.innerHeight * 0.5;
-
-    var best = null;
-    var bestDistance = Infinity;
-
-
-    for (
-      var i = 0;
-      i < candidates.length;
-      i++
-    ) {
-
-      var nodes =
-        document.querySelectorAll(
-          candidates[i].selector
-        );
-
-      for (
-        var j = 0;
-        j < nodes.length;
-        j++
-      ) {
-
-        var rect =
-          nodes[j].getBoundingClientRect();
-
-        if (
-          rect.bottom < 0 ||
-          rect.top > window.innerHeight
-        ) {
-          continue;
-        }
-
-        var sectionCenter =
-          rect.top +
-          rect.height / 2;
-
-        var distance =
-          Math.abs(
-            centerY -
-            sectionCenter
-          );
-
-        if (
-          distance <
-          bestDistance
-        ) {
-          bestDistance = distance;
-
-          best = {
-            mode:
-              candidates[i].mode,
-
-            element:
-              nodes[j],
-
-            profile:
-              SECTION_PROFILES[
-                candidates[i].mode
-              ]
-          };
-        }
-      }
-    }
-
-
-    if (best) {
-      return best;
-    }
-
-
-    return {
-      mode: 'hero',
-      element: null,
-      profile:
-        SECTION_PROFILES.hero
-    };
+    return (
+      MODES[
+        activeCursorMode
+      ] ||
+      MODES.default
+    );
   }
 
 
-  /* =========================================================
-     APPLY SECTION
-     ========================================================= */
-
-  function updateSection() {
-
-    var section =
-      getSectionProfile();
-
-    if (!section) {
-      return;
-    }
-
+  function resetAnimationToRun() {
 
     if (
-      section.mode ===
-      currentSection &&
-      section.element ===
-      currentSectionElement
+      mode === 'run'
     ) {
-      return;
-    }
-
-
-    currentSection =
-      section.mode;
-
-    currentSectionElement =
-      section.element;
-
-
-    /*
-     * Reset the animation gently.
-     * We don't force a visual snap.
-     */
-
-    idleTimer = 0;
-
-
-    /*
-     * Update CSS classes.
-     * Useful for future styling and debugging.
-     */
-
-    document.body.setAttribute(
-      'data-dog-cursor-section',
-      currentSection
-    );
-
-
-    /*
-     * Toy cycle timing is section-aware.
-     */
-
-    lastToySwitch =
-      performance.now();
-
-
-    /*
-     * Calm sections should not suddenly
-     * make the dog run.
-     */
-
-    if (
-      currentSection === 'calm' ||
-      currentSection === 'read' ||
-      currentSection === 'minimal' ||
-      currentSection === 'settle'
-    ) {
-
-      if (
-        mode === 'run' &&
-        nowHasBeenStill()
-      ) {
-        enterIdle();
-      }
-    }
-
-  }
-
-
-  function nowHasBeenStill() {
-    return (
-      performance.now() -
-      lastMoveTime >
-      getCurrentProfile().idleAfter
-    );
-  }
-
-
-  function getCurrentProfile() {
-    return (
-      SECTION_PROFILES[currentSection] ||
-      SECTION_PROFILES.hero
-    );
-  }
-
-
-  /* =========================================================
-     ANIMATION STATE
-     ========================================================= */
-
-  function enterRun() {
-
-    if (mode === 'run') {
       return;
     }
 
     mode = 'run';
 
     idleTimer = 0;
+
     frameIndex = 0;
+
     frameTimer = 0;
   }
 
 
-  function enterIdle() {
+  /* ==========================================================
+     SECTION MODE
+     ========================================================== */
 
-    if (mode !== 'run') {
+  function getCursorModeFromElement(element) {
+
+    if (!element) {
+      return 'default';
+    }
+
+
+    /*
+     * Explicit section/element mode.
+     *
+     * This is the primary API.
+     */
+
+    var modeElement =
+      element.closest(
+        '[data-cursor-mode]'
+      );
+
+
+    if (modeElement) {
+
+      var explicitMode =
+        modeElement.getAttribute(
+          'data-cursor-mode'
+        );
+
+
+      if (
+        explicitMode &&
+        MODES[explicitMode]
+      ) {
+        return explicitMode;
+      }
+    }
+
+
+    /*
+     * Optional element-level mode.
+     *
+     * Useful for a particular card/button.
+     */
+
+    var interactiveMode =
+      element.closest(
+        '[data-cursor-interaction]'
+      );
+
+
+    if (interactiveMode) {
+
+      var interaction =
+        interactiveMode.getAttribute(
+          'data-cursor-interaction'
+        );
+
+
+      if (
+        interaction === 'shop'
+      ) {
+        return 'shop';
+      }
+
+      if (
+        interaction === 'explore'
+      ) {
+        return 'explore';
+      }
+
+      if (
+        interaction === 'build'
+      ) {
+        return 'build';
+      }
+
+      if (
+        interaction === 'discover'
+      ) {
+        return 'discover';
+      }
+    }
+
+
+    return 'default';
+  }
+
+
+  function updateCursorContext() {
+
+    if (
+      mouseX < 0 ||
+      mouseY < 0
+    ) {
       return;
     }
 
-    mode = 'sniff';
 
-    idleTimer = 0;
-    frameIndex = 0;
-    frameTimer = 0;
+    var element =
+      document.elementFromPoint(
+        mouseX,
+        mouseY
+      );
+
+
+    var nextMode =
+      getCursorModeFromElement(
+        element
+      );
+
+
+    /*
+     * Automatic interactive detection.
+     *
+     * This works even in completely new sections.
+     */
+
+    hoveredInteractive =
+      !!(
+        element &&
+        element.closest(
+          'a, button, [role="button"], input, select, textarea, .product-card, .collection-card, .card, [data-cursor-interaction]'
+        )
+      );
+
+
+    /*
+     * If no explicit section mode exists,
+     * interactive elements receive a subtle
+     * shop/explore personality.
+     */
+
+    if (
+      nextMode === 'default' &&
+      hoveredInteractive
+    ) {
+
+      nextMode = 'shop';
+    }
+
+
+    if (
+      nextMode ===
+      activeCursorMode
+    ) {
+      return;
+    }
+
+
+    activeCursorMode =
+      nextMode;
+
+
+    document.body.setAttribute(
+      'data-dog-cursor-mode',
+      activeCursorMode
+    );
+
+
+    /*
+     * Reset timing only.
+     * We do NOT teleport the dog.
+     */
+
+    lastToySwitch =
+      performance.now();
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      INIT
-     ========================================================= */
+     ========================================================== */
 
   function init() {
+
+    /*
+     * Prevent duplicate initialization.
+     *
+     * Important for Shopify Theme Editor.
+     */
+
+    if (
+      document.body.classList.contains(
+        'dog-cursor-initialized'
+      )
+    ) {
+      return;
+    }
+
+
+    document.body.classList.add(
+      'dog-cursor-initialized'
+    );
+
 
     canvas =
       document.createElement(
@@ -660,6 +613,7 @@
       'aria-hidden',
       'true'
     );
+
 
     document.body.appendChild(
       canvas
@@ -688,8 +642,10 @@
       'true'
     );
 
+
     toyEl.innerHTML =
       TOY_SVG.bone;
+
 
     document.body.appendChild(
       toyEl
@@ -724,25 +680,18 @@
 
     window.addEventListener(
       'mouseleave',
-      function () {
-
-        mouseX = -9999;
-        mouseY = -9999;
-
-        toyEl.classList.add(
-          'is-hidden'
-        );
+      onLeave,
+      {
+        passive: true
       }
     );
 
 
     window.addEventListener(
       'mouseenter',
-      function () {
-
-        toyEl.classList.remove(
-          'is-hidden'
-        );
+      onEnter,
+      {
+        passive: true
       }
     );
 
@@ -771,6 +720,9 @@
     lastToySwitch =
       performance.now();
 
+    lastTime =
+      performance.now();
+
 
     requestAnimationFrame(
       loop
@@ -778,11 +730,19 @@
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      RESIZE
-     ========================================================= */
+     ========================================================== */
 
   function resize() {
+
+    if (
+      !canvas ||
+      !ctx
+    ) {
+      return;
+    }
+
 
     var dpr =
       Math.min(
@@ -820,50 +780,85 @@
   }
 
 
-  /* =========================================================
-     MOUSE
-     ========================================================= */
+  /* ==========================================================
+     POINTER
+     ========================================================== */
 
-  function onMove(e) {
+  function onMove(event) {
 
     mouseX =
-      e.clientX;
+      event.clientX;
 
     mouseY =
-      e.clientY;
+      event.clientY;
 
 
     lastMoveTime =
       performance.now();
 
 
-    toyEl.classList.remove(
-      'is-hidden'
-    );
+    if (toyEl) {
+
+      toyEl.classList.remove(
+        'is-hidden'
+      );
+    }
 
 
-    enterRun();
+    resetAnimationToRun();
 
-
-    updateSection();
+    updateCursorContext();
   }
 
 
-  /* =========================================================
+  function onLeave() {
+
+    mouseX = -9999;
+    mouseY = -9999;
+
+
+    if (toyEl) {
+
+      toyEl.classList.add(
+        'is-hidden'
+      );
+    }
+  }
+
+
+  function onEnter() {
+
+    if (toyEl) {
+
+      toyEl.classList.remove(
+        'is-hidden'
+      );
+    }
+  }
+
+
+  /* ==========================================================
      TOY
-     ========================================================= */
+     ========================================================== */
 
   function switchToy() {
 
     toyIndex =
-      (toyIndex + 1) %
+      (
+        toyIndex + 1
+      ) %
       TOYS.length;
 
 
-    toyEl.innerHTML =
-      TOY_SVG[
-        TOYS[toyIndex]
-      ];
+    if (toyEl) {
+
+      toyEl.innerHTML =
+        TOY_SVG[
+          TOYS[
+            toyIndex
+          ]
+        ];
+    }
 
 
     lastToySwitch =
@@ -871,9 +866,9 @@
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      UPDATE
-     ========================================================= */
+     ========================================================== */
 
   function update(
     dt,
@@ -881,22 +876,21 @@
   ) {
 
     if (
-      mouseX <
-      -1000
+      mouseX < -1000
     ) {
       return;
     }
 
 
-    updateSection();
+    updateCursorContext();
 
 
     var profile =
-      getCurrentProfile();
+      getProfile();
 
 
     /*
-     * Section-aware toy cycle.
+     * Section-specific toy timing.
      */
 
     if (
@@ -904,25 +898,31 @@
       lastToySwitch >
       profile.toyCycle
     ) {
+
       switchToy();
     }
 
 
-    toyEl.style.transform =
-      'translate(' +
-      mouseX +
-      'px,' +
-      mouseY +
-      'px)';
+    if (toyEl) {
+
+      toyEl.style.transform =
+        'translate(' +
+        mouseX +
+        'px,' +
+        mouseY +
+        'px)';
+    }
 
 
     /*
-     * Section-aware idle timing.
+     * Idle detection.
      */
 
     var still =
-      now -
-      lastMoveTime >
+      (
+        now -
+        lastMoveTime
+      ) >
       profile.idleAfter;
 
 
@@ -930,19 +930,31 @@
       still &&
       mode === 'run'
     ) {
-      enterIdle();
+
+      mode =
+        'sniff';
+
+      idleTimer = 0;
+
+      frameIndex = 0;
+
+      frameTimer = 0;
     }
 
 
-    /* =======================================================
-       POSITION TARGET
-       ======================================================= */
+    /* --------------------------------------------------------
+       POSITION
+       -------------------------------------------------------- */
 
     var desiredBehindX =
-      -profile.behindDistance;
+      profile.behindX;
 
     var desiredBehindY =
       profile.behindY;
+
+
+    var targetX;
+    var targetY;
 
 
     if (
@@ -950,8 +962,7 @@
     ) {
 
       /*
-       * While running, lag opposite
-       * the direction of movement.
+       * Dog follows behind movement.
        */
 
       if (
@@ -961,8 +972,8 @@
 
         desiredBehindX =
           velX > 0
-            ? -profile.behindDistance
-            : profile.behindDistance;
+            ? profile.behindX
+            : -profile.behindX;
       }
 
 
@@ -982,12 +993,12 @@
         0.08;
 
 
-      var targetX =
+      targetX =
         mouseX +
         behindX;
 
 
-      var targetY =
+      targetY =
         mouseY +
         behindY;
 
@@ -995,13 +1006,15 @@
 
       /*
        * Idle:
-       * place BODY so SNOUT meets
-       * the toy.
+       *
+       * Position the BODY so the
+       * SNOUT meets the toy.
        */
 
       var snoutReach =
         68 *
-        DOG_SCALE;
+        DOG_SCALE *
+        profile.scale;
 
 
       var preferLeft =
@@ -1021,23 +1034,24 @@
         snoutReach;
 
 
-      /*
-       * Calm sections sit slightly
-       * lower and farther away.
-       */
-
-      var idleYOffset =
+      var idleOffset =
         mode === 'sit'
           ? 18
-          : profile.idleStyle === 'calm' ||
-            profile.idleStyle === 'settle'
-            ? 9
-            : 6;
+          : 6;
+
+
+      if (
+        profile.idleType === 'calm' ||
+        profile.idleType === 'settle'
+      ) {
+
+        idleOffset += 5;
+      }
 
 
       targetY =
         mouseY +
-        idleYOffset;
+        idleOffset;
 
 
       behindX +=
@@ -1054,16 +1068,16 @@
 
       behindY +=
         (
-          idleYOffset -
+          idleOffset -
           behindY
         ) *
         0.12;
     }
 
 
-    /* =======================================================
+    /* --------------------------------------------------------
        PHYSICS
-       ======================================================= */
+       -------------------------------------------------------- */
 
     var dx =
       targetX -
@@ -1079,12 +1093,8 @@
         mode === 'bite' ||
         mode === 'sniff'
       )
-        ? profile.followStiffness * 1.7
-        : profile.followStiffness;
-
-
-    var damping =
-      profile.damping;
+        ? profile.stiffness * 2
+        : profile.stiffness;
 
 
     velX +=
@@ -1097,10 +1107,10 @@
 
 
     velX *=
-      damping;
+      profile.damping;
 
     velY *=
-      damping;
+      profile.damping;
 
 
     dogX +=
@@ -1110,9 +1120,9 @@
       velY;
 
 
-    /* =======================================================
+    /* --------------------------------------------------------
        FACING
-       ======================================================= */
+       -------------------------------------------------------- */
 
     if (
       mode === 'run'
@@ -1146,7 +1156,7 @@
     } else {
 
       /*
-       * Always face the toy while idle.
+       * Idle dog always faces toy.
        */
 
       var want =
@@ -1172,6 +1182,7 @@
       facing = 1;
     }
 
+
     if (
       facing <
       -0.85
@@ -1180,9 +1191,9 @@
     }
 
 
-    /* =======================================================
+    /* --------------------------------------------------------
        ANIMATION
-       ======================================================= */
+       -------------------------------------------------------- */
 
     if (
       mode === 'run'
@@ -1195,15 +1206,10 @@
         );
 
 
-      /*
-       * Calm/read/settle sections
-       * deliberately have a slower run cycle.
-       */
-
-      var animationMultiplier =
+      var speedMultiplier =
         (
-          profile.idleStyle === 'calm' ||
-          profile.idleStyle === 'settle'
+          profile.idleType === 'calm' ||
+          profile.idleType === 'settle'
         )
           ? 0.65
           : 1;
@@ -1216,7 +1222,7 @@
           speed *
           0.03
         ) *
-        animationMultiplier;
+        speedMultiplier;
 
 
       if (
@@ -1233,147 +1239,151 @@
           FRAMES.run.length;
       }
 
-    } else {
 
-      idleTimer +=
-        dt;
+      return;
+    }
 
-      frameTimer +=
-        dt *
+
+    idleTimer +=
+      dt;
+
+
+    frameTimer +=
+      dt *
+      (
+        profile.idleType === 'calm' ||
+        profile.idleType === 'settle'
+          ? 0.006
+          : 0.01
+      );
+
+
+    /* --------------------------------------------------------
+       SNIFF
+       -------------------------------------------------------- */
+
+    if (
+      mode === 'sniff'
+    ) {
+
+      if (
+        frameTimer >
+        1
+      ) {
+
+        frameTimer = 0;
+
+        frameIndex =
+          (
+            frameIndex + 1
+          ) %
+          FRAMES.sniff.length;
+      }
+
+
+      var sniffDuration =
         (
-          profile.idleStyle === 'calm' ||
-          profile.idleStyle === 'settle'
-            ? 0.006
-            : 0.01
-        );
+          profile.idleType === 'calm' ||
+          profile.idleType === 'settle'
+        )
+          ? 1300
+          : 900;
 
 
       if (
-        mode === 'sniff'
+        idleTimer >
+        sniffDuration
       ) {
 
-        if (
-          frameTimer >
-          1
-        ) {
+        mode =
+          'sit';
 
-          frameTimer = 0;
-
-          frameIndex =
-            (
-              frameIndex + 1
-            ) %
-            FRAMES.sniff.length;
-        }
-
-
-        /*
-         * Calm sections hold the sniff
-         * slightly longer.
-         */
-
-        var sniffDuration =
-          (
-            profile.idleStyle === 'calm' ||
-            profile.idleStyle === 'settle'
-          )
-            ? 1300
-            : 900;
-
-
-        if (
-          idleTimer >
-          sniffDuration
-        ) {
-
-          mode = 'sit';
-
-          idleTimer = 0;
-
-          frameIndex = 0;
-        }
-
-      } else if (
-        mode === 'sit'
-      ) {
+        idleTimer = 0;
 
         frameIndex = 0;
+      }
 
 
-        var sitDuration =
-          (
-            profile.idleStyle === 'settle'
-          )
-            ? 1300
-            : (
-                profile.idleStyle === 'calm'
-                  ? 1100
-                  : 700
-              );
+      return;
+    }
 
 
-        if (
-          idleTimer >
-          sitDuration
-        ) {
+    /* --------------------------------------------------------
+       SIT
+       -------------------------------------------------------- */
 
-          /*
-           * In calm/minimal/settle areas,
-           * don't immediately chew.
-           *
-           * Instead remain sitting.
-           */
+    if (
+      mode === 'sit'
+    ) {
 
-          if (
-            profile.idleStyle === 'calm' ||
-            profile.idleStyle === 'settle'
-          ) {
+      frameIndex = 0;
 
-            mode = 'sit';
 
-            idleTimer = 0;
+      /*
+       * Calm sections remain calm.
+       */
 
-          } else {
-
-            mode = 'bite';
-
-            idleTimer = 0;
-
-            frameIndex = 0;
-          }
-        }
-
-      } else if (
-        mode === 'bite'
+      if (
+        profile.idleType === 'calm' ||
+        profile.idleType === 'settle'
       ) {
 
-        if (
-          frameTimer >
-          1
-        ) {
+        return;
+      }
 
-          frameTimer = 0;
 
-          frameIndex =
-            (
-              frameIndex + 1
-            ) %
-            FRAMES.bite.length;
-        }
+      if (
+        idleTimer >
+        700
+      ) {
+
+        mode =
+          'bite';
+
+        idleTimer = 0;
+
+        frameIndex = 0;
+      }
+
+
+      return;
+    }
+
+
+    /* --------------------------------------------------------
+       BITE
+       -------------------------------------------------------- */
+
+    if (
+      mode === 'bite'
+    ) {
+
+      if (
+        frameTimer >
+        1
+      ) {
+
+        frameTimer = 0;
+
+        frameIndex =
+          (
+            frameIndex + 1
+          ) %
+          FRAMES.bite.length;
       }
     }
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      DRAW DOT
-     ========================================================= */
+     ========================================================== */
 
   function drawDot(
     x,
     y,
-    r,
-    a
+    radius,
+    alpha
   ) {
 
     ctx.beginPath();
@@ -1381,25 +1391,29 @@
     ctx.arc(
       x,
       y,
-      r,
+      radius,
       0,
       Math.PI * 2
     );
 
     ctx.fillStyle =
       'rgba(0,0,0,' +
-      a +
+      alpha +
       ')';
 
     ctx.fill();
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      DRAW DOG
-     ========================================================= */
+     ========================================================== */
 
   function drawDog() {
+
+    var profile =
+      getProfile();
+
 
     var set =
       FRAMES[
@@ -1408,7 +1422,7 @@
       FRAMES.run;
 
 
-    var pts =
+    var points =
       set[
         frameIndex %
         set.length
@@ -1416,14 +1430,10 @@
       set[0];
 
 
-    var dir =
+    var direction =
       facing >= 0
         ? 1
         : -1;
-
-
-    var profile =
-      getCurrentProfile();
 
 
     var scale =
@@ -1447,6 +1457,7 @@
       Math.PI * 2
     );
 
+
     ctx.fillStyle =
       'rgba(0,0,0,0.1)';
 
@@ -1454,25 +1465,25 @@
 
 
     /*
-     * Dog dots.
+     * Dog body.
      */
 
     for (
       var i = 0;
-      i < pts.length;
+      i < points.length;
       i++
     ) {
 
       var x =
         dogX +
-        pts[i][0] *
+        points[i][0] *
         scale *
-        dir;
+        direction;
 
 
       var y =
         dogY +
-        pts[i][1] *
+        points[i][1] *
         scale;
 
 
@@ -1481,7 +1492,9 @@
         y,
         (
           1.55 +
-          (i % 3) *
+          (
+            i % 3
+          ) *
           0.3
         ) *
         profile.scale,
@@ -1491,9 +1504,7 @@
 
 
     /*
-     * Food crumbs.
-     *
-     * Only during bite mode.
+     * Food crumbs only when biting.
      */
 
     if (
@@ -1502,15 +1513,14 @@
 
       var sx =
         dogX +
-        dir *
+        direction *
         52 *
         scale *
         0.78;
 
 
       var sy =
-        dogY +
-        2;
+        dogY + 2;
 
 
       for (
@@ -1544,17 +1554,25 @@
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      RENDER
-     ========================================================= */
+     ========================================================== */
 
   function render() {
+
+    if (
+      !ctx ||
+      !canvas
+    ) {
+      return;
+    }
+
 
     ctx.clearRect(
       0,
       0,
-      canvas.width,
-      canvas.height
+      window.innerWidth,
+      window.innerHeight
     );
 
 
@@ -1570,9 +1588,9 @@
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      LOOP
-     ========================================================= */
+     ========================================================== */
 
   function loop(time) {
 
@@ -1603,9 +1621,9 @@
   }
 
 
-  /* =========================================================
+  /* ==========================================================
      START
-     ========================================================= */
+     ========================================================== */
 
   if (
     document.readyState ===
@@ -1614,7 +1632,10 @@
 
     document.addEventListener(
       'DOMContentLoaded',
-      init
+      init,
+      {
+        once: true
+      }
     );
 
   } else {

@@ -118,9 +118,9 @@
         "subheading": "PET WORLDS",
         "text": "<p><em>Every companion has their own way of living, playing and resting.</em></p>",
         "columns": 4,
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "accent_color": "#1a1a1a"
+        "background_color": "#eef0e5",
+        "text_color": "#273028",
+        "accent_color": "#71806d"
       }
     },
     "featured_products": {
@@ -175,10 +175,10 @@
         "show_compare_at": true,
         "image_size": "medium",
         "card_style": "standard",
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "heading_color": "#1a1a1a",
-        "card_background": "#ffffff",
+        "background_color": "#f7f3eb",
+        "text_color": "#273028",
+        "heading_color": "#273028",
+        "card_background": "#faf7f0",
         "card_shadow": "#0000001a",
         "aria_label": "Featured products"
       }
@@ -240,9 +240,9 @@
         "add_outfit_text": "Add outfit to cart",
         "empty_text": "Select items to build your outfit",
         "show_variant_selector": true,
-        "background_color": "#f8f7f5",
-        "text_color": "#1a1a1a",
-        "accent_color": "#121212"
+        "background_color": "#f4f0e8",
+        "text_color": "#273028",
+        "accent_color": "#71806d"
       }
     },
     "lookbook_gallery": {
@@ -287,8 +287,8 @@
         "heading": "SEE LIFE WITH THEM",
         "subheading": "Shop the looks",
         "full_width": false,
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
+        "background_color": "#f3eee6",
+        "text_color": "#273028",
         "dot_color": "#ffffff"
       }
     },
@@ -323,8 +323,8 @@
         "content_position": "top",
         "full_width": false,
         "color_dot": "#ffffff",
-        "color_card_background": "#ffffff",
-        "color_card_foreground": "#121212"
+        "color_card_background": "#faf7f0",
+        "color_card_foreground": "#273028"
       }
     },
     "care_ritual_WTwbiB": {
@@ -401,9 +401,9 @@
         "description": "",
         "layout": "narrow",
         "open_first": true,
-        "background_color": "#ffffff",
-        "text_color": "#1a1a1a",
-        "accent_color": "#121212"
+        "background_color": "#eee8dc",
+        "text_color": "#273028",
+        "accent_color": "#71806d"
       }
     },
     "testimonials": {
@@ -455,21 +455,21 @@
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "subheading": "Stay close.",
-        "heading": "NEWSLETTER",
-        "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
+        "subheading": "STAY CLOSE",
+        "heading": "Keep them close.",
+        "description": "<p>New finds, useful ideas, and little things worth knowing.</p>",
+        "placeholder": "Your email address",
+        "button_label": "Join us",
         "button_style": "primary",
         "show_icon": true,
         "style": "default",
-        "background_color": "#f8f9fa",
-        "section_text_color": "#1a1a2e",
+        "background_color": "#dfe6d9",
+        "section_text_color": "#273028",
         "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
+        "note_text": "No noise. Just the good stuff.",
+        "success_message": "You're in. Welcome to Petlio.",
         "show_social": true,
-        "social_label": "Follow us:"
+        "social_label": "Follow along:"
       }
     }
   },

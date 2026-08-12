@@ -1,0 +1,150 @@
+/* ==========================================================================
+   PETLIO — GLOBAL VISUAL SYSTEM
+   One palette / one rhythm / one visual language
+   ========================================================================== */
+
+:root {
+  --petlio-paper: #f7f3eb;
+  --petlio-paper-light: #faf7f0;
+  --petlio-paper-deep: #eee8dc;
+
+  --petlio-sage: #eef0e5;
+  --petlio-sage-light: #dfe6d9;
+  --petlio-sage-deep: #d4ddcf;
+
+  --petlio-story: #e9e2d7;
+
+  --petlio-ink: #273028;
+  --petlio-muted: #69736a;
+  --petlio-soft: #8b938b;
+
+  --petlio-accent: #71806d;
+  --petlio-accent-deep: #304b38;
+
+  --petlio-line: rgba(39, 48, 40, 0.12);
+
+  --petlio-radius-sm: 10px;
+  --petlio-radius-md: 18px;
+  --petlio-radius-lg: 28px;
+
+  --petlio-section-space: clamp(4.5rem, 8vw, 8rem);
+}
+
+
+/* ==========================================================================
+   PAGE FOUNDATION
+   ========================================================================== */
+
+body {
+  background: var(--petlio-paper);
+  color: var(--petlio-ink);
+}
+
+
+/* ==========================================================================
+   SECTION CONTINUITY
+   ========================================================================== */
+
+.shopify-section {
+  position: relative;
+}
+
+
+/*
+  Prevent sections from looking like unrelated white cards.
+  We deliberately do NOT force every section to one background.
+*/
+
+.shopify-section:not(.shopify-section--header):not(.shopify-section--footer) {
+  isolation: isolate;
+}
+
+
+/* ==========================================================================
+   COMMON TYPOGRAPHY
+   ========================================================================== */
+
+.shopify-section h1,
+.shopify-section h2,
+.shopify-section h3 {
+  color: var(--petlio-ink);
+}
+
+
+.shopify-section p {
+  color: var(--petlio-muted);
+}
+
+
+/* ==========================================================================
+   COMMON BUTTON LANGUAGE
+   ========================================================================== */
+
+.shopify-section a.button,
+.shopify-section button.button,
+.shopify-section .button,
+.shopify-section [type="submit"].button {
+  border-radius: 999px;
+
+  background: var(--petlio-accent-deep);
+
+  color: #fff;
+
+  border: 1px solid var(--petlio-accent-deep);
+
+  box-shadow: none;
+
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease;
+}
+
+
+.shopify-section a.button:hover,
+.shopify-section button.button:hover,
+.shopify-section .button:hover,
+.shopify-section [type="submit"].button:hover {
+  background: var(--petlio-ink);
+
+  border-color: var(--petlio-ink);
+
+  transform: translateY(-2px);
+}
+
+
+/* ==========================================================================
+   COMMON CARD LANGUAGE
+   ========================================================================== */
+
+.shopify-section .card {
+  box-shadow: none;
+}
+
+
+.shopify-section img {
+  max-width: 100%;
+}
+
+
+/* ==========================================================================
+   EDITORIAL SECTION HEADINGS
+   ========================================================================== */
+
+.shopify-section .section-heading,
+.shopify-section .section-title {
+  letter-spacing: -0.025em;
+}
+
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 749px) {
+
+  :root {
+    --petlio-section-space: 4rem;
+  }
+
+}

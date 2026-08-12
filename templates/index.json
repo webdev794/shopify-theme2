@@ -129,25 +129,25 @@
         "product_1": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "blouse"
           }
         },
         "product_2": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "navy-blue-jeans"
           }
         },
         "product_3": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "tshirt-navy"
           }
         },
         "product_4": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "cowboy-hat"
           }
         }
       },
@@ -189,25 +189,31 @@
         "product_1": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "blouse"
           }
         },
         "product_2": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "navy-blue-jeans"
           }
         },
         "product_3": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "cowboy-hat"
+          }
+        },
+        "product_fC8Phg": {
+          "type": "product",
+          "settings": {
+            "product": "formal-leader-shoes"
           }
         },
         "product_4": {
           "type": "product",
           "settings": {
-            "product": ""
+            "product": "black-jeans"
           }
         }
       },
@@ -215,6 +221,7 @@
         "product_1",
         "product_2",
         "product_3",
+        "product_fC8Phg",
         "product_4"
       ],
       "settings": {
@@ -245,13 +252,13 @@
           "type": "look",
           "settings": {
             "caption": "",
-            "product_1": "",
+            "product_1": "tshirt-navy",
             "x1": 30,
             "y1": 40,
-            "product_2": "",
+            "product_2": "brownish-frock",
             "x2": 60,
             "y2": 55,
-            "product_3": "",
+            "product_3": "yellow-hat",
             "x3": 45,
             "y3": 70
           }
@@ -260,13 +267,13 @@
           "type": "look",
           "settings": {
             "caption": "",
-            "product_1": "",
+            "product_1": "active-wear",
             "x1": 30,
             "y1": 40,
-            "product_2": "",
+            "product_2": "tshirt-navy",
             "x2": 60,
             "y2": 55,
-            "product_3": "",
+            "product_3": "brownish-frock",
             "x3": 45,
             "y3": 70
           }
@@ -291,7 +298,7 @@
         "hotspot_1": {
           "type": "hotspot",
           "settings": {
-            "product": "",
+            "product": "active-wear",
             "position_x": 36,
             "position_y": 64
           }
@@ -299,7 +306,7 @@
         "hotspot_2": {
           "type": "hotspot",
           "settings": {
-            "product": "",
+            "product": "brownish-frock",
             "position_x": 58,
             "position_y": 45
           }
@@ -324,6 +331,7 @@
       "type": "care-ritual",
       "name": "Care Ritual",
       "settings": {
+        "image": "shopify://shop_images/petlio_hero.png",
         "heading": "<p>For every little moment.</p>",
         "text": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>",
         "button_label": "Explore care",

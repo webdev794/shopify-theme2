@@ -67,6 +67,19 @@
       </div>
 
 
+      {%- liquid
+        assign lookbook_items = ''
+        for block in section.blocks
+          assign p = block.settings.product
+          if p != blank and p.selected_or_first_available_variant.available
+            if lookbook_items != blank
+              assign lookbook_items = lookbook_items | append: ','
+            endif
+            assign lookbook_items = lookbook_items | append: p.selected_or_first_available_variant.id
+          endif
+        endfor
+      -%}
+
       <div class="petlio-lookbook__scene-copy">
 
         <span class="petlio-lookbook__scene-kicker">
@@ -78,8 +91,19 @@
         </span>
 
         <span class="petlio-lookbook__scene-note">
-          Tap a point to discover.
+          Tap a point to discover — or take the whole look.
         </span>
+
+        {%- if lookbook_items != blank -%}
+          <button
+            type="button"
+            class="petlio-lookbook__add-all"
+            data-lookbook-add-all
+            data-variant-ids="{{ lookbook_items }}"
+          >
+            Add all products to cart
+          </button>
+        {%- endif -%}
 
       </div>
 
@@ -232,19 +256,6 @@
     </div>
 
 
-    {%- liquid
-      assign lookbook_items = ''
-      for block in section.blocks
-        assign p = block.settings.product
-        if p != blank and p.selected_or_first_available_variant.available
-          if lookbook_items != blank
-            assign lookbook_items = lookbook_items | append: ','
-          endif
-          assign lookbook_items = lookbook_items | append: p.selected_or_first_available_variant.id
-        endif
-      endfor
-    -%}
-
     <footer class="petlio-lookbook__bottom">
 
       <div class="petlio-lookbook__bottom-number">
@@ -255,17 +266,6 @@
         Find something they love.
         <strong>Make it part of their everyday.</strong>
       </p>
-
-      {%- if lookbook_items != blank -%}
-        <button
-          type="button"
-          class="petlio-lookbook__add-all"
-          data-lookbook-add-all
-          data-variant-ids="{{ lookbook_items }}"
-        >
-          Add all products to cart
-        </button>
-      {%- endif -%}
 
       <span class="petlio-lookbook__bottom-arrow">
         ↓

@@ -56,26 +56,58 @@
           data-look-index="{{ forloop.index }}"
           {{ block.shopify_attributes }}
         >
+          {% assign product_1 = block.settings.product_1 %}
+          {% assign product_2 = block.settings.product_2 %}
+          {% assign product_3 = block.settings.product_3 %}
+          {%- liquid
+            assign look_variant_ids = ''
+            if product_1 != blank and product_1.selected_or_first_available_variant.available
+              assign look_variant_ids = product_1.selected_or_first_available_variant.id
+            endif
+            if product_2 != blank and product_2.selected_or_first_available_variant.available
+              if look_variant_ids != blank
+                assign look_variant_ids = look_variant_ids | append: ','
+              endif
+              assign look_variant_ids = look_variant_ids | append: product_2.selected_or_first_available_variant.id
+            endif
+            if product_3 != blank and product_3.selected_or_first_available_variant.available
+              if look_variant_ids != blank
+                assign look_variant_ids = look_variant_ids | append: ','
+              endif
+              assign look_variant_ids = look_variant_ids | append: product_3.selected_or_first_available_variant.id
+            endif
+          -%}
 
           <div class="lookbook-gallery__look-header">
 
-            <div class="lookbook-gallery__look-number">
-              0{{ forloop.index }}
+            <div class="lookbook-gallery__look-header-main">
+              <div class="lookbook-gallery__look-number">
+                0{{ forloop.index }}
+              </div>
+
+              {% if block.settings.caption != blank %}
+                <p class="lookbook-gallery__caption">
+                  {{ block.settings.caption | escape }}
+                </p>
+              {% else %}
+                <p class="lookbook-gallery__caption">
+                  Everyday, their way.
+                </p>
+              {% endif %}
             </div>
 
-            {% if block.settings.caption != blank %}
-              <p class="lookbook-gallery__caption">
-                {{ block.settings.caption | escape }}
-              </p>
-            {% else %}
-              <p class="lookbook-gallery__caption">
-                Everyday, their way.
-              </p>
-            {% endif %}
-
-            <span class="lookbook-gallery__look-arrow" aria-hidden="true">
-              ↘
-            </span>
+            {%- if look_variant_ids != blank -%}
+              <button
+                type="button"
+                class="lookbook-gallery__add-look lookbook-gallery__add-look--header"
+                data-look-add-all
+                data-variant-ids="{{ look_variant_ids }}"
+              >
+                Add look to cart
+              </button>
+            {%- else -%}
+              <span class="lookbook-gallery__look-arrow" aria-hidden="true">↘</span>
+            {%- endif -%}
 
           </div>
 
@@ -87,10 +119,6 @@
               <span>THE LOOK</span>
               <span>0{{ forloop.index }}</span>
             </div>
-
-            {% assign product_1 = block.settings.product_1 %}
-            {% assign product_2 = block.settings.product_2 %}
-            {% assign product_3 = block.settings.product_3 %}
 
             {% if product_1 != blank %}
 
@@ -264,25 +292,6 @@
 
           </div>
 
-          {%- liquid
-            assign look_variant_ids = ''
-            if product_1 != blank and product_1.selected_or_first_available_variant.available
-              assign look_variant_ids = product_1.selected_or_first_available_variant.id
-            endif
-            if product_2 != blank and product_2.selected_or_first_available_variant.available
-              if look_variant_ids != blank
-                assign look_variant_ids = look_variant_ids | append: ','
-              endif
-              assign look_variant_ids = look_variant_ids | append: product_2.selected_or_first_available_variant.id
-            endif
-            if product_3 != blank and product_3.selected_or_first_available_variant.available
-              if look_variant_ids != blank
-                assign look_variant_ids = look_variant_ids | append: ','
-              endif
-              assign look_variant_ids = look_variant_ids | append: product_3.selected_or_first_available_variant.id
-            endif
-          -%}
-
           <div class="lookbook-gallery__look-footer">
 
             <span>
@@ -293,20 +302,9 @@
               {% endif %}
             </span>
 
-            {%- if look_variant_ids != blank -%}
-              <button
-                type="button"
-                class="lookbook-gallery__add-look"
-                data-look-add-all
-                data-variant-ids="{{ look_variant_ids }}"
-              >
-                Add look to cart
-              </button>
-            {%- else -%}
-              <span class="lookbook-gallery__discover">
-                Explore the look →
-              </span>
-            {%- endif -%}
+            <span class="lookbook-gallery__discover">
+              Tap a piece to add it · or use Add look above
+            </span>
 
           </div>
 

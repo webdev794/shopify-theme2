@@ -8,12 +8,98 @@
 
   var initializedSections = new WeakSet();
 
+  
+  function galleryAddToCart(ids, button) {
+    if (!ids || !ids.length) return;
+    var label = button ? button.textContent : '';
+    if (button) {
+      button.classList.add('is-loading');
+      if (button.matches('[data-look-add-all]')) button.textContent = 'Adding…';
+      else button.classList.add('is-adding');
+    }
+    var utils = window.ThemeUtils || (window.theme && window.theme.utils);
+    var items = ids.map(function (id) { return { id: Number(id), quantity: 1 }; });
+    var promise = (utils && utils.addToCart)
+      ? utils.addToCart(items)
+      : fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ items: items })
+        }).then(function (r) { if (!r.ok) throw new Error('fail'); return r.json(); });
+
+    promise.then(function () {
+      if (button) {
+        button.classList.remove('is-loading', 'is-adding');
+        button.classList.add('is-added');
+        if (button.matches('[data-look-add-all]')) {
+          button.textContent = 'Added';
+          setTimeout(function () {
+            button.classList.remove('is-added');
+            button.textContent = label;
+          }, 1800);
+        } else {
+          setTimeout(function () { button.classList.remove('is-added'); }, 1600);
+        }
+      }
+        function afterAdd(cart) {
+          if (utils && utils.publishCart && cart) utils.publishCart(cart);
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+          document.dispatchEvent(new CustomEvent('product:added', { detail: { cart: cart } }));
+          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: { cart: cart } }));
+          if (window.PetlioToast && PetlioToast.show) {
+            var count = items && items.length > 1 ? items.length + ' items added to cart' : 'Added to cart';
+            PetlioToast.show(count, { withCartLink: true });
+          }
+        }
+        if (utils && typeof utils.getCart === 'function') {
+          utils.getCart().then(afterAdd).catch(function () { afterAdd(null); });
+        } else {
+          fetch('/cart.js').then(function (r) { return r.json(); }).then(afterAdd).catch(function () { afterAdd(null); });
+        }
+    }).catch(function () {
+      if (button) {
+        button.classList.remove('is-loading', 'is-adding');
+        if (button.matches('[data-look-add-all]')) {
+          button.textContent = 'Try again';
+          setTimeout(function () { button.textContent = label; }, 1500);
+        }
+      }
+    });
+  }
+
+  function bindGalleryCart(section) {
+    section.querySelectorAll('[data-look-add]').forEach(function (btn) {
+      if (btn.dataset.boundCart) return;
+      btn.dataset.boundCart = '1';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var id = btn.getAttribute('data-variant-id');
+        var available = btn.getAttribute('data-available');
+        if (available === 'false') return;
+        if (id) galleryAddToCart([id], btn);
+      });
+    });
+    section.querySelectorAll('[data-look-add-all]').forEach(function (btn) {
+      if (btn.dataset.boundCart) return;
+      btn.dataset.boundCart = '1';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var raw = btn.getAttribute('data-variant-ids') || '';
+        var ids = raw.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+        galleryAddToCart(ids, btn);
+      });
+    });
+  }
+
+
   function initLookbookGallery(section) {
     if (!section || initializedSections.has(section)) {
       return;
     }
 
     initializedSections.add(section);
+    bindGalleryCart(section);
 
     var looks = Array.from(
       section.querySelectorAll('[data-look]')

@@ -763,3 +763,115 @@
     animation: none;
   }
 }
+
+/* Product cards are now buttons that add to cart */
+button.lookbook-gallery__product {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+button.lookbook-gallery__product.is-adding {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+button.lookbook-gallery__product.is-added .lookbook-gallery__product-info strong::after {
+  content: " · Added";
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.lookbook-gallery__add-look {
+  appearance: none;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.lookbook-gallery__add-look:hover {
+  background: var(--petlio-ink, #273028);
+  color: #fff;
+  border-color: var(--petlio-ink, #273028);
+  transform: translateY(-1px);
+}
+
+.lookbook-gallery__add-look.is-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.lookbook-gallery__add-look.is-added {
+  background: var(--petlio-accent, #71806d);
+  border-color: var(--petlio-accent, #71806d);
+  color: #fff;
+}
+
+
+/* Header-level Add look — high visibility */
+.lookbook-gallery__look-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.lookbook-gallery__look-header-main {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.lookbook-gallery__add-look--header {
+  flex-shrink: 0;
+  border: none;
+  background: var(--petlio-accent-deep, #304b38);
+  color: #fff !important;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 22px rgba(48, 75, 56, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lookbook-gallery__add-look--header:hover {
+  background: var(--petlio-ink, #273028);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(39, 48, 40, 0.22);
+}
+
+.lookbook-gallery__add-look--header.is-added {
+  background: var(--petlio-accent, #71806d);
+}
+
+@media (max-width: 749px) {
+  .lookbook-gallery__look-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .lookbook-gallery__add-look--header {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}

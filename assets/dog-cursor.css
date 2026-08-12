@@ -1,9 +1,14 @@
-/* =========================================================
-   PETLIO — DOG CURSOR
-   ========================================================= */
+/**
+ * PETLIO — UNIVERSAL DOG CURSOR
+ */
+
+/* ==========================================================
+   DOG CANVAS
+   ========================================================== */
 
 #dog-cursor-canvas {
   position: fixed;
+
   top: 0;
   left: 0;
 
@@ -19,13 +24,13 @@
   opacity: 0.9;
 
   transition:
-    opacity 500ms ease;
+    opacity 450ms ease;
 }
 
 
-/* =========================================================
-   PRODUCT CURSOR
-   ========================================================= */
+/* ==========================================================
+   TOY CURSOR
+   ========================================================== */
 
 #dog-cursor-toy {
   position: fixed;
@@ -54,8 +59,7 @@
     );
 
   transition:
-    opacity 0.15s ease,
-    transform 120ms linear;
+    opacity 150ms ease;
 }
 
 
@@ -72,64 +76,73 @@
 }
 
 
-/* =========================================================
-   SECTION-AWARE CURSOR MOOD
-   ========================================================= */
+/* ==========================================================
+   CURSOR MODES
+   ========================================================== */
 
 /*
- * These are intentionally subtle.
- * The dog JS controls the actual animation.
+ * These are only subtle visual differences.
+ *
+ * The JavaScript controls movement and animation.
  */
 
-body[data-dog-cursor-section="hero"]
-  #dog-cursor-canvas {
-  opacity: 0.95;
-}
-
-body[data-dog-cursor-section="explore"]
+body[data-dog-cursor-mode="default"]
   #dog-cursor-canvas {
   opacity: 0.9;
 }
 
-body[data-dog-cursor-section="shop"]
+
+body[data-dog-cursor-mode="explore"]
+  #dog-cursor-canvas {
+  opacity: 0.9;
+}
+
+
+body[data-dog-cursor-mode="shop"]
   #dog-cursor-canvas {
   opacity: 0.95;
 }
 
-body[data-dog-cursor-section="build"]
+
+body[data-dog-cursor-mode="build"]
   #dog-cursor-canvas {
   opacity: 0.92;
 }
 
-body[data-dog-cursor-section="discover"]
+
+body[data-dog-cursor-mode="discover"]
   #dog-cursor-canvas {
   opacity: 0.88;
 }
 
-body[data-dog-cursor-section="calm"]
+
+body[data-dog-cursor-mode="calm"]
   #dog-cursor-canvas {
   opacity: 0.72;
 }
 
-body[data-dog-cursor-section="read"]
+
+body[data-dog-cursor-mode="read"]
   #dog-cursor-canvas {
   opacity: 0.68;
 }
 
-body[data-dog-cursor-section="minimal"]
+
+body[data-dog-cursor-mode="minimal"]
   #dog-cursor-canvas {
   opacity: 0.58;
 }
 
-body[data-dog-cursor-section="settle"]
+
+body[data-dog-cursor-mode="settle"]
   #dog-cursor-canvas {
   opacity: 0.48;
 }
 
 
-/* =========================================================
-   NORMAL POINTER
-   ========================================================= */
+/* ==========================================================
+   NORMAL CURSOR
+   ========================================================== */
 
 body.dog-cursor-active,
 body.dog-cursor-active a,
@@ -143,11 +156,12 @@ body.dog-cursor-active label {
 }
 
 
-/* =========================================================
-   MOBILE / TOUCH
-   ========================================================= */
+/* ==========================================================
+   TOUCH DEVICES
+   ========================================================== */
 
 @media (pointer: coarse) {
+
   #dog-cursor-canvas,
   #dog-cursor-toy {
     display: none !important;
@@ -166,11 +180,12 @@ body.dog-cursor-active label {
 }
 
 
-/* =========================================================
+/* ==========================================================
    REDUCED MOTION
-   ========================================================= */
+   ========================================================== */
 
 @media (prefers-reduced-motion: reduce) {
+
   #dog-cursor-canvas,
   #dog-cursor-toy {
     display: none !important;

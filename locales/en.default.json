@@ -38,9 +38,6 @@
   },
   "cart": {
     "title": "Cart",
-    "drawer_title": "Your cart",
-    "taxes_and_shipping": "Taxes and shipping calculated at checkout.",
-    "view_cart": "View cart",
     "checkout": "Checkout",
     "update": "Update cart",
     "remove": "Remove",
@@ -56,9 +53,6 @@
     "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
     "taxes_included": "Tax included.",
     "recalculated_note": "Totals update instantly as an estimate. Discounts that depend on quantity (like tiered offers) are recalculated exactly when you click \"Update cart.\""
-  },
-  "accessibility": {
-    "skip_to_content": "Skip to content"
   },
   "gift_card": {
     "add_to_apple_wallet": "Add to Apple Wallet",

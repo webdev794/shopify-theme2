@@ -4,8 +4,8 @@
 
 {%- assign product = card_product -%}
 
-<div class="card-wrapper">
-  <a href="{{ product.url }}" class="card">
+<div class="card-wrapper petlio-card-wrapper">
+  <a href="{{ product.url }}" class="card petlio-card">
     <div class="card__media">
       {%- if product.featured_image -%}
         {%- assign image = product.featured_image -%}

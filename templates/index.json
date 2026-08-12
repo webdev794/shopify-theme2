@@ -208,7 +208,7 @@
           "type": "item",
           "settings": {
             "question": "How long does shipping take?",
-            "answer": "<p>Standard shipping takes 3\u20137 business days.</p>"
+            "answer": "<p>Standard shipping takes 3–7 business days.</p>"
           }
         },
         "q3": {
@@ -336,11 +336,11 @@
   "order": [
     "hero",
     "shop_by_pet",
-    "text_with_icons",
     "featured_products",
     "outfit_builder",
     "lookbook_gallery",
     "lookbook",
+    "text_with_icons",
     "blog_posts",
     "faq",
     "testimonials",

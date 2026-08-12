@@ -257,3 +257,74 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ==========================================================================
+   PETLIO — TRUST / COMMUNITY
+   ========================================================================== */
+
+.testimonials,
+.testimonials-section,
+.shopify-section--testimonials {
+  --testimonial-bg: #e9e2d7;
+  --testimonial-card: #f7f3eb;
+  --testimonial-text: #273028;
+  --testimonial-muted: #69736a;
+  --testimonial-accent: #71806d;
+  --testimonial-line: rgba(39, 48, 40, 0.10);
+
+  background:
+    var(--testimonial-bg);
+}
+
+
+.testimonials h1,
+.testimonials h2,
+.testimonials h3,
+.testimonials-section h1,
+.testimonials-section h2,
+.testimonials-section h3 {
+  color:
+    var(--testimonial-text);
+}
+
+
+.testimonials p,
+.testimonials-section p {
+  color:
+    var(--testimonial-muted);
+}
+
+
+.testimonials .testimonial,
+.testimonials .testimonial-card,
+.testimonials-section .testimonial,
+.testimonials-section .testimonial-card {
+  background:
+    var(--testimonial-card);
+
+  border:
+    1px solid
+    var(--testimonial-line);
+
+  border-radius:
+    22px;
+
+  box-shadow:
+    none;
+}
+
+
+.testimonials .rating,
+.testimonials .stars,
+.testimonials-section .rating,
+.testimonials-section .stars {
+  color:
+    var(--testimonial-accent);
+}
+
+
+.testimonials .quote,
+.testimonials-section .quote {
+  color:
+    var(--testimonial-text);
+}

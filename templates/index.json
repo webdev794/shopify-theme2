@@ -114,9 +114,9 @@
         "small"
       ],
       "settings": {
-        "heading": "Shop by pet",
-        "subheading": "Find the right fit",
-        "text": "",
+        "heading": "Find their world.",
+        "subheading": "",
+        "text": "<p><em>Every companion has their own way of living, playing and resting.</em></p>",
         "columns": 4,
         "background_color": "#ffffff",
         "text_color": "#1a1a1a",

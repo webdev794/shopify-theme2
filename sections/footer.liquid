@@ -1,196 +1,640 @@
-{%- comment -%}
-  Footer — Minimalist Luxury variant
-  Ultra-clean, generous whitespace, gold accent.
-  Focus on brand storytelling and elegant navigation.
-{%- endcomment -%}
-
 {{ 'footer.css' | asset_url | stylesheet_tag }}
 
-<footer class="footer color-scheme-{{ section.settings.color_scheme | default: 'default' }}">
-  <div class="footer__inner page-width">
-    
-    <!-- ── Brand ── -->
-    <div class="footer__brand">
-      <a href="{{ routes.root_url }}" class="footer__logo">
-        {%- if section.settings.logo -%}
-          {{ section.settings.logo | image_url: width: 280 | image_tag: 
-            alt: shop.name, 
-            widths: '140, 280', 
-            sizes: '140px', 
-            class: 'footer__logo-img' 
-          }}
-        {%- else -%}
-          <span class="footer__logo-text">{{ shop.name }}</span>
+<footer class="footer">
+  <div class="footer__shell">
+
+    <!-- ======================================================
+         TOP BRAND / MESSAGE
+         ====================================================== -->
+
+    <div class="footer__intro">
+
+      <div class="footer__brand">
+
+        <a
+          href="{{ routes.root_url }}"
+          class="footer__logo"
+          aria-label="{{ shop.name | escape }}"
+        >
+          {%- if section.settings.logo != blank -%}
+
+            {{
+              section.settings.logo
+              | image_url: width: 360
+              | image_tag:
+                alt: shop.name,
+                widths: '180, 280, 360',
+                sizes: '(max-width: 749px) 180px, 220px',
+                class: 'footer__logo-image'
+            }}
+
+          {%- else -%}
+
+            <span class="footer__logo-text">
+              {{ shop.name }}
+            </span>
+
+          {%- endif -%}
+        </a>
+
+        {%- if section.settings.tagline != blank -%}
+          <p class="footer__tagline">
+            {{ section.settings.tagline }}
+          </p>
         {%- endif -%}
-      </a>
 
-      <div class="footer__accent-line" aria-hidden="true"></div>
+      </div>
 
-      {%- if section.settings.tagline != blank -%}
-        <p class="footer__tagline">{{ section.settings.tagline }}</p>
-      {%- endif -%}
+
+      <!-- Small decorative mark -->
+
+      <div
+        class="footer__mark"
+        aria-hidden="true"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+
+      <!-- Closing statement -->
+
+      <div class="footer__closing">
+
+        <p class="footer__closing-kicker">
+          {{ section.settings.closing_kicker }}
+        </p>
+
+        <h2 class="footer__closing-heading">
+          {{ section.settings.closing_heading }}
+        </h2>
+
+        <p class="footer__closing-text">
+          {{ section.settings.closing_text }}
+        </p>
+
+      </div>
+
     </div>
 
-    <!-- ── Navigation ── -->
-    {%- if section.settings.footer_menu != blank -%}
-      <nav class="footer__nav" aria-label="Footer navigation">
-        <ul class="footer__menu" role="list">
-          {%- for link in section.settings.footer_menu.links -%}
-            <li>
-              <a href="{{ link.url }}" class="footer__link" {% if link.current %}aria-current="page"{% endif %}>
-                {{ link.title | escape }}
-              </a>
-            </li>
-          {%- endfor -%}
-          
-          {%- if section.settings.show_contact_link -%}
-            <li>
-              <a href="{{ routes.page_url | append: '/pages/contact' }}" class="footer__link">
-                Contact
-              </a>
-            </li>
-          {%- endif -%}
-        </ul>
-      </nav>
-    {%- endif -%}
 
-    <!-- ── Newsletter (optional) ── -->
-    {%- if section.settings.show_newsletter -%}
-      <div class="footer__newsletter-wrapper">
-        <h3 class="footer__newsletter-title">{{ section.settings.newsletter_heading | default: 'Subscribe' }}</h3>
-        
-        {%- if section.settings.newsletter_text != blank -%}
-          <p class="footer__newsletter-text">{{ section.settings.newsletter_text }}</p>
+    <!-- ======================================================
+         MAIN FOOTER CONTENT
+         ====================================================== -->
+
+    <div class="footer__main">
+
+
+      <!-- ====================================================
+           NAVIGATION
+           ==================================================== -->
+
+      <div class="footer__navigation">
+
+        {%- if section.settings.footer_menu != blank -%}
+
+          <div class="footer__menu-column">
+
+            <p class="footer__column-label">
+              {{ section.settings.menu_heading }}
+            </p>
+
+            <nav
+              class="footer__nav"
+              aria-label="Footer navigation"
+            >
+
+              <ul class="footer__menu" role="list">
+
+                {%- for link in section.settings.footer_menu.links -%}
+
+                  <li class="footer__menu-item">
+
+                    <a
+                      href="{{ link.url }}"
+                      class="footer__link"
+                      {% if link.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      <span>
+                        {{ link.title | escape }}
+                      </span>
+
+                      <span
+                        class="footer__link-arrow"
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </a>
+
+                  </li>
+
+                {%- endfor -%}
+
+
+                {%- if section.settings.show_contact_link -%}
+
+                  <li class="footer__menu-item">
+
+                    <a
+                      href="/pages/contact"
+                      class="footer__link"
+                    >
+                      <span>
+                        Contact
+                      </span>
+
+                      <span
+                        class="footer__link-arrow"
+                        aria-hidden="true"
+                      >
+                        ↗
+                      </span>
+                    </a>
+
+                  </li>
+
+                {%- endif -%}
+
+              </ul>
+
+            </nav>
+
+          </div>
+
         {%- endif -%}
 
-        {%- form 'customer', class: 'footer__newsletter-form' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <label for="FooterNewsletterEmail" class="visually-hidden">
-            Email
-          </label>
-          <input
-            id="FooterNewsletterEmail"
-            type="email"
-            name="contact[email]"
-            class="footer__newsletter-input"
-            value="{{ form.email }}"
-            placeholder="Your email"
-            required
-            autocomplete="email"
-          >
-          <button type="submit" class="footer__newsletter-submit" aria-label="Subscribe">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-          </button>
-        {%- endform -%}
-        {%- if form.errors -%}
-          <p class="footer__form-message footer__form-message--error" role="alert">
-            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
-          </p>
-        {%- endif -%}
-        {%- if form.posted_successfully? -%}
-          <p class="footer__form-message footer__form-message--success" role="status">
-            Thanks for subscribing!
-          </p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
 
-    <!-- ── Social Links ── -->
-    {%- if section.settings.show_social -%}
-      <ul class="footer__social" role="list">
-        {%- if settings.social_instagram_link != blank -%}
-          <li>
-            <a href="{{ settings.social_instagram_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Instagram">
-              {% render 'icon-instagram' %}
-            </a>
-          </li>
-        {%- endif -%}
-        {%- if settings.social_facebook_link != blank -%}
-          <li>
-            <a href="{{ settings.social_facebook_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Facebook">
-              {% render 'icon-facebook' %}
-            </a>
-          </li>
-        {%- endif -%}
-        {%- if settings.social_tiktok_link != blank -%}
-          <li>
-            <a href="{{ settings.social_tiktok_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="TikTok">
-              {% render 'icon-tiktok' %}
-            </a>
-          </li>
-        {%- endif -%}
-        {%- if settings.social_pinterest_link != blank -%}
-          <li>
-            <a href="{{ settings.social_pinterest_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Pinterest">
-              {% render 'icon-pinterest' %}
-            </a>
-          </li>
-        {%- endif -%}
-        {%- if settings.social_youtube_link != blank -%}
-          <li>
-            <a href="{{ settings.social_youtube_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="YouTube">
-              {% render 'icon-youtube' %}
-            </a>
-          </li>
-        {%- endif -%}
-        {%- if settings.social_twitter_link != blank -%}
-          <li>
-            <a href="{{ settings.social_twitter_link }}" class="footer__social-link" target="_blank" rel="noopener" aria-label="Twitter">
-              {% render 'icon-twitter' %}
-            </a>
-          </li>
-        {%- endif -%}
-      </ul>
-    {%- endif -%}
+        <!-- ==================================================
+             ADDITIONAL BLOCKS
+             ================================================== -->
 
-    <!-- ── Payment Icons ── -->
-    {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-      <ul class="footer__payment" role="list" aria-label="Payment methods">
-        {%- for type in shop.enabled_payment_types -%}
-          <li>{{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}</li>
+        {%- for block in section.blocks -%}
+
+          {%- case block.type -%}
+
+            {%- when 'link_list' -%}
+
+              {%- if block.settings.menu != blank -%}
+
+                <div
+                  class="footer__menu-column"
+                  {{ block.shopify_attributes }}
+                >
+
+                  <p class="footer__column-label">
+
+                    {%- if block.settings.heading != blank -%}
+                      {{ block.settings.heading }}
+                    {%- else -%}
+                      {{ block.settings.menu.title }}
+                    {%- endif -%}
+
+                  </p>
+
+                  <ul
+                    class="footer__menu"
+                    role="list"
+                  >
+
+                    {%- for link in block.settings.menu.links -%}
+
+                      <li class="footer__menu-item">
+
+                        <a
+                          href="{{ link.url }}"
+                          class="footer__link"
+                        >
+                          <span>
+                            {{ link.title | escape }}
+                          </span>
+
+                          <span
+                            class="footer__link-arrow"
+                            aria-hidden="true"
+                          >
+                            ↗
+                          </span>
+                        </a>
+
+                      </li>
+
+                    {%- endfor -%}
+
+                  </ul>
+
+                </div>
+
+              {%- endif -%}
+
+
+            {%- when 'text' -%}
+
+              <div
+                class="footer__text-column"
+                {{ block.shopify_attributes }}
+              >
+
+                {%- if block.settings.heading != blank -%}
+
+                  <p class="footer__column-label">
+                    {{ block.settings.heading }}
+                  </p>
+
+                {%- endif -%}
+
+                <div class="footer__block-text">
+                  {{ block.settings.text }}
+                </div>
+
+              </div>
+
+          {%- endcase -%}
+
         {%- endfor -%}
-      </ul>
-    {%- endif -%}
 
-    <!-- ── Bottom Bar ── -->
-    <div class="footer__bottom">
-      <div class="footer__copyright">
-        <span>&copy; {{ 'now' | date: '%Y' }}</span>
-        <span class="footer__divider">•</span>
-        <span>{{ shop.name | link_to: routes.root_url }}</span>
-        <span class="footer__divider">•</span>
-        <span class="footer__powered">{{ powered_by_link }}</span>
       </div>
+
+
+      <!-- ====================================================
+           NEWSLETTER
+           ==================================================== -->
+
+      {%- if section.settings.show_newsletter -%}
+
+        <div class="footer__newsletter">
+
+          <div class="footer__newsletter-copy">
+
+            <p class="footer__column-label">
+              {{ section.settings.newsletter_heading | default: 'Stay close' }}
+            </p>
+
+            {%- if section.settings.newsletter_text != blank -%}
+
+              <p class="footer__newsletter-text">
+                {{ section.settings.newsletter_text }}
+              </p>
+
+            {%- endif -%}
+
+          </div>
+
+
+          {%- form 'customer', class: 'footer__newsletter-form' -%}
+
+            <input
+              type="hidden"
+              name="contact[tags]"
+              value="newsletter"
+            >
+
+            <label
+              for="FooterNewsletterEmail"
+              class="visually-hidden"
+            >
+              Email address
+            </label>
+
+            <input
+              id="FooterNewsletterEmail"
+              type="email"
+              name="contact[email]"
+              class="footer__newsletter-input"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.newsletter_placeholder }}"
+              required
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+            >
+
+            <button
+              type="submit"
+              class="footer__newsletter-submit"
+              aria-label="{{ section.settings.newsletter_button_label }}"
+            >
+
+              <span>
+                {{ section.settings.newsletter_button_label }}
+              </span>
+
+              <span
+                class="footer__newsletter-arrow"
+                aria-hidden="true"
+              >
+                →
+              </span>
+
+            </button>
+
+          {%- endform -%}
+
+
+          {%- if form.errors -%}
+
+            <p
+              class="footer__form-message footer__form-message--error"
+              role="alert"
+            >
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}
+            </p>
+
+          {%- endif -%}
+
+
+          {%- if form.posted_successfully? -%}
+
+            <p
+              class="footer__form-message footer__form-message--success"
+              role="status"
+            >
+              {{ section.settings.newsletter_success_message }}
+            </p>
+
+          {%- endif -%}
+
+          <p class="footer__newsletter-note">
+            {{ section.settings.newsletter_note }}
+          </p>
+
+        </div>
+
+      {%- endif -%}
+
+    </div>
+
+
+    <!-- ======================================================
+         BOTTOM
+         ====================================================== -->
+
+    <div class="footer__bottom">
+
+
+      <!-- Social -->
+
+      {%- if section.settings.show_social -%}
+
+        <div class="footer__social-area">
+
+          <span class="footer__bottom-label">
+            Follow along
+          </span>
+
+          <ul
+            class="footer__social"
+            role="list"
+          >
+
+            {%- if settings.social_instagram_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_instagram_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Instagram"
+                >
+                  {% render 'icon-instagram' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+
+            {%- if settings.social_facebook_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_facebook_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Facebook"
+                >
+                  {% render 'icon-facebook' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+
+            {%- if settings.social_tiktok_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_tiktok_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="TikTok"
+                >
+                  {% render 'icon-tiktok' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+
+            {%- if settings.social_pinterest_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_pinterest_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Pinterest"
+                >
+                  {% render 'icon-pinterest' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+
+            {%- if settings.social_youtube_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_youtube_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="YouTube"
+                >
+                  {% render 'icon-youtube' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+
+            {%- if settings.social_twitter_link != blank -%}
+
+              <li>
+                <a
+                  href="{{ settings.social_twitter_link }}"
+                  class="footer__social-link"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="X / Twitter"
+                >
+                  {% render 'icon-twitter' %}
+                </a>
+              </li>
+
+            {%- endif -%}
+
+          </ul>
+
+        </div>
+
+      {%- endif -%}
+
+
+      <!-- Payment -->
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+
+        <ul
+          class="footer__payment"
+          role="list"
+          aria-label="Payment methods"
+        >
+
+          {%- for type in shop.enabled_payment_types -%}
+
+            <li>
+              {{
+                type
+                | payment_type_svg_tag:
+                  class: 'footer__payment-icon'
+              }}
+            </li>
+
+          {%- endfor -%}
+
+        </ul>
+
+      {%- endif -%}
+
+
+      <!-- Copyright -->
+
+      <div class="footer__copyright">
+
+        <span>
+          © {{ 'now' | date: '%Y' }}
+        </span>
+
+        <span class="footer__dot">
+          ·
+        </span>
+
+        <a href="{{ routes.root_url }}">
+          {{ shop.name }}
+        </a>
+
+        <span class="footer__dot">
+          ·
+        </span>
+
+        <span class="footer__powered">
+          {{ powered_by_link }}
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         DECORATIVE FOOTER PATH
+         ====================================================== -->
+
+    <div
+      class="footer__path"
+      aria-hidden="true"
+    >
+
+      <span class="footer__path-line"></span>
+
+      <span class="footer__paw">
+        <svg
+          viewBox="0 0 40 40"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="22" cy="8" r="4"/>
+          <circle cx="30" cy="14" r="4"/>
+          <path d="M10 25c1-6 7-9 12-8 6 1 9 6 8 11-1 5-6 7-11 6-6-1-10-4-9-9z"/>
+        </svg>
+      </span>
+
     </div>
 
   </div>
 </footer>
 
+
 {% schema %}
 {
   "name": "Footer",
   "class": "shopify-section--footer",
+
   "settings": [
+
     {
       "type": "header",
       "content": "Brand"
     },
+
     {
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
     },
+
     {
       "type": "textarea",
       "id": "tagline",
-      "label": "Tagline"
+      "label": "Tagline",
+      "default": "Thoughtful things for the everyday moments you share."
     },
+
+    {
+      "type": "text",
+      "id": "closing_kicker",
+      "label": "Closing kicker",
+      "default": "FOR THE LOVE THEY GIVE"
+    },
+
+    {
+      "type": "text",
+      "id": "closing_heading",
+      "label": "Closing heading",
+      "default": "Life with them is better."
+    },
+
+    {
+      "type": "textarea",
+      "id": "closing_text",
+      "label": "Closing text",
+      "default": "Better care. Happier moments. Stronger together."
+    },
+
     {
       "type": "header",
       "content": "Navigation"
     },
+
     {
       "type": "link_list",
       "id": "footer_menu",
@@ -198,95 +642,155 @@
       "info": "Select the menu to display in the footer",
       "default": "footer"
     },
+
+    {
+      "type": "text",
+      "id": "menu_heading",
+      "label": "Menu heading",
+      "default": "Explore"
+    },
+
     {
       "type": "checkbox",
       "id": "show_contact_link",
       "label": "Show contact link",
       "default": true
     },
+
     {
       "type": "header",
       "content": "Newsletter"
     },
+
     {
       "type": "checkbox",
       "id": "show_newsletter",
       "label": "Show newsletter signup",
       "default": true
     },
+
     {
       "type": "text",
       "id": "newsletter_heading",
-      "label": "Heading",
-      "default": "Subscribe"
+      "label": "Newsletter heading",
+      "default": "Stay close"
     },
+
     {
       "type": "textarea",
       "id": "newsletter_text",
-      "label": "Text",
-      "info": "Optional text below the heading",
-      "default": "Get exclusive updates and offers straight to your inbox."
+      "label": "Newsletter text",
+      "default": "New finds, useful ideas, and little things worth knowing."
     },
+
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email placeholder",
+      "default": "Your email address"
+    },
+
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "Button label",
+      "default": "Join us"
+    },
+
+    {
+      "type": "text",
+      "id": "newsletter_note",
+      "label": "Newsletter note",
+      "default": "No noise. Just the good stuff."
+    },
+
+    {
+      "type": "text",
+      "id": "newsletter_success_message",
+      "label": "Success message",
+      "default": "You're in. Welcome to Petlio."
+    },
+
     {
       "type": "header",
       "content": "Social media"
     },
+
     {
       "type": "checkbox",
       "id": "show_social",
       "label": "Show social icons",
       "default": true,
-      "info": "Set your social media URLs in Theme settings → Social media."
+      "info": "Set social URLs in Theme settings → Social media."
     },
+
     {
       "type": "header",
       "content": "Payment"
     },
+
     {
       "type": "checkbox",
       "id": "show_payment_icons",
       "label": "Show payment icons",
       "default": true
     }
+
   ],
+
   "blocks": [
+
     {
       "type": "link_list",
       "name": "Additional menu",
+
       "settings": [
+
         {
           "type": "text",
           "id": "heading",
           "label": "Heading",
           "info": "Leave blank to use the menu's title."
         },
+
         {
           "type": "link_list",
           "id": "menu",
           "label": "Menu"
         }
+
       ]
     },
+
     {
       "type": "text",
       "name": "Text column",
+
       "settings": [
+
         {
           "type": "text",
           "id": "heading",
           "label": "Heading"
         },
+
         {
           "type": "richtext",
           "id": "text",
           "label": "Text"
         }
+
       ]
     }
+
   ],
+
   "max_blocks": 4,
+
   "enabled_on": {
-    "groups": ["footer"]
+    "groups": [
+      "footer"
+    ]
   }
 }
 {% endschema %}

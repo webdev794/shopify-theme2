@@ -1,7 +1,6 @@
 /* =========================================================
    PETLIO — CARE RITUAL
    Chapter 07
-   Editorial transition from shopping to relationship
    ========================================================= */
 
 .petlio-care {
@@ -166,10 +165,6 @@
   line-height: 0.91;
 }
 
-.petlio-care__heading p {
-  margin: 0;
-}
-
 .petlio-care__text {
   max-width: 430px;
   margin-top: 2rem;
@@ -246,7 +241,7 @@
 }
 
 /* =========================================================
-   CLOSING STATEMENT
+   CLOSING
    ========================================================= */
 
 .petlio-care__closing {

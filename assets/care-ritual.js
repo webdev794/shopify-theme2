@@ -15,59 +15,36 @@
 
     initializedSections.add(section);
 
-    /*
-     * -------------------------------------------------------
-     * INTERSECTION REVEAL
-     * -------------------------------------------------------
-     */
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) {
+              return;
+            }
 
-    if (
-      'IntersectionObserver' in window
-    ) {
-      var observer =
-        new IntersectionObserver(
-          function (entries) {
-            entries.forEach(function (entry) {
-              if (!entry.isIntersecting) {
-                return;
-              }
+            entry.target.classList.add('is-visible');
 
-              entry.target.classList.add(
-                'is-visible'
-              );
-
-              observer.unobserve(
-                entry.target
-              );
-            });
-          },
-          {
-            threshold: 0.15
-          }
-        );
+            observer.unobserve(entry.target);
+          });
+        },
+        {
+          threshold: 0.15
+        }
+      );
 
       observer.observe(section);
     } else {
-      section.classList.add(
-        'is-visible'
-      );
+      section.classList.add('is-visible');
     }
 
-    /*
-     * -------------------------------------------------------
-     * IMAGE PARALLAX
-     * -------------------------------------------------------
-     */
+    var visual = section.querySelector(
+      '.petlio-care__visual'
+    );
 
-    var visual =
-      section.querySelector(
-        '.petlio-care__visual'
-      );
-
-    var image =
-      section.querySelector(
-        '.petlio-care__image'
-      );
+    var image = section.querySelector(
+      '.petlio-care__image'
+    );
 
     if (
       !visual ||
@@ -83,23 +60,13 @@
 
     function updateParallax() {
       if (window.innerWidth <= 749) {
-        image.style.transform =
-          'scale(1.001)';
-
+        image.style.transform = 'scale(1.001)';
         ticking = false;
         return;
       }
 
-      var rect =
-        visual.getBoundingClientRect();
-
-      var viewportHeight =
-        window.innerHeight;
-
-      /*
-       * Only animate while the image is
-       * reasonably close to the viewport.
-       */
+      var rect = visual.getBoundingClientRect();
+      var viewportHeight = window.innerHeight;
 
       if (
         rect.bottom < 0 ||
@@ -151,34 +118,19 @@
     requestParallax();
   }
 
-  /*
-   * -------------------------------------------------------
-   * INITIALIZE
-   * -------------------------------------------------------
-   */
-
   function initAll(root) {
     root = root || document;
 
-    var sections =
-      root.querySelectorAll(
-        '[data-section-type="care-ritual"]'
-      );
+    var sections = root.querySelectorAll(
+      '[data-section-type="care-ritual"]'
+    );
 
     sections.forEach(function (section) {
       initCareRitual(section);
     });
   }
 
-  /*
-   * -------------------------------------------------------
-   * PAGE LOAD
-   * -------------------------------------------------------
-   */
-
-  if (
-    document.readyState === 'loading'
-  ) {
+  if (document.readyState === 'loading') {
     document.addEventListener(
       'DOMContentLoaded',
       function () {
@@ -188,12 +140,6 @@
   } else {
     initAll(document);
   }
-
-  /*
-   * -------------------------------------------------------
-   * SHOPIFY THEME EDITOR
-   * -------------------------------------------------------
- */
 
   document.addEventListener(
     'shopify:section:load',
@@ -215,5 +161,4 @@
       initAll(event.target);
     }
   );
-
 })();

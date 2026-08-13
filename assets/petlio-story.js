@@ -50,15 +50,9 @@
     section.dataset.storyChapter = String(index + 1);
     section.dataset.storyLabel = chapter.label;
 
-    // Prefer liquid chapter-header; only inject JS label when none exists
-    if (!section.querySelector('.petlio-story-chapter-label') &&
-        !section.querySelector('.petlio-chapter')) {
-      var label = document.createElement('span');
-      label.className = 'petlio-story-chapter-label';
-      label.textContent = chapter.label;
-      label.setAttribute('aria-hidden', 'true');
-      section.appendChild(label);
-    }
+    // Chapter numbers come from Liquid (section settings / chapter-header).
+    // Do not inject floating JS labels — they duplicated liquid headers and
+    // could position under the site header when the section lacked position:relative.
 
     var revealTargets = section.querySelectorAll('h1, h2, h3, .hero__content, .shop-by-pet__card, .featured-products__product, .outfit-builder__item, .lookbook-gallery__item, .lookbook__hotspot, .testimonial, .newsletter__content');
     for (var i = 0; i < revealTargets.length; i++) {

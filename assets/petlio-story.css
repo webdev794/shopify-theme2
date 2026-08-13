@@ -217,18 +217,15 @@ body.template-index .petlio-story-reveal.is-visible {
 }
 
 /* Small chapter marker used by the story navigation. */
+/* Legacy JS floating labels — hidden. Chapter numbers live in Liquid. */
 body.template-index .petlio-story-chapter-label {
-  position: absolute;
-  top: clamp(18px, 2vw, 32px);
-  left: clamp(20px, 4vw, 64px);
-  z-index: 30; /* above decorative ::before/::after bridges */
-  pointer-events: none;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  opacity: .5;
-  color: inherit;
+  display: none !important;
+}
+
+/* Positioning context for any absolute chapter UI inside sections */
+body.template-index #MainContent > .shopify-section,
+body.template-index .petlio-story-section {
+  position: relative;
 }
 
 /* Story progress rail. */
@@ -280,9 +277,7 @@ body.template-index .petlio-story-chapter-label {
     display: none;
   }
 
-  body.template-index .petlio-story-chapter-label {
-    left: 18px;
-  }
+  /* chapter labels removed */
 }
 
 @media (prefers-reduced-motion: reduce) {

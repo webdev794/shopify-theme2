@@ -2,7 +2,17 @@
 (function () {
   'use strict';
 
-  if (!document.body.classList.contains('template-index')) return;
+  // Run only on homepage. Prefer body class; fall back to path.
+  var path = window.location.pathname || '/';
+  var isIndex =
+    document.body.classList.contains('template-index') ||
+    path === '/' ||
+    path === '';
+
+  if (!isIndex) return;
+
+  // Ensure body has the class used by CSS even if theme.liquid was cached
+  document.body.classList.add('template-index');
 
   var chapters = [
     { key: 'hero', label: '01 · Meet them' },
@@ -24,6 +34,8 @@
       var node = nodes[i];
       if ((node.id || '').indexOf('__' + key) !== -1) return node;
       if (node.querySelector('[data-section-type="' + key + '"]')) return node;
+      // Also match common Shopify section id patterns: shopify-section-template--xxx__key
+      if ((node.id || '').indexOf(key) !== -1) return node;
     }
     return null;
   }
@@ -38,11 +50,9 @@
     section.dataset.storyChapter = String(index + 1);
     section.dataset.storyLabel = chapter.label;
 
-    var label = document.createElement('span');
-    label.className = 'petlio-story-chapter-label';
-    label.textContent = chapter.label;
-    label.setAttribute('aria-hidden', 'true');
-    section.appendChild(label);
+    // Chapter numbers come from Liquid (section settings / chapter-header).
+    // Do not inject floating JS labels — they duplicated liquid headers and
+    // could position under the site header when the section lacked position:relative.
 
     var revealTargets = section.querySelectorAll('h1, h2, h3, .hero__content, .shop-by-pet__card, .featured-products__product, .outfit-builder__item, .lookbook-gallery__item, .lookbook__hotspot, .testimonial, .newsletter__content');
     for (var i = 0; i < revealTargets.length; i++) {
@@ -51,6 +61,15 @@
 
     sections.push({ element: section, chapter: chapter });
   });
+
+  // If chapter matching failed (renamed sections), still tag all main sections
+  if (!sections.length) {
+    var all = document.querySelectorAll('#MainContent > .shopify-section');
+    all.forEach(function (node, index) {
+      node.classList.add('petlio-story-section');
+      sections.push({ element: node, chapter: { key: 'section-' + index, label: String(index + 1).padStart(2, '0') } });
+    });
+  }
 
   if (!sections.length) return;
 
@@ -116,4 +135,190 @@
       });
     }
   }
+
+
+  /* ----------------------------------------------------------------
+     Paper slide (discrete, enter-only):
+     - Sections stay fully readable while active (no continuous drift).
+     - When scroll makes a new section dominant (~midpoint), it plays a
+       short enter animation from alternating L/R, then settles static.
+     - No exit transform (avoids the "slide away then snap back" glitch).
+     - Every main homepage section participates, not only chapter-matched ones.
+     ---------------------------------------------------------------- */
+  function initPaperSlide() {
+    if (!document.body.classList.contains('petlio-paper-slide')) {
+      document.body.classList.add('petlio-paper-slide');
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // ALWAYS use every top-level homepage section so none are skipped
+    var nodes = Array.prototype.slice.call(
+      document.querySelectorAll('#MainContent > .shopify-section')
+    );
+    if (nodes.length < 2) return;
+
+    nodes.forEach(function (node, i) {
+      node.classList.add('petlio-story-section');
+      node.classList.remove('paper-from-left', 'paper-from-right');
+      node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
+      node.classList.add('is-paper-settled');
+      // Ensure positioning context for chapter labels
+      if (getComputedStyle(node).position === 'static') {
+        node.style.position = 'relative';
+      }
+    });
+
+    var intensity = parseFloat(
+      getComputedStyle(document.body).getPropertyValue('--petlio-paper-slide')
+    );
+    if (!intensity || isNaN(intensity)) intensity = 0.55;
+    var maxShift = Math.round(Math.min(90, Math.max(28, intensity * 100)));
+    document.documentElement.style.setProperty('--petlio-paper-dist', maxShift + '%');
+
+    var activeIndex = -1;
+    var isAnimating = false;
+    var cooldownUntil = 0;
+    var ANIM_MS = 520;
+    // Hysteresis: require a clear lead before switching to avoid flip-flop
+    var SWITCH_MARGIN = 0.12;
+
+    function setActive(index) {
+      nodes.forEach(function (node, i) {
+        node.classList.toggle('is-paper-active', i === index);
+      });
+    }
+
+    function clearAnimClasses(node) {
+      node.classList.remove(
+        'paper-enter-from-left',
+        'paper-enter-from-right',
+        'paper-exit-to-left',
+        'paper-exit-to-right'
+      );
+    }
+
+    function playEnter(toIndex) {
+      if (toIndex < 0 || toIndex >= nodes.length) return;
+      if (isAnimating) return;
+
+      isAnimating = true;
+      cooldownUntil = Date.now() + ANIM_MS + 100;
+
+      var incoming = nodes[toIndex];
+      var fromLeft = incoming.classList.contains('paper-from-left');
+      var enterClass = fromLeft ? 'paper-enter-from-left' : 'paper-enter-from-right';
+
+      clearAnimClasses(incoming);
+      incoming.classList.remove('is-paper-settled');
+      void incoming.offsetWidth; // restart animation
+
+      incoming.classList.add(enterClass);
+      setActive(toIndex);
+
+      function finish() {
+        clearAnimClasses(incoming);
+        incoming.classList.add('is-paper-settled');
+        isAnimating = false;
+      }
+
+      function onEnd(e) {
+        if (e && e.target !== incoming) return;
+        incoming.removeEventListener('animationend', onEnd);
+        finish();
+      }
+      incoming.addEventListener('animationend', onEnd);
+      setTimeout(function () {
+        if (!isAnimating) return;
+        incoming.removeEventListener('animationend', onEnd);
+        finish();
+      }, ANIM_MS + 60);
+    }
+
+    function scoreSection(node, vh, mid) {
+      var rect = node.getBoundingClientRect();
+      if (rect.height < 48) return -Infinity;
+      var visibleTop = Math.max(rect.top, 0);
+      var visibleBottom = Math.min(rect.bottom, vh);
+      var visible = Math.max(0, visibleBottom - visibleTop);
+      if (visible < 1) return -Infinity;
+      var ratio = visible / Math.min(rect.height, vh);
+      var center = rect.top + rect.height * 0.5;
+      var dist = Math.abs(center - mid) / vh;
+      // Strong weight on visibility + proximity of section center to viewport center
+      return ratio * 1.6 - dist;
+    }
+
+    function findDominantIndex() {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var mid = vh * 0.48;
+      var best = 0;
+      var bestScore = -Infinity;
+      var second = -Infinity;
+
+      for (var i = 0; i < nodes.length; i++) {
+        var s = scoreSection(nodes[i], vh, mid);
+        if (s > bestScore) {
+          second = bestScore;
+          bestScore = s;
+          best = i;
+        } else if (s > second) {
+          second = s;
+        }
+      }
+      return { index: best, score: bestScore, margin: bestScore - second };
+    }
+
+    function onScrollCheck() {
+      if (isAnimating) return;
+      if (Date.now() < cooldownUntil) return;
+
+      var result = findDominantIndex();
+      var next = result.index;
+
+      // First time: set active without animation
+      if (activeIndex < 0) {
+        activeIndex = next;
+        setActive(activeIndex);
+        return;
+      }
+
+      if (next === activeIndex) return;
+
+      // Require a clear dominant section before switching (hysteresis)
+      if (result.margin < SWITCH_MARGIN && result.score < 0.55) return;
+
+      activeIndex = next;
+      playEnter(next);
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        onScrollCheck();
+      });
+    }
+
+    // Initial settle — no animation on first paint
+    nodes.forEach(function (n) {
+      n.classList.add('is-paper-settled');
+      clearAnimClasses(n);
+    });
+    var initial = findDominantIndex();
+    activeIndex = initial.index;
+    setActive(activeIndex);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPaperSlide);
+  } else {
+    // Defer one frame so section layout/classes from above are ready
+    requestAnimationFrame(initPaperSlide);
+  }
+
 })();

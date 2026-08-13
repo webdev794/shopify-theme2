@@ -341,3 +341,15 @@ body {
   font-weight: 600;
   border-radius: var(--style-border-radius-inputs, 0.4rem);
 }
+
+/* Keep header (and its dropdowns) above page sections like the hero */
+.shopify-section-group-header-group,
+#shopify-section-header,
+.section-header {
+  position: relative;
+  z-index: 1000;
+}
+#MainContent {
+  position: relative;
+  z-index: 1;
+}

@@ -556,3 +556,29 @@
     --card-shift: 0px;
   }
 }
+
+
+/* Chapter framing */
+.shop-by-pet__chapter {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.85rem;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  opacity: 0.55;
+}
+.shop-by-pet__chapter-number {
+  font-variant-numeric: tabular-nums;
+}
+.shop-by-pet__chapter-line {
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+}
+.shop-by-pet__chapter-label {
+  white-space: nowrap;
+}

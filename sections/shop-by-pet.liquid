@@ -23,6 +23,18 @@
 
     <div class="shop-by-pet__intro">
       <div class="shop-by-pet__intro-copy">
+        {%- if section.settings.chapter_number != blank or section.settings.chapter_label != blank -%}
+          <div class="shop-by-pet__chapter" aria-hidden="true">
+            {%- if section.settings.chapter_number != blank -%}
+              <span class="shop-by-pet__chapter-number">{{ section.settings.chapter_number | escape }}</span>
+            {%- endif -%}
+            <span class="shop-by-pet__chapter-line"></span>
+            {%- if section.settings.chapter_label != blank -%}
+              <span class="shop-by-pet__chapter-label">{{ section.settings.chapter_label | escape }}</span>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
         {%- if section.settings.subheading != blank -%}
           <p class="shop-by-pet__eyebrow">
             <span class="shop-by-pet__eyebrow-dot" aria-hidden="true"></span>
@@ -164,6 +176,18 @@
   "class": "section-shop-by-pet",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "text",
+      "id": "chapter_number",
+      "label": "Chapter number",
+      "default": "02"
+    },
+    {
+      "type": "text",
+      "id": "chapter_label",
+      "label": "Chapter label",
+      "default": "Pet worlds"
+    },
     {
       "type": "text",
       "id": "heading",

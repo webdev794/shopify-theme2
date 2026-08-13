@@ -72,16 +72,27 @@
 
     return promise
       .then(function (cart) {
-        function afterAdd(cartData) {
-          if (utils && utils.publishCart && cartData) utils.publishCart(cartData);
-          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
-          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: { cart: cartData } }));
+        function finishWithCart(cartData) {
+          if (!cartData) {
+            return fetch('/cart.js', { credentials: 'same-origin' })
+              .then(function (r) { return r.json(); })
+              .then(finishWithCart)
+              .catch(function () {});
+          }
+          if (utils && utils.publishCart) utils.publishCart(cartData);
+          // Same shape as Everyday Essentials (featured-products.js)
+          document.dispatchEvent(new CustomEvent('cart:updated', {
+            detail: { item_count: cartData.item_count, cart: cartData }
+          }));
+          document.dispatchEvent(new CustomEvent('cart:refresh', {
+            detail: { item_count: cartData.item_count, cart: cartData }
+          }));
           if (window.PetlioToast && PetlioToast.show) {
             var msg = ids.length > 1 ? (ids.length + ' items added to cart') : 'Added to cart';
             PetlioToast.show(msg, { withCartLink: true });
           }
           try {
-            var n = cartData && typeof cartData.item_count === 'number' ? cartData.item_count : null;
+            var n = typeof cartData.item_count === 'number' ? cartData.item_count : null;
             if (n !== null) {
               document.querySelectorAll('[data-cart-count], [data-cart-drawer-count], .cart-count, .header__cart-count').forEach(function (el) {
                 el.textContent = n > 0 ? String(n) : '';
@@ -93,14 +104,11 @@
           } catch (err) {}
         }
 
-        // utils.addToCart now returns full cart
-        if (cart && typeof cart.item_count === 'number') {
-          afterAdd(cart);
-        } else if (utils && utils.getCart) {
-          utils.getCart().then(afterAdd).catch(function () { afterAdd(null); });
-        } else {
-          afterAdd(cart);
-        }
+        // Always re-read full cart so drawer has line items (not just a count)
+        fetch('/cart.js', { credentials: 'same-origin' })
+          .then(function (r) { return r.json(); })
+          .then(finishWithCart)
+          .catch(function () { finishWithCart(cart); });
 
         if (button) {
           button.classList.remove('is-loading');

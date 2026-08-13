@@ -14,7 +14,7 @@
   --header-height: 6rem;
 
   position: relative;
-  z-index: 40;
+  z-index: 1000;
   background: color-mix(in srgb, var(--header-bg) 95%, transparent);
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
@@ -31,7 +31,7 @@
   backdrop-filter: saturate(140%) blur(10px);
   background: color-mix(in srgb, var(--header-bg) 92%, transparent);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  z-index: 50;
+  z-index: 1000;
 }
 
 .header--sticky.header--scrolled {
@@ -187,6 +187,14 @@
 .header__menu-item { 
   position: relative;
   padding: 0 0.5rem;
+  z-index: 1;
+}
+.header__menu-item:hover,
+.header__menu-item:focus-within {
+  z-index: 1002;
+}
+.header__dropdown[open] {
+  z-index: 1002;
 }
 
 .header__menu-item::after {
@@ -275,6 +283,7 @@
 /* Dropdown panel — premium with glass effect */
 .header__submenu {
   position: absolute;
+  z-index: 1001;
   top: calc(100% + 0.5rem);
   left: 50%;
   transform: translateX(-50%) translateY(8px);
@@ -353,6 +362,7 @@
 /* Mega menu — refined grid with visual hierarchy */
 .header__mega-menu {
   position: absolute;
+  z-index: 1001;
   top: calc(100% + 0.5rem);
   left: 50%;
   transform: translateX(-50%) translateY(12px);

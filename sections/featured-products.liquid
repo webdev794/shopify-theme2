@@ -34,11 +34,17 @@
   <div class="featured-products__container{% if section.settings.full_width %} featured-products__container--full{% endif %}">
 
     <div class="featured-products__header">
-      <div class="featured-products__chapter" aria-hidden="true">
-        <span class="featured-products__chapter-number">03</span>
-        <span class="featured-products__chapter-line"></span>
-        <span>Everyday</span>
-      </div>
+      {%- if section.settings.chapter_number != blank or section.settings.chapter_label != blank -%}
+        <div class="featured-products__chapter" aria-hidden="true">
+          {%- if section.settings.chapter_number != blank -%}
+            <span class="featured-products__chapter-number">{{ section.settings.chapter_number | escape }}</span>
+          {%- endif -%}
+          <span class="featured-products__chapter-line"></span>
+          {%- if section.settings.chapter_label != blank -%}
+            <span>{{ section.settings.chapter_label | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
 
       <div class="featured-products__header-main">
         {%- if section.settings.subheading != blank -%}
@@ -230,6 +236,18 @@
       "info": "t:sections.featured_products.settings.full_width.info"
     },
     { "type": "header", "content": "t:sections.featured_products.settings.header__2.content" },
+    {
+      "type": "text",
+      "id": "chapter_number",
+      "label": "Chapter number",
+      "default": "03"
+    },
+    {
+      "type": "text",
+      "id": "chapter_label",
+      "label": "Chapter label",
+      "default": "Everyday"
+    },
     {
       "type": "text",
       "id": "heading",

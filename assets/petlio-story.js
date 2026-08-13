@@ -50,7 +50,9 @@
     section.dataset.storyChapter = String(index + 1);
     section.dataset.storyLabel = chapter.label;
 
-    if (!section.querySelector('.petlio-story-chapter-label')) {
+    // Prefer liquid chapter-header; only inject JS label when none exists
+    if (!section.querySelector('.petlio-story-chapter-label') &&
+        !section.querySelector('.petlio-chapter')) {
       var label = document.createElement('span');
       label.className = 'petlio-story-chapter-label';
       label.textContent = chapter.label;
@@ -142,9 +144,12 @@
 
 
   /* ----------------------------------------------------------------
-     Paper slide (discrete): sections stay fully readable.
-     When scroll crosses ~50% into another section, play a short
-     automated L/R paper transition, then settle static again.
+     Paper slide (discrete, enter-only):
+     - Sections stay fully readable while active (no continuous drift).
+     - When scroll makes a new section dominant (~midpoint), it plays a
+       short enter animation from alternating L/R, then settles static.
+     - No exit transform (avoids the "slide away then snap back" glitch).
+     - Every main homepage section participates, not only chapter-matched ones.
      ---------------------------------------------------------------- */
   function initPaperSlide() {
     if (!document.body.classList.contains('petlio-paper-slide')) {
@@ -152,37 +157,36 @@
     }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+    // ALWAYS use every top-level homepage section so none are skipped
     var nodes = Array.prototype.slice.call(
-      document.querySelectorAll('#MainContent > .shopify-section.petlio-story-section')
+      document.querySelectorAll('#MainContent > .shopify-section')
     );
-    if (!nodes.length) {
-      nodes = Array.prototype.slice.call(
-        document.querySelectorAll('#MainContent > .shopify-section')
-      );
-      nodes.forEach(function (node) {
-        node.classList.add('petlio-story-section');
-      });
-    }
     if (nodes.length < 2) return;
 
     nodes.forEach(function (node, i) {
+      node.classList.add('petlio-story-section');
       node.classList.remove('paper-from-left', 'paper-from-right');
       node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
       node.classList.add('is-paper-settled');
+      // Ensure positioning context for chapter labels
+      if (getComputedStyle(node).position === 'static') {
+        node.style.position = 'relative';
+      }
     });
 
     var intensity = parseFloat(
       getComputedStyle(document.body).getPropertyValue('--petlio-paper-slide')
     );
     if (!intensity || isNaN(intensity)) intensity = 0.55;
-    // Distance as % for keyframe travel
-    var maxShift = Math.round(Math.min(100, Math.max(30, intensity * 110)));
+    var maxShift = Math.round(Math.min(90, Math.max(28, intensity * 100)));
     document.documentElement.style.setProperty('--petlio-paper-dist', maxShift + '%');
 
-    var activeIndex = 0;
+    var activeIndex = -1;
     var isAnimating = false;
     var cooldownUntil = 0;
-    var ANIM_MS = 480;
+    var ANIM_MS = 520;
+    // Hysteresis: require a clear lead before switching to avoid flip-flop
+    var SWITCH_MARGIN = 0.12;
 
     function setActive(index) {
       nodes.forEach(function (node, i) {
@@ -199,104 +203,98 @@
       );
     }
 
-    function playTransition(fromIndex, toIndex) {
-      if (fromIndex === toIndex || isAnimating) return;
-      if (fromIndex < 0 || toIndex < 0 || toIndex >= nodes.length) return;
+    function playEnter(toIndex) {
+      if (toIndex < 0 || toIndex >= nodes.length) return;
+      if (isAnimating) return;
 
       isAnimating = true;
-      cooldownUntil = Date.now() + ANIM_MS + 120;
+      cooldownUntil = Date.now() + ANIM_MS + 100;
 
-      var outgoing = nodes[fromIndex];
       var incoming = nodes[toIndex];
-      var goingDown = toIndex > fromIndex;
+      var fromLeft = incoming.classList.contains('paper-from-left');
+      var enterClass = fromLeft ? 'paper-enter-from-left' : 'paper-enter-from-right';
 
-      // Alternating paper direction based on the incoming section's side
-      var incomingFromLeft = incoming.classList.contains('paper-from-left');
-      // When going down: incoming enters from its side, outgoing exits opposite
-      // When going up: reverse the travel so it feels like pages flipping back
-      var enterClass = incomingFromLeft ? 'paper-enter-from-left' : 'paper-enter-from-right';
-      var exitClass;
-      if (goingDown) {
-        exitClass = incomingFromLeft ? 'paper-exit-to-right' : 'paper-exit-to-left';
-      } else {
-        // reverse directions for scroll-up
-        enterClass = incomingFromLeft ? 'paper-enter-from-right' : 'paper-enter-from-left';
-        exitClass = incomingFromLeft ? 'paper-exit-to-left' : 'paper-exit-to-right';
-      }
-
-      clearAnimClasses(outgoing);
       clearAnimClasses(incoming);
-      outgoing.classList.remove('is-paper-settled');
       incoming.classList.remove('is-paper-settled');
+      void incoming.offsetWidth; // restart animation
 
-      // Force reflow so animation restarts cleanly
-      void outgoing.offsetWidth;
-      void incoming.offsetWidth;
-
-      outgoing.classList.add(exitClass);
       incoming.classList.add(enterClass);
       setActive(toIndex);
 
-      var finished = 0;
-      function onEnd(e) {
-        if (e && e.target !== outgoing && e.target !== incoming) return;
-        finished += 1;
-        if (finished < 2) return;
-        outgoing.removeEventListener('animationend', onEnd);
-        incoming.removeEventListener('animationend', onEnd);
-        clearAnimClasses(outgoing);
+      function finish() {
         clearAnimClasses(incoming);
-        outgoing.classList.add('is-paper-settled');
         incoming.classList.add('is-paper-settled');
         isAnimating = false;
       }
 
-      outgoing.addEventListener('animationend', onEnd);
+      function onEnd(e) {
+        if (e && e.target !== incoming) return;
+        incoming.removeEventListener('animationend', onEnd);
+        finish();
+      }
       incoming.addEventListener('animationend', onEnd);
-      // Safety timeout if animationend is missed
       setTimeout(function () {
         if (!isAnimating) return;
-        onEnd({ target: outgoing });
-        onEnd({ target: incoming });
-      }, ANIM_MS + 80);
+        incoming.removeEventListener('animationend', onEnd);
+        finish();
+      }, ANIM_MS + 60);
+    }
+
+    function scoreSection(node, vh, mid) {
+      var rect = node.getBoundingClientRect();
+      if (rect.height < 48) return -Infinity;
+      var visibleTop = Math.max(rect.top, 0);
+      var visibleBottom = Math.min(rect.bottom, vh);
+      var visible = Math.max(0, visibleBottom - visibleTop);
+      if (visible < 1) return -Infinity;
+      var ratio = visible / Math.min(rect.height, vh);
+      var center = rect.top + rect.height * 0.5;
+      var dist = Math.abs(center - mid) / vh;
+      // Strong weight on visibility + proximity of section center to viewport center
+      return ratio * 1.6 - dist;
     }
 
     function findDominantIndex() {
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      var mid = vh * 0.5;
-      var best = activeIndex;
+      var mid = vh * 0.48;
+      var best = 0;
       var bestScore = -Infinity;
+      var second = -Infinity;
 
       for (var i = 0; i < nodes.length; i++) {
-        var rect = nodes[i].getBoundingClientRect();
-        if (rect.height < 40) continue;
-        // How much of the viewport mid-band does this section own?
-        var visibleTop = Math.max(rect.top, 0);
-        var visibleBottom = Math.min(rect.bottom, vh);
-        var visible = Math.max(0, visibleBottom - visibleTop);
-        var ratio = visible / Math.min(rect.height, vh);
-        // Prefer section whose center is closest to viewport center
-        var center = rect.top + rect.height * 0.5;
-        var dist = Math.abs(center - mid);
-        var score = ratio * 2 - dist / vh;
-        if (score > bestScore) {
-          bestScore = score;
+        var s = scoreSection(nodes[i], vh, mid);
+        if (s > bestScore) {
+          second = bestScore;
+          bestScore = s;
           best = i;
+        } else if (s > second) {
+          second = s;
         }
       }
-      return best;
+      return { index: best, score: bestScore, margin: bestScore - second };
     }
 
     function onScrollCheck() {
       if (isAnimating) return;
       if (Date.now() < cooldownUntil) return;
 
-      var next = findDominantIndex();
-      if (next !== activeIndex) {
-        var prev = activeIndex;
+      var result = findDominantIndex();
+      var next = result.index;
+
+      // First time: set active without animation
+      if (activeIndex < 0) {
         activeIndex = next;
-        playTransition(prev, next);
+        setActive(activeIndex);
+        return;
       }
+
+      if (next === activeIndex) return;
+
+      // Require a clear dominant section before switching (hysteresis)
+      if (result.margin < SWITCH_MARGIN && result.score < 0.55) return;
+
+      activeIndex = next;
+      playEnter(next);
     }
 
     var ticking = false;
@@ -310,12 +308,13 @@
     }
 
     // Initial settle — no animation on first paint
-    activeIndex = findDominantIndex();
-    setActive(activeIndex);
     nodes.forEach(function (n) {
       n.classList.add('is-paper-settled');
       clearAnimClasses(n);
     });
+    var initial = findDominantIndex();
+    activeIndex = initial.index;
+    setActive(activeIndex);
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
@@ -324,7 +323,8 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPaperSlide);
   } else {
-    initPaperSlide();
+    // Defer one frame so section layout/classes from above are ready
+    requestAnimationFrame(initPaperSlide);
   }
 
 })();

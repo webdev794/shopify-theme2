@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Petlio",
-    "theme_version": "1.3.9",
+    "theme_version": "1.3.10",
     "theme_author": "Caresort Technologies",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
@@ -216,7 +216,7 @@
         "id": "enable_paper_slide",
         "label": "Homepage paper-slide sections",
         "default": true,
-        "info": "On the homepage, when you scroll past the midpoint of a section a short automated paper slide plays (alternating left/right). Sections stay fully readable while you browse. Turn off for a static layout. Respects reduced-motion."
+        "info": "On the homepage, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still so products are easy to browse. Turn off for a static layout. Respects reduced-motion."
       },
       {
         "type": "range",

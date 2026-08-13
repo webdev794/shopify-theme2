@@ -797,13 +797,13 @@
       performance.now();
 
 
-    if (!document.body.classList.contains('dog-cursor-ready')) {
-      document.body.classList.add('dog-cursor-ready');
+    if (toyEl) {
+
+      toyEl.classList.remove(
+        'is-hidden'
+      );
     }
 
-    if (toyEl) {
-      toyEl.classList.remove('is-hidden');
-    }
 
     resetAnimationToRun();
 

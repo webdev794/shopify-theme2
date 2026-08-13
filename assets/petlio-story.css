@@ -321,53 +321,121 @@ body.template-index .shopify-section .testimonials {
 
 
 /* ==========================================================================
-   PAPER SLIDE — scroll-linked section transitions (optional)
+   PAPER SLIDE — discrete chapter transitions (optional)
    Enabled when body.petlio-paper-slide is present (theme setting).
-   Keeps native scroll; sections ease in from L/R and drift away.
+   Sections stay fully readable. When the user crosses ~50% into another
+   section, a short automated L/R paper animation plays, then settles static.
    ========================================================================== */
 
 body.petlio-paper-slide {
-  --petlio-paper-slide: 0.7;
+  --petlio-paper-slide: 0.55;
+  --petlio-paper-dist: 55%;
   --petlio-paper-ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Allow horizontal travel without clipping the sliding paper */
-body.petlio-paper-slide #MainContent {
-  overflow-x: visible;
-  overflow-y: visible;
+  --petlio-paper-duration: 0.48s;
 }
 
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
-  --paper-x: 0%;
-  --paper-opacity: 1;
-  --paper-scale: 1;
-  transform: translate3d(var(--paper-x), 0, 0) scale(var(--paper-scale));
-  opacity: var(--paper-opacity);
+  transform: none;
+  opacity: 1;
   transform-origin: center center;
-  will-change: transform, opacity;
-  transition: none; /* driven by scroll via JS */
+  will-change: auto;
   backface-visibility: hidden;
 }
 
-/* Soft paper edge + slight lift while the section is the active "page" */
-body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
-  box-shadow:
-    0 12px 40px rgba(39, 48, 40, 0.07),
-    0 2px 0 rgba(255, 255, 255, 0.4) inset;
-  z-index: 6;
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-settled {
+  transform: none !important;
+  opacity: 1 !important;
 }
 
-/* Reduced motion: no horizontal travel */
+/* Active chapter lift (static, no continuous motion) */
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
+  position: relative;
+  z-index: 6;
+  box-shadow:
+    0 12px 40px rgba(39, 48, 40, 0.07),
+    0 2px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+/* ---- Enter / exit keyframes ---- */
+@keyframes petlio-paper-enter-left {
+  from {
+    transform: translate3d(calc(var(--petlio-paper-dist) * -1), 0, 0);
+    opacity: 0.35;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes petlio-paper-enter-right {
+  from {
+    transform: translate3d(var(--petlio-paper-dist), 0, 0);
+    opacity: 0.35;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes petlio-paper-exit-left {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(calc(var(--petlio-paper-dist) * -1), 0, 0);
+    opacity: 0.25;
+  }
+}
+
+@keyframes petlio-paper-exit-right {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(var(--petlio-paper-dist), 0, 0);
+    opacity: 0.25;
+  }
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-enter-from-left {
+  animation: petlio-paper-enter-left var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 8;
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-enter-from-right {
+  animation: petlio-paper-enter-right var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 8;
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-exit-to-left {
+  animation: petlio-paper-exit-left var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 7;
+  pointer-events: none;
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-exit-to-right {
+  animation: petlio-paper-exit-right var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 7;
+  pointer-events: none;
+}
+
+/* Reduced motion: never animate horizontal travel */
 @media (prefers-reduced-motion: reduce) {
   body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
+    animation: none !important;
     transform: none !important;
     opacity: 1 !important;
   }
 }
 
-/* Mobile: gentler travel so it does not feel jumpy */
+/* Mobile: shorter travel, slightly faster */
 @media (max-width: 749px) {
   body.petlio-paper-slide {
-    --petlio-paper-slide: 0.4;
+    --petlio-paper-dist: 36%;
+    --petlio-paper-duration: 0.4s;
   }
 }

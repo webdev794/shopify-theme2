@@ -142,14 +142,12 @@
 
 
   /* ----------------------------------------------------------------
-     Paper slide: alternating L/R entrance + exit while scrolling
+     Paper slide (discrete): sections stay fully readable.
+     When scroll crosses ~50% into another section, play a short
+     automated L/R paper transition, then settle static again.
      ---------------------------------------------------------------- */
   function initPaperSlide() {
-    // Auto-enable if setting class missing but we're on index (helps when
-    // settings_data hasn't saved the default yet)
     if (!document.body.classList.contains('petlio-paper-slide')) {
-      // Only auto-add when the theme setting default is intended on;
-      // still respect reduced-motion below.
       document.body.classList.add('petlio-paper-slide');
     }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -165,93 +163,164 @@
         node.classList.add('petlio-story-section');
       });
     }
+    if (nodes.length < 2) return;
 
     nodes.forEach(function (node, i) {
       node.classList.remove('paper-from-left', 'paper-from-right');
       node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
+      node.classList.add('is-paper-settled');
     });
-
-    if (!nodes.length) return;
 
     var intensity = parseFloat(
       getComputedStyle(document.body).getPropertyValue('--petlio-paper-slide')
     );
-    if (!intensity || isNaN(intensity)) intensity = 0.7;
-    // maxShift as % of section width — higher = more obvious slide
-    var maxShift = Math.round(Math.min(90, Math.max(25, intensity * 120)));
+    if (!intensity || isNaN(intensity)) intensity = 0.55;
+    // Distance as % for keyframe travel
+    var maxShift = Math.round(Math.min(100, Math.max(30, intensity * 110)));
+    document.documentElement.style.setProperty('--petlio-paper-dist', maxShift + '%');
 
-    var ticking = false;
+    var activeIndex = 0;
+    var isAnimating = false;
+    var cooldownUntil = 0;
+    var ANIM_MS = 480;
 
-    function easeOutCubic(t) {
-      return 1 - Math.pow(1 - t, 3);
-    }
-
-    function updatePapers() {
-      ticking = false;
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-
-      nodes.forEach(function (section) {
-        var rect = section.getBoundingClientRect();
-        var h = Math.max(rect.height, 1);
-
-        // t > 0 → section center still below viewport center (entering)
-        // t < 0 → section center above viewport center (leaving)
-        var center = rect.top + h * 0.5;
-        var viewCenter = vh * 0.45;
-        var t = (center - viewCenter) / vh;
-
-        var fromLeft = section.classList.contains('paper-from-left');
-        var enterDir = fromLeft ? -1 : 1;
-        var exitDir = -enterDir;
-
-        var x = 0;
-        var opacity = 1;
-        var scale = 1;
-
-        if (t > 0.08) {
-          // Entering from below / side
-          var p = Math.min(1, (t - 0.08) / 0.75);
-          p = easeOutCubic(p);
-          x = enterDir * maxShift * p;
-          opacity = 1 - p * 0.28;
-          scale = 1 - p * 0.035;
-        } else if (t < -0.08) {
-          // Leaving upward / opposite side
-          var p2 = Math.min(1, (-t - 0.08) / 0.75);
-          p2 = easeOutCubic(p2);
-          x = exitDir * maxShift * p2;
-          opacity = 1 - p2 * 0.35;
-          scale = 1 - p2 * 0.04;
-        }
-
-        section.style.setProperty('--paper-x', x.toFixed(2) + '%');
-        section.style.setProperty('--paper-opacity', opacity.toFixed(3));
-        section.style.setProperty('--paper-scale', scale.toFixed(4));
-
-        if (Math.abs(t) < 0.6) {
-          section.classList.add('is-paper-active');
-        } else {
-          section.classList.remove('is-paper-active');
-        }
+    function setActive(index) {
+      nodes.forEach(function (node, i) {
+        node.classList.toggle('is-paper-active', i === index);
       });
     }
 
-    function onScroll() {
-      if (!ticking) {
-        ticking = true;
-        window.requestAnimationFrame(updatePapers);
+    function clearAnimClasses(node) {
+      node.classList.remove(
+        'paper-enter-from-left',
+        'paper-enter-from-right',
+        'paper-exit-to-left',
+        'paper-exit-to-right'
+      );
+    }
+
+    function playTransition(fromIndex, toIndex) {
+      if (fromIndex === toIndex || isAnimating) return;
+      if (fromIndex < 0 || toIndex < 0 || toIndex >= nodes.length) return;
+
+      isAnimating = true;
+      cooldownUntil = Date.now() + ANIM_MS + 120;
+
+      var outgoing = nodes[fromIndex];
+      var incoming = nodes[toIndex];
+      var goingDown = toIndex > fromIndex;
+
+      // Alternating paper direction based on the incoming section's side
+      var incomingFromLeft = incoming.classList.contains('paper-from-left');
+      // When going down: incoming enters from its side, outgoing exits opposite
+      // When going up: reverse the travel so it feels like pages flipping back
+      var enterClass = incomingFromLeft ? 'paper-enter-from-left' : 'paper-enter-from-right';
+      var exitClass;
+      if (goingDown) {
+        exitClass = incomingFromLeft ? 'paper-exit-to-right' : 'paper-exit-to-left';
+      } else {
+        // reverse directions for scroll-up
+        enterClass = incomingFromLeft ? 'paper-enter-from-right' : 'paper-enter-from-left';
+        exitClass = incomingFromLeft ? 'paper-exit-to-left' : 'paper-exit-to-right';
+      }
+
+      clearAnimClasses(outgoing);
+      clearAnimClasses(incoming);
+      outgoing.classList.remove('is-paper-settled');
+      incoming.classList.remove('is-paper-settled');
+
+      // Force reflow so animation restarts cleanly
+      void outgoing.offsetWidth;
+      void incoming.offsetWidth;
+
+      outgoing.classList.add(exitClass);
+      incoming.classList.add(enterClass);
+      setActive(toIndex);
+
+      var finished = 0;
+      function onEnd(e) {
+        if (e && e.target !== outgoing && e.target !== incoming) return;
+        finished += 1;
+        if (finished < 2) return;
+        outgoing.removeEventListener('animationend', onEnd);
+        incoming.removeEventListener('animationend', onEnd);
+        clearAnimClasses(outgoing);
+        clearAnimClasses(incoming);
+        outgoing.classList.add('is-paper-settled');
+        incoming.classList.add('is-paper-settled');
+        isAnimating = false;
+      }
+
+      outgoing.addEventListener('animationend', onEnd);
+      incoming.addEventListener('animationend', onEnd);
+      // Safety timeout if animationend is missed
+      setTimeout(function () {
+        if (!isAnimating) return;
+        onEnd({ target: outgoing });
+        onEnd({ target: incoming });
+      }, ANIM_MS + 80);
+    }
+
+    function findDominantIndex() {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var mid = vh * 0.5;
+      var best = activeIndex;
+      var bestScore = -Infinity;
+
+      for (var i = 0; i < nodes.length; i++) {
+        var rect = nodes[i].getBoundingClientRect();
+        if (rect.height < 40) continue;
+        // How much of the viewport mid-band does this section own?
+        var visibleTop = Math.max(rect.top, 0);
+        var visibleBottom = Math.min(rect.bottom, vh);
+        var visible = Math.max(0, visibleBottom - visibleTop);
+        var ratio = visible / Math.min(rect.height, vh);
+        // Prefer section whose center is closest to viewport center
+        var center = rect.top + rect.height * 0.5;
+        var dist = Math.abs(center - mid);
+        var score = ratio * 2 - dist / vh;
+        if (score > bestScore) {
+          bestScore = score;
+          best = i;
+        }
+      }
+      return best;
+    }
+
+    function onScrollCheck() {
+      if (isAnimating) return;
+      if (Date.now() < cooldownUntil) return;
+
+      var next = findDominantIndex();
+      if (next !== activeIndex) {
+        var prev = activeIndex;
+        activeIndex = next;
+        playTransition(prev, next);
       }
     }
 
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        onScrollCheck();
+      });
+    }
+
+    // Initial settle — no animation on first paint
+    activeIndex = findDominantIndex();
+    setActive(activeIndex);
+    nodes.forEach(function (n) {
+      n.classList.add('is-paper-settled');
+      clearAnimClasses(n);
+    });
+
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-    // Run after layout settles
-    updatePapers();
-    setTimeout(updatePapers, 80);
-    setTimeout(updatePapers, 320);
   }
 
-  // Defer paper init slightly so section classes from above are applied
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initPaperSlide);
   } else {

@@ -2,60 +2,22 @@
  * PETLIO — UNIVERSAL DOG CURSOR
  */
 
-/* Prevent flash: hidden until first pointer move */
-#dog-cursor-canvas,
-#dog-cursor-toy {
-  opacity: 0 !important;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-body.dog-cursor-ready #dog-cursor-canvas {
-  visibility: visible;
-  opacity: 0.9;
-}
-
-body.dog-cursor-ready #dog-cursor-toy {
-  visibility: visible;
-  opacity: 1;
-}
-
-body.dog-cursor-ready #dog-cursor-toy.is-hidden {
-  opacity: 0;
-}
-
-/* Keep mode-specific canvas opacity after ready */
-body.dog-cursor-ready[data-dog-cursor-mode="calm"] #dog-cursor-canvas { opacity: 0.72; }
-body.dog-cursor-ready[data-dog-cursor-mode="read"] #dog-cursor-canvas { opacity: 0.68; }
-body.dog-cursor-ready[data-dog-cursor-mode="minimal"] #dog-cursor-canvas { opacity: 0.58; }
-body.dog-cursor-ready[data-dog-cursor-mode="settle"] #dog-cursor-canvas { opacity: 0.48; }
-
-
-
-
 /* ==========================================================
    DOG CANVAS
    ========================================================== */
 
 #dog-cursor-canvas {
   position: fixed;
-
   top: 0;
   left: 0;
-
   width: 100vw;
   height: 100vh;
-
   pointer-events: none;
-
   z-index: 2147483000;
-
   mix-blend-mode: multiply;
-
-  opacity: 0.9;
-
-  transition:
-    opacity 450ms ease;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms ease, visibility 300ms ease;
 }
 
 
@@ -65,32 +27,19 @@ body.dog-cursor-ready[data-dog-cursor-mode="settle"] #dog-cursor-canvas { opacit
 
 #dog-cursor-toy {
   position: fixed;
-
   top: 0;
   left: 0;
-
   width: 44px;
   height: 44px;
-
-  margin:
-    -22px 0 0 -22px;
-
+  margin: -22px 0 0 -22px;
   pointer-events: none;
-
   z-index: 2147483001;
-
   overflow: visible;
-
   will-change: transform;
-
-  filter:
-    drop-shadow(
-      0 3px 4px
-      rgba(0, 0, 0, 0.22)
-    );
-
-  transition:
-    opacity 150ms ease;
+  opacity: 0;
+  visibility: hidden;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.22));
+  transition: opacity 150ms ease, visibility 150ms ease;
 }
 
 
@@ -175,15 +124,22 @@ body[data-dog-cursor-mode="settle"]
    NORMAL CURSOR
    ========================================================== */
 
-body.dog-cursor-active,
-body.dog-cursor-active a,
-body.dog-cursor-active button,
-body.dog-cursor-active input,
-body.dog-cursor-active textarea,
-body.dog-cursor-active select,
-body.dog-cursor-active [role="button"],
-body.dog-cursor-active label {
+/* Hide system cursor only once custom cursor is ready */
+body.dog-cursor-ready,
+body.dog-cursor-ready a,
+body.dog-cursor-ready button,
+body.dog-cursor-ready input,
+body.dog-cursor-ready textarea,
+body.dog-cursor-ready select,
+body.dog-cursor-ready [role="button"],
+body.dog-cursor-ready label {
   cursor: none;
+}
+
+body.dog-cursor-active:not(.dog-cursor-ready),
+body.dog-cursor-active:not(.dog-cursor-ready) a,
+body.dog-cursor-active:not(.dog-cursor-ready) button {
+  cursor: auto;
 }
 
 
@@ -232,4 +188,18 @@ body.dog-cursor-active label {
   body.dog-cursor-active label {
     cursor: auto;
   }
+}
+
+body.dog-cursor-ready #dog-cursor-canvas {
+  visibility: visible;
+  opacity: 0.9;
+}
+
+body.dog-cursor-ready #dog-cursor-toy {
+  visibility: visible;
+  opacity: 1;
+}
+
+body.dog-cursor-ready #dog-cursor-toy.is-hidden {
+  opacity: 0;
 }

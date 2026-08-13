@@ -9,51 +9,52 @@
   var initializedSections = new WeakSet();
 
   
-  function galleryAddToCart(ids, button) {
-    if (!ids || !ids.length) return;
+  
+  function parseVariantIds(raw) {
+    if (Array.isArray(raw)) {
+      return raw.map(function (v) { return Number(v); }).filter(function (id) { return id && !isNaN(id) && id > 0; });
+    }
+    return String(raw || '')
+      .split(',')
+      .map(function (s) { return Number(String(s).trim()); })
+      .filter(function (id) { return id && !isNaN(id) && id > 0; });
+  }
+
+  function galleryAddToCart(rawIds, button) {
+    var ids = parseVariantIds(rawIds);
+    if (!ids.length) {
+      if (window.PetlioToast && PetlioToast.show) {
+        PetlioToast.show('No available products to add');
+      }
+      return Promise.resolve();
+    }
+
     var label = button ? button.textContent : '';
     if (button) {
       button.classList.add('is-loading');
       if (button.matches('[data-look-add-all]')) button.textContent = 'Adding…';
       else button.classList.add('is-adding');
     }
+
     var utils = window.ThemeUtils || (window.theme && window.theme.utils);
-    var items = ids.map(function (id) { return { id: Number(id), quantity: 1 }; });
+    var items = ids.map(function (id) { return { id: id, quantity: 1 }; });
+
     var promise = (utils && utils.addToCart)
       ? utils.addToCart(items)
-      : fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ items: items })
-        }).then(function (r) { if (!r.ok) throw new Error('fail'); return r.json(); });
+      : Promise.reject(new Error('Cart unavailable'));
 
-    promise.then(function () {
-      if (button) {
-        button.classList.remove('is-loading', 'is-adding');
-        button.classList.add('is-added');
-        if (button.matches('[data-look-add-all]')) {
-          button.textContent = 'Added';
-          setTimeout(function () {
-            button.classList.remove('is-added');
-            button.textContent = label;
-          }, 1800);
-        } else {
-          setTimeout(function () { button.classList.remove('is-added'); }, 1600);
-        }
-      }
-        function afterAdd(cart) {
-          // Update cart count / listeners without opening the drawer
-          if (utils && utils.publishCart && cart) utils.publishCart(cart);
-          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
-          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: { cart: cart } }));
-          // Toast confirmation only (drawer was opening empty)
+    return promise
+      .then(function (cart) {
+        function afterAdd(cartData) {
+          if (utils && utils.publishCart && cartData) utils.publishCart(cartData);
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
+          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: { cart: cartData } }));
           if (window.PetlioToast && PetlioToast.show) {
-            var msg = items && items.length > 1 ? (items.length + ' items added to cart') : 'Added to cart';
+            var msg = ids.length > 1 ? (ids.length + ' items added to cart') : 'Added to cart';
             PetlioToast.show(msg, { withCartLink: true });
           }
-          // Update header cart count badge if present
           try {
-            var n = cart && typeof cart.item_count === 'number' ? cart.item_count : null;
+            var n = cartData && typeof cartData.item_count === 'number' ? cartData.item_count : null;
             if (n !== null) {
               document.querySelectorAll('[data-cart-count], [data-cart-drawer-count], .cart-count, .header__cart-count').forEach(function (el) {
                 el.textContent = n > 0 ? String(n) : '';
@@ -64,21 +65,45 @@
             }
           } catch (err) {}
         }
-        if (utils && typeof utils.getCart === 'function') {
+
+        if (cart && typeof cart.item_count === 'number') {
+          afterAdd(cart);
+        } else if (utils && utils.getCart) {
           utils.getCart().then(afterAdd).catch(function () { afterAdd(null); });
         } else {
-          fetch('/cart.js').then(function (r) { return r.json(); }).then(afterAdd).catch(function () { afterAdd(null); });
+          afterAdd(cart);
         }
-    }).catch(function () {
-      if (button) {
-        button.classList.remove('is-loading', 'is-adding');
-        if (button.matches('[data-look-add-all]')) {
-          button.textContent = 'Try again';
-          setTimeout(function () { button.textContent = label; }, 1500);
+
+        if (button) {
+          button.classList.remove('is-loading', 'is-adding');
+          button.classList.add('is-added');
+          if (button.matches('[data-look-add-all]')) {
+            button.textContent = 'Added';
+            setTimeout(function () {
+              button.classList.remove('is-added');
+              button.textContent = label;
+            }, 1800);
+          } else {
+            setTimeout(function () { button.classList.remove('is-added'); }, 1600);
+          }
         }
-      }
-    });
+      })
+      .catch(function (err) {
+        console.error('[Petlio] gallery add failed', err);
+        if (button) {
+          button.classList.remove('is-loading', 'is-adding');
+          if (button.matches('[data-look-add-all]')) {
+            button.textContent = 'Try again';
+            setTimeout(function () { button.textContent = label; }, 1800);
+          }
+        }
+        var msg = (err && err.data && (err.data.description || err.data.message)) || (err && err.message) || 'Could not add to cart';
+        if (window.PetlioToast && PetlioToast.show) {
+          PetlioToast.show(msg);
+        }
+      });
   }
+
 
   function bindGalleryCart(section) {
     section.querySelectorAll('[data-look-add]').forEach(function (btn) {
@@ -99,8 +124,7 @@
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         var raw = btn.getAttribute('data-variant-ids') || '';
-        var ids = raw.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
-        galleryAddToCart(ids, btn);
+        galleryAddToCart(raw, btn);
       });
     });
   }

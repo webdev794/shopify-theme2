@@ -61,20 +61,29 @@
           {% assign product_3 = block.settings.product_3 %}
           {%- liquid
             assign look_variant_ids = ''
-            if product_1 != blank and product_1.selected_or_first_available_variant.available
-              assign look_variant_ids = product_1.selected_or_first_available_variant.id
-            endif
-            if product_2 != blank and product_2.selected_or_first_available_variant.available
-              if look_variant_ids != blank
-                assign look_variant_ids = look_variant_ids | append: ','
+            if product_1 != blank
+              assign v1 = product_1.selected_or_first_available_variant
+              if v1 != blank and v1.available and v1.id != blank
+                assign look_variant_ids = v1.id | append: ''
               endif
-              assign look_variant_ids = look_variant_ids | append: product_2.selected_or_first_available_variant.id
             endif
-            if product_3 != blank and product_3.selected_or_first_available_variant.available
-              if look_variant_ids != blank
-                assign look_variant_ids = look_variant_ids | append: ','
+            if product_2 != blank
+              assign v2 = product_2.selected_or_first_available_variant
+              if v2 != blank and v2.available and v2.id != blank
+                if look_variant_ids != blank
+                  assign look_variant_ids = look_variant_ids | append: ','
+                endif
+                assign look_variant_ids = look_variant_ids | append: v2.id
               endif
-              assign look_variant_ids = look_variant_ids | append: product_3.selected_or_first_available_variant.id
+            endif
+            if product_3 != blank
+              assign v3 = product_3.selected_or_first_available_variant
+              if v3 != blank and v3.available and v3.id != blank
+                if look_variant_ids != blank
+                  assign look_variant_ids = look_variant_ids | append: ','
+                endif
+                assign look_variant_ids = look_variant_ids | append: v3.id
+              endif
             endif
           -%}
 

@@ -2,6 +2,37 @@
  * PETLIO — UNIVERSAL DOG CURSOR
  */
 
+/* Prevent flash: hidden until first pointer move */
+#dog-cursor-canvas,
+#dog-cursor-toy {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body.dog-cursor-ready #dog-cursor-canvas {
+  visibility: visible;
+  opacity: 0.9;
+}
+
+body.dog-cursor-ready #dog-cursor-toy {
+  visibility: visible;
+  opacity: 1;
+}
+
+body.dog-cursor-ready #dog-cursor-toy.is-hidden {
+  opacity: 0;
+}
+
+/* Keep mode-specific canvas opacity after ready */
+body.dog-cursor-ready[data-dog-cursor-mode="calm"] #dog-cursor-canvas { opacity: 0.72; }
+body.dog-cursor-ready[data-dog-cursor-mode="read"] #dog-cursor-canvas { opacity: 0.68; }
+body.dog-cursor-ready[data-dog-cursor-mode="minimal"] #dog-cursor-canvas { opacity: 0.58; }
+body.dog-cursor-ready[data-dog-cursor-mode="settle"] #dog-cursor-canvas { opacity: 0.48; }
+
+
+
+
 /* ==========================================================
    DOG CANVAS
    ========================================================== */

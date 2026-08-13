@@ -646,6 +646,8 @@
     toyEl.innerHTML =
       TOY_SVG.bone;
 
+    /* Hide until first mousemove — prevents icon flash at 0,0 on load */
+    toyEl.classList.add('is-hidden');
 
     document.body.appendChild(
       toyEl
@@ -796,6 +798,10 @@
     lastMoveTime =
       performance.now();
 
+    /* Reveal cursor only after real pointer movement (no load flash) */
+    if (!document.body.classList.contains('dog-cursor-ready')) {
+      document.body.classList.add('dog-cursor-ready');
+    }
 
     if (toyEl) {
 

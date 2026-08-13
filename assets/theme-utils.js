@@ -31,8 +31,38 @@
     },
     getCart: function () { return ThemeUtils.fetchJSON("/cart.js"); },
     addToCart: function (items) {
-      var payload = Array.isArray(items) ? { items: items } : { items: [items] };
-      return ThemeUtils.fetchJSON("/cart/add.js", { method: "POST", body: payload });
+      var list = Array.isArray(items) ? items : [items];
+      // Normalize to {id, quantity} and drop invalid ids (0 / NaN cause 422)
+      list = list.map(function (item) {
+        if (item && typeof item === "object") {
+          return { id: Number(item.id), quantity: Number(item.quantity) || 1 };
+        }
+        return { id: Number(item), quantity: 1 };
+      }).filter(function (item) {
+        return item.id && !isNaN(item.id) && item.id > 0;
+      });
+      if (!list.length) {
+        return Promise.reject(Object.assign(new Error("No valid products to add"), { status: 422 }));
+      }
+      // Add sequentially — bulk add 422s if any single line is invalid
+      var chain = Promise.resolve({ items: [], item_count: 0 });
+      list.forEach(function (item) {
+        chain = chain.then(function (acc) {
+          return ThemeUtils.fetchJSON("/cart/add.js", {
+            method: "POST",
+            body: { items: [item] }
+          }).then(function (res) {
+            return res;
+          }).catch(function (err) {
+            // Skip sold-out / invalid lines; continue with others
+            console.warn("[Petlio] skip variant", item.id, err && (err.data || err.message));
+            return acc;
+          });
+        });
+      });
+      return chain.then(function () {
+        return ThemeUtils.getCart();
+      });
     },
     changeCart: function (line, quantity) {
       return ThemeUtils.fetchJSON("/cart/change.js", { method: "POST", body: { line: line, quantity: quantity } });

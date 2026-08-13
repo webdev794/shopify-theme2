@@ -71,11 +71,14 @@
         assign lookbook_items = ''
         for block in section.blocks
           assign p = block.settings.product
-          if p != blank and p.selected_or_first_available_variant.available
-            if lookbook_items != blank
-              assign lookbook_items = lookbook_items | append: ','
+          if p != blank
+            assign v = p.selected_or_first_available_variant
+            if v != blank and v.available and v.id != blank
+              if lookbook_items != blank
+                assign lookbook_items = lookbook_items | append: ','
+              endif
+              assign lookbook_items = lookbook_items | append: v.id
             endif
-            assign lookbook_items = lookbook_items | append: p.selected_or_first_available_variant.id
           endif
         endfor
       -%}

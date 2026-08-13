@@ -280,3 +280,78 @@ body.template-index .petlio-story-chapter-label {
     transition: none;
   }
 }
+
+
+/* ---- Stronger continuous story rhythm ---- */
+body.template-index #MainContent > .shopify-section {
+  background: transparent;
+}
+
+/* Soft paper bridges between chapters */
+body.template-index .petlio-story-section + .petlio-story-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(88%, 960px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--petlio-story-line, rgba(23, 23, 23, 0.12)),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Keep lower sections on paper tones even if merchant global bg is white */
+body.template-index .shopify-section .blog-posts,
+body.template-index .shopify-section .faq,
+body.template-index .shopify-section .testimonials {
+  background-color: var(--petlio-paper, #f7f3eb);
+}
+
+
+/* ==========================================================================
+   PAPER SLIDE — scroll-linked section transitions (optional)
+   Enabled when body.petlio-paper-slide is present (theme setting).
+   Keeps native scroll; sections ease in from L/R and drift away.
+   ========================================================================== */
+
+body.petlio-paper-slide {
+  --petlio-paper-slide: 0.55;
+  --petlio-paper-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
+  --paper-x: 0;
+  --paper-opacity: 1;
+  --paper-scale: 1;
+  transform: translate3d(var(--paper-x), 0, 0) scale(var(--paper-scale));
+  opacity: var(--paper-opacity);
+  transform-origin: center center;
+  will-change: transform, opacity;
+  transition: none; /* driven by scroll via JS */
+}
+
+/* Soft paper edge while moving */
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
+  box-shadow: 0 18px 50px rgba(39, 48, 40, 0.06);
+}
+
+/* Reduced motion: no horizontal travel */
+@media (prefers-reduced-motion: reduce) {
+  body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Mobile: gentler travel so it does not feel jumpy */
+@media (max-width: 749px) {
+  body.petlio-paper-slide {
+    --petlio-paper-slide: 0.28;
+  }
+}

@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Petlio",
-    "theme_version": "1.3.6",
+    "theme_version": "1.3.7",
     "theme_author": "Caresort Technologies",
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
@@ -205,6 +205,29 @@
         "default": "#aaa",
         "label": "Disabled dark color",
         "info": "Darker shade for disabled elements."
+      }
+    ]
+  },
+  {
+    "name": "Story / motion",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_paper_slide",
+        "label": "Homepage paper-slide sections",
+        "default": true,
+        "info": "On the homepage, sections ease in from alternating sides as you scroll. Previous sections drift away. Turn off for a static layout. Respects reduced-motion preferences."
+      },
+      {
+        "type": "range",
+        "id": "paper_slide_intensity",
+        "min": 20,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Slide distance",
+        "default": 55,
+        "info": "How far sections travel horizontally when entering or leaving."
       }
     ]
   },

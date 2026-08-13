@@ -146,9 +146,9 @@
      - Every main homepage section participates, not only chapter-matched ones.
      ---------------------------------------------------------------- */
   function initPaperSlide() {
-    if (!document.body.classList.contains('petlio-paper-slide')) {
-      document.body.classList.add('petlio-paper-slide');
-    }
+    // Respect theme setting: Liquid only adds this class when
+    // settings.enable_paper_slide is on. Never force-enable.
+    if (!document.body.classList.contains('petlio-paper-slide')) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     // ALWAYS use every top-level homepage section so none are skipped

@@ -1,6 +1,6 @@
 .testimonials {
   padding: 60px 0;
-  background-color: var(--t-bg, #ffffff);
+  background-color: var(--t-bg, var(--petlio-paper, #f7f3eb));
 }
 
 .testimonials__header {
@@ -12,12 +12,12 @@
   font-size: 32px;
   font-weight: 700;
   margin: 0 0 12px;
-  color: var(--t-heading-color, #1a1a1a);
+  color: var(--t-heading-color, var(--petlio-ink, #273028));
 }
 
 .testimonials__subheading {
   font-size: 16px;
-  color: var(--t-subheading-color, #666666);
+  color: var(--t-subheading-color, var(--petlio-muted, #69736a));
   margin: 0;
 }
 
@@ -59,7 +59,8 @@
   flex-direction: column;
   height: 100%;
   padding: 30px;
-  background: var(--t-card-bg, #f8f8f8);
+  background: var(--t-card-bg, var(--petlio-paper-light, #faf7f0));
+  border: 1px solid var(--petlio-line, rgba(39,48,40,0.12));
   border-radius: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -256,75 +257,4 @@
   .testimonials__grid--3 {
     grid-template-columns: repeat(2, 1fr);
   }
-}
-
-/* ==========================================================================
-   PETLIO — TRUST / COMMUNITY
-   ========================================================================== */
-
-.testimonials,
-.testimonials-section,
-.shopify-section--testimonials {
-  --testimonial-bg: #e9e2d7;
-  --testimonial-card: #f7f3eb;
-  --testimonial-text: #273028;
-  --testimonial-muted: #69736a;
-  --testimonial-accent: #71806d;
-  --testimonial-line: rgba(39, 48, 40, 0.10);
-
-  background:
-    var(--testimonial-bg);
-}
-
-
-.testimonials h1,
-.testimonials h2,
-.testimonials h3,
-.testimonials-section h1,
-.testimonials-section h2,
-.testimonials-section h3 {
-  color:
-    var(--testimonial-text);
-}
-
-
-.testimonials p,
-.testimonials-section p {
-  color:
-    var(--testimonial-muted);
-}
-
-
-.testimonials .testimonial,
-.testimonials .testimonial-card,
-.testimonials-section .testimonial,
-.testimonials-section .testimonial-card {
-  background:
-    var(--testimonial-card);
-
-  border:
-    1px solid
-    var(--testimonial-line);
-
-  border-radius:
-    22px;
-
-  box-shadow:
-    none;
-}
-
-
-.testimonials .rating,
-.testimonials .stars,
-.testimonials-section .rating,
-.testimonials-section .stars {
-  color:
-    var(--testimonial-accent);
-}
-
-
-.testimonials .quote,
-.testimonials-section .quote {
-  color:
-    var(--testimonial-text);
 }

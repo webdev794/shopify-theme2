@@ -147,6 +147,8 @@
    The wrapper is a flex container; justify-content places content
    horizontally, align-items vertically. */
 .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   display: flex;
   flex: 1;
   width: 100%;
@@ -158,36 +160,48 @@
 .hero--content-top-left .hero__content-wrapper,
 .hero--content-top-center .hero__content-wrapper,
 .hero--content-top-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   align-items: flex-start;
 }
 
 .hero--content-middle-left .hero__content-wrapper,
 .hero--content-middle-center .hero__content-wrapper,
 .hero--content-middle-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   align-items: center;
 }
 
 .hero--content-bottom-left .hero__content-wrapper,
 .hero--content-bottom-center .hero__content-wrapper,
 .hero--content-bottom-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   align-items: flex-end;
 }
 
 .hero--content-top-left .hero__content-wrapper,
 .hero--content-middle-left .hero__content-wrapper,
 .hero--content-bottom-left .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   justify-content: flex-start;
 }
 
 .hero--content-top-center .hero__content-wrapper,
 .hero--content-middle-center .hero__content-wrapper,
 .hero--content-bottom-center .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   justify-content: center;
 }
 
 .hero--content-top-right .hero__content-wrapper,
 .hero--content-middle-right .hero__content-wrapper,
 .hero--content-bottom-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
   justify-content: flex-end;
 }
 
@@ -223,6 +237,7 @@
 
 /* ---- Typography ---- */
 .hero__heading {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 24px rgba(0, 0, 0, 0.25);
   margin: 0;
   font-weight: 700;
   line-height: 1.1;
@@ -244,6 +259,8 @@
 
 .hero__text {
   line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 16px rgba(0, 0, 0, 0.3);
+  opacity: 1;
 }
 
 .hero__text > p {
@@ -352,6 +369,8 @@
   }
 
   .hero--stack-mobile .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
     padding: 1.75rem 1.5rem 2.25rem;
   }
 

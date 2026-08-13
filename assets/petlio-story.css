@@ -3,6 +3,10 @@
  *
  * The homepage is intentionally treated as one continuous story instead of
  * a stack of unrelated Shopify sections. This file only affects the index.
+ *
+ * Combined with the global petlio-theme.css chapter + paper language, this
+ * is a core uniqueness device: the site reads as sequential chapters of
+ * life with pets.
  */
 
 body.template-index {
@@ -275,4 +279,36 @@ body.template-index .petlio-story-chapter-label {
     transform: none;
     transition: none;
   }
+}
+
+
+/* ---- Stronger continuous story rhythm ---- */
+body.template-index #MainContent > .shopify-section {
+  background: transparent;
+}
+
+/* Soft paper bridges between chapters */
+body.template-index .petlio-story-section + .petlio-story-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(88%, 960px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--petlio-story-line, rgba(23, 23, 23, 0.12)),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Keep lower sections on paper tones even if merchant global bg is white */
+body.template-index .shopify-section .blog-posts,
+body.template-index .shopify-section .faq,
+body.template-index .shopify-section .testimonials {
+  background-color: var(--petlio-paper, #f7f3eb);
 }

@@ -9,7 +9,7 @@
 
 .blog-posts {
   padding: 4rem 0;
-  background: var(--color-background, #ffffff);
+  background: var(--bp-bg, var(--petlio-paper, var(--color-background, #f7f3eb)));
 }
 
 .blog-posts__container {
@@ -109,7 +109,7 @@
    ============================================ */
 
 .blog-posts__post {
-  background: var(--color-background, #ffffff);
+  background: var(--bp-bg, var(--petlio-paper, var(--color-background, #f7f3eb)));
   border-radius: 12px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -455,80 +455,4 @@
   .blog-posts__content {
     padding: 1rem;
   }
-}
-
-/* ==========================================================================
-   PETLIO — CARE / STORIES
-   ========================================================================== */
-
-.blog-posts,
-.blog-posts-section,
-.shopify-section--blog-posts {
-  --blog-bg: #f3eee6;
-  --blog-card: #faf7f0;
-  --blog-text: #273028;
-  --blog-muted: #69736a;
-  --blog-accent: #71806d;
-  --blog-line: rgba(39, 48, 40, 0.12);
-
-  background:
-    var(--blog-bg);
-}
-
-
-.blog-posts h1,
-.blog-posts h2,
-.blog-posts h3,
-.blog-posts-section h1,
-.blog-posts-section h2,
-.blog-posts-section h3 {
-  color:
-    var(--blog-text);
-}
-
-
-.blog-posts p,
-.blog-posts-section p {
-  color:
-    var(--blog-muted);
-}
-
-
-.blog-posts .card,
-.blog-posts-section .card,
-.blog-posts .article-card,
-.blog-posts-section .article-card {
-  background:
-    var(--blog-card);
-
-  border:
-    1px solid
-    var(--blog-line);
-
-  border-radius:
-    18px;
-
-  box-shadow:
-    none;
-}
-
-
-.blog-posts a,
-.blog-posts-section a {
-  color:
-    var(--blog-text);
-}
-
-
-.blog-posts a:hover,
-.blog-posts-section a:hover {
-  color:
-    var(--blog-accent);
-}
-
-
-.blog-posts .button,
-.blog-posts-section .button {
-  border-radius:
-    999px;
 }

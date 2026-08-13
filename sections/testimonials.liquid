@@ -6,7 +6,13 @@
 <link rel="preload" href="{{ 'testimonials.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript>{{ 'testimonials.css' | asset_url | stylesheet_tag }}</noscript>
 
-<div class="testimonials" data-section-id="{{ section.id }}" data-section-type="testimonials">
+<div class="testimonials" data-section-id="{{ section.id }}" data-section-type="testimonials"
+  style="
+    --t-bg: {{ section.settings.background_color | default: '#f7f3eb' }};
+    --t-heading-color: {{ section.settings.text_color | default: '#273028' }};
+    --t-subheading-color: {{ section.settings.text_color | default: '#273028' }};
+    --t-card-bg: {{ section.settings.card_background | default: '#faf7f0' }};
+  ">
   <div class="page-width">
     {%- if section.settings.heading != blank -%}
       <div class="testimonials__header">
@@ -147,6 +153,28 @@
       "type": "url",
       "id": "view_all_link",
       "label": "t:sections.testimonials.settings.view_all_link.label"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f7f3eb"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#273028"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#faf7f0"
     }
   ],
   "blocks": [

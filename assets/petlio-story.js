@@ -2,7 +2,17 @@
 (function () {
   'use strict';
 
-  if (!document.body.classList.contains('template-index')) return;
+  // Run only on homepage. Prefer body class; fall back to path.
+  var path = window.location.pathname || '/';
+  var isIndex =
+    document.body.classList.contains('template-index') ||
+    path === '/' ||
+    path === '';
+
+  if (!isIndex) return;
+
+  // Ensure body has the class used by CSS even if theme.liquid was cached
+  document.body.classList.add('template-index');
 
   var chapters = [
     { key: 'hero', label: '01 · Meet them' },
@@ -24,6 +34,8 @@
       var node = nodes[i];
       if ((node.id || '').indexOf('__' + key) !== -1) return node;
       if (node.querySelector('[data-section-type="' + key + '"]')) return node;
+      // Also match common Shopify section id patterns: shopify-section-template--xxx__key
+      if ((node.id || '').indexOf(key) !== -1) return node;
     }
     return null;
   }
@@ -38,11 +50,13 @@
     section.dataset.storyChapter = String(index + 1);
     section.dataset.storyLabel = chapter.label;
 
-    var label = document.createElement('span');
-    label.className = 'petlio-story-chapter-label';
-    label.textContent = chapter.label;
-    label.setAttribute('aria-hidden', 'true');
-    section.appendChild(label);
+    if (!section.querySelector('.petlio-story-chapter-label')) {
+      var label = document.createElement('span');
+      label.className = 'petlio-story-chapter-label';
+      label.textContent = chapter.label;
+      label.setAttribute('aria-hidden', 'true');
+      section.appendChild(label);
+    }
 
     var revealTargets = section.querySelectorAll('h1, h2, h3, .hero__content, .shop-by-pet__card, .featured-products__product, .outfit-builder__item, .lookbook-gallery__item, .lookbook__hotspot, .testimonial, .newsletter__content');
     for (var i = 0; i < revealTargets.length; i++) {
@@ -51,6 +65,15 @@
 
     sections.push({ element: section, chapter: chapter });
   });
+
+  // If chapter matching failed (renamed sections), still tag all main sections
+  if (!sections.length) {
+    var all = document.querySelectorAll('#MainContent > .shopify-section');
+    all.forEach(function (node, index) {
+      node.classList.add('petlio-story-section');
+      sections.push({ element: node, chapter: { key: 'section-' + index, label: String(index + 1).padStart(2, '0') } });
+    });
+  }
 
   if (!sections.length) return;
 
@@ -122,35 +145,46 @@
      Paper slide: alternating L/R entrance + exit while scrolling
      ---------------------------------------------------------------- */
   function initPaperSlide() {
-    if (!document.body.classList.contains('petlio-paper-slide')) return;
+    // Auto-enable if setting class missing but we're on index (helps when
+    // settings_data hasn't saved the default yet)
+    if (!document.body.classList.contains('petlio-paper-slide')) {
+      // Only auto-add when the theme setting default is intended on;
+      // still respect reduced-motion below.
+      document.body.classList.add('petlio-paper-slide');
+    }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     var nodes = Array.prototype.slice.call(
       document.querySelectorAll('#MainContent > .shopify-section.petlio-story-section')
     );
     if (!nodes.length) {
-      // Fallback: all main sections on index
       nodes = Array.prototype.slice.call(
         document.querySelectorAll('#MainContent > .shopify-section')
       );
-      nodes.forEach(function (node, i) {
+      nodes.forEach(function (node) {
         node.classList.add('petlio-story-section');
-        node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
-      });
-    } else {
-      nodes.forEach(function (node, i) {
-        node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
       });
     }
+
+    nodes.forEach(function (node, i) {
+      node.classList.remove('paper-from-left', 'paper-from-right');
+      node.classList.add(i % 2 === 0 ? 'paper-from-left' : 'paper-from-right');
+    });
+
     if (!nodes.length) return;
 
     var intensity = parseFloat(
       getComputedStyle(document.body).getPropertyValue('--petlio-paper-slide')
     );
-    if (!intensity || isNaN(intensity)) intensity = 0.55;
-    var maxShift = Math.round(intensity * 100); // vw-ish via % of section
+    if (!intensity || isNaN(intensity)) intensity = 0.7;
+    // maxShift as % of section width — higher = more obvious slide
+    var maxShift = Math.round(Math.min(90, Math.max(25, intensity * 120)));
 
     var ticking = false;
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
 
     function updatePapers() {
       ticking = false;
@@ -160,47 +194,41 @@
         var rect = section.getBoundingClientRect();
         var h = Math.max(rect.height, 1);
 
-        // Progress: 0 = fully below viewport, 0.5 = centered, 1 = fully above
-        // Use intersection-style ratio focused on when section crosses mid viewport
+        // t > 0 → section center still below viewport center (entering)
+        // t < 0 → section center above viewport center (leaving)
         var center = rect.top + h * 0.5;
-        var viewCenter = vh * 0.5;
-        var dist = center - viewCenter;
-        // normalize by viewport height
-        var t = dist / vh; // negative when section is above center
+        var viewCenter = vh * 0.45;
+        var t = (center - viewCenter) / vh;
 
-        // Enter from side when below, settle at 0, exit opposite when above
-        // t > 0.6: still below → offset
-        // t ~ 0: centered → 0
-        // t < -0.6: above → exit offset
         var fromLeft = section.classList.contains('paper-from-left');
-        var enterDir = fromLeft ? -1 : 1; // negative = left
+        var enterDir = fromLeft ? -1 : 1;
         var exitDir = -enterDir;
 
         var x = 0;
         var opacity = 1;
         var scale = 1;
 
-        if (t > 0.15) {
-          // Entering from below
-          var p = Math.min(1, (t - 0.15) / 0.85);
-          p = p * p; // ease
+        if (t > 0.08) {
+          // Entering from below / side
+          var p = Math.min(1, (t - 0.08) / 0.75);
+          p = easeOutCubic(p);
           x = enterDir * maxShift * p;
-          opacity = 1 - p * 0.35;
-          scale = 1 - p * 0.04;
-        } else if (t < -0.15) {
-          // Leaving upward
-          var p2 = Math.min(1, (-t - 0.15) / 0.85);
-          p2 = p2 * p2;
+          opacity = 1 - p * 0.28;
+          scale = 1 - p * 0.035;
+        } else if (t < -0.08) {
+          // Leaving upward / opposite side
+          var p2 = Math.min(1, (-t - 0.08) / 0.75);
+          p2 = easeOutCubic(p2);
           x = exitDir * maxShift * p2;
-          opacity = 1 - p2 * 0.4;
-          scale = 1 - p2 * 0.05;
+          opacity = 1 - p2 * 0.35;
+          scale = 1 - p2 * 0.04;
         }
 
-        section.style.setProperty('--paper-x', x + '%');
-        section.style.setProperty('--paper-opacity', String(opacity));
-        section.style.setProperty('--paper-scale', String(scale));
+        section.style.setProperty('--paper-x', x.toFixed(2) + '%');
+        section.style.setProperty('--paper-opacity', opacity.toFixed(3));
+        section.style.setProperty('--paper-scale', scale.toFixed(4));
 
-        if (Math.abs(t) < 0.55) {
+        if (Math.abs(t) < 0.6) {
           section.classList.add('is-paper-active');
         } else {
           section.classList.remove('is-paper-active');
@@ -217,9 +245,17 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
+    // Run after layout settles
     updatePapers();
+    setTimeout(updatePapers, 80);
+    setTimeout(updatePapers, 320);
   }
 
-  initPaperSlide();
+  // Defer paper init slightly so section classes from above are applied
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPaperSlide);
+  } else {
+    initPaperSlide();
+  }
 
 })();

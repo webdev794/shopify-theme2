@@ -21,8 +21,14 @@ body.template-index {
 }
 
 body.template-index #MainContent {
-  overflow: clip;
+  overflow-x: clip;
+  overflow-y: visible;
   background: var(--petlio-story-paper);
+}
+
+/* When paper-slide is on, prefer visible so side travel is not cropped */
+body.template-index.petlio-paper-slide #MainContent {
+  overflow-x: visible;
 }
 
 /* Remove the feeling that Shopify has placed separate white cards one after another. */
@@ -321,12 +327,18 @@ body.template-index .shopify-section .testimonials {
    ========================================================================== */
 
 body.petlio-paper-slide {
-  --petlio-paper-slide: 0.55;
+  --petlio-paper-slide: 0.7;
   --petlio-paper-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Allow horizontal travel without clipping the sliding paper */
+body.petlio-paper-slide #MainContent {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
-  --paper-x: 0;
+  --paper-x: 0%;
   --paper-opacity: 1;
   --paper-scale: 1;
   transform: translate3d(var(--paper-x), 0, 0) scale(var(--paper-scale));
@@ -334,11 +346,15 @@ body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
   transform-origin: center center;
   will-change: transform, opacity;
   transition: none; /* driven by scroll via JS */
+  backface-visibility: hidden;
 }
 
-/* Soft paper edge while moving */
+/* Soft paper edge + slight lift while the section is the active "page" */
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
-  box-shadow: 0 18px 50px rgba(39, 48, 40, 0.06);
+  box-shadow:
+    0 12px 40px rgba(39, 48, 40, 0.07),
+    0 2px 0 rgba(255, 255, 255, 0.4) inset;
+  z-index: 6;
 }
 
 /* Reduced motion: no horizontal travel */
@@ -352,6 +368,6 @@ body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-
 /* Mobile: gentler travel so it does not feel jumpy */
 @media (max-width: 749px) {
   body.petlio-paper-slide {
-    --petlio-paper-slide: 0.28;
+    --petlio-paper-slide: 0.4;
   }
 }

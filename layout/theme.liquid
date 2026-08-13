@@ -39,7 +39,10 @@
       #PBarNextFrameWrapper { display: none !important; }
     </style>
   </head>
-  <body class="{% if request.page_type == 'index' and settings.enable_paper_slide %}petlio-paper-slide{% endif %}" style="{% if settings.paper_slide_intensity %}--petlio-paper-slide: {{ settings.paper_slide_intensity | divided_by: 100.0 }};{% endif %}">
+  <body
+    class="template-{{ request.page_type }}{% if request.page_type == 'index' %} template-index{% endif %}{% if request.page_type == 'index' and settings.enable_paper_slide %} petlio-paper-slide{% endif %}"
+    style="{% if settings.paper_slide_intensity %}--petlio-paper-slide: {{ settings.paper_slide_intensity | divided_by: 100.0 }};{% endif %}"
+  >
     <a class="skip-link visually-hidden-focusable" href="#MainContent">
       {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
     </a>
@@ -51,4 +54,5 @@
     {% render 'quick-view-modal' %}
   </body>
 </html>
+
 

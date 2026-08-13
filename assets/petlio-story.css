@@ -148,6 +148,7 @@ body.template-index .petlio-story-section--lookbook-gallery::after {
 body.template-index .petlio-story-section--lookbook {
   z-index: 3;
   width: min(94%, 1500px);
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   background: var(--petlio-story-ink);
@@ -155,6 +156,7 @@ body.template-index .petlio-story-section--lookbook {
   border-radius: var(--petlio-story-radius);
   overflow: clip;
   box-shadow: 0 30px 100px rgba(0,0,0,.14);
+  box-sizing: border-box;
 }
 
 /* TRUST — deliberately quieter after the large visual moment. */
@@ -261,8 +263,8 @@ body.template-index .petlio-story-section {
 
 @media screen and (max-width: 749px) {
   body.template-index .petlio-story-section + .petlio-story-section {
-    margin-top: -1.5rem;
-    padding-top: 3rem;
+    margin-top: -1rem;
+    padding-top: 2.5rem;
   }
 
   body.template-index .petlio-story-section--outfit-builder,
@@ -270,14 +272,26 @@ body.template-index .petlio-story-section {
   body.template-index .petlio-story-section--faq,
   body.template-index .petlio-story-section--newsletter {
     width: 100%;
-    border-radius: 24px;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+
+  /* Lookbook: no side crop — full width inside the page, overflow only inside scene */
+  body.template-index .petlio-story-section--lookbook {
+    overflow: visible;
+    padding-inline: 0;
+  }
+
+  body.template-index .petlio-story-section--lookbook .petlio-lookbook {
+    max-width: 100%;
   }
 
   .petlio-story-progress {
     display: none;
   }
-
-  /* chapter labels removed */
 }
 
 @media (prefers-reduced-motion: reduce) {

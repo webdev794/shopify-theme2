@@ -82,6 +82,9 @@
 
   var DOG_SCALE = 1.12;
 
+  /* Stop the rAF loop after the dog has fully settled (saves main-thread work / Lighthouse). */
+  var LOOP_PAUSE_AFTER_MS = 1800;
+
 
   /* ==========================================================
      CURSOR TOYS
@@ -369,6 +372,9 @@
   var activeCursorMode = 'default';
 
   var hoveredInteractive = false;
+
+  var loopRunning = false;
+  var rafId = 0;
 
 
   /* ==========================================================
@@ -724,9 +730,7 @@
       performance.now();
 
 
-    requestAnimationFrame(
-      loop
-    );
+    startLoop();
   }
 
 
@@ -784,6 +788,29 @@
      POINTER
      ========================================================== */
 
+  function startLoop() {
+
+    if (loopRunning) {
+      return;
+    }
+
+    loopRunning = true;
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(loop);
+  }
+
+
+  function stopLoop() {
+
+    loopRunning = false;
+
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }
+
+
   function onMove(event) {
 
     mouseX =
@@ -808,6 +835,8 @@
     resetAnimationToRun();
 
     updateCursorContext();
+
+    startLoop();
   }
 
 
@@ -1594,6 +1623,10 @@
 
   function loop(time) {
 
+    if (!loopRunning) {
+      return;
+    }
+
     var dt =
       Math.min(
         time -
@@ -1615,9 +1648,27 @@
     render();
 
 
-    requestAnimationFrame(
-      loop
-    );
+    /*
+     * Pause the loop once the dog has settled into a static sit
+     * and the pointer has been still long enough. Restarts on
+     * the next mousemove via startLoop().
+     */
+    var settled =
+      mode === 'sit' &&
+      Math.abs(velX) < 0.05 &&
+      Math.abs(velY) < 0.05 &&
+      (time - lastMoveTime) > LOOP_PAUSE_AFTER_MS;
+
+    var pointerGone =
+      mouseX < -1000 &&
+      (time - lastMoveTime) > LOOP_PAUSE_AFTER_MS;
+
+    if (settled || pointerGone) {
+      stopLoop();
+      return;
+    }
+
+    rafId = requestAnimationFrame(loop);
   }
 
 

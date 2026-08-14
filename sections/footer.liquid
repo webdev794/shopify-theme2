@@ -549,6 +549,27 @@
           {{ powered_by_link }}
         </span>
 
+        {%- if shop.privacy_policy != blank or shop.terms_of_service != blank or shop.refund_policy != blank or shop.shipping_policy != blank -%}
+          <span class="footer__dot">·</span>
+          <span class="footer__policies">
+            {%- if shop.privacy_policy != blank -%}
+              <a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title | default: 'Privacy' }}</a>
+            {%- endif -%}
+            {%- if shop.terms_of_service != blank -%}
+              {%- if shop.privacy_policy != blank %}<span class="footer__dot">·</span>{%- endif -%}
+              <a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title | default: 'Terms' }}</a>
+            {%- endif -%}
+            {%- if shop.refund_policy != blank -%}
+              {%- if shop.privacy_policy != blank or shop.terms_of_service != blank %}<span class="footer__dot">·</span>{%- endif -%}
+              <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | default: 'Refunds' }}</a>
+            {%- endif -%}
+            {%- if shop.shipping_policy != blank -%}
+              {%- if shop.privacy_policy != blank or shop.terms_of_service != blank or shop.refund_policy != blank %}<span class="footer__dot">·</span>{%- endif -%}
+              <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | default: 'Shipping' }}</a>
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+
       </div>
 
     </div>

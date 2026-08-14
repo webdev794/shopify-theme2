@@ -1,51 +1,12 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "hero": {
       "type": "hero",
-      "blocks": {
-        "heading_pJr7Kk": {
-          "type": "heading",
-          "settings": {
-            "heading": "Life with them starts here.",
-            "heading_size": "medium",
-            "heading_tag": "h2"
-          }
-        },
-        "text_cCixxP": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Everything you need, for every moment together. </p>",
-            "text_size": "medium"
-          }
-        },
-        "buttons_4j4kYY": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop now",
-            "button_link_1": "",
-            "button_style_1": "primary",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary"
-          }
-        }
-      },
-      "block_order": [
-        "heading_pJr7Kk",
-        "text_cCixxP",
-        "buttons_4j4kYY"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "image": "",
+        "image_mobile": "",
         "height": "medium",
         "full_width": true,
         "content_position": "middle-left",
@@ -61,59 +22,11 @@
     },
     "shop_by_pet": {
       "type": "shop-by-pet",
-      "blocks": {
-        "dog": {
-          "type": "pet",
-          "settings": {
-            "title": "Dogs",
-            "caption": "Food, toys & gear",
-            "pet_icon": "dog",
-            "collection": "",
-            "link": "",
-            "button_label": "Shop dogs"
-          }
-        },
-        "cat": {
-          "type": "pet",
-          "settings": {
-            "title": "Cats",
-            "caption": "Treats & essentials",
-            "pet_icon": "cat",
-            "collection": "",
-            "link": "",
-            "button_label": "Shop cats"
-          }
-        },
-        "bird": {
-          "type": "pet",
-          "settings": {
-            "title": "Birds",
-            "caption": "Cages & care",
-            "pet_icon": "bird",
-            "collection": "",
-            "link": "",
-            "button_label": "Shop birds"
-          }
-        },
-        "small": {
-          "type": "pet",
-          "settings": {
-            "title": "Small pets",
-            "caption": "Habitat & feed",
-            "pet_icon": "rabbit",
-            "collection": "",
-            "link": "",
-            "button_label": "Shop now"
-          }
-        }
-      },
-      "block_order": [
-        "dog",
-        "cat",
-        "bird",
-        "small"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
+        "chapter_number": "02",
+        "chapter_label": "Pet worlds",
         "heading": "Find their world.",
         "subheading": "PET WORLDS",
         "text": "<p><em>Every companion has their own way of living, playing and resting.</em></p>",
@@ -125,44 +38,16 @@
     },
     "featured_products": {
       "type": "featured-products",
-      "blocks": {
-        "product_1": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_4": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_1",
-        "product_2",
-        "product_3",
-        "product_4"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "layout": "grid",
         "products_per_row": "4",
         "gap": 20,
         "border_radius": 8,
         "full_width": false,
+        "chapter_number": "03",
+        "chapter_label": "Everyday",
         "heading": "EVERYDAY ESSENTIALS",
         "subheading": "",
         "description": "<p><em>Everything they need, for every day.</em></p>",
@@ -185,60 +70,23 @@
     },
     "outfit_builder": {
       "type": "outfit-builder",
-      "blocks": {
-        "product_1": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_2": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_3": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_fC8Phg": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        },
-        "product_4": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_1",
-        "product_2",
-        "product_3",
-        "product_fC8Phg",
-        "product_4"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "chapter_label": "EVERYDAY / YOUR WAY",
-        "heading": "OUTFIT BUILDER",
+        "heading": "KIT BUILDER",
         "subheading": "Make it theirs.",
-        "description": "<p>Pick the pieces that belong together. Build a little everyday world that's made just for them.</p>",
+        "description": "<p>Pick the pieces that belong together. Build a little everyday setup that&rsquo;s made just for them.</p>",
         "catalog_label": "Choose your pieces",
         "selection_eyebrow": "YOUR COLLECTION",
-        "summary_note": "Choose a few things they’ll love.",
+        "summary_note": "Choose a few things they'll love.",
         "footer_text": "Pick · mix · make it theirs",
         "max_items": 4,
-        "selection_label": "Your outfit",
+        "selection_label": "Your kit",
         "total_label": "Total",
-        "select_button_text": "Add to outfit",
-        "add_outfit_text": "Add outfit to cart",
-        "empty_text": "Select items to build your outfit",
+        "select_button_text": "Add to kit",
+        "add_outfit_text": "Add kit to cart",
+        "empty_text": "Select items to build your kit",
         "show_variant_selector": true,
         "background_color": "#f8f7f5",
         "text_color": "#1a1a1a",
@@ -247,42 +95,8 @@
     },
     "lookbook_gallery": {
       "type": "lookbook-gallery",
-      "blocks": {
-        "look_1": {
-          "type": "look",
-          "settings": {
-            "caption": "",
-            "product_1": "",
-            "x1": 30,
-            "y1": 40,
-            "product_2": "",
-            "x2": 60,
-            "y2": 55,
-            "product_3": "",
-            "x3": 45,
-            "y3": 70
-          }
-        },
-        "look_2": {
-          "type": "look",
-          "settings": {
-            "caption": "",
-            "product_1": "",
-            "x1": 30,
-            "y1": 40,
-            "product_2": "",
-            "x2": 60,
-            "y2": 55,
-            "product_3": "",
-            "x3": 45,
-            "y3": 70
-          }
-        }
-      },
-      "block_order": [
-        "look_1",
-        "look_2"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "heading": "SEE LIFE WITH THEM",
         "subheading": "Shop the looks",
@@ -294,28 +108,8 @@
     },
     "lookbook": {
       "type": "lookbook",
-      "blocks": {
-        "hotspot_1": {
-          "type": "hotspot",
-          "settings": {
-            "product": "",
-            "position_x": 36,
-            "position_y": 64
-          }
-        },
-        "hotspot_2": {
-          "type": "hotspot",
-          "settings": {
-            "product": "",
-            "position_x": 58,
-            "position_y": 45
-          }
-        }
-      },
-      "block_order": [
-        "hotspot_1",
-        "hotspot_2"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "heading": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>",
         "text": "<p><em>Take the whole look home.</em></p>",
@@ -330,6 +124,8 @@
     "care_ritual_WTwbiB": {
       "type": "care-ritual",
       "name": "Care Ritual",
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "image": "",
         "heading": "<p>For every little moment.</p>",
@@ -344,6 +140,8 @@
     },
     "blog_posts": {
       "type": "blog-posts",
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "blog": "",
         "posts_limit": 3,
@@ -362,43 +160,18 @@
         "excerpt_words": 20,
         "read_more_label": "Read More",
         "show_view_all": true,
-        "view_all_label": "View All Articles"
+        "view_all_label": "View All Articles",
+        "background_color": "#f7f3eb"
       }
     },
     "faq": {
       "type": "faq",
-      "blocks": {
-        "q1": {
-          "type": "item",
-          "settings": {
-            "question": "What is your return policy?",
-            "answer": "<p>We offer free returns within 30 days of purchase.</p>"
-          }
-        },
-        "q2": {
-          "type": "item",
-          "settings": {
-            "question": "How long does shipping take?",
-            "answer": "<p>Standard shipping takes 3–7 business days.</p>"
-          }
-        },
-        "q3": {
-          "type": "item",
-          "settings": {
-            "question": "Do you ship internationally?",
-            "answer": "<p>Yes, we ship to most countries worldwide.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "q1",
-        "q2",
-        "q3"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "heading": "Frequently asked questions",
         "subheading": "Help center",
-        "description": "",
+        "description": "<p>Quick answers about shipping, returns, sizing, and care. Still stuck? We're here.</p>",
         "layout": "narrow",
         "open_first": true,
         "background_color": "#ffffff",
@@ -406,70 +179,26 @@
         "accent_color": "#121212"
       }
     },
-    "testimonials": {
-      "type": "testimonials",
-      "blocks": {
-        "t1": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
-            "rating": 5,
-            "author": "Sarah Johnson",
-            "position": "Regular Customer"
-          }
-        },
-        "t2": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "Best customer service I've ever experienced.",
-            "rating": 5,
-            "author": "Michael Chen",
-            "position": "Business Owner"
-          }
-        },
-        "t3": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "The products are exactly as described and the quality is premium.",
-            "rating": 4,
-            "author": "Emily Davis",
-            "position": "Designer"
-          }
-        }
-      },
-      "block_order": [
-        "t1",
-        "t2",
-        "t3"
-      ],
-      "settings": {
-        "heading": "TRUST / COMMUNITY",
-        "subheading": "Loved by people who get it.",
-        "columns": "3",
-        "show_rating": true,
-        "show_view_all": false,
-        "view_all_text": "View All Testimonials",
-        "view_all_link": ""
-      }
-    },
     "newsletter": {
       "type": "newsletter",
+      "blocks": {},
+      "block_order": [],
       "settings": {
-        "subheading": "Stay close.",
+        "subheading": "Stay close",
         "heading": "NEWSLETTER",
-        "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
+        "description": "<p>New finds, care tips, and quiet offers—for the everyday life you share with them.</p>",
+        "placeholder": "Your email address",
+        "button_label": "Join us",
         "button_style": "primary",
         "show_icon": true,
         "style": "default",
         "background_color": "#f8f9fa",
         "section_text_color": "#1a1a2e",
         "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
+        "note_text": "No noise. Unsubscribe anytime.",
+        "success_message": "You're in. Welcome to Petlio.",
         "show_social": true,
-        "social_label": "Follow us:"
+        "social_label": "Follow along"
       }
     }
   },
@@ -483,7 +212,6 @@
     "care_ritual_WTwbiB",
     "blog_posts",
     "faq",
-    "testimonials",
     "newsletter"
   ]
 }

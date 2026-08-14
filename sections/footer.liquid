@@ -331,32 +331,31 @@
 
             </button>
 
+            {%- if form.errors -%}
+
+              <p
+                class="footer__form-message footer__form-message--error"
+                role="alert"
+              >
+                {{ form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email }}
+              </p>
+
+            {%- endif -%}
+
+
+            {%- if form.posted_successfully? -%}
+
+              <p
+                class="footer__form-message footer__form-message--success"
+                role="status"
+              >
+                {{ section.settings.newsletter_success_message }}
+              </p>
+
+            {%- endif -%}
+
           {%- endform -%}
-
-
-          {%- if form.errors -%}
-
-            <p
-              class="footer__form-message footer__form-message--error"
-              role="alert"
-            >
-              {{ form.errors.translated_fields.email | capitalize }}
-              {{ form.errors.messages.email }}
-            </p>
-
-          {%- endif -%}
-
-
-          {%- if form.posted_successfully? -%}
-
-            <p
-              class="footer__form-message footer__form-message--success"
-              role="status"
-            >
-              {{ section.settings.newsletter_success_message }}
-            </p>
-
-          {%- endif -%}
 
           <p class="footer__newsletter-note">
             {{ section.settings.newsletter_note }}

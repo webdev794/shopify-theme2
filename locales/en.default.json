@@ -245,7 +245,8 @@
           "label": "Hover",
           "info": "Color for hover states"
         }
-      }
+      },
+      "language_label": "Language"
     },
     "hero": {
       "pause_video": "Pause video",
@@ -363,6 +364,18 @@
     },
     "mix_match_pack": {
       "empty": "Add products to build your pack."
+    },
+    "contact": {
+      "email_label": "Email",
+      "phone_label": "Phone",
+      "hours_label": "Hours",
+      "address_label": "Address",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "optional": "optional",
+      "topic": "Topic",
+      "message": "Message"
     }
   },
   "products": {
@@ -495,5 +508,33 @@
   },
   "accessibility": {
     "skip_to_content": "Skip to content"
+  },
+  "customer": {
+    "log_out": "Log out",
+    "login_page": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "sign_in": "Sign in",
+      "create_account": "Don't have an account?",
+      "create_account_link": "Create account"
+    },
+    "recover_password": {
+      "title": "Forgot password?",
+      "subtext": "Enter your email to receive a password reset link.",
+      "success": "Check your email for a reset link.",
+      "submit": "Submit"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Create"
+    },
+    "account": {
+      "title": "Account"
+    },
+    "orders": {
+      "title": "Order history",
+      "none": "You haven't placed any orders yet."
+    }
   }
 }

@@ -1,5 +1,4 @@
-<link rel="preload" href="{{ 'section-newsletter.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'section-newsletter.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'section-newsletter.css' | asset_url | stylesheet_tag: preload: true }}
 <script src="{{ 'newsletter.js' | asset_url }}" defer></script>
 
 <div 

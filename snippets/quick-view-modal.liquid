@@ -23,5 +23,4 @@
 </dialog>
 
 <script src="{{ 'quick-view.js' | asset_url }}" defer></script>
-<link rel="preload" href="{{ 'quick-view.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'quick-view.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'quick-view.css' | asset_url | stylesheet_tag: preload: true }}

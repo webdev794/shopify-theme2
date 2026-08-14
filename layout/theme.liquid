@@ -4,9 +4,9 @@
     {% render 'meta-tags' %}
     {% render 'css-variables' %}
     {% unless settings.type_primary_font.system? %}
-      <!-- theme-check-disable RemoteAsset -->
+      {% # theme-check-disable RemoteAsset %}
       <link rel="preconnect" href="//fonts.shopifycdn.com" crossorigin>
-      <!-- /theme-check-disable RemoteAsset -->
+      {% # theme-check-enable RemoteAsset %}
     {% endunless %}
     {{ 'critical.css' | asset_url | stylesheet_tag }}
     {{ 'petlio-theme.css' | asset_url | stylesheet_tag }}
@@ -20,9 +20,9 @@
       {{ 'petlio-story.css' | asset_url | stylesheet_tag }}
     {% endif %}
     {{ content_for_header }}
-    <!-- theme-check-disable RemoteAsset -->
+    {% # theme-check-disable RemoteAsset %}
     <script src="//cdn.shopify.com/shopifycloud/shop-js/shop-installments.js" defer></script>
-    <!-- /theme-check-disable RemoteAsset -->
+    {% # theme-check-enable RemoteAsset %}
     <script>
       window.theme = window.theme || {};
       window.theme.moneyFormat = {{ shop.money_format | json }};

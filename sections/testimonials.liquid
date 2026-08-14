@@ -3,8 +3,7 @@
   Version: 1.0
 {% endcomment %}
 
-<link rel="preload" href="{{ 'testimonials.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'testimonials.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'testimonials.css' | asset_url | stylesheet_tag: preload: true }}
 
 <div class="testimonials" data-section-id="{{ section.id }}" data-section-type="testimonials"
   style="

@@ -3,8 +3,7 @@
   Section 03 / the bridge from discovering their world to shopping what belongs in it.
 {% endcomment %}
 
-<link rel="preload" href="{{ 'featured-products.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'featured-products.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'featured-products.css' | asset_url | stylesheet_tag: preload: true }}
 
 <section
   class="featured-products"

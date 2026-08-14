@@ -16,7 +16,7 @@ jobs:
   lhci:
     name: Lighthouse
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -25,20 +25,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Theme Kit
-        run: |
-          curl -s https://shopify.github.io/themekit/install.sh | bash
-          sudo mv theme /usr/local/bin/theme
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli @shopify/theme
 
-      - name: Push theme using Theme Kit
-        run: |
-          theme deploy \
-            --path=. \
-            --store=suvara-beauty.myshopify.com \
-            --themeid=157305929906 \
-            --password=${{ secrets.SHOPIFY_THEME_TOKEN }} \
-            --allow-live \
-            --force
+      - name: Push theme
+        run: shopify theme push --theme=157305929906 --path=. --store=suvara-beauty.myshopify.com --allow-live --force
+        env:
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_THEME_TOKEN }}
 
       - name: Authenticate with storefront password
         id: auth

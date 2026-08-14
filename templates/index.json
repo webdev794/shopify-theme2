@@ -111,9 +111,6 @@
         "heading": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>",
         "text": "<p><em>Take the whole look home.</em></p>",
         "heading_size": "medium",
-        "content_position": "top",
-        "full_width": false,
-        "color_dot": "#ffffff",
         "color_card_background": "#ffffff",
         "color_card_foreground": "#121212"
       }

@@ -8,15 +8,12 @@
 
   var initializedSections = new WeakSet();
 
-  
-
   /*
    * -------------------------------------------------------
    * ADD TO CART (single + all)
    * -------------------------------------------------------
    */
 
-  
   function parseVariantIds(raw) {
     if (Array.isArray(raw)) {
       return raw.map(function (v) { return Number(v); }).filter(function (id) { return id && !isNaN(id) && id > 0; });
@@ -80,7 +77,6 @@
               .catch(function () {});
           }
           if (utils && utils.publishCart) utils.publishCart(cartData);
-          // Same shape as Everyday Essentials (featured-products.js)
           document.dispatchEvent(new CustomEvent('cart:updated', {
             detail: { item_count: cartData.item_count, cart: cartData }
           }));
@@ -104,7 +100,6 @@
           } catch (err) {}
         }
 
-        // Always re-read full cart so drawer has line items (not just a count)
         fetch('/cart.js', { credentials: 'same-origin' })
           .then(function (r) { return r.json(); })
           .then(finishWithCart)
@@ -157,7 +152,6 @@
     }
   }
 
-
   function initLookbook(section) {
     if (!section || initializedSections.has(section)) {
       return;
@@ -166,9 +160,9 @@
     initializedSections.add(section);
     bindCartActions(section);
 
-    var hotspots = Array.from(
-      section.querySelectorAll('[data-hotspot]')
-    );
+    var hotspots = Array.from(section.querySelectorAll('[data-hotspot]'));
+    var mobileCards = Array.from(section.querySelectorAll('[data-mobile-card]'));
+    var isMobile = window.matchMedia('(max-width: 749px)').matches;
 
     if (!hotspots.length) {
       return;
@@ -176,37 +170,47 @@
 
     /*
      * -------------------------------------------------------
-     * CLOSE ALL
+     * CLOSE ALL (desktop only)
      * -------------------------------------------------------
      */
 
     function closeAll(except) {
       hotspots.forEach(function (hotspot) {
-        if (hotspot === except) {
-          return;
-        }
+        if (hotspot === except) return;
 
-        var button = hotspot.querySelector(
-          '[data-hotspot-button]'
-        );
+        var button = hotspot.querySelector('[data-hotspot-button]');
+        var card = hotspot.querySelector('[data-product-card]');
 
-        var card = hotspot.querySelector(
-          '[data-product-card]'
-        );
-
-        if (button) {
-          button.setAttribute(
-            'aria-expanded',
-            'false'
-          );
-        }
-
-        if (card) {
-          card.hidden = true;
-        }
-
+        if (button) button.setAttribute('aria-expanded', 'false');
+        if (card) card.hidden = true;
         hotspot.classList.remove('is-active');
       });
+    }
+
+    /*
+     * -------------------------------------------------------
+     * MOBILE: highlight + scroll to card
+     * -------------------------------------------------------
+     */
+
+    function highlightMobileCard(index) {
+      mobileCards.forEach(function (card) {
+        card.classList.remove('is-highlighted');
+      });
+
+      var target = mobileCards.find(function (card) {
+        return card.getAttribute('data-hotspot-index') === String(index);
+      });
+
+      if (target) {
+        target.classList.add('is-highlighted');
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Remove highlight after a short time
+        setTimeout(function () {
+          target.classList.remove('is-highlighted');
+        }, 2200);
+      }
     }
 
     /*
@@ -216,48 +220,47 @@
      */
 
     function toggleHotspot(hotspot) {
-      var button = hotspot.querySelector(
-        '[data-hotspot-button]'
-      );
+      var button = hotspot.querySelector('[data-hotspot-button]');
+      var card = hotspot.querySelector('[data-product-card]');
+      var index = hotspot.getAttribute('data-hotspot-index');
 
-      var card = hotspot.querySelector(
-        '[data-product-card]'
-      );
+      if (!button) return;
 
-      if (!button || !card) {
+      // On mobile → just highlight the corresponding list card
+      if (window.matchMedia('(max-width: 749px)').matches) {
+        highlightMobileCard(index);
+        // Also toggle the + visual on the hotspot
+        var isOpen = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        // Reset other hotspots
+        hotspots.forEach(function (h) {
+          if (h !== hotspot) {
+            var b = h.querySelector('[data-hotspot-button]');
+            if (b) b.setAttribute('aria-expanded', 'false');
+            h.classList.remove('is-active');
+          }
+        });
+        hotspot.classList.toggle('is-active', !isOpen);
         return;
       }
 
-      var isOpen =
-        button.getAttribute('aria-expanded') === 'true';
+      // Desktop behaviour (floating card)
+      if (!card) return;
+
+      var isOpen = button.getAttribute('aria-expanded') === 'true';
 
       if (isOpen) {
-        button.setAttribute(
-          'aria-expanded',
-          'false'
-        );
-
+        button.setAttribute('aria-expanded', 'false');
         card.hidden = true;
-
-        hotspot.classList.remove(
-          'is-active'
-        );
-
+        hotspot.classList.remove('is-active');
         return;
       }
 
       closeAll(hotspot);
 
-      button.setAttribute(
-        'aria-expanded',
-        'true'
-      );
-
+      button.setAttribute('aria-expanded', 'true');
       card.hidden = false;
-
-      hotspot.classList.add(
-        'is-active'
-      );
+      hotspot.classList.add('is-active');
     }
 
     /*
@@ -267,244 +270,62 @@
      */
 
     hotspots.forEach(function (hotspot) {
-      var button = hotspot.querySelector(
-        '[data-hotspot-button]'
-      );
-
-      var closeButton = hotspot.querySelector(
-        '[data-product-close]'
-      );
+      var button = hotspot.querySelector('[data-hotspot-button]');
+      var closeButton = hotspot.querySelector('[data-product-close]');
 
       if (button) {
-        button.addEventListener(
-          'click',
-          function (event) {
-            event.preventDefault();
-
-            toggleHotspot(hotspot);
-          }
-        );
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleHotspot(hotspot);
+        });
       }
 
       if (closeButton) {
-        closeButton.addEventListener(
-          'click',
-          function (event) {
-            event.preventDefault();
-
-            var hotspotButton =
-              hotspot.querySelector(
-                '[data-hotspot-button]'
-              );
-
-            var card =
-              hotspot.querySelector(
-                '[data-product-card]'
-              );
-
-            if (hotspotButton) {
-              hotspotButton.setAttribute(
-                'aria-expanded',
-                'false'
-              );
-            }
-
-            if (card) {
-              card.hidden = true;
-            }
-
-            hotspot.classList.remove(
-              'is-active'
-            );
-          }
-        );
-      }
-    });
-
-    /*
-     * -------------------------------------------------------
-     * CLICK OUTSIDE
-     * -------------------------------------------------------
-     */
-
-    document.addEventListener(
-      'click',
-      function (event) {
-        if (
-          !section.contains(event.target)
-        ) {
-          return;
-        }
-
-        if (
-          event.target.closest(
-            '[data-hotspot]'
-          )
-        ) {
-          return;
-        }
-
-        closeAll();
-      }
-    );
-
-    /*
-     * -------------------------------------------------------
-     * ESCAPE KEY
-     * -------------------------------------------------------
-     */
-
-    section.addEventListener(
-      'keydown',
-      function (event) {
-        if (event.key !== 'Escape') {
-          return;
-        }
-
-        closeAll();
-      }
-    );
-
-    /*
-     * -------------------------------------------------------
-     * KEYBOARD NAVIGATION
-     * -------------------------------------------------------
-     */
-
-    hotspots.forEach(function (hotspot, index) {
-      var button = hotspot.querySelector(
-        '[data-hotspot-button]'
-      );
-
-      if (!button) {
-        return;
-      }
-
-      button.addEventListener(
-        'keydown',
-        function (event) {
-          if (
-            event.key !== 'ArrowRight' &&
-            event.key !== 'ArrowDown' &&
-            event.key !== 'ArrowLeft' &&
-            event.key !== 'ArrowUp'
-          ) {
-            return;
-          }
-
+        closeButton.addEventListener('click', function (event) {
           event.preventDefault();
+          event.stopPropagation();
 
-          var nextIndex;
+          var hotspotButton = hotspot.querySelector('[data-hotspot-button]');
+          var card = hotspot.querySelector('[data-product-card]');
 
-          if (
-            event.key === 'ArrowRight' ||
-            event.key === 'ArrowDown'
-          ) {
-            nextIndex = index + 1;
-
-            if (
-              nextIndex >= hotspots.length
-            ) {
-              nextIndex = 0;
-            }
-          } else {
-            nextIndex = index - 1;
-
-            if (nextIndex < 0) {
-              nextIndex =
-                hotspots.length - 1;
-            }
-          }
-
-          var nextButton =
-            hotspots[nextIndex].querySelector(
-              '[data-hotspot-button]'
-            );
-
-          if (nextButton) {
-            nextButton.focus();
-          }
-        }
-      );
+          if (hotspotButton) hotspotButton.setAttribute('aria-expanded', 'false');
+          if (card) card.hidden = true;
+          hotspot.classList.remove('is-active');
+        });
+      }
     });
 
-    /*
-     * -------------------------------------------------------
-     * MOBILE CARD POSITIONING
-     * -------------------------------------------------------
-     *
-     * Prevents product cards from extending beyond
-     * the scene on smaller screens.
-     */
+    // Click outside (desktop)
+    document.addEventListener('click', function (event) {
+      if (!section.contains(event.target)) return;
+      if (event.target.closest('[data-hotspot]')) return;
+      if (window.matchMedia('(max-width: 749px)').matches) return;
+      closeAll();
+    });
 
-    function positionCards() {
-      var isMobile =
-        window.matchMedia(
-          '(max-width: 749px)'
-        ).matches;
+    // Escape
+    section.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') closeAll();
+    });
 
-      hotspots.forEach(function (hotspot) {
-        var card = hotspot.querySelector(
-          '[data-product-card]'
-        );
+    // Keyboard navigation between hotspots
+    hotspots.forEach(function (hotspot, index) {
+      var button = hotspot.querySelector('[data-hotspot-button]');
+      if (!button) return;
 
-        if (!card) {
-          return;
-        }
+      button.addEventListener('keydown', function (event) {
+        if (!['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(event.key)) return;
+        event.preventDefault();
 
-        card.style.removeProperty(
-          'left'
-        );
+        var nextIndex = (event.key === 'ArrowRight' || event.key === 'ArrowDown')
+          ? (index + 1) % hotspots.length
+          : (index - 1 + hotspots.length) % hotspots.length;
 
-        card.style.removeProperty(
-          'right'
-        );
-
-        if (!isMobile) {
-          return;
-        }
-
-        var hotspotRect =
-          hotspot.getBoundingClientRect();
-
-        var sectionRect =
-          section.getBoundingClientRect();
-
-        var cardWidth =
-          card.offsetWidth || 280;
-
-        var leftEdge =
-          hotspotRect.left -
-          sectionRect.left;
-
-        var rightEdge =
-          sectionRect.right -
-          hotspotRect.right;
-
-        /*
-         * If the hotspot is on the right side,
-         * open the card toward the left.
-         */
-
-        if (
-          rightEdge < cardWidth + 30
-        ) {
-          card.style.left = 'auto';
-          card.style.right = '29px';
-        } else {
-          card.style.left = '29px';
-          card.style.right = 'auto';
-        }
+        var nextButton = hotspots[nextIndex].querySelector('[data-hotspot-button]');
+        if (nextButton) nextButton.focus();
       });
-    }
-
-    window.addEventListener(
-      'resize',
-      positionCards,
-      { passive: true }
-    );
-
-    positionCards();
+    });
   }
 
   /*
@@ -515,60 +336,28 @@
 
   function initAll(root) {
     root = root || document;
-
-    var sections = root.querySelectorAll(
-      '[data-section-type="lookbook"]'
-    );
-
+    var sections = root.querySelectorAll('[data-section-type="lookbook"]');
     sections.forEach(function (section) {
       initLookbook(section);
     });
   }
 
-  /*
-   * -------------------------------------------------------
-   * PAGE LOAD
-   * -------------------------------------------------------
-   */
-
-  if (
-    document.readyState === 'loading'
-  ) {
-    document.addEventListener(
-      'DOMContentLoaded',
-      function () {
-        initAll(document);
-      }
-    );
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      initAll(document);
+    });
   } else {
     initAll(document);
   }
 
-  /*
-   * -------------------------------------------------------
-   * SHOPIFY THEME EDITOR
-   * -------------------------------------------------------
-   */
-
-  document.addEventListener(
-    'shopify:section:load',
-    function (event) {
-      initAll(event.target);
-    }
-  );
-
-  document.addEventListener(
-    'shopify:section:reorder',
-    function () {
-      initAll(document);
-    }
-  );
-
-  document.addEventListener(
-    'shopify:section:select',
-    function (event) {
-      initAll(event.target);
-    }
-  );
+  document.addEventListener('shopify:section:load', function (event) {
+    initAll(event.target);
+  });
+  document.addEventListener('shopify:section:reorder', function () {
+    initAll(document);
+  });
+  document.addEventListener('shopify:section:select', function (event) {
+    initAll(event.target);
+  });
 
 })();

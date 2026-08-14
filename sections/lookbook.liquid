@@ -147,6 +147,7 @@
             </button>
 
 
+            <!-- Desktop floating product card -->
             <div
               id="lookbook-product-{{ section.id }}-{{ forloop.index }}"
               class="petlio-lookbook__product"
@@ -256,6 +257,63 @@
 
       </div>
 
+    </div>
+
+
+    <!-- ========== MOBILE VERTICAL PRODUCT LIST ========== -->
+    <div class="petlio-lookbook__mobile-list" data-mobile-product-list>
+      {% for block in section.blocks %}
+        {% assign product = block.settings.product %}
+        {% if product != blank %}
+          <div
+            class="petlio-lookbook__mobile-card"
+            data-mobile-card
+            data-product-id="{{ product.id }}"
+            data-hotspot-index="{{ forloop.index }}"
+            id="lookbook-mobile-{{ section.id }}-{{ forloop.index }}"
+          >
+            <div class="petlio-lookbook__mobile-card-image">
+              {% if product.featured_image %}
+                {{
+                  product.featured_image
+                  | image_url: width: 400
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '200, 300, 400',
+                    sizes: '120px',
+                    alt: product.title
+                }}
+              {% endif %}
+            </div>
+
+            <div class="petlio-lookbook__mobile-card-content">
+              {% if product.vendor != blank %}
+                <span class="petlio-lookbook__mobile-card-vendor">{{ product.vendor }}</span>
+              {% endif %}
+              <h3 class="petlio-lookbook__mobile-card-title">{{ product.title }}</h3>
+              <div class="petlio-lookbook__mobile-card-price">{{ product.price | money }}</div>
+              <div class="petlio-lookbook__mobile-card-actions">
+                <button
+                  type="button"
+                  class="petlio-lookbook__add-btn"
+                  data-lookbook-add
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                >
+                  {% if product.selected_or_first_available_variant.available %}
+                    Add to cart
+                  {% else %}
+                    Sold out
+                  {% endif %}
+                </button>
+                <a class="petlio-lookbook__product-link" href="{{ product.url }}">
+                  View <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
 
 

@@ -25,20 +25,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Shopify CLI
-        run: npm install -g @shopify/cli
-
-      - name: Push theme to Shopify
+      - name: Install Theme Kit
         run: |
-          shopify theme push \
+          curl -s https://shopify.github.io/themekit/install.sh | bash
+          sudo mv theme /usr/local/bin/theme
+
+      - name: Push theme using Theme Kit
+        run: |
+          theme deploy \
             --path=. \
             --store=suvara-beauty.myshopify.com \
-            --theme=157305929906 \
-            --token=${{ secrets.SHOPIFY_THEME_TOKEN }} \
-            --force \
-            --allow-live
-        env:
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_THEME_TOKEN }}
+            --themeid=157305929906 \
+            --password=${{ secrets.SHOPIFY_THEME_TOKEN }} \
+            --allow-live \
+            --force
 
       - name: Authenticate with storefront password
         id: auth

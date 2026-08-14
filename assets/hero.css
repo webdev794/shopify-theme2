@@ -236,7 +236,17 @@
 }
 
 /* ---- Typography ---- */
-.hero__heading {
+/* Specificity note: global rules in petlio-theme.css
+   (".shopify-section h1/h2/h3" and ".shopify-section p") target these
+   same elements and otherwise win over the plain ".hero__heading" /
+   ".hero__text" classes, silently replacing the merchant's chosen
+   --hero-foreground color with the theme's default ink/muted text
+   colors. That's what caused hero text to blend into light photos
+   regardless of the "Text color" setting. Scoping with the extra
+   ".hero" ancestor raises specificity so the overlay-aware color
+   always wins. */
+.hero .hero__heading {
+  color: var(--hero-foreground);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 24px rgba(0, 0, 0, 0.25);
   margin: 0;
   font-weight: 700;
@@ -257,13 +267,15 @@
   font-size: clamp(2.75rem, 1.6rem + 4.5vw, 4.75rem);
 }
 
-.hero__text {
+.hero .hero__text {
+  color: var(--hero-foreground);
   line-height: 1.6;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 16px rgba(0, 0, 0, 0.3);
   opacity: 1;
 }
 
-.hero__text > p {
+.hero .hero__text > p {
+  color: inherit;
   margin: 0 0 0.5em;
 }
 

@@ -224,6 +224,18 @@ body {
   padding: 1rem 1.1rem 1.25rem;
 }
 
+/* Product card content — padding keeps price/currency clear of
+   overflow:hidden + border-radius on .product-card */
+.shopify-section .product-card__content {
+  padding: 0.65rem 0.85rem 1rem;
+  margin-top: 0;
+}
+
+.shopify-section .product-card__price {
+  line-height: 1.4;
+  overflow: visible;
+}
+
 .shopify-section .card__vendor {
   margin: 0 0 0.25rem;
   font-size: 0.7rem;

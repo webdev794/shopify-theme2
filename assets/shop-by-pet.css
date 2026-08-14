@@ -82,11 +82,11 @@
 
 .shop-by-pet__heading {
   max-width: 700px;
-  margin: 0;
+  margin: 0.2em 0 0;
   font-size: clamp(2.5rem, 5.5vw, 5.25rem);
   font-weight: 500;
   letter-spacing: -0.055em;
-  line-height: 0.96;
+  line-height: 1.05;
   text-wrap: balance;
 }
 

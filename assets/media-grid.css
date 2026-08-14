@@ -154,14 +154,22 @@
   padding: 0.75rem 0.25rem 0;
 }
 
-.media-grid__caption-heading {
+/* The extra ".media-grid__caption" ancestor is required for specificity,
+   not style: without it, the global ".shopify-section h1/h2/h3" and
+   ".shopify-section p" rules in petlio-theme.css outrank a single class
+   and silently replace the inherited --grid-overlay-text color with the
+   theme's default dark ink/muted text — the same bug that made the hero
+   heading unreadable on light photos. */
+.media-grid__caption .media-grid__caption-heading {
+  color: inherit;
   margin: 0;
   font-size: 1.0625rem;
   font-weight: 600;
   line-height: 1.3;
 }
 
-.media-grid__caption-text {
+.media-grid__caption .media-grid__caption-text {
+  color: inherit;
   margin: 0.25rem 0 0;
   font-size: 0.9375rem;
   line-height: 1.5;

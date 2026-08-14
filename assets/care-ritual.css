@@ -159,11 +159,11 @@
 
 .petlio-care__heading {
   max-width: 600px;
-  margin: 0;
+  margin: 0.2em 0 0;
   font-size: clamp(3rem, 5.5vw, 6.5rem);
   font-weight: 400;
   letter-spacing: -0.065em;
-  line-height: 0.91;
+  line-height: 1.05;
 }
 
 .petlio-care__heading p {

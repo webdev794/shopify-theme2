@@ -167,7 +167,7 @@
             </span>
 
             <h3 class="outfit-builder__summary-title">
-              {{ section.settings.selection_label | default: 'Your outfit' }}
+              {{ section.settings.selection_label | default: 'Your kit' }}
             </h3>
           </div>
 
@@ -194,7 +194,7 @@
           class="outfit-builder__empty-msg"
           data-ob-empty
         >
-          {{ section.settings.empty_text | default: 'Select items to build your outfit' }}
+          {{ section.settings.empty_text | default: 'Select items to build your kit' }}
         </p>
 
         <div class="outfit-builder__totals" data-ob-totals hidden>
@@ -211,7 +211,7 @@
             disabled
           >
             <span>
-              {{ section.settings.add_outfit_text | default: 'Add outfit to cart' }}
+              {{ section.settings.add_outfit_text | default: 'Add kit to cart' }}
             </span>
             <span aria-hidden="true">→</span>
           </button>

@@ -1,7 +1,7 @@
 /* =========================================================
    PETLIO — SHOPPABLE LOOKBOOK
    Chapter 06
-   Editorial shopping scene
+   Scene with 2 featured products + grid below
    ========================================================= */
 
 .petlio-lookbook {
@@ -23,10 +23,7 @@
   margin: 0 auto;
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
-
+/* Header */
 .petlio-lookbook__header {
   position: relative;
   z-index: 5;
@@ -48,9 +45,7 @@
   text-transform: uppercase;
 }
 
-.petlio-lookbook__chapter-number {
-  opacity: 0.5;
-}
+.petlio-lookbook__chapter-number { opacity: 0.5; }
 
 .petlio-lookbook__chapter-line {
   width: 38px;
@@ -60,20 +55,15 @@
 }
 
 .petlio-lookbook__heading {
-  margin: 0;
+  margin: 0.2em 0 0;
   font-size: clamp(2.8rem, 6vw, 5.8rem);
   font-weight: 500;
   letter-spacing: -0.065em;
-  line-height: 0.92;
+  line-height: 1.05;
 }
 
-.petlio-lookbook__heading p {
-  margin: 0;
-}
-
-.petlio-lookbook__heading strong {
-  font-weight: 500;
-}
+.petlio-lookbook__heading p { margin: 0; }
+.petlio-lookbook__heading strong { font-weight: 500; }
 
 .petlio-lookbook__intro {
   max-width: 420px;
@@ -83,32 +73,19 @@
   line-height: 1.5;
 }
 
-.petlio-lookbook__intro p {
-  margin: 0;
-}
+.petlio-lookbook__intro p { margin: 0; }
+.petlio-lookbook__intro em { font-style: normal; }
 
-.petlio-lookbook__intro em {
-  font-style: normal;
-}
-
-/* =========================================================
-   SCENE
-   ========================================================= */
-
+/* Scene */
 .petlio-lookbook__scene {
   position: relative;
-  min-height: min(760px, 65vw);
+  min-height: min(620px, 60vw);
   overflow: hidden;
   border-radius: clamp(28px, 4vw, 54px);
   background: #e9e1d6;
-  box-shadow:
-    0 35px 100px rgba(29, 41, 33, 0.09);
+  box-shadow: 0 35px 100px rgba(29, 41, 33, 0.09);
   isolation: isolate;
 }
-
-/* =========================================================
-   BACKGROUND
-   ========================================================= */
 
 .petlio-lookbook__scene-background {
   position: absolute;
@@ -177,10 +154,7 @@
   height: 55px;
 }
 
-/* =========================================================
-   PLANTS
-   ========================================================= */
-
+/* Plants */
 .petlio-lookbook__plant {
   position: absolute;
   bottom: 14%;
@@ -189,14 +163,8 @@
   height: 250px;
 }
 
-.petlio-lookbook__plant--left {
-  left: 3%;
-}
-
-.petlio-lookbook__plant--right {
-  right: 3%;
-  transform: scaleX(-1);
-}
+.petlio-lookbook__plant--left { left: 3%; }
+.petlio-lookbook__plant--right { right: 3%; transform: scaleX(-1); }
 
 .petlio-lookbook__plant::before {
   content: "";
@@ -221,26 +189,12 @@
   transform-origin: bottom center;
 }
 
-.petlio-lookbook__plant span:nth-child(1) {
-  transform: translateX(-50%) rotate(-28deg);
-}
+.petlio-lookbook__plant span:nth-child(1) { transform: translateX(-50%) rotate(-28deg); }
+.petlio-lookbook__plant span:nth-child(2) { transform: translateX(-50%) rotate(22deg); }
+.petlio-lookbook__plant span:nth-child(3) { transform: translateX(-50%) rotate(-55deg) scale(0.8); }
+.petlio-lookbook__plant span:nth-child(4) { transform: translateX(-50%) rotate(52deg) scale(0.75); }
 
-.petlio-lookbook__plant span:nth-child(2) {
-  transform: translateX(-50%) rotate(22deg);
-}
-
-.petlio-lookbook__plant span:nth-child(3) {
-  transform: translateX(-50%) rotate(-55deg) scale(0.8);
-}
-
-.petlio-lookbook__plant span:nth-child(4) {
-  transform: translateX(-50%) rotate(52deg) scale(0.75);
-}
-
-/* =========================================================
-   SCENE COPY
-   ========================================================= */
-
+/* Scene copy */
 .petlio-lookbook__scene-copy {
   position: absolute;
   top: 2rem;
@@ -269,230 +223,7 @@
   font-size: 0.68rem;
 }
 
-/* =========================================================
-   HOTSPOT
-   ========================================================= */
-
-.petlio-lookbook__hotspot-wrap {
-  position: absolute;
-  top: var(--hotspot-y);
-  left: var(--hotspot-x);
-  z-index: 10;
-  transform: translate(-50%, -50%);
-}
-
-.petlio-lookbook__hotspot {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 52px;
-  height: 52px;
-  padding: 0;
-  cursor: pointer;
-  border: 5px solid rgba(255, 255, 255, 0.75);
-  border-radius: 50%;
-  background: var(--lookbook-dot, #fff);
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.14);
-  transition:
-    transform 300ms ease,
-    box-shadow 300ms ease;
-}
-
-.petlio-lookbook__hotspot:hover,
-.petlio-lookbook__hotspot:focus-visible {
-  transform: scale(1.12);
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.2);
-  outline: none;
-}
-
-.petlio-lookbook__hotspot-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--lookbook-ink);
-}
-
-.petlio-lookbook__hotspot-plus {
-  position: absolute;
-  color: var(--lookbook-ink);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1;
-  opacity: 0;
-  transform: rotate(-90deg);
-  transition:
-    opacity 250ms ease,
-    transform 350ms ease;
-}
-
-.petlio-lookbook__hotspot[aria-expanded="true"] {
-  transform: rotate(45deg);
-}
-
-.petlio-lookbook__hotspot[aria-expanded="true"]
-.petlio-lookbook__hotspot-dot {
-  opacity: 0;
-}
-
-.petlio-lookbook__hotspot[aria-expanded="true"]
-.petlio-lookbook__hotspot-plus {
-  opacity: 1;
-  transform: rotate(0);
-}
-
-.petlio-lookbook__hotspot-ring {
-  position: absolute;
-  inset: -9px;
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  border-radius: 50%;
-  animation: petlio-lookbook-pulse 2.8s ease-out infinite;
-}
-
-@keyframes petlio-lookbook-pulse {
-  0% {
-    transform: scale(0.8);
-    opacity: 0.6;
-  }
-
-  75% {
-    transform: scale(1.35);
-    opacity: 0;
-  }
-
-  100% {
-    transform: scale(1.35);
-    opacity: 0;
-  }
-}
-
-/* =========================================================
-   PRODUCT CARD
-   ========================================================= */
-
-.petlio-lookbook__product {
-  position: absolute;
-  top: 34px;
-  left: 34px;
-  display: grid;
-  grid-template-columns: 125px 1fr;
-  width: min(360px, 32vw);
-  overflow: hidden;
-  color: var(--lookbook-card-fg, #121212);
-  background: var(--lookbook-card-bg, #fff);
-  border-radius: 18px;
-  box-shadow:
-    0 20px 55px rgba(0, 0, 0, 0.16);
-  animation: petlio-lookbook-card-in 280ms ease both;
-}
-
-.petlio-lookbook__hotspot-wrap:nth-of-type(even)
-.petlio-lookbook__product {
-  right: 34px;
-  left: auto;
-}
-
-@keyframes petlio-lookbook-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.petlio-lookbook__product-image {
-  min-height: 145px;
-  background: #f3f1ed;
-}
-
-.petlio-lookbook__product-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.petlio-lookbook__product-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-  padding: 1rem 1rem 1rem 1.1rem;
-}
-
-.petlio-lookbook__product-vendor {
-  margin-bottom: 0.35rem;
-  color: rgba(18, 18, 18, 0.5);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.petlio-lookbook__product-title {
-  margin: 0;
-  padding-right: 0.6rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  line-height: 1.25;
-}
-
-.petlio-lookbook__product-price {
-  margin-top: 0.45rem;
-  font-size: 0.72rem;
-  opacity: 0.65;
-}
-
-.petlio-lookbook__product-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  width: fit-content;
-  margin-top: 0.8rem;
-  color: inherit;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.petlio-lookbook__product-link span {
-  transition: transform 200ms ease;
-}
-
-.petlio-lookbook__product-link:hover span {
-  transform: translateX(3px);
-}
-
-.petlio-lookbook__product-close {
-  position: absolute;
-  top: 7px;
-  right: 8px;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  cursor: pointer;
-  border: 0;
-  border-radius: 50%;
-  color: #121212;
-  background: rgba(255, 255, 255, 0.85);
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* =========================================================
-   SCENE FOOTER
-   ========================================================= */
-
+/* Scene footer */
 .petlio-lookbook__scene-footer {
   position: absolute;
   right: 2rem;
@@ -515,10 +246,6 @@
   height: 1px;
   background: rgba(29, 41, 33, 0.12);
 }
-
-/* =========================================================
-   EMPTY STATE
-   ========================================================= */
 
 .petlio-lookbook__empty {
   position: absolute;
@@ -544,12 +271,178 @@
 }
 
 /* =========================================================
-   BOTTOM
+   FEATURED CARDS INSIDE THE SCENE
    ========================================================= */
 
+.petlio-lookbook__scene-products {
+  position: absolute;
+  z-index: 5;
+  bottom: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1.25rem;
+  width: max-content;
+  max-width: calc(100% - 3rem);
+}
+
+.petlio-lookbook__scene-card {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 0.85rem;
+  align-items: center;
+  width: 280px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(29, 41, 33, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.petlio-lookbook__scene-card-image {
+  display: block;
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f3f1ed;
+  flex-shrink: 0;
+}
+
+.petlio-lookbook__scene-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.petlio-lookbook__scene-card-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.petlio-lookbook__scene-card-title {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.petlio-lookbook__scene-card-title a {
+  color: var(--lookbook-ink);
+  text-decoration: none;
+}
+
+.petlio-lookbook__scene-card-title a:hover {
+  color: var(--petlio-accent-deep, #304b38);
+}
+
+.petlio-lookbook__scene-card-price {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* =========================================================
+   PRODUCT GRID (remaining products)
+   ========================================================= */
+
+.petlio-lookbook__product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.petlio-lookbook__product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--lookbook-card-bg, #fff);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(29, 41, 33, 0.07);
+  border: 1px solid rgba(29, 41, 33, 0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.petlio-lookbook__product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(29, 41, 33, 0.12);
+}
+
+.petlio-lookbook__product-card-image {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f3f1ed;
+}
+
+.petlio-lookbook__product-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.petlio-lookbook__product-card:hover .petlio-lookbook__product-card-image img {
+  transform: scale(1.04);
+}
+
+.petlio-lookbook__product-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.1rem 1.15rem 1.25rem;
+  flex: 1;
+}
+
+.petlio-lookbook__product-card-vendor {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(18, 18, 18, 0.45);
+}
+
+.petlio-lookbook__product-card-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.petlio-lookbook__product-card-title a {
+  color: var(--lookbook-ink);
+  text-decoration: none;
+}
+
+.petlio-lookbook__product-card-title a:hover {
+  color: var(--petlio-accent-deep, #304b38);
+}
+
+.petlio-lookbook__product-card-price {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
+.petlio-lookbook__product-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 0.85rem;
+}
+
+/* Bottom */
 .petlio-lookbook__bottom {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 1.2rem;
   width: min(700px, 100%);
   margin: 3rem auto 0;
@@ -558,7 +451,6 @@
 .petlio-lookbook__bottom-number {
   display: grid;
   place-items: center;
-  flex: 0 0 42px;
   width: 42px;
   height: 42px;
   border: 1px solid var(--lookbook-line);
@@ -568,7 +460,6 @@
 }
 
 .petlio-lookbook__bottom p {
-  flex: 1;
   margin: 0;
   color: var(--lookbook-muted);
   font-size: 0.78rem;
@@ -585,198 +476,12 @@
   opacity: 0.4;
 }
 
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 749px) {
-  .petlio-lookbook {
-    padding: 3.5rem 0;
-    overflow-x: clip;
-    max-width: 100%;
-  }
-
-  .petlio-lookbook__container {
-    width: 100%;
-    max-width: 100%;
-    padding-inline: 1rem;
-    box-sizing: border-box;
-  }
-
-  .petlio-lookbook__header {
-    margin-bottom: 2.5rem;
-    max-width: 100%;
-  }
-
-  .petlio-lookbook__heading {
-    font-size: clamp(2.2rem, 11vw, 3.6rem);
-  }
-
-  .petlio-lookbook__scene {
-    min-height: 520px;
-    border-radius: 20px;
-    /* Keep hotspots/cards inside the rounded frame without eating the left edge */
-    overflow: hidden;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .petlio-lookbook__arch {
-    top: 9%;
-    width: 85%;
-    height: 58%;
-  }
-
-  .petlio-lookbook__plant {
-    width: 72px;
-    height: 140px;
-    bottom: 14%;
-  }
-
-  .petlio-lookbook__plant--left {
-    left: 2%;
-  }
-
-  .petlio-lookbook__plant--right {
-    right: 2%;
-  }
-
-  .petlio-lookbook__plant::before {
-    width: 28px;
-    height: 42px;
-  }
-
-  .petlio-lookbook__plant span {
-    bottom: 30px;
-    width: 34px;
-    height: 72px;
-  }
-
-  .petlio-lookbook__scene-copy {
-    top: 1rem;
-    left: 1rem;
-    right: 1rem;
-    max-width: calc(100% - 2rem);
-  }
-
-  .petlio-lookbook__scene-title {
-    font-size: 0.9rem;
-  }
-
-  .petlio-lookbook__hotspot {
-    width: 44px;
-    height: 44px;
-  }
-
-  /*
-   * Product cards: on mobile, pin inside the scene instead of floating
-   * off the hotspot (which clipped on the left when hotspot-x was low).
-   */
-  .petlio-lookbook__product {
-    position: absolute;
-    top: auto;
-    bottom: 4.5rem;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%);
-    grid-template-columns: 88px 1fr;
-    width: min(300px, calc(100vw - 2.5rem));
-    max-width: calc(100% - 1.5rem);
-    border-radius: 14px;
-    z-index: 20;
-  }
-
-  .petlio-lookbook__hotspot-wrap:nth-of-type(even)
-  .petlio-lookbook__product {
-    left: 50% !important;
-    right: auto !important;
-  }
-
-  .petlio-lookbook__product-image {
-    min-height: 110px;
-  }
-
-  .petlio-lookbook__product-content {
-    padding: 0.75rem;
-  }
-
-  .petlio-lookbook__product-title {
-    font-size: 0.72rem;
-  }
-
-  .petlio-lookbook__scene-footer {
-    right: 0.75rem;
-    bottom: 0.75rem;
-    left: 0.75rem;
-  }
-
-  .petlio-lookbook__bottom {
-    margin-top: 1.75rem;
-    padding-inline: 0.25rem;
-  }
-
-  .petlio-lookbook__cta-row {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 420px) {
-  .petlio-lookbook__scene {
-    min-height: 480px;
-    border-radius: 16px;
-  }
-
-  .petlio-lookbook__product {
-    grid-template-columns: 76px 1fr;
-    width: min(280px, calc(100vw - 2rem));
-    bottom: 4rem;
-  }
-
-  .petlio-lookbook__product-image {
-    min-height: 96px;
-  }
-
-  .petlio-lookbook__product-link {
-    margin-top: 0.5rem;
-  }
-
-  .petlio-lookbook__container {
-    padding-inline: 0.75rem;
-  }
-}
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  .petlio-lookbook__hotspot,
-  .petlio-lookbook__hotspot-plus,
-  .petlio-lookbook__product-link span {
-    transition: none;
-  }
-
-  .petlio-lookbook__hotspot-ring,
-  .petlio-lookbook__product {
-    animation: none;
-  }
-}
-
-/* ---- Add to cart actions ---- */
-.petlio-lookbook__product-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.65rem;
-  margin-top: 0.75rem;
-}
-
+/* Buttons */
 .petlio-lookbook__add-btn {
   appearance: none;
   border: none;
   cursor: pointer;
-  padding: 0.55rem 1rem;
+  padding: 0.55rem 1.1rem;
   border-radius: 999px;
   background: var(--petlio-accent-deep, #304b38);
   color: #fff;
@@ -784,6 +489,12 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.petlio-lookbook__add-btn--small {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.7rem;
+  margin-top: 0.35rem;
 }
 
 .petlio-lookbook__add-btn:hover:not(:disabled) {
@@ -826,7 +537,6 @@
 }
 
 .petlio-lookbook__add-all:hover {
-  background: var(--petlio-accent-deep, #304b38);
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(39, 48, 40, 0.15);
 }
@@ -838,12 +548,191 @@
 
 .petlio-lookbook__add-all.is-added {
   background: var(--petlio-accent, #71806d);
-  border-color: var(--petlio-accent, #71806d);
 }
 
-.petlio-lookbook__bottom {
-  display: flex;
-  flex-direction: column;
+.petlio-lookbook__product-link {
+  display: inline-flex;
   align-items: center;
-  text-align: center;
+  gap: 0.35rem;
+  color: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.petlio-lookbook__product-link span {
+  transition: transform 200ms ease;
+}
+
+.petlio-lookbook__product-link:hover span {
+  transform: translateX(3px);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 749px) {
+  .petlio-lookbook {
+    padding: 3.5rem 0;
+    overflow-x: clip;
+    max-width: 100%;
+  }
+
+  .petlio-lookbook__container {
+    width: 100%;
+    max-width: 100%;
+    padding-inline: 1rem;
+    box-sizing: border-box;
+  }
+
+  .petlio-lookbook__header {
+    margin-bottom: 2.5rem;
+  }
+
+  .petlio-lookbook__heading {
+    font-size: clamp(2.2rem, 11vw, 3.6rem);
+  }
+
+  .petlio-lookbook__scene {
+    min-height: 480px;
+    border-radius: 20px;
+  }
+
+  .petlio-lookbook__arch {
+    top: 9%;
+    width: 85%;
+    height: 58%;
+  }
+
+  .petlio-lookbook__plant {
+    width: 72px;
+    height: 140px;
+    bottom: 14%;
+  }
+
+  .petlio-lookbook__plant--left { left: 2%; }
+  .petlio-lookbook__plant--right { right: 2%; }
+
+  .petlio-lookbook__plant::before {
+    width: 28px;
+    height: 42px;
+  }
+
+  .petlio-lookbook__plant span {
+    bottom: 30px;
+    width: 34px;
+    height: 72px;
+  }
+
+  .petlio-lookbook__scene-copy {
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+
+  .petlio-lookbook__scene-title {
+    font-size: 0.9rem;
+  }
+
+  .petlio-lookbook__scene-footer {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+  }
+
+  /* Featured cards inside scene on mobile – stack vertically */
+  .petlio-lookbook__scene-products {
+    bottom: 3.5rem;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: calc(100% - 2rem);
+    max-width: 320px;
+  }
+
+  .petlio-lookbook__scene-card {
+    width: 100%;
+    grid-template-columns: 72px 1fr;
+    gap: 0.7rem;
+    padding: 0.65rem;
+  }
+
+  .petlio-lookbook__scene-card-image {
+    width: 72px;
+    height: 72px;
+  }
+
+  .petlio-lookbook__scene-card-title {
+    font-size: 0.78rem;
+  }
+
+  /* Grid below */
+  .petlio-lookbook__product-grid {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 1.5rem;
+  }
+
+  .petlio-lookbook__product-card {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    border-radius: 14px;
+  }
+
+  .petlio-lookbook__product-card-image {
+    aspect-ratio: 1;
+    height: 100%;
+  }
+
+  .petlio-lookbook__product-card-content {
+    padding: 0.9rem 0.95rem 1rem 0;
+    justify-content: center;
+  }
+
+  .petlio-lookbook__product-card-title {
+    font-size: 0.88rem;
+  }
+
+  .petlio-lookbook__product-card-actions {
+    margin-top: 0.6rem;
+  }
+
+  .petlio-lookbook__bottom {
+    margin-top: 1.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .petlio-lookbook__scene {
+    min-height: 440px;
+    border-radius: 16px;
+  }
+
+  .petlio-lookbook__scene-card {
+    grid-template-columns: 64px 1fr;
+  }
+
+  .petlio-lookbook__scene-card-image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .petlio-lookbook__product-card {
+    grid-template-columns: 96px 1fr;
+  }
+
+  .petlio-lookbook__container {
+    padding-inline: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petlio-lookbook__product-card,
+  .petlio-lookbook__product-card-image img,
+  .petlio-lookbook__product-link span {
+    transition: none;
+  }
 }

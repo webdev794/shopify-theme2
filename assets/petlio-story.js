@@ -14,64 +14,52 @@
   // Ensure body has the class used by CSS even if theme.liquid was cached
   document.body.classList.add('template-index');
 
-  var chapters = [
-    { key: 'hero', label: '01 · Meet them' },
-    { key: 'shop-by-pet', label: '02 · Discover' },
-    { key: 'featured-products', label: '03 · Everyday' },
-    { key: 'outfit-builder', label: '04 · Build' },
-    { key: 'lookbook-gallery', label: '05 · See them' },
-    { key: 'lookbook', label: '06 · Explore' },
-    { key: 'text-with-icons', label: '07 · Why Petlio' },
-    { key: 'blog-posts', label: '08 · Care & stories' },
-    { key: 'faq', label: '09 · Help' },
-    { key: 'testimonials', label: '10 · From the community' },
-    { key: 'newsletter', label: '11 · Stay close' }
-  ];
-
-  function findSection(key) {
-    var nodes = document.querySelectorAll('#MainContent > .shopify-section');
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      if ((node.id || '').indexOf('__' + key) !== -1) return node;
-      if (node.querySelector('[data-section-type="' + key + '"]')) return node;
-      // Also match common Shopify section id patterns: shopify-section-template--xxx__key
-      if ((node.id || '').indexOf(key) !== -1) return node;
-    }
-    return null;
-  }
-
+  /* Fully dynamic: every main section becomes a chapter. No hardcoded keys.
+     Add/remove/reorder sections in the theme editor — dots update automatically. */
   var sections = [];
+  var mainNodes = document.querySelectorAll('#MainContent > .shopify-section');
 
-  chapters.forEach(function (chapter, index) {
-    var section = findSection(chapter.key);
-    if (!section) return;
+  mainNodes.forEach(function (node, index) {
+    // Skip empty / tiny utility sections
+    if (node.offsetHeight < 80) return;
 
-    section.classList.add('petlio-story-section', 'petlio-story-section--' + chapter.key);
-    section.dataset.storyChapter = String(index + 1);
-    section.dataset.storyLabel = chapter.label;
+    var key = 'section-' + index;
+    var id = node.id || '';
+    // Prefer a readable key from the Shopify section id suffix
+    var m = id.match(/__([a-z0-9-]+)$/i);
+    if (m) key = m[1];
 
-    // Chapter numbers come from Liquid (section settings / chapter-header).
-    // Do not inject floating JS labels — they duplicated liquid headers and
-    // could position under the site header when the section lacked position:relative.
+    var label = String(index + 1).padStart(2, '0');
+    // Prefer label from section content if present
+    var chapterLabelEl = node.querySelector(
+      '.petlio-care__chapter-label, .outfit-builder__chapter-label, [class*="chapter-label"], [class*="__chapter-label"]'
+    );
+    if (chapterLabelEl && chapterLabelEl.textContent.trim()) {
+      label = String(index + 1).padStart(2, '0') + ' · ' + chapterLabelEl.textContent.trim();
+    } else {
+      var headingEl = node.querySelector('h1, h2');
+      if (headingEl && headingEl.textContent.trim()) {
+        var h = headingEl.textContent.trim().replace(/\s+/g, ' ');
+        if (h.length > 28) h = h.slice(0, 28) + '…';
+        label = String(index + 1).padStart(2, '0') + ' · ' + h;
+      }
+    }
 
-    var revealTargets = section.querySelectorAll('h1, h2, h3, .hero__content, .shop-by-pet__card, .featured-products__product, .outfit-builder__item, .lookbook-gallery__item, .lookbook__hotspot, .testimonial, .newsletter__content');
+    node.classList.add('petlio-story-section', 'petlio-story-section--' + key);
+    node.dataset.storyChapter = String(index + 1);
+    node.dataset.storyLabel = label;
+
+    var revealTargets = node.querySelectorAll(
+      'h1, h2, h3, .hero__content, .shop-by-pet__card, .featured-products__product, .outfit-builder__item, .outfit-builder__card, .lookbook-gallery__item, .lookbook__hotspot, .testimonial, .newsletter__content'
+    );
     for (var i = 0; i < revealTargets.length; i++) {
       revealTargets[i].classList.add('petlio-story-reveal');
     }
 
-    sections.push({ element: section, chapter: chapter });
+    sections.push({ element: node, chapter: { key: key, label: label } });
   });
 
-  // If chapter matching failed (renamed sections), still tag all main sections
-  if (!sections.length) {
-    var all = document.querySelectorAll('#MainContent > .shopify-section');
-    all.forEach(function (node, index) {
-      node.classList.add('petlio-story-section');
-      sections.push({ element: node, chapter: { key: 'section-' + index, label: String(index + 1).padStart(2, '0') } });
-    });
-  }
-
-  if (!sections.length) return;
+    if (!sections.length) return;
 
   /* Reveal content as the user enters each chapter. */
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -116,24 +104,60 @@
 
     document.body.appendChild(rail);
 
-    if ('IntersectionObserver' in window) {
-      var sectionObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          var index = sections.findIndex(function (item) {
-            return item.element === entry.target;
-          });
-          if (index === -1) return;
-          dots.forEach(function (dot, dotIndex) {
-            dot.classList.toggle('is-active', dotIndex === index);
-          });
-        });
-      }, { threshold: 0.25, rootMargin: '-15% 0px -55% 0px' });
+    function updateProgressDots() {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var probe = vh * 0.35;
+      var best = -1;
+      var bestDist = Infinity;
 
-      sections.forEach(function (item) {
-        sectionObserver.observe(item.element);
+      for (var i = 0; i < sections.length; i++) {
+        var rect = sections[i].element.getBoundingClientRect();
+        // Skip fully off-screen sections
+        if (rect.bottom <= 0 || rect.top >= vh) continue;
+
+        var anchor = rect.top + Math.min(rect.height * 0.2, 120);
+        var dist = Math.abs(anchor - probe);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      }
+
+      // Past last section (footer): keep last dot active — never jump back to first
+      if (best === -1 && sections.length) {
+        var lastRect = sections[sections.length - 1].element.getBoundingClientRect();
+        if (lastRect.bottom <= probe || lastRect.top < 0) {
+          best = sections.length - 1;
+        } else {
+          best = 0;
+        }
+      }
+      if (best < 0) best = 0;
+
+      dots.forEach(function (dot, dotIndex) {
+        var on = dotIndex === best;
+        dot.classList.toggle('is-active', on);
+        if (on) {
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.removeAttribute('aria-current');
+        }
       });
     }
+
+    var progressTicking = false;
+    function onProgressScroll() {
+      if (progressTicking) return;
+      progressTicking = true;
+      window.requestAnimationFrame(function () {
+        progressTicking = false;
+        updateProgressDots();
+      });
+    }
+
+    updateProgressDots();
+    window.addEventListener('scroll', onProgressScroll, { passive: true });
+    window.addEventListener('resize', onProgressScroll, { passive: true });
   }
 
 

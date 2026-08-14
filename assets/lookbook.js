@@ -1,18 +1,12 @@
 /* =========================================================
    PETLIO — SHOPPABLE LOOKBOOK
-   Chapter 06 interactions
+   Chapter 06 – Add to cart only
    ========================================================= */
 
 (function () {
   'use strict';
 
   var initializedSections = new WeakSet();
-
-  /*
-   * -------------------------------------------------------
-   * ADD TO CART (single + all)
-   * -------------------------------------------------------
-   */
 
   function parseVariantIds(raw) {
     if (Array.isArray(raw)) {
@@ -153,186 +147,10 @@
   }
 
   function initLookbook(section) {
-    if (!section || initializedSections.has(section)) {
-      return;
-    }
-
+    if (!section || initializedSections.has(section)) return;
     initializedSections.add(section);
     bindCartActions(section);
-
-    var hotspots = Array.from(section.querySelectorAll('[data-hotspot]'));
-    var mobileCards = Array.from(section.querySelectorAll('[data-mobile-card]'));
-    var isMobile = window.matchMedia('(max-width: 749px)').matches;
-
-    if (!hotspots.length) {
-      return;
-    }
-
-    /*
-     * -------------------------------------------------------
-     * CLOSE ALL (desktop only)
-     * -------------------------------------------------------
-     */
-
-    function closeAll(except) {
-      hotspots.forEach(function (hotspot) {
-        if (hotspot === except) return;
-
-        var button = hotspot.querySelector('[data-hotspot-button]');
-        var card = hotspot.querySelector('[data-product-card]');
-
-        if (button) button.setAttribute('aria-expanded', 'false');
-        if (card) card.hidden = true;
-        hotspot.classList.remove('is-active');
-      });
-    }
-
-    /*
-     * -------------------------------------------------------
-     * MOBILE: highlight + scroll to card
-     * -------------------------------------------------------
-     */
-
-    function highlightMobileCard(index) {
-      mobileCards.forEach(function (card) {
-        card.classList.remove('is-highlighted');
-      });
-
-      var target = mobileCards.find(function (card) {
-        return card.getAttribute('data-hotspot-index') === String(index);
-      });
-
-      if (target) {
-        target.classList.add('is-highlighted');
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Remove highlight after a short time
-        setTimeout(function () {
-          target.classList.remove('is-highlighted');
-        }, 2200);
-      }
-    }
-
-    /*
-     * -------------------------------------------------------
-     * TOGGLE HOTSPOT
-     * -------------------------------------------------------
-     */
-
-    function toggleHotspot(hotspot) {
-      var button = hotspot.querySelector('[data-hotspot-button]');
-      var card = hotspot.querySelector('[data-product-card]');
-      var index = hotspot.getAttribute('data-hotspot-index');
-
-      if (!button) return;
-
-      // On mobile → just highlight the corresponding list card
-      if (window.matchMedia('(max-width: 749px)').matches) {
-        highlightMobileCard(index);
-        // Also toggle the + visual on the hotspot
-        var isOpen = button.getAttribute('aria-expanded') === 'true';
-        button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-        // Reset other hotspots
-        hotspots.forEach(function (h) {
-          if (h !== hotspot) {
-            var b = h.querySelector('[data-hotspot-button]');
-            if (b) b.setAttribute('aria-expanded', 'false');
-            h.classList.remove('is-active');
-          }
-        });
-        hotspot.classList.toggle('is-active', !isOpen);
-        return;
-      }
-
-      // Desktop behaviour (floating card)
-      if (!card) return;
-
-      var isOpen = button.getAttribute('aria-expanded') === 'true';
-
-      if (isOpen) {
-        button.setAttribute('aria-expanded', 'false');
-        card.hidden = true;
-        hotspot.classList.remove('is-active');
-        return;
-      }
-
-      closeAll(hotspot);
-
-      button.setAttribute('aria-expanded', 'true');
-      card.hidden = false;
-      hotspot.classList.add('is-active');
-    }
-
-    /*
-     * -------------------------------------------------------
-     * EVENTS
-     * -------------------------------------------------------
-     */
-
-    hotspots.forEach(function (hotspot) {
-      var button = hotspot.querySelector('[data-hotspot-button]');
-      var closeButton = hotspot.querySelector('[data-product-close]');
-
-      if (button) {
-        button.addEventListener('click', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          toggleHotspot(hotspot);
-        });
-      }
-
-      if (closeButton) {
-        closeButton.addEventListener('click', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-
-          var hotspotButton = hotspot.querySelector('[data-hotspot-button]');
-          var card = hotspot.querySelector('[data-product-card]');
-
-          if (hotspotButton) hotspotButton.setAttribute('aria-expanded', 'false');
-          if (card) card.hidden = true;
-          hotspot.classList.remove('is-active');
-        });
-      }
-    });
-
-    // Click outside (desktop)
-    document.addEventListener('click', function (event) {
-      if (!section.contains(event.target)) return;
-      if (event.target.closest('[data-hotspot]')) return;
-      if (window.matchMedia('(max-width: 749px)').matches) return;
-      closeAll();
-    });
-
-    // Escape
-    section.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') closeAll();
-    });
-
-    // Keyboard navigation between hotspots
-    hotspots.forEach(function (hotspot, index) {
-      var button = hotspot.querySelector('[data-hotspot-button]');
-      if (!button) return;
-
-      button.addEventListener('keydown', function (event) {
-        if (!['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(event.key)) return;
-        event.preventDefault();
-
-        var nextIndex = (event.key === 'ArrowRight' || event.key === 'ArrowDown')
-          ? (index + 1) % hotspots.length
-          : (index - 1 + hotspots.length) % hotspots.length;
-
-        var nextButton = hotspots[nextIndex].querySelector('[data-hotspot-button]');
-        if (nextButton) nextButton.focus();
-      });
-    });
   }
-
-  /*
-   * -------------------------------------------------------
-   * INITIALIZE ALL
-   * -------------------------------------------------------
-   */
 
   function initAll(root) {
     root = root || document;

@@ -1,0 +1,412 @@
+/* ========== HERO STYLES ========== */
+/* This file contains all styles for the hero section */
+
+/* ---- Base ---- */
+.hero {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  color: var(--hero-foreground);
+  isolation: isolate;
+}
+
+.hero:not(.hero--full-width) {
+  max-width: var(--page-width, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 12px;
+}
+
+@media (max-width: 749px) {
+  .hero:not(.hero--full-width) {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+  }
+}
+
+/* ---- Heights ---- */
+.hero--small {
+  min-height: 26rem;
+}
+
+.hero--medium {
+  min-height: 34rem;
+}
+
+.hero--large {
+  min-height: 45rem;
+}
+
+.hero--full {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.hero--adapt {
+  min-height: 0;
+  aspect-ratio: var(--hero-aspect-ratio, 16 / 7);
+}
+
+@media (max-width: 749px) {
+  .hero--small {
+    min-height: 20rem;
+  }
+
+  .hero--medium {
+    min-height: 26rem;
+  }
+
+  .hero--large {
+    min-height: 34rem;
+  }
+
+  .hero--adapt {
+    aspect-ratio: var(--hero-aspect-ratio-mobile, var(--hero-aspect-ratio, 16 / 7));
+  }
+}
+
+/* ---- Media ---- */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Absolutely positioned so sizing comes from .hero__media directly.
+   Percentage heights through the inline <picture> wrapper are unreliable
+   and let tall portrait images overflow at their natural size. */
+.hero__image,
+.hero__video,
+.hero__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero__placeholder {
+  background: #e7e7e7;
+  fill: #a0a0a0;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--hero-overlay);
+  opacity: var(--hero-overlay-opacity);
+  pointer-events: none;
+}
+
+/* ---- Video pause/play control ---- */
+.hero__video-toggle {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.2s ease;
+}
+
+.hero__video-toggle:hover,
+.hero__video-toggle:focus-visible {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.hero__video-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.hero__video-icon--play {
+  display: none;
+}
+
+.hero--video-paused .hero__video-icon--pause {
+  display: none;
+}
+
+.hero--video-paused .hero__video-icon--play {
+  display: block;
+}
+
+/* ---- Content placement ----
+   The wrapper is a flex container; justify-content places content
+   horizontally, align-items vertically. */
+.hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: var(--page-width, 1200px);
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.hero--content-top-left .hero__content-wrapper,
+.hero--content-top-center .hero__content-wrapper,
+.hero--content-top-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  align-items: flex-start;
+}
+
+.hero--content-middle-left .hero__content-wrapper,
+.hero--content-middle-center .hero__content-wrapper,
+.hero--content-middle-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  align-items: center;
+}
+
+.hero--content-bottom-left .hero__content-wrapper,
+.hero--content-bottom-center .hero__content-wrapper,
+.hero--content-bottom-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  align-items: flex-end;
+}
+
+.hero--content-top-left .hero__content-wrapper,
+.hero--content-middle-left .hero__content-wrapper,
+.hero--content-bottom-left .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  justify-content: flex-start;
+}
+
+.hero--content-top-center .hero__content-wrapper,
+.hero--content-middle-center .hero__content-wrapper,
+.hero--content-bottom-center .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  justify-content: center;
+}
+
+.hero--content-top-right .hero__content-wrapper,
+.hero--content-middle-right .hero__content-wrapper,
+.hero--content-bottom-right .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+  justify-content: flex-end;
+}
+
+/* ---- Content ---- */
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: var(--hero-content-max-width, 650px);
+}
+
+.hero__content--boxed {
+  padding: 2rem;
+  background: var(--hero-box-background);
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.hero__content--align-left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.hero__content--align-center {
+  text-align: center;
+  align-items: center;
+}
+
+.hero__content--align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+/* ---- Typography ---- */
+/* Specificity note: global rules in petlio-theme.css
+   (".shopify-section h1/h2/h3" and ".shopify-section p") target these
+   same elements and otherwise win over the plain ".hero__heading" /
+   ".hero__text" classes, silently replacing the merchant's chosen
+   --hero-foreground color with the theme's default ink/muted text
+   colors. That's what caused hero text to blend into light photos
+   regardless of the "Text color" setting. Scoping with the extra
+   ".hero" ancestor raises specificity so the overlay-aware color
+   always wins. */
+.hero .hero__heading {
+  color: var(--hero-foreground);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 24px rgba(0, 0, 0, 0.25);
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+}
+
+.hero__heading--small {
+  font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+}
+
+.hero__heading--medium {
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+}
+
+.hero__heading--large {
+  font-size: clamp(2.75rem, 1.6rem + 4.5vw, 4.75rem);
+}
+
+.hero .hero__text {
+  color: var(--hero-foreground);
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 16px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+}
+
+.hero .hero__text > p {
+  color: inherit;
+  margin: 0 0 0.5em;
+}
+
+.hero__text > p:last-child {
+  margin-bottom: 0;
+}
+
+.hero__text--small {
+  font-size: 0.9375rem;
+}
+
+.hero__text--medium {
+  font-size: 1.0625rem;
+}
+
+.hero__text--large {
+  font-size: 1.25rem;
+}
+
+/* ---- Buttons ----
+   Inherits the theme's .button / .button--primary / .button--secondary
+   styles when present; the rules below are a self-contained fallback so
+   the section still looks finished in themes without global button CSS.
+   Colors are pulled from the theme's Accent palette (settings.accent_background /
+   settings.accent_foreground via --color-accent-background / --color-accent-foreground
+   in css-variables.liquid) rather than hardcoded, so merchants' brand colors apply here too. */
+.hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.hero__content--align-center .hero__buttons {
+  justify-content: center;
+}
+
+.hero__content--align-right .hero__buttons {
+  justify-content: flex-end;
+}
+
+.hero__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.625rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.hero__button--primary {
+  color: var(--color-accent-foreground, #ffffff);
+  background-color: var(--color-accent-background, #121212);
+  border: 1px solid var(--color-accent-background, #121212);
+}
+
+.hero__button--primary:hover,
+.hero__button--primary:focus-visible {
+  opacity: 0.85;
+}
+
+.hero__button--secondary {
+  color: currentColor;
+  background-color: transparent;
+  border: 1px solid currentColor;
+}
+
+.hero__button--secondary:hover,
+.hero__button--secondary:focus-visible {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.hero__button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ---- Focus states ---- */
+.hero :is(a, button):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ---- Stack content below media on mobile ---- */
+@media (max-width: 749px) {
+  .hero--stack-mobile {
+    flex-direction: column;
+    min-height: 0;
+    color: inherit;
+  }
+
+  .hero--stack-mobile .hero__media {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    aspect-ratio: var(--hero-aspect-ratio-mobile, 4 / 3);
+  }
+
+  .hero--stack-mobile .hero__content-wrapper {
+  position: relative;
+  z-index: 3;
+    padding: 1.75rem 1.5rem 2.25rem;
+  }
+
+  .hero--stack-mobile .hero__content {
+    max-width: 100%;
+  }
+
+  .hero--stack-mobile .hero__content--boxed {
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+  }
+
+  .hero--stack-mobile .hero__button--primary {
+    color: var(--color-accent-foreground, #ffffff);
+    background-color: var(--color-accent-background, #121212);
+    border-color: var(--color-accent-background, #121212);
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__video-toggle,
+  .hero__button {
+    transition: none;
+  }
+}

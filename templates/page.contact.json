@@ -1,0 +1,60 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "contact": {
+      "type": "contact",
+      "settings": {
+        "eyebrow": "Contact",
+        "heading": "We're here to help",
+        "text": "<p>Questions about orders, shipping, or products for your pets? Send a message and our team will reply within one business day.</p>",
+        "show_channels": true,
+        "email": "hello@example.com",
+        "hours": "Mon\u2013Fri, 9am\u20136pm",
+        "show_phone": true,
+        "show_topic": true,
+        "topics": "Orders,Shipping,Returns,Product help,Other",
+        "button_label": "Send message",
+        "privacy_note": "We only use your details to reply to this message."
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "How fast do you reply?",
+            "answer": "<p>We respond to most messages within one business day.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "Can I change or cancel an order?",
+            "answer": "<p>Contact us as soon as possible with your order number and we will help.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
+      "settings": {
+        "heading": "Before you write",
+        "subheading": "Quick answers"
+      }
+    }
+  },
+  "order": [
+    "contact",
+    "faq"
+  ]
+}

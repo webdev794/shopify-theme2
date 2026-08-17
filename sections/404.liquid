@@ -1,0 +1,163 @@
+{% comment %}
+  This section is used in the 404 template to render page shown when customers
+  enter an invalid store URL.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/404
+{% endcomment %}
+
+<div class="error-404 error-404__page-width">
+  {% if section.settings.image != blank %}
+    <div class="error-404__image">
+      {{
+        section.settings.image
+        | image_url: width: 600
+        | image_tag: loading: 'eager', widths: '300,450,600', alt: ''
+      }}
+    </div>
+  {% else %}
+    <p class="error-404__code" aria-hidden="true">404</p>
+  {% endif %}
+
+  <h1 class="error-404__title">{{ '404.title' | t }}</h1>
+  <p class="error-404__message">{{ '404.not_found' | t }}</p>
+
+  {% if section.settings.show_search %}
+    <form action="{{ routes.search_url }}" method="get" role="search" class="error-404__search">
+      <div class="error-404__search-input-wrapper">
+        <input
+          type="search"
+          name="q"
+          placeholder="{{ 'search.placeholder' | t }}"
+          class="error-404__search-input"
+          aria-label="{{ 'search.placeholder' | t }}"
+        >
+        <button type="submit" class="error-404__search-submit">
+          {{ 'search.submit' | t }}
+        </button>
+      </div>
+    </form>
+  {% endif %}
+
+  <div class="error-404__actions">
+    <a href="{{ routes.root_url }}" class="button button--secondary">
+      {{ '404.back_to_home' | t }}
+    </a>
+    <a href="{{ routes.all_products_collection_url }}" class="button button--primary">
+      {{ '404.back_to_shopping' | t }}
+    </a>
+  </div>
+</div>
+
+{% stylesheet %}
+  .error-404__page-width {
+    max-width: 32rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+    padding-block: 5rem 4rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .error-404__image {
+    max-width: 260px;
+    margin-bottom: 0.5rem;
+  }
+
+  .error-404__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .error-404__code {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-foreground-secondary, #ccc);
+    margin-bottom: 0.5rem;
+  }
+
+  .error-404__title {
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.9rem);
+  }
+
+  .error-404__message {
+    color: var(--color-foreground-secondary, #666);
+    max-width: 30ch;
+  }
+
+  .error-404__search {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .error-404__search-input-wrapper {
+    display: flex;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 0.4rem;
+    overflow: hidden;
+  }
+
+  .error-404__search-input-wrapper:focus-within {
+    border-color: var(--color-foreground, #1a1a1a);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground, #1a1a1a) 12%, transparent);
+  }
+
+  .error-404__search-input {
+    flex: 1;
+    border: none;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+  }
+
+  .error-404__search-input:focus {
+    outline: none;
+  }
+
+  .error-404__search-submit {
+    padding: 0.7rem 1.1rem;
+    border: none;
+    background: var(--color-foreground, #1a1a1a);
+    color: var(--color-background, #fff);
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .error-404__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .error-404__actions .button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.404",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.error_404.settings.image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:sections.error_404.settings.show_search.label",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

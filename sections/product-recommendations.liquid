@@ -1,0 +1,109 @@
+{% comment %}
+  Renders Shopify's native product recommendation engine
+  (the same algorithmic engine used by product_recommendations.json),
+  not a merchant-curated list. Must be lazy-loaded via JS after page load,
+  per Shopify's required implementation pattern, since the recommendations
+  object is only populated when the section is rendered through the
+  recommendations endpoint with a product_id param.
+  https://shopify.dev/docs/api/liquid/objects/recommendations
+{% endcomment %}
+
+{% if recommendations.performed %}
+  {% comment %} This branch renders when Shopify calls this same section via the recommendations endpoint {% endcomment %}
+  {% if recommendations.products_count > 0 %}
+    <div class="product-recommendations__grid">
+      {% for product in recommendations.products %}
+        <a href="{{ product.url }}" class="product-recommendations__card">
+          <div class="product-recommendations__media">
+            {% if product.featured_media %}
+              {{
+                product.featured_media
+                | image_url: width: 600
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '300,450,600',
+                  alt: product.featured_media.alt | default: product.title,
+                  class: 'product-recommendations__image'
+              }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'product-recommendations__placeholder' }}
+            {% endif %}
+          </div>
+          <p class="product-recommendations__title">{{ product.title }}</p>
+          <div class="product-recommendations__price">
+            {% if product.compare_at_price > product.price %}
+              <span class="price price--sale">{{ product.price | money }}</span>
+              <span class="price price--compare"><s>{{ product.compare_at_price | money }}</s></span>
+            {% else %}
+              <span class="price">{{ product.price | money }}</span>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% else %}
+  {% comment %} This branch renders on normal page load and lazy-loads the real recommendations above via JS {% endcomment %}
+  {% if section.settings.heading != blank %}
+    <h2 class="product-recommendations__heading page-width">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <product-recommendations
+    class="product-recommendations page-width"
+    data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}&intent={{ section.settings.intent }}"
+  >
+    <div class="product-recommendations__grid" data-recommendations-placeholder>
+      {% comment %} Skeleton placeholders shown while the real recommendation fetch is in flight {% endcomment %}
+      {% for i in (1..section.settings.products_to_show) %}
+        <div class="product-recommendations__skeleton"></div>
+      {% endfor %}
+    </div>
+  </product-recommendations>
+
+  <script src="{{ 'product-recommendations.js' | asset_url }}" defer="defer"></script>
+  {{ 'product-recommendations.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "tag": "section",
+  "class": "shopify-section--product-recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You may also like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Number of products to show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Recommendation type",
+      "options": [
+        { "value": "related", "label": "Related products" },
+        { "value": "complementary", "label": "Complementary products" }
+      ],
+      "default": "related",
+      "info": "'Related' uses Shopify's general similarity engine. 'Complementary' uses Shopify's pairing engine (requires Shopify Search & Discovery app for full accuracy)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product recommendations"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

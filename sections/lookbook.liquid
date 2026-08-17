@@ -1,0 +1,281 @@
+{{ 'lookbook.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'lookbook.js' | asset_url }}" defer></script>
+
+<section
+  class="petlio-lookbook"
+  data-section-type="lookbook"
+  data-section-id="{{ section.id }}"
+  style="
+    --lookbook-card-bg: {{ section.settings.color_card_background }};
+    --lookbook-card-fg: {{ section.settings.color_card_foreground }};
+  "
+>
+  <div class="petlio-lookbook__container">
+
+    <header class="petlio-lookbook__header">
+      <div class="petlio-lookbook__chapter">
+        <span class="petlio-lookbook__chapter-number">06</span>
+        <span class="petlio-lookbook__chapter-line"></span>
+        <span class="petlio-lookbook__chapter-label">SHOP / DISCOVER</span>
+      </div>
+
+      {% if section.settings.heading != blank %}
+        <h2 class="petlio-lookbook__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.text != blank %}
+        <div class="petlio-lookbook__intro">{{ section.settings.text }}</div>
+      {% endif %}
+    </header>
+
+
+    <div class="petlio-lookbook__scene">
+
+      <div class="petlio-lookbook__scene-background">
+        <div class="petlio-lookbook__arch"></div>
+        <div class="petlio-lookbook__sun"></div>
+        <div class="petlio-lookbook__floor"></div>
+        <div class="petlio-lookbook__shape petlio-lookbook__shape--one"></div>
+        <div class="petlio-lookbook__shape petlio-lookbook__shape--two"></div>
+
+        <div class="petlio-lookbook__plant petlio-lookbook__plant--left">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="petlio-lookbook__plant petlio-lookbook__plant--right">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      {%- liquid
+        assign lookbook_items = ''
+        assign featured_count = 0
+        for block in section.blocks
+          assign p = block.settings.product
+          if p != blank
+            assign v = p.selected_or_first_available_variant
+            if v != blank and v.available and v.id != blank
+              if lookbook_items != blank
+                assign lookbook_items = lookbook_items | append: ','
+              endif
+              assign lookbook_items = lookbook_items | append: v.id
+            endif
+          endif
+        endfor
+      -%}
+
+      <div class="petlio-lookbook__scene-copy">
+        <span class="petlio-lookbook__scene-kicker">ONE LOOK</span>
+        <span class="petlio-lookbook__scene-title">Everything together.</span>
+        <span class="petlio-lookbook__scene-note">Take the whole look home.</span>
+
+        {%- if lookbook_items != blank -%}
+          <button
+            type="button"
+            class="petlio-lookbook__add-all"
+            data-lookbook-add-all
+            data-variant-ids="{{ lookbook_items }}"
+          >
+            Add all products to cart
+          </button>
+        {%- endif -%}
+      </div>
+
+
+      <!-- Featured products inside the scene (first 2) -->
+      <div class="petlio-lookbook__scene-products">
+        {% assign featured_index = 0 %}
+        {% for block in section.blocks %}
+          {% assign product = block.settings.product %}
+          {% if product != blank and featured_index < 2 %}
+            <div class="petlio-lookbook__scene-card" {{ block.shopify_attributes }}>
+              <a href="{{ product.url }}" class="petlio-lookbook__scene-card-image">
+                {% if product.featured_image %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 400
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '200, 300, 400',
+                      sizes: '140px',
+                      alt: product.title
+                  }}
+                {% endif %}
+              </a>
+              <div class="petlio-lookbook__scene-card-content">
+                <h3 class="petlio-lookbook__scene-card-title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                <div class="petlio-lookbook__scene-card-price">{{ product.price | money }}</div>
+                <button
+                  type="button"
+                  class="petlio-lookbook__add-btn petlio-lookbook__add-btn--small"
+                  data-lookbook-add
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                >
+                  {% if product.selected_or_first_available_variant.available %}
+                    Add to cart
+                  {% else %}
+                    Sold out
+                  {% endif %}
+                </button>
+              </div>
+            </div>
+            {% assign featured_index = featured_index | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+
+      {% if section.blocks.size == 0 %}
+        <div class="petlio-lookbook__empty">
+          <span>06</span>
+          <p>Add products to create your shoppable look.</p>
+        </div>
+      {% endif %}
+
+      <div class="petlio-lookbook__scene-footer">
+        <span class="petlio-lookbook__footer-line"></span>
+        <span>Made for the moments in between.</span>
+        <span class="petlio-lookbook__footer-line"></span>
+      </div>
+
+    </div>
+
+
+    <!-- Remaining products in the grid below -->
+    <div class="petlio-lookbook__product-grid">
+      {% assign grid_index = 0 %}
+      {% for block in section.blocks %}
+        {% assign product = block.settings.product %}
+        {% if product != blank %}
+          {% if grid_index >= 2 %}
+            <div class="petlio-lookbook__product-card" {{ block.shopify_attributes }}>
+              <a href="{{ product.url }}" class="petlio-lookbook__product-card-image">
+                {% if product.featured_image %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 600
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '300, 400, 500, 600',
+                      sizes: '(max-width: 749px) 40vw, 220px',
+                      alt: product.title
+                  }}
+                {% endif %}
+              </a>
+              <div class="petlio-lookbook__product-card-content">
+                {% if product.vendor != blank %}
+                  <span class="petlio-lookbook__product-card-vendor">{{ product.vendor }}</span>
+                {% endif %}
+                <h3 class="petlio-lookbook__product-card-title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                <div class="petlio-lookbook__product-card-price">{{ product.price | money }}</div>
+                <div class="petlio-lookbook__product-card-actions">
+                  <button
+                    type="button"
+                    class="petlio-lookbook__add-btn"
+                    data-lookbook-add
+                    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                    {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                  >
+                    {% if product.selected_or_first_available_variant.available %}
+                      Add to cart
+                    {% else %}
+                      Sold out
+                    {% endif %}
+                  </button>
+                  <a class="petlio-lookbook__product-link" href="{{ product.url }}">
+                    View <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          {% assign grid_index = grid_index | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+
+    <footer class="petlio-lookbook__bottom">
+      <div class="petlio-lookbook__bottom-number">06</div>
+      <p>
+        Find something they love.
+        <strong>Make it part of their everyday.</strong>
+      </p>
+      <span class="petlio-lookbook__bottom-arrow">↓</span>
+    </footer>
+
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "Shoppable Lookbook",
+  "tag": "section",
+  "class": "section-shoppable-lookbook",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p><em>Take the whole look home.</em></p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "color",
+      "id": "color_card_background",
+      "label": "Product card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_card_foreground",
+      "label": "Product card text",
+      "default": "#121212"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shoppable Lookbook",
+      "blocks": [
+        { "type": "hotspot" },
+        { "type": "hotspot" }
+      ]
+    }
+  ]
+}
+{% endschema %}

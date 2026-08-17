@@ -1,0 +1,136 @@
+/* ==========================================================================
+   PETLIO — SCROLL BIRD
+   Realistic songbird that flies on the right while scrolling,
+   and perches on section lines when the page is still.
+   ========================================================================== */
+
+#scroll-bird-root {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  z-index: 40;
+  pointer-events: none;
+  contain: layout style;
+}
+
+#scroll-bird {
+  position: fixed;
+  right: clamp(12px, 2.4vw, 36px);
+  width: 56px;
+  height: 48px;
+  margin: 0;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition: none;
+  z-index: 41;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#scroll-bird.is-ready {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+#scroll-bird.is-flying .scroll-bird__wing {
+  animation: scroll-bird-flap 0.18s ease-in-out infinite alternate;
+}
+
+#scroll-bird.is-landing .scroll-bird__wing {
+  animation: scroll-bird-settle 0.45s ease-out forwards;
+}
+
+#scroll-bird.is-perched .scroll-bird__wing {
+  animation: none;
+  transform: rotate(8deg);
+}
+
+#scroll-bird.is-perched .scroll-bird__body {
+  transform: translateY(2px);
+}
+
+#scroll-bird svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 8px rgba(39, 48, 40, 0.18));
+}
+
+.scroll-bird__wing {
+  transform-origin: 28px 22px;
+  transform-box: fill-box;
+}
+
+.scroll-bird__body {
+  transition: transform 0.35s ease;
+}
+
+@keyframes scroll-bird-flap {
+  from {
+    transform: rotate(-18deg);
+  }
+  to {
+    transform: rotate(28deg);
+  }
+}
+
+@keyframes scroll-bird-settle {
+  0% {
+    transform: rotate(22deg);
+  }
+  60% {
+    transform: rotate(-6deg);
+  }
+  100% {
+    transform: rotate(8deg);
+  }
+}
+
+/* Decorative perch lines injected on sections (right edge) */
+.scroll-bird-perch {
+  position: absolute;
+  right: 0;
+  top: 18%;
+  width: clamp(48px, 8vw, 96px);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 35%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.scroll-bird-perch::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--petlio-accent, #71806d);
+  opacity: 0.45;
+  box-shadow: 0 0 0 2px var(--petlio-paper, #f7f3eb);
+}
+
+.shopify-section {
+  position: relative;
+}
+
+/* Hide on small screens / reduced motion / coarse pointers */
+@media (max-width: 989px),
+  (pointer: coarse),
+  (prefers-reduced-motion: reduce) {
+  #scroll-bird-root,
+  #scroll-bird,
+  .scroll-bird-perch {
+    display: none !important;
+  }
+}

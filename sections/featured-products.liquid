@@ -1,0 +1,424 @@
+{% comment %}
+  Petlio — Everyday Essentials
+  Section 03 / the bridge from discovering their world to shopping what belongs in it.
+{% endcomment %}
+
+{{ 'featured-products.css' | asset_url | stylesheet_tag: preload: true }}
+
+<section
+  class="featured-products"
+  data-section-id="{{ section.id }}"
+  data-section-type="featured-products"
+  data-layout="{{ section.settings.layout }}"
+  data-products-per-row="{{ section.settings.products_per_row }}"
+  data-text-adding="{{ 'sections.featured_products.adding' | t }}"
+  data-text-added="{{ 'sections.featured_products.added' | t }}"
+  data-text-error="{{ 'sections.featured_products.error' | t }}"
+  data-text-added-notice="{{ 'sections.featured_products.added_notice' | t }}"
+  role="region"
+  aria-label="{{ section.settings.aria_label | default: 'Everyday essentials' | escape }}"
+  style="
+    --fp-bg: {{ section.settings.background_color }};
+    --fp-text-color: {{ section.settings.text_color }};
+    --fp-heading-color: {{ section.settings.heading_color }};
+    --fp-card-bg: {{ section.settings.card_background }};
+    --fp-card-shadow: {{ section.settings.card_shadow }};
+    --fp-border-radius: {{ section.settings.border_radius }}px;
+    --fp-gap: {{ section.settings.gap }}px;
+    --fp-products-per-row: {{ section.settings.products_per_row }};
+  "
+>
+  <div class="featured-products__story-shape" aria-hidden="true"></div>
+
+  <div class="featured-products__container{% if section.settings.full_width %} featured-products__container--full{% endif %}">
+
+    <div class="featured-products__header">
+      {%- if section.settings.chapter_number != blank or section.settings.chapter_label != blank -%}
+        <div class="featured-products__chapter" aria-hidden="true">
+          {%- if section.settings.chapter_number != blank -%}
+            <span class="featured-products__chapter-number">{{ section.settings.chapter_number | escape }}</span>
+          {%- endif -%}
+          <span class="featured-products__chapter-line"></span>
+          {%- if section.settings.chapter_label != blank -%}
+            <span>{{ section.settings.chapter_label | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="featured-products__header-main">
+        {%- if section.settings.subheading != blank -%}
+          <p class="featured-products__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="featured-products__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="featured-products__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="featured-products__header-aside">
+        <span class="featured-products__paw" aria-hidden="true">🐾</span>
+        {%- if section.settings.show_view_all and section.settings.view_all_link != blank -%}
+          <a href="{{ section.settings.view_all_link }}" class="featured-products__view-all featured-products__view-all--top">
+            {{ section.settings.view_all_text | default: 'Explore everything' | escape }}
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M13 5L21 12L13 19V14H3V10H13V5Z"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="featured-products__bridge" aria-hidden="true">
+      <span class="featured-products__bridge-dot"></span>
+      <span class="featured-products__bridge-line"></span>
+      <span class="featured-products__bridge-copy">Picked for everyday moments</span>
+      <span class="featured-products__bridge-line"></span>
+      <span class="featured-products__bridge-dot"></span>
+    </div>
+
+    <div class="featured-products__grid-wrapper">
+      <div class="featured-products__grid{% if section.settings.layout == 'carousel' %} featured-products__grid--carousel{% endif %}"
+           role="list"
+           data-fp-grid>
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'product' -%}
+              {%- if block.settings.product != blank -%}
+                <div class="featured-products__item featured-products__item--{{ forloop.index }}"
+                     role="listitem"
+                     {{ block.shopify_attributes }}>
+                  {%- render 'featured-products',
+                      product: block.settings.product,
+                      show_vendor: section.settings.show_vendor,
+                      show_rating: section.settings.show_rating,
+                      show_quick_add: section.settings.show_quick_add,
+                      show_compare_at: section.settings.show_compare_at,
+                      image_size: section.settings.image_size,
+                      card_style: section.settings.card_style -%}
+                </div>
+              {%- else -%}
+                <div class="featured-products__item featured-products__item--placeholder featured-products__item--{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
+                  <div class="product-card product-card--{{ section.settings.card_style }}">
+                    <div class="product-card__image-wrapper product-card__image-wrapper--{{ section.settings.image_size }}">
+                      <div class="product-card__image-placeholder">
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      </div>
+                      {%- if section.settings.show_compare_at -%}
+                        <div class="product-card__badges">
+                          <span class="product-card__badge product-card__badge--sale">{{ 'products.product.on_sale' | t }}</span>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                    <div class="product-card__info">
+                      {%- if section.settings.show_vendor -%}<p class="product-card__vendor">Sample Vendor</p>{%- endif -%}
+                      <p class="product-card__title">Sample Product</p>
+                      {%- if section.settings.show_rating -%}
+                        <div class="product-card__rating">
+                          <span class="product-card__stars" aria-hidden="true">
+                            {%- for i in (1..4) -%}<svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>{%- endfor -%}
+                            <svg class="empty" viewBox="0 0 24 24"><path d="M22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21.02L12 17.27L18.18 21.02L16.54 13.97L22 9.24ZM12 15.4V6.1L13.71 10.13L18.09 10.5L14.77 13.39L15.76 17.67L12 15.4Z"/></svg>
+                          </span>
+                          <span class="product-card__rating-count">(12)</span>
+                        </div>
+                      {%- endif -%}
+                      <div class="product-card__price{% if section.settings.show_compare_at %} product-card__price--sale{% endif %}">
+                        <span class="product-card__price-current">{{ 4999 | money }}</span>
+                        {%- if section.settings.show_compare_at -%}<span class="product-card__price-compare">{{ 6999 | money }}</span>{%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+
+            {%- when '@app' -%}
+              <div class="featured-products__item featured-products__item--app" role="listitem" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+
+            {%- when 'custom_liquid' -%}
+              <div class="featured-products__item featured-products__item--custom-liquid" role="listitem" {{ block.shopify_attributes }}>
+                {{ block.settings.custom_liquid }}
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.layout == 'carousel' and section.blocks.size > 1 -%}
+      <div class="featured-products__carousel-nav" data-fp-nav hidden>
+        <button class="featured-products__carousel-btn featured-products__carousel-btn--prev" type="button" aria-label="{{ 'sections.featured_products.previous' | t }}" data-fp-prev>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"/></svg>
+        </button>
+        <button class="featured-products__carousel-btn featured-products__carousel-btn--next" type="button" aria-label="{{ 'sections.featured_products.next' | t }}" data-fp-next>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12L10 6Z"/></svg>
+        </button>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_view_all and section.settings.view_all_link == blank -%}
+      <div class="featured-products__footer">
+        <a href="{{ routes.all_products_collection_url }}" class="featured-products__view-all featured-products__view-all--centered">
+          {{ section.settings.view_all_text | default: 'Explore everything' | escape }}
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 5L21 12L13 19V14H3V10H13V5Z"/></svg>
+        </a>
+      </div>
+    {%- endif -%}
+
+    <div class="featured-products__end-note" aria-hidden="true">
+      <span>Good things for the moments that make them, them.</span>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'featured-products.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "t:sections.featured_products.name",
+  "tag": "section",
+  "class": "featured-products-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "t:sections.featured_products.settings.header__1.content" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.featured_products.settings.layout.label",
+      "default": "grid",
+      "options": [
+        { "value": "grid", "label": "t:sections.featured_products.settings.layout.options__1.label" },
+        { "value": "carousel", "label": "t:sections.featured_products.settings.layout.options__2.label" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "t:sections.featured_products.settings.products_per_row.label",
+      "default": "4",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "info": "t:sections.featured_products.settings.products_per_row.info"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:sections.featured_products.settings.gap.label",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:sections.featured_products.settings.border_radius.label",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 8,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.featured_products.settings.full_width.label",
+      "default": false,
+      "info": "t:sections.featured_products.settings.full_width.info"
+    },
+    { "type": "header", "content": "t:sections.featured_products.settings.header__2.content" },
+    {
+      "type": "text",
+      "id": "chapter_number",
+      "label": "Chapter number",
+      "default": "03"
+    },
+    {
+      "type": "text",
+      "id": "chapter_label",
+      "label": "Chapter label",
+      "default": "Everyday"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.featured_products.settings.heading.label",
+      "default": "Everything they need for everyday life."
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:sections.featured_products.settings.subheading.label",
+      "default": "Made for their everyday"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:sections.featured_products.settings.description.label",
+      "default": "<p>From playtime to quiet moments, these are the things that naturally belong in their world.</p>"
+    },
+    { "type": "header", "content": "t:sections.featured_products.settings.header__3.content" },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "t:sections.featured_products.settings.show_view_all.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "t:sections.featured_products.settings.view_all_text.label",
+      "default": "Explore everything"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "t:sections.featured_products.settings.view_all_link.label",
+      "info": "t:sections.featured_products.settings.view_all_link.info"
+    },
+    { "type": "header", "content": "t:sections.featured_products.settings.header__4.content" },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "t:sections.featured_products.settings.show_vendor.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "t:sections.featured_products.settings.show_rating.label",
+      "default": true,
+      "info": "t:sections.featured_products.settings.show_rating.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "t:sections.featured_products.settings.show_quick_add.label",
+      "default": true,
+      "info": "t:sections.featured_products.settings.show_quick_add.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_at",
+      "label": "t:sections.featured_products.settings.show_compare_at.label",
+      "default": true,
+      "info": "t:sections.featured_products.settings.show_compare_at.info"
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "label": "t:sections.featured_products.settings.image_size.label",
+      "default": "medium",
+      "options": [
+        { "value": "small", "label": "t:sections.featured_products.settings.image_size.options__1.label" },
+        { "value": "medium", "label": "t:sections.featured_products.settings.image_size.options__2.label" },
+        { "value": "large", "label": "t:sections.featured_products.settings.image_size.options__3.label" }
+      ],
+      "info": "t:sections.featured_products.settings.image_size.info"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "t:sections.featured_products.settings.card_style.label",
+      "default": "standard",
+      "options": [
+        { "value": "standard", "label": "t:sections.featured_products.settings.card_style.options__1.label" },
+        { "value": "compact", "label": "t:sections.featured_products.settings.card_style.options__2.label" },
+        { "value": "minimal", "label": "t:sections.featured_products.settings.card_style.options__3.label" }
+      ]
+    },
+    { "type": "header", "content": "t:sections.featured_products.settings.header__5.content" },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.featured_products.settings.background_color.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.featured_products.settings.text_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "t:sections.featured_products.settings.heading_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:sections.featured_products.settings.card_background.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_shadow",
+      "label": "t:sections.featured_products.settings.card_shadow.label",
+      "default": "rgba(0, 0, 0, 0.1)"
+    },
+    { "type": "header", "content": "t:sections.featured_products.settings.header__6.content" },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "t:sections.featured_products.settings.aria_label.label",
+      "default": "Everyday essentials"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "t:sections.featured_products.blocks.product.name",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.featured_products.blocks.product.settings.product.label"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:sections.custom_liquid.name",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "t:sections.custom_liquid.settings.custom_liquid.label"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.featured_products.presets.name",
+      "category": "Collection",
+      "settings": {
+        "heading": "Featured Products",
+        "subheading": "Our Best Sellers",
+        "products_per_row": "4",
+        "layout": "grid"
+      },
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
+    }
+  ]
+}
+{% endschema %}

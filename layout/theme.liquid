@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% render 'meta-tags' %}
+    {% render 'css-variables' %}
+    {% unless settings.type_primary_font.system? %}
+      {% # theme-check-disable RemoteAsset %}
+      <link rel="preconnect" href="//fonts.shopifycdn.com" crossorigin>
+      {% # theme-check-enable RemoteAsset %}
+    {% endunless %}
+    {{ 'critical.css' | asset_url | stylesheet_tag }}
+    {{ 'petlio-theme.css' | asset_url | stylesheet_tag }}
+    {{ 'buttons.css' | asset_url | stylesheet_tag }}
+    {{ 'unit-price.css' | asset_url | stylesheet_tag }}
+    {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
+    {{ 'dog-cursor.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-bird.css' | asset_url | stylesheet_tag }}
+    {{ 'petlio-toast.css' | asset_url | stylesheet_tag }}
+    {% if request.page_type == 'index' %}
+      {{ 'petlio-story.css' | asset_url | stylesheet_tag }}
+    {% endif %}
+    {{ content_for_header }}
+    {% # theme-check-disable RemoteAsset %}
+    <script src="//cdn.shopify.com/shopifycloud/shop-js/shop-installments.js" defer></script>
+    {% # theme-check-enable RemoteAsset %}
+    <script>
+      window.theme = window.theme || {};
+      window.theme.moneyFormat = {{ shop.money_format | json }};
+    </script>
+    <script src="{{ 'theme-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'dog-cursor.js' | asset_url }}" defer></script>
+    <script src="{{ 'scroll-bird.js' | asset_url }}" defer></script>
+    <script src="{{ 'petlio-toast.js' | asset_url }}" defer></script>
+    {% if request.page_type == 'index' %}
+      <script src="{{ 'petlio-story.js' | asset_url }}" defer></script>
+    {% endif %}
+    <style>
+      html, body { min-height: 100vh !important; min-height: 100dvh !important; }
+      .shopify-section-group-footer-group { position: relative !important; }
+      #PBarNextFrameWrapper { display: none !important; }
+    </style>
+  </head>
+  <body
+    class="template-{{ request.page_type }}{% if request.page_type == 'index' %} template-index{% endif %}{% if request.page_type == 'index' and settings.enable_paper_slide %} petlio-paper-slide{% endif %}"
+    style="{% if settings.paper_slide_intensity %}--petlio-paper-slide: {{ settings.paper_slide_intensity | divided_by: 100.0 }};{% endif %}"
+  >
+    <a class="skip-link visually-hidden-focusable" href="#MainContent">
+      {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
+    </a>
+    {% sections 'header-group' %}
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    {% sections 'footer-group' %}
+    {% render 'quick-view-modal' %}
+  </body>
+</html>
+
+

@@ -1,0 +1,834 @@
+{% comment %}
+  Renders the main product section: media gallery, product information,
+  and add-to-cart form. Content is block-based so merchants can reorder,
+  hide, or configure each piece from the theme editor.
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+{% endcomment %}
+
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+%}
+
+<section
+  class="product product--media-{{ section.settings.media_position }}"
+  id="product-{{ section.id }}"
+>
+  <div class="product__container page-width">
+
+    {% comment %} ---------- MEDIA GALLERY ---------- {% endcomment %}
+    {% capture media_block %}
+    <div class="product__media">
+      {% if product.media.size > 0 %}
+        <div class="product__media-main" id="product-media-main-{{ section.id }}">
+          {% for media in product.media %}
+            {% liquid
+              if forloop.first
+                assign media_loading = 'eager'
+                assign media_fetchpriority = 'high'
+              else
+                assign media_loading = 'lazy'
+                assign media_fetchpriority = 'auto'
+              endif
+            %}
+            <div
+              class="product__media-item{% if media == featured_media %} is-active{% endif %}"
+              id="media-{{ section.id }}-{{ media.id }}"
+              data-media-id="{{ media.id }}"
+            >
+              {% case media.media_type %}
+                {% when 'image' %}
+                  {{
+                    media
+                    | image_url: width: 1600
+                    | image_tag:
+                      loading: media_loading,
+                      fetchpriority: media_fetchpriority,
+                      widths: '400,600,800,1000,1200,1600',
+                      sizes: '(min-width: 750px) 50vw, 100vw',
+                      alt: media.alt | default: product.title,
+                      class: 'product__media-image'
+                  }}
+                {% when 'video', 'external_video' %}
+                  {{ media | media_tag: image_size: '1600x', controls: true }}
+                {% when 'model' %}
+                  {{ media | media_tag: image_size: '1600x' }}
+                {% else %}
+                  {{ media | media_tag }}
+              {% endcase %}
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if product.media.size > 1 %}
+          <div class="product__media-thumbs" aria-label="{{ product.title }} media">
+            {% for media in product.media %}
+              <a
+                href="#media-{{ section.id }}-{{ media.id }}"
+                class="product__media-thumb{% if media == featured_media %} is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                {% if media == featured_media %}aria-current="true"{% endif %}
+                aria-label="{{ 'products.product.media.load_image' | t: index: forloop.index }}"
+              >
+                {{
+                  media.preview_image
+                  | image_url: width: 200
+                  | image_tag: alt: '', loading: 'lazy', widths: '100,150,200'
+                }}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="product__media-placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+    {% endcapture %}
+
+    {% comment %} ---------- PRODUCT INFO ---------- {% endcomment %}
+    {% capture info_block %}
+    <div class="product__info">
+      {% for block in section.blocks %}
+        {% case block.type %}
+
+          {% when 'vendor' %}
+            {% if product.vendor != blank %}
+              <p class="product__vendor" {{ block.shopify_attributes }}>{{ product.vendor }}</p>
+            {% endif %}
+
+          {% when 'title' %}
+            <h1 class="product__title" {{ block.shopify_attributes }}>{{ product.title }}</h1>
+
+          {% when 'price' %}
+            <div
+              class="product__price"
+              id="product-price-{{ section.id }}"
+              data-unit-price="{{ current_variant.price }}"
+              data-money-format="{{ shop.money_format | escape }}"
+              {{ block.shopify_attributes }}
+            >
+              {% if current_variant.compare_at_price > current_variant.price %}
+                <span class="price price--sale">
+                  <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+                  {{ current_variant.price | money }}
+                </span>
+                <span class="price price--compare">
+                  <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+                  <s>{{ current_variant.compare_at_price | money }}</s>
+                </span>
+              {% else %}
+                <span class="price">{{ current_variant.price | money }}</span>
+              {% endif %}
+            </div>
+            {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+              <p class="product__tax-note">
+                {%- if cart.taxes_included -%}
+                  {{ 'products.product.price.tax_included' | t | default: 'Tax included.' }}
+                {%- endif -%}
+                {%- if shop.shipping_policy.body != blank -%}
+                  {{ 'products.product.price.shipping_policy_html' | t: link: shop.shipping_policy.url | default: 'Shipping calculated at checkout.' }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+            <div id="unit-price-{{ section.id }}">
+              {% render 'unit-price', object: current_variant %}
+            </div>
+
+            {% comment %}
+              Server-rendered variant + selling plan data (including
+              pre-formatted money strings) so the JS never has to reimplement
+              money formatting. Rendered here (not in variant_picker) so it's
+              available even for single-variant products that only have
+              selling plans, with no variant picker on the page at all.
+            {% endcomment %}
+            <script type="application/json" id="product-variants-{{ section.id }}" data-product-variants>
+              [
+                {% for variant in product.variants %}
+                  {%- assign has_unit_pricing = false -%}
+                  {%- if variant.unit_price_measurement -%}
+                    {%- assign has_unit_pricing = true -%}
+                  {%- endif -%}
+                  {
+                    "id": {{ variant.id | json }},
+                    "available": {{ variant.available | json }},
+                    "options": {{ variant.options | json }},
+                    "price": {{ variant.price | json }},
+                    "compare_at_price": {{ variant.compare_at_price | json }},
+                    "price_formatted": {{ variant.price | money | json }},
+                    "compare_at_price_formatted": {{ variant.compare_at_price | money | json }},
+                    "unit_price_formatted": {{ variant.unit_price | money | json }},
+                    "unit_price_reference_value": {{ variant.unit_price_measurement.reference_value | json }},
+                    "unit_price_reference_unit": {{ variant.unit_price_measurement.reference_unit | json }},
+                    "has_unit_pricing": {{ has_unit_pricing | json }},
+                    "featured_media_id": {{ variant.featured_media.id | json }},
+                    "selling_plan_allocations": [
+                      {% for allocation in variant.selling_plan_allocations %}
+                        {
+                          "selling_plan_id": {{ allocation.selling_plan.id | json }},
+                          "price_formatted": {{ allocation.price | money | json }},
+                          "compare_at_price_formatted": {{ allocation.compare_at_price | money | json }}
+                        }{% unless forloop.last %},{% endunless %}
+                      {% endfor %}
+                    ]
+                  }{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              ]
+            </script>
+
+          {% when 'description' %}
+            {% if product.description != blank %}
+              <div class="product__description rte" {{ block.shopify_attributes }}>
+                {{ product.description }}
+              </div>
+            {% endif %}
+
+          {% when 'variant_picker' %}
+            {% if product.has_only_default_variant == false %}
+              {% if block.settings.picker_style == 'pets' %}
+                <div {{ block.shopify_attributes }}>
+                  {% assign product_form_id = 'product-form-' | append: section.id %}
+                  {% render 'variant-picker-pets', product: product, section: section, product_form_id: product_form_id %}
+                </div>
+              {% else %}
+              <variant-selects
+                class="product__variants"
+                data-section-id="{{ section.id }}"
+                {{ block.shopify_attributes }}
+              >
+                {% for option in product.options_with_values %}
+                  <fieldset class="product__option">
+                    <legend class="product__option-name">
+                      {{ option.name }}:
+                      <span data-selected-value>{{ option.selected_value }}</span>
+                    </legend>
+                    <div class="product__option-values{% if option.values.first.swatch %} product__option-values--swatches{% endif %}">
+                      {% for value in option.values %}
+                        {% liquid
+                          assign input_id = 'option-' | append: section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0
+                        %}
+                        <input
+                          type="radio"
+                          id="{{ input_id }}"
+                          name="option-{{ section.id }}-{{ option.position }}"
+                          value="{{ value.name | escape }}"
+                          {% if value.selected %}checked{% endif %}
+                          class="visually-hidden product__option-input"
+                        >
+                        {% if value.swatch.image %}
+                          <label
+                            for="{{ input_id }}"
+                            class="product__option-label product__option-label--swatch{% unless value.available %} product__option-label--unavailable{% endunless %}"
+                            title="{{ value.name | escape }}"
+                          >
+                            <span class="product__swatch">
+                              {{
+                                value.swatch.image
+                                | image_url: width: 60
+                                | image_tag: loading: 'lazy', alt: value.name, width: 30, height: 30, class: 'product__swatch-image'
+                              }}
+                            </span>
+                            <span class="visually-hidden">{{ value.name }}</span>
+                          </label>
+                        {% elsif value.swatch.color %}
+                          <label
+                            for="{{ input_id }}"
+                            class="product__option-label product__option-label--swatch{% unless value.available %} product__option-label--unavailable{% endunless %}"
+                            title="{{ value.name | escape }}"
+                          >
+                            <span class="product__swatch" style="background-color: {{ value.swatch.color }};"></span>
+                            <span class="visually-hidden">{{ value.name }}</span>
+                          </label>
+                        {% else %}
+                          <label
+                            for="{{ input_id }}"
+                            class="product__option-label{% unless value.available %} product__option-label--unavailable{% endunless %}"
+                          >
+                            {{ value.name }}
+                          </label>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                {% endfor %}
+              </variant-selects>
+              {% endif %}
+            {% endif %}
+
+          {% when 'selling_plan_selector' %}
+            {% if product.selling_plan_groups.size > 0 %}
+              <div class="product__selling-plans" id="selling-plans-{{ section.id }}" data-selling-plans {{ block.shopify_attributes }}>
+                {% unless product.requires_selling_plan %}
+                  <fieldset class="product__selling-plan-group">
+                    <legend class="product__option-name">{{ 'products.product.purchase_option' | t }}</legend>
+                    <div class="product__selling-plan-values">
+                      <label class="product__selling-plan-option">
+                        <input
+                          type="radio"
+                          name="selling_plan-{{ section.id }}"
+                          value=""
+                          {% unless product.selected_selling_plan %}checked{% endunless %}
+                          data-selling-plan-radio
+                        >
+                        {{ 'products.product.one_time_purchase' | t }}
+                      </label>
+                    </div>
+                  </fieldset>
+                {% endunless %}
+
+                {% assign selling_plan_selected = false %}
+                {% if product.selected_selling_plan %}
+                  {% assign selling_plan_selected = true %}
+                {% endif %}
+                {% for group in product.selling_plan_groups %}
+                  <fieldset class="product__selling-plan-group">
+                    <legend class="product__option-name">{{ group.name }}</legend>
+                    <div class="product__selling-plan-values">
+                      {% for selling_plan in group.selling_plans %}
+                        {% liquid
+                          assign force_check = false
+                          if product.requires_selling_plan and selling_plan_selected == false
+                            assign force_check = true
+                            assign selling_plan_selected = true
+                          endif
+                        %}
+                        <label class="product__selling-plan-option">
+                          <input
+                            type="radio"
+                            name="selling_plan-{{ section.id }}"
+                            value="{{ selling_plan.id }}"
+                            {% if product.selected_selling_plan.id == selling_plan.id or force_check %}checked{% endif %}
+                            data-selling-plan-radio
+                          >
+                          {{ selling_plan.name }}
+                          {% if selling_plan.description != blank %}
+                            <span class="product__selling-plan-description">{{ selling_plan.description }}</span>
+                          {% endif %}
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </fieldset>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+          {% when 'quantity_selector' %}
+            <div class="product__quantity" data-section-id="{{ section.id }}" {{ block.shopify_attributes }}>
+              <label for="quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
+              <div class="quantity-input">
+                <button
+                  type="button"
+                  class="quantity-input__button"
+                  data-quantity-decrease
+                  aria-label="{{ 'products.product.quantity.decrease' | t }}"
+                >&minus;</button>
+                <input
+                  type="number"
+                  id="quantity-{{ section.id }}"
+                  name="quantity"
+                  form="product-form-{{ section.id }}"
+                  value="1"
+                  min="1"
+                  {% if current_variant.quantity_rule.max != null %}
+                    max="{{ current_variant.quantity_rule.max }}"
+                  {% endif %}
+                  step="{{ current_variant.quantity_rule.increment | default: 1 }}"
+                >
+                <button
+                  type="button"
+                  class="quantity-input__button"
+                  data-quantity-increase
+                  aria-label="{{ 'products.product.quantity.increase' | t }}"
+                >+</button>
+              </div>
+              <p class="product__price-total" data-price-total hidden>
+                {{ 'products.product.price.total' | t }}
+                <span data-price-total-amount></span>
+              </p>
+            </div>
+
+          {% when 'complementary_products' %}
+            {% if block.settings.enable_complementary_products %}
+              <div
+                class="product__complementary"
+                data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ block.settings.complementary_products_count }}&intent=complementary"
+                {{ block.shopify_attributes }}
+              >
+                <p class="product__complementary-heading">
+                  {{ block.settings.complementary_heading | default: 'Pairs well with' }}
+                </p>
+                <div class="product__complementary-grid" data-complementary-placeholder>
+                  {% for i in (1..block.settings.complementary_products_count) %}
+                    <div class="product-recommendations__skeleton"></div>
+                  {% endfor %}
+                </div>
+              </div>
+              <script src="{{ 'complementary-products.js' | asset_url }}" defer></script>
+              {{ 'product-recommendations.css' | asset_url | stylesheet_tag }}
+              {{ 'complementary-products.css' | asset_url | stylesheet_tag }}
+            {% endif %}
+
+          {% when 'pickup_availability' %}
+            {% if block.settings.enable_pickup_availability %}
+              {% liquid
+                assign pickup_locations = current_variant.store_availabilities | where: 'pick_up_enabled', true
+                assign available_text = block.settings.available_text | default: 'Pickup available at'
+                assign unavailable_text = block.settings.unavailable_text | default: 'Pickup currently unavailable at'
+                assign no_pickup_text = block.settings.no_pickup_text | default: 'Pickup currently unavailable for this item'
+                assign view_all_text = block.settings.view_all_text | default: 'View store info'
+                assign modal_title = block.settings.modal_title | default: 'Store availability'
+              %}
+              <div
+                class="pickup-availability"
+                id="pickup-availability-{{ section.id }}"
+                data-section-id="{{ section.id }}"
+                data-available-text="{{ available_text | escape }}"
+                data-unavailable-text="{{ unavailable_text | escape }}"
+                data-no-pickup-text="{{ no_pickup_text | escape }}"
+                data-view-all-text="{{ view_all_text | escape }}"
+                {{ block.shopify_attributes }}
+              >
+                <div class="pickup-availability__body" data-pickup-body>
+                  {% if pickup_locations.size > 0 %}
+                    {% assign first_pickup = pickup_locations.first %}
+                    <span class="pickup-availability__icon{% if first_pickup.available %} pickup-availability__icon--available{% else %} pickup-availability__icon--unavailable{% endif %}">
+                      {% if first_pickup.available %}
+                        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.7 5.3a1 1 0 010 1.4l-8 8a1 1 0 01-1.4 0l-4-4a1 1 0 111.4-1.4L8 12.6l7.3-7.3a1 1 0 011.4 0z" fill="currentColor"/></svg>
+                      {% else %}
+                        <svg viewBox="0 0 20 20" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                      {% endif %}
+                    </span>
+                    <span class="pickup-availability__text">
+                      <span class="pickup-availability__status">
+                        {% if first_pickup.available %}
+                          {{ available_text }} {{ first_pickup.location.name }}
+                        {% else %}
+                          {{ unavailable_text }} {{ first_pickup.location.name }}
+                        {% endif %}
+                      </span>
+                      <span class="pickup-availability__time">{{ first_pickup.pick_up_time }}</span>
+                      {% if pickup_locations.size > 1 %}
+                        <button type="button" class="pickup-availability__link" data-pickup-modal-open>
+                          {{ view_all_text }}
+                        </button>
+                      {% endif %}
+                    </span>
+                  {% else %}
+                    <span class="pickup-availability__none">{{ no_pickup_text }}</span>
+                  {% endif %}
+                </div>
+
+                <script type="application/json" data-pickup-variants>
+                  [
+                    {% for variant in product.variants %}
+                      {% assign variant_pickups = variant.store_availabilities | where: 'pick_up_enabled', true %}
+                      {
+                        "id": {{ variant.id | json }},
+                        "locations": [
+                          {% for pickup in variant_pickups %}
+                            {
+                              "name": {{ pickup.location.name | json }},
+                              "address": {{ pickup.location.address.summary | json }},
+                              "available": {{ pickup.available | json }},
+                              "pickup_time": {{ pickup.pick_up_time | json }}
+                            }{% unless forloop.last %},{% endunless %}
+                          {% endfor %}
+                        ]
+                      }{% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                  ]
+                </script>
+
+                <pickup-availability-modal class="pickup-availability-modal" hidden data-pickup-modal>
+                  <div class="pickup-availability-modal__overlay" data-pickup-modal-close></div>
+                  <div class="pickup-availability-modal__dialog" role="dialog" aria-modal="true" aria-label="{{ modal_title | escape }}">
+                    <button type="button" class="pickup-availability-modal__close" data-pickup-modal-close aria-label="Close">&times;</button>
+                    <h2 class="pickup-availability-modal__title">{{ modal_title }}</h2>
+                    <ul class="pickup-availability-modal__list" data-pickup-modal-list></ul>
+                  </div>
+                </pickup-availability-modal>
+              </div>
+            {% endif %}
+
+          {% when 'shop_pay_installments' %}
+            {% if block.settings.enable_shop_pay_installments %}
+              {% liquid
+                assign min_installment_price = block.settings.min_installment_price | times: 100
+                assign installments_count = block.settings.installments_count | default: 6
+                assign installment_price = current_variant.price | times: 1.0 | divided_by: installments_count | round
+                assign tooltip_text = block.settings.installments_tooltip | default: 'Interest-free payments with Shop Pay.'
+              %}
+
+              {% if current_variant.price >= min_installment_price %}
+                <div
+                  class="shop-pay-installments"
+                  id="shop-pay-installments-{{ section.id }}"
+                  data-installments="{{ installments_count }}"
+                  data-min-price="{{ min_installment_price }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <div class="installments-wrapper">
+                    <span class="installments-price" data-installments-price>
+                      {{ current_variant.price | money_with_currency }}
+                    </span>
+                    <span class="installments-or">{{ block.settings.installments_or_text | default: "or" }}</span>
+                    <span class="installments-payment">
+                      <span class="installments-amount" data-installments-amount>
+                        {{ installment_price | money_with_currency }}
+                      </span>
+                      <span class="installments-label">
+                        {{ block.settings.installments_label | default: "/mo for" }}
+                        <span class="installments-months" data-installments-months>{{ installments_count }}</span>
+                        {{ block.settings.installments_months_label | default: "months" }}
+                      </span>
+                    </span>
+                    <span class="installments-divider">·</span>
+                    <span class="installments-provider">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#5A31F4"/>
+                        <path d="M16.59 7.58L10 14.17l-2.59-2.58L6 13l4 4 8-8z" fill="#5A31F4"/>
+                      </svg>
+                      {{ block.settings.installments_provider | default: "Shop Pay" }}
+                    </span>
+                    <span class="installments-info" tabindex="0" role="button" aria-label="{{ tooltip_text | escape }}">
+                      i
+                      <span class="installments-info__tooltip" role="tooltip">
+                        {{ tooltip_text }}
+                        {% if block.settings.installments_terms_url != blank %}
+                          <a href="{{ block.settings.installments_terms_url }}" class="installments-info__link">See terms</a>
+                        {% endif %}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+
+          {% when 'follow_on_shop' %}
+            {% if block.settings.enable_follow_on_shop %}
+              <div class="product__follow-on-shop" {{ block.shopify_attributes }}>
+                {{ shop | login_button: action: 'follow' }}
+              </div>
+            {% endif %}
+
+          {% when 'buy_buttons' %}
+            <div class="product__buy-buttons" {{ block.shopify_attributes }}>
+              {% assign product_form_id = 'product-form-' | append: section.id %}
+              {% form 'product', product, id: product_form_id, class: 'product__form' %}
+                <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id-input>
+                <input
+                  type="hidden"
+                  name="selling_plan"
+                  value="{{ product.selected_selling_plan.id | default: '' }}"
+                  data-selling-plan-input
+                >
+
+                {%- if product.gift_card? -%}
+                  {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+                {%- endif -%}
+
+                <button
+                  type="submit"
+                  name="add"
+                  class="button button--primary product__add-to-cart"
+                  data-add-to-cart
+                  {% unless current_variant.available %}disabled{% endunless %}
+                >
+                  <span data-add-to-cart-text>
+                    {% if current_variant.available %}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {% else %}
+                      {{ 'products.product.sold_out' | t }}
+                    {% endif %}
+                  </span>
+                </button>
+
+                {% if block.settings.show_dynamic_checkout and product.gift_card? == false %}
+                  {{ form | payment_button }}
+                {% endif %}
+              {% endform %}
+            </div>
+
+          {% when 'custom_liquid' %}
+            <div class="product__custom-liquid" {{ block.shopify_attributes }}>
+              {{ block.settings.custom_liquid }}
+            </div>
+
+          {% when '@app' %}
+            {% comment %}
+              Render app blocks. This allows apps to inject content
+              (like reviews or size charts) into the product page.
+              The block is rendered using the {% render block %} tag which
+              calls the app's block template.
+            {% endcomment %}
+            <div class="product__app-block" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+    </div>
+    {% endcapture %}
+
+    {% comment %}
+      Physically reorder the DOM to match the visual layout, so keyboard
+      tab order always follows top-to-bottom, left-to-right regardless of
+      the merchant's chosen media position. CSS alone (order/grid-column)
+      only changes visual position, not tab order, so this must be a real
+      DOM swap, not a style-only reorder.
+    {% endcomment %}
+    {% if section.settings.media_position == 'right' %}
+      {{ info_block }}
+      {{ media_block }}
+    {% else %}
+      {{ media_block }}
+      {{ info_block }}
+    {% endif %}
+  </div>
+</section>
+
+{% comment %}
+  Translated strings for the variant-switch JS below. Liquid can't run inside
+  {% javascript %} (it's a static, deduped asset), so these have to be handed
+  over via a real translated inline script instead of the hardcoded English
+  fallbacks the JS used to rely on.
+{% endcomment %}
+<script>
+  window.themeStrings = window.themeStrings || {};
+  Object.assign(window.themeStrings, {
+    addToCart: {{ 'products.product.add_to_cart' | t | json }},
+    soldOut: {{ 'products.product.sold_out' | t | json }},
+    unavailable: {{ 'products.product.unavailable' | t | json }},
+    unitPriceLabel: {{ 'products.product.unit_price_label' | t | json }}
+  });
+</script>
+
+{{ 'product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main_product.settings.header__1.content"
+    },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "t:sections.main_product.settings.media_position.label",
+      "options": [
+        { "value": "left", "label": "t:sections.main_product.settings.media_position.options__1.label" },
+        { "value": "right", "label": "t:sections.main_product.settings.media_position.options__2.label" }
+      ],
+      "default": "left"
+    }
+  ],
+  "blocks": [
+    { "type": "vendor", "name": "t:sections.main_product.blocks.vendor.name", "limit": 1 },
+    { "type": "title", "name": "t:sections.main_product.blocks.title.name", "limit": 1 },
+    { "type": "price", "name": "t:sections.main_product.blocks.price.name", "limit": 1 },
+    { "type": "variant_picker", "name": "t:sections.main_product.blocks.variant_picker.name", "limit": 1, "settings": [
+      {
+        "type": "select",
+        "id": "picker_style",
+        "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.label",
+        "default": "standard",
+        "options": [
+          { "value": "standard", "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__1.label" },
+          { "value": "pets", "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__2.label" }
+        ]
+      }
+    ]},
+    { "type": "selling_plan_selector", "name": "t:sections.main_product.blocks.selling_plan_selector.name", "limit": 1 },
+    { "type": "quantity_selector", "name": "t:sections.main_product.blocks.quantity_selector.name", "limit": 1 },
+    {
+      "type": "complementary_products",
+      "name": "Complementary Products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_complementary_products",
+          "label": "Enable complementary products",
+          "default": true,
+          "info": "Shows products that pair well with this one, powered by Shopify's recommendation engine. Set up complementary products for each product in Shopify admin under Search & Discovery, or the product's own Related products section."
+        },
+        {
+          "type": "text",
+          "id": "complementary_heading",
+          "label": "Heading",
+          "default": "Pairs well with"
+        },
+        {
+          "type": "range",
+          "id": "complementary_products_count",
+          "label": "Number of products to show",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "default": 3
+        }
+      ]
+    },
+    {
+      "type": "pickup_availability",
+      "name": "Pickup Availability",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_pickup_availability",
+          "label": "Enable pickup availability",
+          "default": true,
+          "info": "Requires local pickup enabled in Settings → Locations"
+        },
+        { "type": "text", "id": "available_text", "label": "Available text", "default": "Pickup available at" },
+        { "type": "text", "id": "unavailable_text", "label": "Unavailable text", "default": "Pickup currently unavailable at" },
+        { "type": "text", "id": "no_pickup_text", "label": "No pickup text", "default": "Pickup currently unavailable for this item" },
+        { "type": "text", "id": "view_all_text", "label": "\"View store info\" text", "default": "View store info" },
+        { "type": "text", "id": "modal_title", "label": "Modal title", "default": "Store availability" }
+      ]
+    },
+    {
+      "type": "shop_pay_installments",
+      "name": "Shop Pay Installments",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_shop_pay_installments",
+          "label": "Enable Shop Pay Installments",
+          "default": true,
+          "info": "Show installment payment options on the product page"
+        },
+        {
+          "type": "range",
+          "id": "installments_count",
+          "label": "Number of installments",
+          "min": 2,
+          "max": 24,
+          "step": 1,
+          "default": 6,
+          "unit": "x",
+          "info": "Number of monthly payments (e.g., 6 = 6 months)"
+        },
+        {
+          "type": "number",
+          "id": "min_installment_price",
+          "label": "Minimum price for installments",
+          "default": 50,
+          "info": "Products below this price (in your store's currency, e.g. 50 for $50.00) won't show the installment badge"
+        },
+        {
+          "type": "text",
+          "id": "installments_or_text",
+          "label": "\"Or\" text",
+          "default": "or",
+          "info": "Text between the price and installment amount"
+        },
+        {
+          "type": "text",
+          "id": "installments_label",
+          "label": "Installment label",
+          "default": "/mo for",
+          "info": "Label after the installment amount (e.g., '/mo for')"
+        },
+        {
+          "type": "text",
+          "id": "installments_months_label",
+          "label": "Months label",
+          "default": "months",
+          "info": "Label after the number of months"
+        },
+        {
+          "type": "text",
+          "id": "installments_provider",
+          "label": "Provider name",
+          "default": "Shop Pay",
+          "info": "Name of the payment provider"
+        },
+        {
+          "type": "text",
+          "id": "installments_tooltip",
+          "label": "Tooltip text",
+          "default": "Interest-free payments with Shop Pay.",
+          "info": "Text shown when hovering or focusing the info icon. If a terms URL is set below, a \"See terms\" link is appended automatically."
+        },
+        {
+          "type": "url",
+          "id": "installments_terms_url",
+          "label": "Terms link URL",
+          "info": "Optional — if set, a clickable \"See terms\" link is added to the tooltip"
+        }
+      ]
+    },
+    {
+      "type": "follow_on_shop",
+      "name": "Follow on Shop",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_follow_on_shop",
+          "label": "Enable Follow on Shop button",
+          "default": true,
+          "info": "Lets customers follow your store in the Shop app. Only appears for eligible shops/regions; nothing renders if the shop isn't eligible."
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "t:sections.main_product.blocks.buy_buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "t:sections.main_product.blocks.buy_buttons.settings.show_dynamic_checkout.label",
+          "default": true
+        }
+      ]
+    },
+    { "type": "description", "name": "t:sections.main_product.blocks.description.name", "limit": 1 },
+    {
+      "type": "custom_liquid",
+      "name": "t:sections.main_product.blocks.custom_liquid.name",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "t:sections.main_product.blocks.custom_liquid.settings.custom_liquid.label"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.product",
+      "blocks": [
+        { "type": "vendor" },
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "variant_picker" },
+        { "type": "selling_plan_selector" },
+        { "type": "quantity_selector" },
+        { "type": "complementary_products" },
+        { "type": "pickup_availability" },
+        { "type": "shop_pay_installments" },
+        { "type": "follow_on_shop" },
+        { "type": "buy_buttons" },
+        { "type": "description" }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

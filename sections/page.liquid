@@ -1,0 +1,97 @@
+{% comment %}
+  This section is used in the page template to render store pages like About us
+  or Contact us.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/page
+{% endcomment %}
+
+<div class="page" data-content-width="{{ section.settings.content_width }}">
+  <div class="page__page-width">
+    <h1 class="page__title">{{ page.title }}</h1>
+
+    {% if page.metafields.custom.image %}
+      <div class="page__image">
+        {{
+          page.metafields.custom.image
+          | image_url: width: 1200
+          | image_tag:
+            loading: 'eager',
+            widths: '600,900,1200',
+            alt: page.title,
+            class: 'page__image-el'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="page__content rte">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .page {
+    padding-block: 3rem 4rem;
+  }
+
+  .page__page-width {
+    max-width: 48rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .page[data-content-width='narrow'] .page__page-width {
+    max-width: 38rem;
+  }
+
+  .page[data-content-width='wide'] .page__page-width {
+    max-width: 64rem;
+  }
+
+  .page__title {
+    font-size: clamp(1.6rem, 1.3rem + 1vw, 2.4rem);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .page__image {
+    margin-bottom: 2rem;
+    border-radius: 0.6rem;
+    overflow: hidden;
+  }
+
+  .page__image-el {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Rich text styling now comes from the shared .rte class in critical.css
+     (applied via class="page__content rte" above), so every RTE-generated
+     block — page content, product/collection descriptions, article body —
+     stays visually consistent. Only page-specific spacing stays here. */
+  .page__content > * + * {
+    margin-top: 1.25rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:sections.page.settings.content_width.label",
+      "options": [
+        { "value": "narrow", "label": "t:sections.page.settings.content_width.options__1.label" },
+        { "value": "medium", "label": "t:sections.page.settings.content_width.options__2.label" },
+        { "value": "wide", "label": "t:sections.page.settings.content_width.options__3.label" }
+      ],
+      "default": "medium"
+    }
+  ]
+}
+{% endschema %}

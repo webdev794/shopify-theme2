@@ -1,0 +1,23 @@
+{{ 'customer-accounts.css' | asset_url | stylesheet_tag }}
+<div class="customer customer--order">
+  <div class="customer__container customer__container--wide">
+    <p class="customer__back"><a href="{{ routes.account_url }}">← Return to account</a></p>
+    <h1 class="customer__heading">{{ order.name }}</h1>
+    <p>{{ order.created_at | date: format: 'date' }}</p>
+    <div class="customer__table-wrap"><table class="customer__table">
+      <thead><tr><th>Product</th><th>SKU</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+      <tbody>{% for line_item in order.line_items %}<tr>
+        <td>{{ line_item.title | link_to: line_item.product.url }}{% unless line_item.variant.title == 'Default Title' %}<br><small>{{ line_item.variant.title }}</small>{% endunless %}</td>
+        <td>{{ line_item.sku }}</td><td>{{ line_item.final_price | money }}</td><td>{{ line_item.quantity }}</td><td>{{ line_item.final_line_price | money }}</td>
+      </tr>{% endfor %}</tbody>
+      <tfoot>
+        <tr><td colspan="4">Subtotal</td><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+        <tr class="customer__table-total"><td colspan="4">Total</td><td>{{ order.total_net_amount | money }}</td></tr>
+      </tfoot>
+    </table></div>
+    <div class="customer__order-addresses">
+      <div><h2 class="customer__subheading">Billing address</h2><p>{{ order.billing_address | format_address }}</p></div>
+      <div><h2 class="customer__subheading">Shipping address</h2><p>{{ order.shipping_address | format_address }}</p></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{{ 'customer-accounts.css' | asset_url | stylesheet_tag }}
+<div class="customer customer--addresses">
+  <div class="customer__container">
+    <p class="customer__back"><a href="{{ routes.account_url }}">← Return to account</a></p>
+    <h1 class="customer__heading">Addresses</h1>
+    <div class="customer__address-list">
+      {% for address in customer.addresses %}
+        <div class="customer__address-card{% if address == customer.default_address %} is-default{% endif %}">
+          {% if address == customer.default_address %}<span class="customer__default-badge">Default</span>{% endif %}
+          {{ address | format_address }}
+        </div>
+      {% endfor %}
+    </div>
+    <h2 class="customer__subheading">Add a new address</h2>
+    {% form 'customer_address', customer.new_address, class: 'customer__form' %}
+      <div class="customer__field-row">
+        <div class="customer__field"><label>First name</label><input type="text" name="address[first_name]"></div>
+        <div class="customer__field"><label>Last name</label><input type="text" name="address[last_name]"></div>
+      </div>
+      <div class="customer__field"><label>Address</label><input type="text" name="address[address1]"></div>
+      <div class="customer__field"><label>City</label><input type="text" name="address[city]"></div>
+      <div class="customer__field"><label>Postal/ZIP</label><input type="text" name="address[zip]"></div>
+      <div class="customer__field"><label>Country</label><input type="text" name="address[country]"></div>
+      <button type="submit" class="button button--primary">Add address</button>
+    {% endform %}
+  </div>
+</div>

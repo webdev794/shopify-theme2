@@ -1,0 +1,406 @@
+{%- comment -%}
+  Hero / Image Banner
+  - Image, art-directed mobile image, or looping background video
+  - Block-based content: heading, text, buttons (reorderable in the editor)
+  - 9 content positions, 5 height modes, overlay + optional content box
+  - LCP-aware: first section on the page loads its image eagerly with
+    fetchpriority="high"; every other instance lazy-loads
+  - Autoplaying video is muted, respects prefers-reduced-motion, and
+    ships a visible pause/play control (WCAG 2.2.2)
+{%- endcomment -%}
+
+{%- liquid
+  assign image = section.settings.image
+  assign focal_style = nil
+  if image.presentation.focal_point
+    assign focal_style = 'object-position: ' | append: image.presentation.focal_point
+  endif
+  assign mobile_image = section.settings.image_mobile
+  assign video = section.settings.video
+
+  if section.index == 1
+    assign loading = 'eager'
+    assign fetchpriority = 'high'
+  else
+    assign loading = 'lazy'
+    assign fetchpriority = 'auto'
+  endif
+-%}
+
+{{ 'hero.css' | asset_url | stylesheet_tag }}
+{%- if video != blank -%}
+  <script src="{{ 'hero.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+<div
+  class="hero hero--{{ section.settings.height }} hero--content-{{ section.settings.content_position }}{% if section.settings.full_width %} hero--full-width{% endif %}{% if section.settings.stack_on_mobile %} hero--stack-mobile{% endif %}"
+  style="
+    --hero-foreground: {{ section.settings.color_foreground }};
+    --hero-overlay: {{ section.settings.color_overlay }};
+    --hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --hero-box-background: {{ section.settings.color_box_background }};
+    --hero-content-max-width: {{ section.settings.content_max_width }}px;
+    {%- if section.settings.height == 'adapt' and image != blank %} --hero-aspect-ratio: {{ image.aspect_ratio }};{% endif -%}
+    {%- if section.settings.height == 'adapt' and mobile_image != blank %} --hero-aspect-ratio-mobile: {{ mobile_image.aspect_ratio }};{% endif -%}
+  "
+  {% if video != blank %}data-hero-video-wrapper{% endif %}
+>
+  <div class="hero__media">
+    {%- if video != blank -%}
+      {{
+        video
+        | video_tag:
+          class: 'hero__video',
+          autoplay: true,
+          loop: true,
+          muted: true,
+          controls: false,
+          playsinline: true,
+          preload: 'metadata',
+          image_size: '1500x'
+      }}
+      <button
+        type="button"
+        class="hero__video-toggle"
+        data-hero-video-toggle
+        aria-label="{{ 'sections.hero.pause_video' | t }}"
+        data-play-label="{{ 'sections.hero.play_video' | t }}"
+      >
+        <svg class="hero__video-icon hero__video-icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <svg class="hero__video-icon hero__video-icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7 4.5v15l13-7.5-13-7.5z"/>
+        </svg>
+      </button>
+    {%- elsif image != blank -%}
+      <picture>
+        {%- if mobile_image != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ mobile_image | image_url: width: 375 }} 375w, {{ mobile_image | image_url: width: 750 }} 750w, {{ mobile_image | image_url: width: 1100 }} 1100w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          image
+          | image_url: width: 3840
+          | image_tag:
+            class: 'hero__image',
+            widths: '750, 1100, 1500, 1780, 2000, 3000, 3840',
+            sizes: '100vw',
+            loading: loading,
+            fetchpriority: fetchpriority,
+            alt: image.alt,
+            style: focal_style
+        }}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'hero__placeholder' }}
+    {%- endif -%}
+
+    <div class="hero__overlay" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__content-wrapper">
+    <div class="hero__content{% if section.settings.show_content_box %} hero__content--boxed{% endif %} hero__content--align-{{ section.settings.content_alignment }}">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            {%- if block.settings.heading != blank -%}
+              {%- if block.settings.heading_tag == 'h1' -%}
+                <h1 class="hero__heading hero__heading--{{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
+                  {{ block.settings.heading }}
+                </h1>
+              {%- else -%}
+                <h2 class="hero__heading hero__heading--{{ block.settings.heading_size }}" {{ block.shopify_attributes }}>
+                  {{ block.settings.heading }}
+                </h2>
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'text' -%}
+            {%- if block.settings.text != blank -%}
+              <div class="hero__text hero__text--{{ block.settings.text_size }}" {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+              </div>
+            {%- endif -%}
+
+          {%- when 'buttons' -%}
+            <div class="hero__buttons" {{ block.shopify_attributes }}>
+              {%- if block.settings.button_label_1 != blank -%}
+                <a
+                  {% if block.settings.button_link_1 != blank %}href="{{ block.settings.button_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                  class="hero__button button {% if block.settings.button_style_1 == 'secondary' %}button--secondary hero__button--secondary{% else %}button--primary hero__button--primary{% endif %}"
+                >
+                  {{ block.settings.button_label_1 | escape }}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.button_label_2 != blank -%}
+                <a
+                  {% if block.settings.button_link_2 != blank %}href="{{ block.settings.button_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                  class="hero__button button {% if block.settings.button_style_2 == 'secondary' %}button--secondary hero__button--secondary{% else %}button--primary hero__button--primary{% endif %}"
+                >
+                  {{ block.settings.button_label_2 | escape }}
+                </a>
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.hero.name",
+  "tag": "section",
+  "class": "section-hero",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "t:sections.hero.settings.header__1.content" },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.hero.settings.image.label",
+      "info": "t:sections.hero.settings.image.info"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "t:sections.hero.settings.image_mobile.label",
+      "info": "t:sections.hero.settings.image_mobile.info"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "t:sections.hero.settings.video.label",
+      "info": "t:sections.hero.settings.video.info"
+    },
+    { "type": "header", "content": "t:sections.hero.settings.header__2.content" },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:sections.hero.settings.height.label",
+      "options": [
+        { "value": "adapt", "label": "t:sections.hero.settings.height.options__1.label" },
+        { "value": "small", "label": "t:sections.hero.settings.height.options__2.label" },
+        { "value": "medium", "label": "t:sections.hero.settings.height.options__3.label" },
+        { "value": "large", "label": "t:sections.hero.settings.height.options__4.label" },
+        { "value": "full", "label": "t:sections.hero.settings.height.options__5.label" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.hero.settings.full_width.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:sections.hero.settings.content_position.label",
+      "options": [
+        { "value": "top-left", "label": "t:sections.hero.settings.content_position.options__1.label" },
+        { "value": "top-center", "label": "t:sections.hero.settings.content_position.options__2.label" },
+        { "value": "top-right", "label": "t:sections.hero.settings.content_position.options__3.label" },
+        { "value": "middle-left", "label": "t:sections.hero.settings.content_position.options__4.label" },
+        { "value": "middle-center", "label": "t:sections.hero.settings.content_position.options__5.label" },
+        { "value": "middle-right", "label": "t:sections.hero.settings.content_position.options__6.label" },
+        { "value": "bottom-left", "label": "t:sections.hero.settings.content_position.options__7.label" },
+        { "value": "bottom-center", "label": "t:sections.hero.settings.content_position.options__8.label" },
+        { "value": "bottom-right", "label": "t:sections.hero.settings.content_position.options__9.label" }
+      ],
+      "default": "middle-center"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "t:sections.hero.settings.content_alignment.label",
+      "options": [
+        { "value": "left", "label": "t:sections.hero.settings.content_alignment.options__1.label" },
+        { "value": "center", "label": "t:sections.hero.settings.content_alignment.options__2.label" },
+        { "value": "right", "label": "t:sections.hero.settings.content_alignment.options__3.label" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "t:sections.hero.settings.content_max_width.label",
+      "min": 400,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 650
+    },
+    {
+      "type": "checkbox",
+      "id": "stack_on_mobile",
+      "label": "t:sections.hero.settings.stack_on_mobile.label",
+      "default": false,
+      "info": "t:sections.hero.settings.stack_on_mobile.info"
+    },
+    { "type": "header", "content": "t:sections.hero.settings.header__3.content" },
+    {
+      "type": "color",
+      "id": "color_overlay",
+      "label": "t:sections.hero.settings.color_overlay.label",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "t:sections.hero.settings.overlay_opacity.label",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 40,
+      "info": "t:sections.hero.settings.overlay_opacity.info"
+    },
+    { "type": "header", "content": "t:sections.hero.settings.header__4.content" },
+    {
+      "type": "color",
+      "id": "color_foreground",
+      "label": "t:sections.hero.settings.color_foreground.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content_box",
+      "label": "t:sections.hero.settings.show_content_box.label",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "color_box_background",
+      "label": "t:sections.hero.settings.color_box_background.label",
+      "default": "#00000080",
+      "info": "t:sections.hero.settings.color_box_background.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.hero.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:sections.hero.blocks.heading.settings.heading.label",
+          "default": "Tell your story"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sections.hero.blocks.heading.settings.heading_size.label",
+          "options": [
+            { "value": "small", "label": "t:sections.hero.blocks.heading.settings.heading_size.options__1.label" },
+            { "value": "medium", "label": "t:sections.hero.blocks.heading.settings.heading_size.options__2.label" },
+            { "value": "large", "label": "t:sections.hero.blocks.heading.settings.heading_size.options__3.label" }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "t:sections.hero.blocks.heading.settings.heading_tag.label",
+          "options": [
+            { "value": "h1", "label": "H1" },
+            { "value": "h2", "label": "H2" }
+          ],
+          "default": "h2",
+          "info": "t:sections.hero.blocks.heading.settings.heading_tag.info"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.hero.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.hero.blocks.text.settings.text.label",
+          "default": "<p>Pair a bold image with a short message that introduces your brand or highlights a campaign.</p>"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:sections.hero.blocks.text.settings.text_size.label",
+          "options": [
+            { "value": "small", "label": "t:sections.hero.blocks.text.settings.text_size.options__1.label" },
+            { "value": "medium", "label": "t:sections.hero.blocks.text.settings.text_size.options__2.label" },
+            { "value": "large", "label": "t:sections.hero.blocks.text.settings.text_size.options__3.label" }
+          ],
+          "default": "medium"
+        }
+      ]
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.hero.blocks.buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "label": "t:sections.hero.blocks.buttons.settings.button_label_1.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "t:sections.hero.blocks.buttons.settings.button_link_1.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style_1",
+          "label": "t:sections.hero.blocks.buttons.settings.button_style_1.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.hero.blocks.buttons.settings.button_style_1.options__1.label" },
+            { "value": "secondary", "label": "t:sections.hero.blocks.buttons.settings.button_style_1.options__2.label" }
+          ],
+          "default": "primary"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "t:sections.hero.blocks.buttons.settings.button_label_2.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "t:sections.hero.blocks.buttons.settings.button_link_2.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style_2",
+          "label": "t:sections.hero.blocks.buttons.settings.button_style_2.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.hero.blocks.buttons.settings.button_style_2.options__1.label" },
+            { "value": "secondary", "label": "t:sections.hero.blocks.buttons.settings.button_style_2.options__2.label" }
+          ],
+          "default": "secondary"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.hero.presets.name",
+      "blocks": [
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "buttons" }
+      ]
+    }
+  ]
+}
+{% endschema %}

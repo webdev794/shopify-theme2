@@ -1,0 +1,39 @@
+{% comment %} Variant picker for multi-pet products. {% endcomment %}
+{%- unless product.has_only_default_variant -%}
+<div class="variant-picker variant-picker--pets" data-variant-picker data-section-id="{{ section.id }}" data-product-id="{{ product.id }}">
+  {%- for option in product.options_with_values -%}
+    {%- assign option_index = forloop.index0 -%}
+    {%- assign option_name_down = option.name | downcase -%}
+    {%- assign is_pet_type = false -%}
+    {%- if option_name_down contains 'pet' or option_name_down contains 'animal' or option_name_down contains 'species' -%}{%- assign is_pet_type = true -%}{%- endif -%}
+    <fieldset class="variant-picker__option{% if is_pet_type %} variant-picker__option--pet-type{% endif %}" data-option-index="{{ option_index }}">
+      <legend class="variant-picker__label">{{ option.name }} <span class="variant-picker__selected-value" data-selected-value>{{ option.selected_value }}</span></legend>
+      <div class="variant-picker__values" role="radiogroup" aria-label="{{ option.name | escape }}">
+        {%- for value in option.values -%}
+          {%- assign input_id = section.id | append: '-' | append: product.id | append: '-' | append: option_index | append: '-' | append: forloop.index0 -%}
+          {%- assign value_down = value | downcase -%}
+          <div class="variant-picker__value">
+            <input type="radio" id="{{ input_id }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" form="{{ product_form_id | default: 'product-form' }}" {% if option.selected_value == value %}checked{% endif %} data-option-value data-option-position="{{ option.position }}" class="variant-picker__input visually-hidden">
+            <label for="{{ input_id }}" class="variant-picker__chip{% if is_pet_type %} variant-picker__chip--pet{% endif %}">
+              {%- if is_pet_type -%}
+                <span class="variant-picker__pet-icon" aria-hidden="true">
+                  {%- if value_down contains 'dog' or value_down contains 'puppy' -%}🐕
+                  {%- elsif value_down contains 'cat' or value_down contains 'kitten' -%}🐈
+                  {%- elsif value_down contains 'bird' -%}🦜
+                  {%- elsif value_down contains 'fish' -%}🐟
+                  {%- elsif value_down contains 'rabbit' -%}🐇
+                  {%- else -%}🐾{%- endif -%}
+                </span>
+              {%- endif -%}
+              <span class="variant-picker__chip-text">{{ value }}</span>
+            </label>
+          </div>
+        {%- endfor -%}
+      </div>
+    </fieldset>
+  {%- endfor -%}
+  <script type="application/json" data-variant-json>{{ product.variants | json }}</script>
+</div>
+{{ 'variant-picker-pets.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'variant-picker-pets.js' | asset_url }}" defer></script>
+{%- endunless -%}

@@ -1,0 +1,104 @@
+{%- comment -%}
+  Gift card recipient form — collects the info needed for Shopify to email
+  the gift card directly to a recipient instead of the buyer.
+
+  Uses Shopify's reserved line-item property names (required exact spelling,
+  these are recognized natively by checkout, not custom fields):
+    - properties[__shopify_send_gift_card_to_recipient] = "true" (activates the feature)
+    - properties[Recipient email]   (required when active)
+    - properties[Recipient name]    (optional, max 255 chars)
+    - properties[Message]           (optional, max 200 chars)
+    - properties[Send on]           (optional, yyyy-mm-dd, max 90 days out)
+    - properties[__shopify_offset]  (optional, recipient's local tz offset in minutes)
+
+  https://shopify.dev/docs/storefronts/themes/product-merchandising/gift-cards
+
+  Accepts:
+  - product: {Object} the gift card product
+  - form: {Object} the enclosing {% form 'product' %} object (for error display)
+  - section: {Object} the enclosing section (for a unique id namespace)
+
+  Note: per Shopify's docs, this form's validation does not support
+  accelerated/dynamic checkout buttons — only "Add to Cart". The dynamic
+  checkout button is intentionally omitted for gift card products in
+  main-product.liquid for this reason.
+{%- endcomment -%}
+
+<div class="gift-card-recipient-form" data-gift-card-recipient-form>
+  <label class="gift-card-recipient-form__toggle">
+    <input
+      type="checkbox"
+      name="properties[__shopify_send_gift_card_to_recipient]"
+      value="true"
+      data-recipient-checkbox
+      {% if form.errors %}checked{% endif %}
+    >
+    {{ 'products.product.gift_card_recipient.checkbox_label' | t }}
+  </label>
+
+  <div class="gift-card-recipient-form__fields" data-recipient-fields hidden>
+    <div class="gift-card-recipient-form__field">
+      <label for="Recipient-email-{{ section.id }}">
+        {{ 'products.product.gift_card_recipient.email_label' | t }}
+        <span aria-hidden="true">*</span>
+      </label>
+      <input
+        type="email"
+        id="Recipient-email-{{ section.id }}"
+        name="properties[Recipient email]"
+        value="{{ form.email }}"
+        data-recipient-input
+        autocomplete="email"
+      >
+    </div>
+
+    <div class="gift-card-recipient-form__field">
+      <label for="Recipient-name-{{ section.id }}">
+        {{ 'products.product.gift_card_recipient.name_label' | t }}
+      </label>
+      <input
+        type="text"
+        id="Recipient-name-{{ section.id }}"
+        name="properties[Recipient name]"
+        value="{{ form.name }}"
+        maxlength="255"
+      >
+    </div>
+
+    <div class="gift-card-recipient-form__field">
+      <label for="Recipient-message-{{ section.id }}">
+        {{ 'products.product.gift_card_recipient.message_label' | t }}
+      </label>
+      <textarea
+        id="Recipient-message-{{ section.id }}"
+        name="properties[Message]"
+        maxlength="200"
+        rows="3"
+      >{{ form.message }}</textarea>
+    </div>
+
+    <div class="gift-card-recipient-form__field">
+      <label for="Recipient-send-on-{{ section.id }}">
+        {{ 'products.product.gift_card_recipient.send_on_label' | t }}
+      </label>
+      <input
+        type="date"
+        id="Recipient-send-on-{{ section.id }}"
+        name="properties[Send on]"
+        min="{{ 'now' | date: '%Y-%m-%d' }}"
+      >
+    </div>
+
+    <input type="hidden" name="properties[__shopify_offset]" data-recipient-offset value="0">
+  </div>
+
+  {%- if form.errors -%}
+    <ul class="gift-card-recipient-form__errors" role="alert">
+      {%- for field in form.errors -%}
+        <li>{{ form.errors.messages[field] }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
+
+<script src="{{ 'gift-card-recipient-form.js' | asset_url }}" defer></script>

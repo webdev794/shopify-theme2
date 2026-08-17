@@ -1,0 +1,130 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "1784638594b5aa5b28": {
+      "type": "apps",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "shop_pay_installments_Btzgcz": {
+          "type": "shop_pay_installments",
+          "settings": {
+            "enable_shop_pay_installments": true,
+            "installments_count": 6,
+            "min_installment_price": 50,
+            "installments_or_text": "or",
+            "installments_label": "/mo for",
+            "installments_months_label": "months",
+            "installments_provider": "Shop Pay",
+            "installments_tooltip": "Interest-free payments with Shop Pay.",
+            "installments_terms_url": ""
+          }
+        },
+        "selling_plan_selector_6VKdba": {
+          "type": "selling_plan_selector",
+          "settings": {}
+        },
+        "follow_on_shop_M9BJJB": {
+          "type": "follow_on_shop",
+          "settings": {
+            "enable_follow_on_shop": true
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "complementary_products_KMrx6K": {
+          "type": "complementary_products",
+          "settings": {
+            "enable_complementary_products": true,
+            "complementary_heading": "Pairs well with:",
+            "complementary_products_count": 3
+          }
+        },
+        "pickup_availability_aEWcUE": {
+          "type": "pickup_availability",
+          "settings": {
+            "enable_pickup_availability": true,
+            "available_text": "Pickup available at",
+            "unavailable_text": "Pickup currently unavailable at",
+            "no_pickup_text": "Pickup currently unavailable for this item",
+            "view_all_text": "View store info",
+            "modal_title": "Store availability"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "shop_pay_installments_Btzgcz",
+        "selling_plan_selector_6VKdba",
+        "follow_on_shop_M9BJJB",
+        "buy_buttons",
+        "complementary_products_KMrx6K",
+        "pickup_availability_aEWcUE",
+        "description"
+      ],
+      "settings": {
+        "media_position": "left"
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "You may also like",
+        "products_to_show": 4,
+        "intent": "related"
+      }
+    },
+    "1784638599a04bd965": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "1784638594b5aa5b28",
+    "main",
+    "product-recommendations",
+    "1784638599a04bd965"
+  ]
+}

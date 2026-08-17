@@ -1,0 +1,33 @@
+{{ 'customer-accounts.css' | asset_url | stylesheet_tag }}
+<div class="customer customer--account">
+  <div class="customer__container customer__container--wide">
+    <div class="customer__account-header">
+      <h1 class="customer__heading">{{ 'customer.account.title' | t | default: 'Account' }}</h1>
+      <a href="{{ routes.account_logout_url }}" class="customer__logout">{{ 'customer.log_out' | t | default: 'Log out' }}</a>
+    </div>
+    <div class="customer__account-grid">
+      <section class="customer__orders">
+        <h2 class="customer__subheading">{{ 'customer.orders.title' | t | default: 'Order history' }}</h2>
+        {% if customer.orders.size > 0 %}
+          <div class="customer__table-wrap"><table class="customer__table">
+            <thead><tr><th>Order</th><th>Date</th><th>Payment</th><th>Fulfillment</th><th>Total</th></tr></thead>
+            <tbody>{% for order in customer.orders %}<tr>
+              <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
+              <td>{{ order.created_at | date: format: 'date' }}</td>
+              <td>{{ order.financial_status_label }}</td>
+              <td>{{ order.fulfillment_status_label }}</td>
+              <td>{{ order.total_net_amount | money }}</td>
+            </tr>{% endfor %}</tbody>
+          </table></div>
+        {% else %}<p class="customer__empty">{{ 'customer.orders.none' | t | default: "You haven't placed any orders yet." }}</p>{% endif %}
+      </section>
+      <aside class="customer__details">
+        <h2 class="customer__subheading">Account details</h2>
+        <p class="customer__name">{{ customer.name }}</p>
+        <p class="customer__email">{{ customer.email }}</p>
+        {% if customer.default_address %}<div class="customer__address">{{ customer.default_address | format_address }}</div>{% endif %}
+        <a href="{{ routes.account_addresses_url }}" class="button button--secondary">View addresses ({{ customer.addresses_count }})</a>
+      </aside>
+    </div>
+  </div>
+</div>

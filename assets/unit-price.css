@@ -1,0 +1,9 @@
+.unit-price {
+  font-size: 0.8rem;
+  color: var(--color-foreground-secondary, #767676);
+  margin-top: 0.15rem;
+}
+
+.unit-price__price {
+  font-weight: 500;
+}

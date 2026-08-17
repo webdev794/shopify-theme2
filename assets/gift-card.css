@@ -1,0 +1,135 @@
+/* ========== GIFT CARD PAGE STYLES ========== */
+/* Referenced from layout/gift_card.liquid, applies to templates/gift_card.liquid */
+
+.gift-card {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  background: var(--color-background-secondary, #f4f4f4);
+}
+
+.gift-card__card {
+  width: 100%;
+  max-width: 26rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-foreground, #1a1a1a),
+    color-mix(in srgb, var(--color-foreground, #1a1a1a) 75%, black 25%)
+  );
+  color: #fff;
+  border-radius: 1rem;
+  padding: 2.25rem 2rem;
+  text-align: center;
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.35);
+}
+
+.gift-card__card--disabled {
+  background: linear-gradient(135deg, var(--color-disabled, #888), var(--color-disabled-dark, #aaa));
+}
+
+.gift-card__shop-name {
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.85;
+}
+
+.gift-card__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+}
+
+.gift-card__balance {
+  font-size: 2.75rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.gift-card__status {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}
+
+.gift-card__code-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+  background: color-mix(in srgb, var(--color-background, #fff) 10%, transparent);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.gift-card__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.gift-card__copy-button {
+  border: none;
+  background: color-mix(in srgb, var(--color-background, #fff) 15%, transparent);
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.gift-card__copy-button.is-copied {
+  background: color-mix(in srgb, var(--color-background, #fff) 35%, transparent);
+}
+
+.gift-card__redeem-button {
+  display: inline-block;
+  margin-top: 1.75rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: var(--color-foreground, #1a1a1a);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gift-card__details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gift-card__qr {
+  background: #fff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.gift-card__print-button {
+  border: 1px solid var(--color-border, #ccc);
+  background: transparent;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+@media print {
+  .gift-card__copy-button,
+  .gift-card__print-button {
+    display: none;
+  }
+}
+
+.gift-card__send-on {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin-top: 0.25rem;
+}

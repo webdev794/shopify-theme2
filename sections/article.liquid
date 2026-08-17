@@ -1,0 +1,584 @@
+{% comment %}
+  This section is used in the article template to render a single blog post,
+  including featured image, metadata, content, sharing, comments, and
+  previous/next navigation.
+
+  https://shopify.dev/docs/storefronts/themes/architecture/templates/article
+{% endcomment %}
+
+<article class="article" itemscope itemtype="https://schema.org/BlogPosting">
+  {% if section.settings.show_back_link %}
+    <div class="article__page-width">
+      <a href="{{ blog.url }}" class="article__back-link">
+        <svg class="article__back-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        {{ 'blog.back_to_blog' | t: blog: blog.title }}
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="article__header article__page-width">
+    {% if section.settings.show_tags and article.tags.size > 0 %}
+      <div class="article__tags">
+        {% for tag in article.tags %}
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__tag">{{ tag }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <h1 class="article__title" itemprop="headline">{{ article.title }}</h1>
+
+    <div class="article__meta">
+      {% if section.settings.show_author %}
+        <span class="article__meta-item" itemprop="author">
+          <svg class="article__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          {{ article.author }}
+        </span>
+      {% endif %}
+
+      {% if section.settings.show_date %}
+        <span class="article__meta-item">
+          <svg class="article__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+            {{ article.published_at | date: format: 'date' }}
+          </time>
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.show_featured_image and article.image %}
+    <div class="article__hero">
+      {{
+        article.image
+        | image_url: width: 1600
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '600,900,1200,1600',
+          sizes: '100vw',
+          alt: article.image.alt | default: article.title,
+          class: 'article__hero-image',
+          itemprop: 'image'
+      }}
+    </div>
+  {% endif %}
+
+  <div class="article__body article__page-width">
+    <div class="article__content rte" itemprop="articleBody">
+      {{ article.content }}
+    </div>
+
+    {% if section.settings.enable_sharing %}
+      <div class="article__share">
+        <span class="article__share-label">{{ 'blog.share' | t }}</span>
+
+        <a
+          href="https://twitter.com/intent/tweet?text={{ article.title | url_encode }}&url={{ shop.url | append: article.url | url_encode }}"
+          target="_blank"
+          rel="noopener"
+          class="article__share-link"
+          aria-label="{{ 'blog.share_on_twitter' | t }}"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-7.6 8.7L23.3 21h-6.9l-5.4-6.6L4.8 21H1.7l8.1-9.3L1 3h7.1l4.9 6.1L18.9 3zM17.6 19h1.9L7.5 5H5.4l12.2 14z"/></svg>
+        </a>
+
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: article.url | url_encode }}"
+          target="_blank"
+          rel="noopener"
+          class="article__share-link"
+          aria-label="{{ 'blog.share_on_facebook' | t }}"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5H16l.4-3H13.5V8.4c0-.87.24-1.46 1.5-1.46H16.5V4.35c-.26-.03-1.15-.1-2.19-.1-2.17 0-3.66 1.32-3.66 3.76v2.5H8.2v3h2.45V21h2.85z"/></svg>
+        </a>
+
+        {%- assign pinterest_image = article.image | default: shop.brand.square_logo | default: shop.brand.logo -%}
+        {%- if pinterest_image != blank -%}
+          {%- assign pinterest_media_url = pinterest_image | image_url: width: 1200 | prepend: 'https:' -%}
+          <a
+            href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: article.url | url_encode }}&media={{ pinterest_media_url | url_encode }}&description={{ article.title | url_encode }}"
+            target="_blank"
+            rel="noopener"
+            class="article__share-link"
+            aria-label="{{ 'blog.share_on_pinterest' | t }}"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.3-.09-.79-.17-2.01.03-2.87.19-.79 1.23-5.02 1.23-5.02s-.31-.63-.31-1.55c0-1.46.85-2.55 1.9-2.55.9 0 1.33.67 1.33 1.48 0 .9-.57 2.25-.87 3.5-.25 1.05.52 1.9 1.55 1.9 1.86 0 3.29-1.96 3.29-4.79 0-2.5-1.8-4.25-4.36-4.25-2.97 0-4.71 2.23-4.71 4.53 0 .9.34 1.86.78 2.38.09.1.1.19.07.3l-.28 1.15c-.05.19-.16.24-.36.14-1.35-.63-2.19-2.6-2.19-4.19 0-3.41 2.48-6.55 7.15-6.55 3.75 0 6.67 2.68 6.67 6.25 0 3.73-2.35 6.73-5.62 6.73-1.1 0-2.13-.57-2.48-1.24l-.68 2.57c-.24.94-.9 2.11-1.35 2.83.99.31 2.05.47 3.15.47 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+          </a>
+        {%- endif -%}
+
+        <button type="button" class="article__share-link article__share-copy" data-copy-link aria-label="{{ 'blog.copy_link' | t }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+
+    {% if blog.comments_enabled? %}
+      <div class="article__comments" id="comments">
+        <h2 class="article__comments-title">
+          {{ 'blog.article_comments' | t }} ({{ article.comments_count }})
+        </h2>
+
+        {% if article.comments_count > 0 %}
+          {% paginate article.comments by 10 %}
+            <ul class="article__comment-list">
+              {% for comment in article.comments %}
+                <li class="article__comment">
+                  <p class="article__comment-author">{{ comment.author }}</p>
+                  <time class="article__comment-date" datetime="{{ comment.created_at | date: '%Y-%m-%d' }}">
+                    {{ comment.created_at | date: format: 'date' }}
+                  </time>
+                  <div class="article__comment-content">{{ comment.content }}</div>
+                </li>
+              {% endfor %}
+            </ul>
+
+            {% if paginate.pages > 1 %}
+              <div class="article__comments-pagination">
+                {{ paginate | default_pagination }}
+              </div>
+            {% endif %}
+          {% endpaginate %}
+        {% endif %}
+
+        <div class="article__comment-form-wrapper">
+          <h3 class="article__comment-form-title">{{ 'blog.comment_form_title' | t }}</h3>
+
+          {% form 'new_comment', article, class: 'article__comment-form' %}
+            {% if form.posted_successfully? %}
+              <p class="article__comment-success">{{ 'blog.comment_form_success' | t }}</p>
+            {% endif %}
+
+            {% if form.errors %}
+              <div class="article__comment-errors">
+                {{ form.errors | default_errors }}
+              </div>
+            {% endif %}
+
+            <div class="article__comment-field">
+              <label for="comment-author-{{ section.id }}">{{ 'blog.comment_form_name' | t }}</label>
+              <input
+                type="text"
+                id="comment-author-{{ section.id }}"
+                name="comment[author]"
+                value="{{ form.author }}"
+                required
+              >
+            </div>
+
+            <div class="article__comment-field">
+              <label for="comment-email-{{ section.id }}">{{ 'blog.comment_form_email' | t }}</label>
+              <input
+                type="email"
+                id="comment-email-{{ section.id }}"
+                name="comment[email]"
+                value="{{ form.email }}"
+                required
+              >
+            </div>
+
+            <div class="article__comment-field">
+              <label for="comment-body-{{ section.id }}">{{ 'blog.comment_form_body' | t }}</label>
+              <textarea
+                id="comment-body-{{ section.id }}"
+                name="comment[body]"
+                rows="5"
+                required
+              >{{ form.body }}</textarea>
+            </div>
+
+            {% if blog.moderated? %}
+              <p class="article__comment-moderation-note">{{ 'blog.comment_form_moderated' | t }}</p>
+            {% endif %}
+
+            <button type="submit" class="button button--primary">{{ 'blog.comment_form_submit' | t }}</button>
+          {% endform %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_navigation and blog.previous_article or blog.next_article %}
+    <nav class="article__nav article__page-width" aria-label="{{ 'blog.article_navigation' | t }}">
+      {% if blog.previous_article %}
+        <a href="{{ blog.previous_article }}" class="article__nav-link article__nav-link--prev">
+          <svg class="article__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          <span>{{ 'blog.previous_article' | t }}</span>
+        </a>
+      {% else %}
+        <span></span>
+      {% endif %}
+
+      {% if blog.next_article %}
+        <a href="{{ blog.next_article }}" class="article__nav-link article__nav-link--next">
+          <span>{{ 'blog.next_article' | t }}</span>
+          <svg class="article__nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</article>
+
+{% stylesheet %}
+  .article__page-width {
+    max-width: 56rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .article {
+    padding-block: 2rem 4rem;
+  }
+
+  .article__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--color-foreground-secondary, #666);
+    margin-bottom: 1.5rem;
+  }
+
+  .article__back-link:hover {
+    color: var(--color-foreground, #1a1a1a);
+  }
+
+  .article__back-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .article__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .article__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .article__tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--color-background-secondary, #f4f4f4);
+    color: var(--color-foreground-secondary, #666);
+  }
+
+  .article__tag:hover {
+    background: var(--color-foreground, #1a1a1a);
+    color: var(--color-background, #fff);
+  }
+
+  .article__title {
+    font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.6rem);
+    line-height: 1.15;
+  }
+
+  .article__meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+    color: var(--color-foreground-secondary, #777);
+  }
+
+  .article__meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .article__meta-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .article__hero {
+    max-width: 72rem;
+    margin: 0 auto 2.5rem;
+    padding-inline: 1rem;
+  }
+
+  .article__hero-image {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: 0.6rem;
+    display: block;
+  }
+
+  .article__content {
+    line-height: 1.75;
+    font-size: 1.05rem;
+    color: var(--color-foreground, #1a1a1a);
+  }
+
+  .article__content > * + * {
+    margin-top: 1.25rem;
+  }
+
+  .article__content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+
+  .article__share {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border, #eee);
+  }
+
+  .article__share-label {
+    font-size: 0.85rem;
+    color: var(--color-foreground-secondary, #777);
+    margin-right: 0.25rem;
+  }
+
+  .article__share-link {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-background-secondary, #f4f4f4);
+    color: var(--color-foreground, #1a1a1a);
+    border: none;
+    cursor: pointer;
+  }
+
+  .article__share-link:hover {
+    background: var(--color-foreground, #1a1a1a);
+    color: var(--color-background, #fff);
+  }
+
+  .article__share-link svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .article__share-copy.is-copied {
+    background: var(--color-foreground, #1a1a1a);
+    color: var(--color-background, #fff);
+  }
+
+  /* ---------- Comments ---------- */
+  .article__comments {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border, #eee);
+  }
+
+  .article__comments-title {
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .article__comment-list {
+    list-style: none;
+    margin: 0 0 2rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .article__comments-pagination {
+    margin-bottom: 2rem;
+  }
+
+  .article__comment {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-border, #f0f0f0);
+  }
+
+  .article__comment-author {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .article__comment-date {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-foreground-secondary, #999);
+    margin-bottom: 0.4rem;
+  }
+
+  .article__comment-content {
+    font-size: 0.9rem;
+    color: var(--color-foreground-secondary, #444);
+    line-height: 1.6;
+  }
+
+  .article__comment-form-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .article__comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 32rem;
+  }
+
+  .article__comment-field label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .article__comment-field input,
+  .article__comment-field textarea {
+    width: 100%;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 0.4rem;
+    padding: 0.6rem 0.75rem;
+    font: inherit;
+  }
+
+  .article__comment-success {
+    background: var(--color-background-secondary, #f4f4f4);
+    padding: 0.75rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .article__comment-errors {
+    color: var(--color-sale, #c0392b);
+    font-size: 0.85rem;
+  }
+
+  .article__comment-moderation-note {
+    font-size: 0.8rem;
+    color: var(--color-foreground-secondary, #888);
+  }
+
+  .article__comment-form button {
+    align-self: flex-start;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: var(--color-foreground, #1a1a1a);
+    color: var(--color-background, #fff);
+    cursor: pointer;
+  }
+
+  /* ---------- Prev / next ---------- */
+  .article__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border, #eee);
+  }
+
+  .article__nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--color-foreground, #1a1a1a);
+  }
+
+  .article__nav-link--next {
+    margin-left: auto;
+  }
+
+  .article__nav-icon {
+    width: 16px;
+    height: 16px;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-copy-link]');
+    if (!button) return;
+
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      button.classList.add('is-copied');
+      setTimeout(() => button.classList.remove('is-copied'), 1500);
+    });
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "t:general.article",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_back_link",
+      "label": "t:sections.article.settings.show_back_link.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_image",
+      "label": "t:sections.article.settings.show_featured_image.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:sections.article.settings.show_author.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.article.settings.show_date.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "t:sections.article.settings.show_tags.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sharing",
+      "label": "t:sections.article.settings.enable_sharing.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "t:sections.article.settings.show_navigation.label",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

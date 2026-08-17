@@ -1,0 +1,49 @@
+{%- comment -%}
+  Renders social icon links from the global Theme Settings → Social media
+  fields (settings.social_*_link). Used by footer.liquid, newsletter.liquid,
+  and anywhere else social icons are needed — single source of truth, so a
+  merchant only enters each URL once and every section stays in sync.
+
+  To add a new platform:
+    1. Add a social_<platform>_link text setting to settings_schema.json
+       (in the "Social media" group).
+    2. Add the platform id to the platform_ids list below.
+    3. Add a matching {% when '<platform>' %} SVG case below.
+
+  Accepts:
+  - wrapper_class: {String} class for the outer <ul> (optional)
+  - link_class: {String} class for each <a> (optional)
+{%- endcomment -%}
+
+{%- liquid
+  assign wrapper_class = wrapper_class | default: 'social-icons'
+  assign link_class = link_class | default: 'social-icons__link'
+  assign platform_ids = 'instagram,facebook,twitter,tiktok,youtube,linkedin' | split: ','
+-%}
+
+<ul class="{{ wrapper_class }}" role="list">
+  {%- for platform in platform_ids -%}
+    {%- assign setting_key = 'social_' | append: platform | append: '_link' -%}
+    {%- assign url = settings[setting_key] -%}
+    {%- if url != blank -%}
+      <li>
+        <a href="{{ url }}" class="{{ link_class }}" target="_blank" rel="noopener" aria-label="{{ platform | capitalize }}">
+          {%- case platform -%}
+            {%- when 'instagram' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
+            {%- when 'facebook' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7h2.4l.4-3h-2.8V9.1c0-.9.3-1.5 1.6-1.5h1.3V4.9c-.3 0-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7V11H8.3v3h2.4v7h2.8z"/></svg>
+            {%- when 'twitter' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17.6 3H21l-7.4 8.5L22.2 21h-6.8l-5.3-6.3L4 21H.6L8.5 12 .2 3h7l4.8 5.7L17.6 3zm-1.2 16h1.9L6.6 4.9H4.6L16.4 19z"/></svg>
+            {%- when 'tiktok' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.3 1.9 1.6 3.4 3.5 3.7v3c-1.3 0-2.5-.4-3.5-1.1v5.9c0 3.4-2.6 5.5-5.4 5.5A5.3 5.3 0 0 1 5.8 14a5.4 5.4 0 0 1 5.9-5.3v3.1a2.4 2.4 0 0 0-3 2.3c0 1.3 1.1 2.4 2.4 2.4 1.4 0 2.4-1 2.4-2.6V3h3z"/></svg>
+            {%- when 'youtube' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12c0 1.6.1 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8c.3-1.6.4-3.2.4-4.8s-.1-3.2-.4-4.8zM10 15.2V8.8l5.3 3.2L10 15.2z"/></svg>
+            {%- when 'linkedin' -%}
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6.94 5a2 2 0 11-4-.002 2 2 0 014 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-3.96 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.68-2.91V8.48z"/></svg>
+          {%- endcase -%}
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>

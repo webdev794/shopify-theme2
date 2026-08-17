@@ -60,19 +60,27 @@
                           {{ child_link.title | escape }}
                         </a>
                         {%- if child_link.links != blank -%}
-                          <ul class="header__mobile-sublist header__mobile-sublist--nested list-unstyled">
-                            {%- for grandchild_link in child_link.links -%}
-                              <li>
-                                <a
-                                  href="{{ grandchild_link.url }}"
-                                  class="header__mobile-link header__mobile-link--nested"
-                                  {% if grandchild_link.current %}aria-current="page"{% endif %}
-                                >
-                                  {{ grandchild_link.title | escape }}
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
+                          <details class="header__mobile-dropdown header__mobile-dropdown--nested">
+                            <summary
+                              class="header__mobile-nested-toggle"
+                              aria-label="{{ child_link.title | escape }}"
+                            >
+                              <span class="header__caret" aria-hidden="true">{% render 'icon-caret' %}</span>
+                            </summary>
+                            <ul class="header__mobile-sublist header__mobile-sublist--nested list-unstyled">
+                              {%- for grandchild_link in child_link.links -%}
+                                <li>
+                                  <a
+                                    href="{{ grandchild_link.url }}"
+                                    class="header__mobile-link header__mobile-link--nested"
+                                    {% if grandchild_link.current %}aria-current="page"{% endif %}
+                                  >
+                                    {{ grandchild_link.title | escape }}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </details>
                         {%- endif -%}
                       </li>
                     {%- endfor -%}

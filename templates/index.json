@@ -11,9 +11,42 @@
   "sections": {
     "hero": {
       "type": "hero",
+      "blocks": {
+        "heading_pJr7Kk": {
+          "type": "heading",
+          "settings": {
+            "heading": "Life with them starts here.",
+            "heading_size": "medium",
+            "heading_tag": "h2"
+          }
+        },
+        "text_cCixxP": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Everything you need, for every moment together. </p>",
+            "text_size": "medium"
+          }
+        },
+        "buttons_4j4kYY": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "Shop now",
+            "button_link_1": "",
+            "button_style_1": "primary",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary"
+          }
+        }
+      },
+      "block_order": [
+        "heading_pJr7Kk",
+        "text_cCixxP",
+        "buttons_4j4kYY"
+      ],
       "settings": {
-        "image": "",
-        "image_mobile": "",
+        "image": "shopify://shop_images/hero.webp",
+        "image_mobile": "shopify://shop_images/hero.webp",
         "height": "medium",
         "full_width": true,
         "content_position": "middle-left",
@@ -29,6 +62,58 @@
     },
     "shop_by_pet": {
       "type": "shop-by-pet",
+      "blocks": {
+        "dog": {
+          "type": "pet",
+          "settings": {
+            "title": "Dogs",
+            "caption": "Food, toys & gear",
+            "pet_icon": "dog",
+            "collection": "dogs",
+            "link": "",
+            "button_label": "Shop dogs"
+          }
+        },
+        "cat": {
+          "type": "pet",
+          "settings": {
+            "title": "Cats",
+            "caption": "Treats & essentials",
+            "pet_icon": "cat",
+            "collection": "cats",
+            "link": "",
+            "button_label": "Shop cats"
+          }
+        },
+        "bird": {
+          "type": "pet",
+          "settings": {
+            "title": "Birds",
+            "caption": "Cages & care",
+            "pet_icon": "bird",
+            "collection": "birds",
+            "link": "",
+            "button_label": "Shop birds"
+          }
+        },
+        "small": {
+          "type": "pet",
+          "settings": {
+            "title": "Small pets",
+            "caption": "Habitat & feed",
+            "pet_icon": "rabbit",
+            "collection": "small-pets",
+            "link": "",
+            "button_label": "Shop now"
+          }
+        }
+      },
+      "block_order": [
+        "dog",
+        "cat",
+        "bird",
+        "small"
+      ],
       "settings": {
         "chapter_number": "02",
         "chapter_label": "Pet worlds",
@@ -43,6 +128,38 @@
     },
     "featured_products": {
       "type": "featured-products",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": "bird-food-treats"
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": "cat-food-treats"
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": "dog-food-treats"
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": "cat-grooming-care"
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
       "settings": {
         "layout": "grid",
         "products_per_row": "4",
@@ -73,6 +190,38 @@
     },
     "outfit_builder": {
       "type": "outfit-builder",
+      "blocks": {
+        "product_1": {
+          "type": "product",
+          "settings": {
+            "product": "small-pet-habitat-cages-pens"
+          }
+        },
+        "product_2": {
+          "type": "product",
+          "settings": {
+            "product": "dog-collar-harness-lashes"
+          }
+        },
+        "product_3": {
+          "type": "product",
+          "settings": {
+            "product": "bird-cages-aviaries"
+          }
+        },
+        "product_4": {
+          "type": "product",
+          "settings": {
+            "product": "cat-beds-scratching"
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
+      ],
       "settings": {
         "chapter_label": "EVERYDAY / YOUR WAY",
         "heading": "KIT BUILDER",
@@ -80,7 +229,7 @@
         "description": "<p>Pick the pieces that belong together. Build a little everyday setup that&rsquo;s made just for them.</p>",
         "catalog_label": "Choose your pieces",
         "selection_eyebrow": "YOUR COLLECTION",
-        "summary_note": "Choose a few things they'll love.",
+        "summary_note": "Choose a few things they’ll love.",
         "footer_text": "Pick · mix · make it theirs",
         "max_items": 4,
         "selection_label": "Your kit",
@@ -96,6 +245,42 @@
     },
     "lookbook_gallery": {
       "type": "lookbook-gallery",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {
+            "caption": "",
+            "product_1": "cat-beds-scratching",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "cat-grooming-care",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "cat-toys",
+            "x3": 45,
+            "y3": 70
+          }
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {
+            "caption": "",
+            "product_1": "small-pet-habitat-cages-pens",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "small-pet-toys-enrichment",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "small-pet-grooming-care",
+            "x3": 45,
+            "y3": 70
+          }
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2"
+      ],
       "settings": {
         "heading": "SEE LIFE WITH THEM",
         "subheading": "Shop the looks",
@@ -107,6 +292,24 @@
     },
     "lookbook": {
       "type": "lookbook",
+      "blocks": {
+        "hotspot_1": {
+          "type": "hotspot",
+          "settings": {
+            "product": "cat-beds-scratching"
+          }
+        },
+        "hotspot_2": {
+          "type": "hotspot",
+          "settings": {
+            "product": "dog-beds-crates"
+          }
+        }
+      },
+      "block_order": [
+        "hotspot_1",
+        "hotspot_2"
+      ],
       "settings": {
         "heading": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>",
         "text": "<p><em>Take the whole look home.</em></p>",
@@ -119,7 +322,7 @@
       "type": "care-ritual",
       "name": "Care Ritual",
       "settings": {
-        "image": "",
+        "image": "shopify://shop_images/petlio_hero.webp",
         "heading": "<p>For every little moment.</p>",
         "text": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>",
         "button_label": "Explore care",
@@ -133,7 +336,7 @@
     "blog_posts": {
       "type": "blog-posts",
       "settings": {
-        "blog": "",
+        "blog": "news",
         "posts_limit": 3,
         "layout": "grid",
         "columns": "3",
@@ -156,10 +359,94 @@
     },
     "faq": {
       "type": "faq",
+      "blocks": {
+        "item_MGVwGR": {
+          "type": "item",
+          "settings": {
+            "question": "Do you restock sold-out items?",
+            "answer": "<p>Yes. Join the waitlist on the product page or the newsletter—we restock popular items regularly and notify subscribers first.</p>"
+          }
+        },
+        "item_QQk3Qt": {
+          "type": "item",
+          "settings": {
+            "question": "How should I clean beds, collars, and fabric items?",
+            "answer": "<p>Most fabric items are machine-washable on gentle cycle; check the care label on each product. Wipe harnesses and plastic parts with mild soap and water; avoid harsh chemicals.</p>"
+          }
+        },
+        "item_4GfhAc": {
+          "type": "item",
+          "settings": {
+            "question": "What if my pet doesn’t like a product?",
+            "answer": "<p>Contact us within 30 days. We’ll help with a return or exchange so you can find a better fit.</p>"
+          }
+        },
+        "item_A9LCz7": {
+          "type": "item",
+          "settings": {
+            "question": "Do you offer subscriptions or auto-delivery?",
+            "answer": "<p>Not yet. We’re exploring subscription options for food and essentials—join the newsletter to be notified when it launches.</p>"
+          }
+        },
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer free returns within 30 days of delivery. Items must be unused and in original packaging. Start a return from your order confirmation email or contact care@petlio.com.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders ship within 1–2 business days. Standard delivery takes 3–7 business days in the US. You will receive tracking as soon as your order leaves our warehouse.</p>"
+          }
+        },
+        "q3": {
+          "type": "item",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes. We ship to most countries. International delivery typically takes 7–14 business days. Duties and taxes may apply depending on your region.</p>"
+          }
+        },
+        "q4": {
+          "type": "item",
+          "settings": {
+            "question": "How do I choose the right size for collars, harnesses, or beds?",
+            "answer": "<p>Each product page includes a size guide with measurements. When in doubt, size up for comfort—especially for growing pets—or message us with your pet’s weight and breed and we’ll help.</p>"
+          }
+        },
+        "q5": {
+          "type": "item",
+          "settings": {
+            "question": "Are your products safe for pets?",
+            "answer": "<p>Yes. We source materials intended for pet use and list materials and care notes on every product. If you ever have a concern, contact us and we’ll make it right.</p>"
+          }
+        },
+        "q6": {
+          "type": "item",
+          "settings": {
+            "question": "Can I change or cancel my order?",
+            "answer": "<p>If your order has not shipped yet, email care@petlio.com with your order number and we’ll do our best to update or cancel it. Once shipped, you can use our 30-day return window.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_MGVwGR",
+        "item_QQk3Qt",
+        "item_4GfhAc",
+        "item_A9LCz7",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
+      ],
       "settings": {
         "heading": "Frequently asked questions",
         "subheading": "Help center",
-        "description": "<p>Quick answers about shipping, returns, sizing, and care. Still stuck? We're here.</p>",
+        "description": "<p>Quick answers about shipping, returns, sizing, and care. Still stuck? We’re here.</p>",
         "layout": "narrow",
         "open_first": true,
         "background_color": "#ffffff",

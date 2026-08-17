@@ -1,8 +1,6 @@
 {% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+  Enhanced Cart Template with Full Discount Support
+  Displays discounts on individual items and entire orders
 {% endcomment %}
 
 <div class="cart" id="cart-{{ section.id }}">
@@ -34,7 +32,11 @@
               </thead>
               <tbody>
                 {% for item in cart.items %}
-                  <tr class="cart-item" data-unit-price="{{ item.final_price }}">
+                  <tr class="cart-item" 
+                      data-unit-price="{{ item.final_price }}"
+                      data-original-price="{{ item.original_price }}"
+                      data-line-key="{{ item.key }}"
+                      data-quantity="{{ item.quantity }}">
                     <td class="cart-item__media-cell">
                       <a href="{{ item.url }}" class="cart-item__image-link">
                         {% if item.image %}
@@ -92,16 +94,33 @@
                           <p class="cart-item__message">{{ item.message }}</p>
                         {% endif %}
 
+                        <!-- Enhanced Line-Level Discount Display -->
                         {% if item.line_level_discount_allocations.size > 0 %}
-                          <ul class="cart-item__discounts" role="list">
+                          <div class="cart-item__discounts-wrapper">
+                            <ul class="cart-item__discounts" role="list">
+                              {% for discount_allocation in item.line_level_discount_allocations %}
+                                <li class="cart-item__discount">
+                                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="M20 12L12 20 4 12l8-8 8 8z"/>
+                                    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+                                  </svg>
+                                  {{ discount_allocation.discount_application.title }}
+                                  <span class="cart-item__discount-amount">
+                                    &minus;{{ discount_allocation.amount | money }}
+                                  </span>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                            
+                            {% assign total_line_discount = 0 %}
                             {% for discount_allocation in item.line_level_discount_allocations %}
-                              <li class="cart-item__discount">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12L12 20 4 12l8-8 8 8z"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
-                                {{ discount_allocation.discount_application.title }}
-                                (&minus;{{ discount_allocation.amount | money }})
-                              </li>
+                              {% assign total_line_discount = total_line_discount | plus: discount_allocation.amount %}
                             {% endfor %}
-                          </ul>
+                            <p class="cart-item__total-discount">
+                              <span class="cart-item__discount-label">Total discount on this item:</span>
+                              <span class="cart-item__discount-total">&minus;{{ total_line_discount | money }}</span>
+                            </p>
+                          </div>
                         {% endif %}
 
                         <a href="{{ item.url_to_remove }}" class="cart-item__remove">
@@ -112,8 +131,12 @@
 
                     <td class="cart-item__price-cell" data-label="{{ 'cart.price' | t }}">
                       {% if item.original_price != item.final_price %}
-                        <span class="price price--sale">{{ item.final_price | money }}</span>
-                        <span class="price price--compare"><s>{{ item.original_price | money }}</s></span>
+                        <div class="cart-item__prices">
+                          <span class="price price--sale">{{ item.final_price | money }}</span>
+                          <span class="price price--compare"><s>{{ item.original_price | money }}</s></span>
+                          {% assign savings_percent = item.original_price | minus: item.final_price | times: 100 | divided_by: item.original_price %}
+                          <span class="price__savings-badge">Save {{ savings_percent }}%</span>
+                        </div>
                       {% else %}
                         <span class="price">{{ item.final_price | money }}</span>
                       {% endif %}
@@ -141,6 +164,7 @@
                             max="{{ item.variant.inventory_quantity }}"
                           {% endif %}
                           aria-label="{{ 'cart.quantity' | t }}"
+                          data-line-key="{{ item.key }}"
                         >
                         <button
                           type="button"
@@ -153,6 +177,9 @@
 
                     <td class="cart-item__total-cell" data-label="{{ 'cart.total' | t }}">
                       <span data-line-total>{{ item.final_line_price | money }}</span>
+                      {% if item.original_line_price != item.final_line_price %}
+                        <span class="cart-item__original-line-total"><s>{{ item.original_line_price | money }}</s></span>
+                      {% endif %}
                     </td>
                   </tr>
                 {% endfor %}
@@ -173,27 +200,87 @@
             {% endif %}
 
             <div class="cart__totals" data-money-format="{{ shop.money_format | escape }}">
-              <div class="cart__row">
+              <!-- Subtotal with discount awareness -->
+              <div class="cart__row cart__row--subtotal">
                 <span>{{ 'cart.subtotal' | t }}</span>
                 <span data-subtotal-amount>{{ cart.total_price | money }}</span>
               </div>
 
+              <!-- Display total discounts if any -->
+              {% assign total_discount_amount = 0 %}
+              
               {%- if cart.taxes_included -%}
                 <p class="cart__tax-note">
                   {{ 'cart.taxes_included' | t | default: 'Tax included.' }}
                 </p>
               {%- endif -%}
 
+              <!-- Cart-Level Discount Applications -->
               {% if cart.cart_level_discount_applications.size > 0 %}
-                {% for discount_application in cart.cart_level_discount_applications %}
-                  <div class="cart__row cart__row--discount">
-                    <span>
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12L12 20 4 12l8-8 8 8z"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
-                      {{ discount_application.title }}
-                    </span>
-                    <span>&minus;{{ discount_application.total_allocated_amount | money }}</span>
+                <div class="cart__discounts">
+                  <p class="cart__discounts-label">Discounts applied:</p>
+                  {% for discount_application in cart.cart_level_discount_applications %}
+                    <div class="cart__row cart__row--discount">
+                      <span class="cart__discount-name">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                          <path d="M20 12L12 20 4 12l8-8 8 8z"/>
+                          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+                        </svg>
+                        {{ discount_application.title }}
+                        <span class="cart__discount-code">
+                          {% if discount_application.code %}
+                            ({{ discount_application.code }})
+                          {% endif %}
+                        </span>
+                      </span>
+                      <span class="cart__discount-amount">&minus;{{ discount_application.total_allocated_amount | money }}</span>
+                    </div>
+                    {% assign total_discount_amount = total_discount_amount | plus: discount_application.total_allocated_amount %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <!-- Show total savings -->
+              {% if total_discount_amount > 0 or cart.total_discount > 0 %}
+                <div class="cart__row cart__row--savings">
+                  <span>Total savings</span>
+                  <span class="cart__savings-amount">&minus;{{ cart.total_discount | money }}</span>
+                </div>
+              {% endif %}
+
+              <!-- Discount code input for enhanced UX -->
+              {% if section.settings.enable_discount_code %}
+                <div class="cart__discount-code-input">
+                  <label for="discount-code" class="cart__discount-code-label">Discount code</label>
+                  <div class="cart__discount-code-wrapper">
+                    <input 
+                      type="text" 
+                      name="discount" 
+                      id="discount-code" 
+                      class="cart__discount-code-field"
+                      placeholder="Enter discount code"
+                      {% if cart.cart_level_discount_applications.size > 0 %}disabled{% endif %}
+                    >
+                    <button 
+                      type="submit" 
+                      name="apply_discount" 
+                      class="cart__discount-code-apply"
+                      {% if cart.cart_level_discount_applications.size > 0 %}disabled{% endif %}
+                    >
+                      Apply
+                    </button>
                   </div>
-                {% endfor %}
+                  {% if cart.cart_level_discount_applications.size > 0 %}
+                    <button 
+                      type="submit" 
+                      name="remove_discount" 
+                      class="cart__discount-remove"
+                      aria-label="Remove discount code"
+                    >
+                      Remove discount
+                    </button>
+                  {% endif %}
+                </div>
               {% endif %}
 
               <p class="cart__taxes-note">{{ 'cart.taxes_and_shipping_at_checkout' | t }}</p>
@@ -375,8 +462,17 @@
     color: var(--color-sale, #c0392b);
   }
 
+  /* Enhanced Discount Styles */
+  .cart-item__discounts-wrapper {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f4f0;
+    border-radius: 0.4rem;
+    border-left: 3px solid var(--color-sale, #c0392b);
+  }
+
   .cart-item__discounts {
-    margin: 0.3rem 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
     display: flex;
@@ -394,6 +490,19 @@
 
   .cart-item__discount svg {
     flex-shrink: 0;
+  }
+
+  .cart-item__discount-amount {
+    font-weight: 600;
+  }
+
+  .cart-item__total-discount {
+    margin: 0.3rem 0 0;
+    padding-top: 0.3rem;
+    border-top: 1px dashed rgba(192, 57, 43, 0.2);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-sale, #c0392b);
   }
 
   .cart-item__remove {
@@ -418,8 +527,32 @@
     font-weight: 600;
   }
 
+  .cart-item__prices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .price__savings-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    background: var(--color-sale, #c0392b);
+    color: white;
+    border-radius: 2rem;
+    width: fit-content;
+  }
+
   .cart-item__total-cell {
     font-weight: 600;
+  }
+
+  .cart-item__original-line-total {
+    display: block;
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-foreground-secondary, #888);
   }
 
   /* ---------- Quantity ---------- */
@@ -511,14 +644,130 @@
     font-size: 0.95rem;
   }
 
+  .cart__row--subtotal {
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-border, #eee);
+  }
+
   .cart__tax-note {
     font-size: 0.8rem;
     color: var(--color-foreground-secondary, #777);
     margin: 0.25rem 0 0;
   }
 
+  /* Cart-level Discount Styles */
+  .cart__discounts {
+    background: #f8f4f0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    border-left: 3px solid var(--color-sale, #c0392b);
+  }
+
+  .cart__discounts-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-foreground-secondary, #666);
+    margin: 0 0 0.2rem 0;
+  }
+
   .cart__row--discount {
     color: var(--color-sale, #c0392b);
+    font-weight: 500;
+  }
+
+  .cart__discount-name {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .cart__discount-code {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-foreground-secondary, #666);
+  }
+
+  .cart__discount-amount {
+    font-weight: 600;
+  }
+
+  .cart__row--savings {
+    font-weight: 600;
+    color: var(--color-sale, #c0392b);
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(192, 57, 43, 0.2);
+  }
+
+  /* Discount Code Input */
+  .cart__discount-code-input {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border, #e5e5e5);
+  }
+
+  .cart__discount-code-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+
+  .cart__discount-code-wrapper {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .cart__discount-code-field {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border, #ccc);
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .cart__discount-code-field:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .cart__discount-code-apply {
+    padding: 0.5rem 1rem;
+    background: var(--color-foreground, #1a1a1a);
+    color: white;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .cart__discount-code-apply:hover:not(:disabled) {
+    opacity: 0.8;
+  }
+
+  .cart__discount-code-apply:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .cart__discount-remove {
+    margin-top: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    background: transparent;
+    border: 1px solid var(--color-sale, #c0392b);
+    color: var(--color-sale, #c0392b);
+    border-radius: 0.3rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+
+  .cart__discount-remove:hover {
+    background: var(--color-sale, #c0392b);
+    color: white;
   }
 
   .cart__taxes-note {
@@ -550,6 +799,12 @@
     font-size: 0.95rem;
     cursor: pointer;
     border: 1px solid var(--color-foreground, #1a1a1a);
+    transition: opacity 0.2s;
+  }
+
+  .cart__update-button:hover,
+  .cart__checkout-button:hover {
+    opacity: 0.85;
   }
 
   .cart__update-button {
@@ -619,13 +874,19 @@
       justify-content: center;
     }
 
+    .cart-item__discounts-wrapper {
+      width: 100%;
+      text-align: left;
+    }
+
     .cart-item__price-cell,
     .cart-item__quantity-cell,
     .cart-item__total-cell {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.3rem;
       border-bottom: none;
       padding-block: 0.4rem;
       padding-left: 0;
@@ -637,6 +898,15 @@
       content: attr(data-label);
       font-size: 0.8rem;
       color: var(--color-foreground-secondary, #888);
+      font-weight: 500;
+    }
+
+    .cart__discount-code-wrapper {
+      flex-direction: column;
+    }
+
+    .price__savings-badge {
+      margin: 0 auto;
     }
   }
 {% endstylesheet %}
@@ -698,11 +968,20 @@
     const unitPrice = parseInt(row.dataset.unitPrice, 10);
     const quantityInput = row.querySelector('input[type="number"]');
     const totalEl = row.querySelector('[data-line-total]');
+    const originalTotalEl = row.querySelector('.cart-item__original-line-total');
     const totalsWrapper = document.querySelector('.cart__totals');
     if (!unitPrice || !quantityInput || !totalEl || !totalsWrapper) return;
 
     const quantity = parseInt(quantityInput.value, 10) || 0;
-    totalEl.textContent = formatMoney(unitPrice * quantity, totalsWrapper.dataset.moneyFormat);
+    const lineTotal = unitPrice * quantity;
+    totalEl.textContent = formatMoney(lineTotal, totalsWrapper.dataset.moneyFormat);
+
+    // Update original line total if it exists
+    if (originalTotalEl && row.dataset.originalPrice) {
+      const originalUnitPrice = parseInt(row.dataset.originalPrice, 10);
+      const originalLineTotal = originalUnitPrice * quantity;
+      originalTotalEl.textContent = formatMoney(originalLineTotal, totalsWrapper.dataset.moneyFormat);
+    }
   }
 
   function updateSubtotal() {
@@ -729,6 +1008,23 @@
     updateLineTotal(row);
     updateSubtotal();
   });
+
+  // Handle discount code application (for UX enhancement)
+  document.addEventListener('submit', (event) => {
+    const form = event.target.closest('form.cart__form');
+    if (!form) return;
+
+    const discountInput = form.querySelector('#discount-code');
+    const applyButton = form.querySelector('[name="apply_discount"]');
+    const removeButton = form.querySelector('[name="remove_discount"]');
+
+    if (discountInput && discountInput.value.trim() && event.submitter === applyButton) {
+      // The form will submit normally with the discount parameter
+      // This just provides visual feedback
+      discountInput.disabled = true;
+      if (applyButton) applyButton.disabled = true;
+    }
+  });
 {% endjavascript %}
 
 {% schema %}
@@ -739,6 +1035,12 @@
       "type": "checkbox",
       "id": "enable_note",
       "label": "t:sections.cart.settings.enable_note.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_discount_code",
+      "label": "Enable discount code field",
       "default": true
     }
   ]

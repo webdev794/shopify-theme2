@@ -3,9 +3,9 @@
    ======================================== */
 
 .product {
-  --product-gap: 2rem;
-  --product-radius: 0.5rem;
-  padding-block: 2rem;
+  --product-gap: 3.5rem;
+  --product-radius: 0.25rem;
+  padding-block: 3.5rem;
 }
 
 .product__container {
@@ -13,7 +13,7 @@
   gap: var(--product-gap);
   max-width: var(--page-width, 1200px);
   margin-inline: auto;
-  padding-inline: 1rem;
+  padding-inline: 1.5rem;
 }
 
 @media screen and (min-width: 750px) {
@@ -28,26 +28,39 @@
   }
 }
 
-/* ---------- Media gallery ---------- */
-.product__media-main {
+/* ---------- Media gallery ----------
+   Single active main image + bottom thumbnail strip (Lula-style).
+   Non-active slides are hidden so the page does not grow with every image.
+   --------------------------------------------------------------- */
+.product__media {
   display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  border-radius: var(--product-radius);
-  scrollbar-width: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 100%;
 }
 
-.product__media-main::-webkit-scrollbar {
-  display: none;
+.product__media-main {
+  position: relative;
+  border-radius: var(--product-radius);
+  background: var(--color-background-secondary, #f4f4f4);
+  overflow: hidden;
+  /* Cap height so the info column stays in view without endless scroll */
+  max-height: min(70vh, 640px);
+  aspect-ratio: 1 / 1;
 }
 
 .product__media-item {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  aspect-ratio: 1 / 1;
-  background: var(--color-background-secondary, #f4f4f4);
-  padding: 1rem;
+  display: none;
+  width: 100%;
+  height: 100%;
+  padding: 0.75rem;
   box-sizing: border-box;
+}
+
+.product__media-item.is-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product__media-image,
@@ -56,26 +69,48 @@
 .product__media-item model-viewer {
   width: 100%;
   height: 100%;
+  max-height: min(70vh, 640px);
   object-fit: contain;
   display: block;
 }
 
+/* Bottom thumbnail strip — horizontal scroll when many images */
 .product__media-thumbs {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.15rem;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.product__media-thumbs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.product__media-thumbs::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-foreground, #1a1a1a) 25%, transparent);
+  border-radius: 2px;
 }
 
 .product__media-thumb {
-  flex: 0 0 64px;
-  width: 64px;
-  height: 64px;
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
   border-radius: calc(var(--product-radius) / 2);
   overflow: hidden;
-  border: 2px solid transparent;
-  opacity: 0.7;
-  transition: opacity 0.15s ease, border-color 0.15s ease;
+  border: none;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-foreground, #1a1a1a) 12%, transparent);
+  opacity: 0.6;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  scroll-snap-align: start;
+  cursor: pointer;
+  background: var(--color-background-secondary, #f4f4f4);
+  padding: 0;
+  text-decoration: none;
 }
 
 .product__media-thumb img {
@@ -88,7 +123,8 @@
 .product__media-thumb.is-active,
 .product__media-thumb:hover {
   opacity: 1;
-  border-color: var(--color-foreground, #1a1a1a);
+  box-shadow: 0 0 0 1.5px var(--color-foreground, #1a1a1a);
+  transform: translateY(-2px);
 }
 
 .product__media-placeholder svg {
@@ -96,27 +132,50 @@
   height: auto;
 }
 
+@media screen and (max-width: 749px) {
+  .product__media-main {
+    max-height: min(60vh, 520px);
+  }
+
+  .product__media-image,
+  .product__media-item img,
+  .product__media-item video,
+  .product__media-item model-viewer {
+    max-height: min(60vh, 520px);
+  }
+
+  .product__media-thumb {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+  }
+}
+
 /* ---------- Info column ---------- */
 .product__info > * + * {
-  margin-top: 1rem;
+  margin-top: 1.375rem;
 }
 
 .product__vendor {
   text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--color-foreground-secondary, #666);
 }
 
 .product__title {
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+  font-size: clamp(1.75rem, 1.35rem + 1.4vw, 2.5rem);
   line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
 .product__price {
-  font-size: 1.25rem;
+  font-size: 1.375rem;
+  font-weight: 500;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.625rem;
   align-items: baseline;
 }
 
@@ -160,18 +219,19 @@ variant-selects {
 .product__option-label {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.625rem 1.125rem;
   border: 1px solid var(--color-border, #ccc);
-  border-radius: 999px;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
 .product__option-input:checked + .product__option-label {
   border-color: var(--color-foreground, #1a1a1a);
   background: var(--color-foreground, #1a1a1a);
   color: var(--color-background, #fff);
+  transform: translateY(-1px);
 }
 
 .product__option-input:focus-visible + .product__option-label {
@@ -483,14 +543,22 @@ variant-selects {
 
 .product__add-to-cart {
   width: 100%;
-  padding: 0.9rem 1.5rem;
-  border-radius: var(--style-border-radius-inputs, var(--product-radius));
-  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 2px;
+  border: 1px solid var(--color-foreground, #1a1a1a);
   background: var(--color-foreground, #1a1a1a);
   color: var(--color-background, #fff);
-  font-size: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.product__add-to-cart:hover:not(:disabled),
+.product__add-to-cart:focus-visible:not(:disabled) {
+  transform: translateY(-2px);
 }
 
 .product__add-to-cart:disabled {

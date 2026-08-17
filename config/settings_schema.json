@@ -1,11 +1,11 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Petlio",
-    "theme_version": "1.3.14",
+    "theme_name": "Lumora",
+    "theme_version": "1.0.0",
     "theme_author": "Caresort Technologies",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_documentation_url": "https://www.caresortsolutions.com/lumora-theme-documentation/",
+    "theme_support_url": "https://www.caresortsolutions.com/lumora-theme-support/"
   },
   {
     "name": "t:general.typography",
@@ -44,7 +44,7 @@
       {
         "type": "range",
         "id": "min_page_margin",
-        "min": 10,
+        "min": 0,
         "max": 100,
         "step": 1,
         "unit": "px",
@@ -83,6 +83,7 @@
         "default": "#333333",
         "label": "t:labels.foreground"
       },
+
       {
         "type": "header",
         "content": "Secondary colors"
@@ -99,6 +100,7 @@
         "default": "#1A1A1A",
         "label": "Secondary foreground"
       },
+
       {
         "type": "header",
         "content": "Accent / Buttons"
@@ -125,6 +127,7 @@
         "label": "t:labels.input_corner_radius",
         "default": 4
       },
+
       {
         "type": "header",
         "content": "Status colors"
@@ -205,29 +208,6 @@
         "default": "#aaa",
         "label": "Disabled dark color",
         "info": "Darker shade for disabled elements."
-      }
-    ]
-  },
-  {
-    "name": "Story / motion",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "enable_paper_slide",
-        "label": "Homepage paper-slide sections",
-        "default": true,
-        "info": "On the homepage, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still. Turn OFF for a fully static layout (no paper motion). Respects reduced-motion preferences."
-      },
-      {
-        "type": "range",
-        "id": "paper_slide_intensity",
-        "min": 20,
-        "max": 100,
-        "step": 5,
-        "unit": "%",
-        "label": "Slide distance",
-        "default": 55,
-        "info": "How far the paper travels during the short transition animation."
       }
     ]
   },

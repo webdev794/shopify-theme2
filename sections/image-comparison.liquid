@@ -1,14 +1,12 @@
 {% comment %}
   Image Comparison Section
-  Version: 1.0
-  Description: A before/after image comparison slider with drag functionality
 {% endcomment %}
 
 {{ 'image-comparison.css' | asset_url | stylesheet_tag }}
 
 <div class="image-comparison" 
      data-section-id="{{ section.id }}" 
-     data-section-type="image-comparison"
+     data-section-type="image-comparison" data-compare-mode="{{ section.settings.compare_mode | default: 'slider' }}" data-wipe-auto="{{ section.settings.wipe_auto | default: false }}"
      data-default-position="{{ section.settings.default_position }}"
      style="
        --ic-height: {{ section.settings.section_height }}px;
@@ -201,6 +199,24 @@
       "id": "aria_label",
       "label": "t:sections.image_comparison.settings.aria_label.label",
       "default": "Image comparison slider showing before and after"
+    },
+    {
+      "type": "select",
+      "id": "compare_mode",
+      "label": "Comparison mode",
+      "options": [
+        { "value": "slider", "label": "Drag slider" },
+        { "value": "wipe", "label": "Animated wipe" },
+        { "value": "vertical", "label": "Vertical slider" }
+      ],
+      "default": "slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "wipe_auto",
+      "label": "Auto-play wipe animation",
+      "default": true,
+      "info": "Only applies when mode is Animated wipe"
     }
   ],
   "presets": [

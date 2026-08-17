@@ -1,7 +1,5 @@
 {% comment %}
   Pairing Products Section
-  Version: 1.0
-  Description: A section that displays complementary products that pair well together
 {% endcomment %}
 
 {{ 'pairing-products.css' | asset_url | stylesheet_tag }}
@@ -156,7 +154,7 @@
               </div>
               <div class="pairing-products__bundle-price">
                 <span class="pairing-products__bundle-price-label">{{ section.settings.bundle_price_label | default: 'Bundle Price' | escape }}:</span>
-                <span class="pairing-products__bundle-price-amount" id="bundle-total-price">
+                <span class="pairing-products__bundle-price-amount" id="bundle-total-price-{{ section.id }}">
                   {%- assign bundle_price = main_product.price -%}
                   {%- for block in section.blocks -%}
                     {%- assign product = block.settings.product -%}

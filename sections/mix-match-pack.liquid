@@ -1,11 +1,8 @@
 {% comment %}
   Mix & Match Pack Section
-  Version: 1.0
-  Description: A section that allows customers to build their own custom pack/bundle by selecting products
 {% endcomment %}
 
-<link rel="preload" href="{{ 'mix-match-pack.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript>{{ 'mix-match-pack.css' | asset_url | stylesheet_tag }}</noscript>
+{{ 'mix-match-pack.css' | asset_url | stylesheet_tag }}
 
 <div class="mix-match-pack" 
      data-section-id="{{ section.id }}" 

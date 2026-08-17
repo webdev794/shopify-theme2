@@ -6,6 +6,7 @@
   class="burst-effects" 
   data-section-id="{{ section.id }}" 
   data-animation="{{ section.settings.animation_effect }}"
+  data-mobile-animation="{{ section.settings.mobile_animation | default: 'fade-up' }}"
   data-duration="{{ section.settings.animation_duration }}"
   data-delay="{{ section.settings.animation_delay }}"
 >
@@ -55,7 +56,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "header", "content": "t:sections.burst_effects.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "t:sections.burst_effects.settings.header__1.content"
+    },
     {
       "type": "image_picker",
       "id": "image",
@@ -97,17 +101,35 @@
       "label": "Description color",
       "default": "#ffffff"
     },
-    { "type": "header", "content": "t:sections.burst_effects.settings.header__2.content" },
+    {
+      "type": "header",
+      "content": "t:sections.burst_effects.settings.header__2.content"
+    },
     {
       "type": "select",
       "id": "button_style",
       "label": "t:sections.burst_effects.settings.button_style.label",
       "options": [
-        { "value": "gradient", "label": "t:sections.burst_effects.settings.button_style.options__1.label" },
-        { "value": "outline", "label": "t:sections.burst_effects.settings.button_style.options__2.label" },
-        { "value": "glow", "label": "t:sections.burst_effects.settings.button_style.options__3.label" },
-        { "value": "slide", "label": "t:sections.burst_effects.settings.button_style.options__4.label" },
-        { "value": "pulse", "label": "t:sections.burst_effects.settings.button_style.options__5.label" }
+        {
+          "value": "gradient",
+          "label": "t:sections.burst_effects.settings.button_style.options__1.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.burst_effects.settings.button_style.options__2.label"
+        },
+        {
+          "value": "glow",
+          "label": "t:sections.burst_effects.settings.button_style.options__3.label"
+        },
+        {
+          "value": "slide",
+          "label": "t:sections.burst_effects.settings.button_style.options__4.label"
+        },
+        {
+          "value": "pulse",
+          "label": "t:sections.burst_effects.settings.button_style.options__5.label"
+        }
       ],
       "default": "gradient"
     },
@@ -117,18 +139,45 @@
       "label": "t:sections.burst_effects.settings.show_icon.label",
       "default": true
     },
-    { "type": "header", "content": "t:sections.burst_effects.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "t:sections.burst_effects.settings.header__3.content"
+    },
     {
       "type": "select",
       "id": "animation_effect",
       "label": "t:sections.burst_effects.settings.animation_effect.label",
       "options": [
-        { "value": "fade-in", "label": "t:sections.burst_effects.settings.animation_effect.options__1.label" },
-        { "value": "slide-up", "label": "t:sections.burst_effects.settings.animation_effect.options__2.label" },
-        { "value": "scale-up", "label": "t:sections.burst_effects.settings.animation_effect.options__3.label" },
-        { "value": "parallax", "label": "t:sections.burst_effects.settings.animation_effect.options__4.label" }
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "fade-up",
+          "label": "Fade up"
+        },
+        {
+          "value": "fade-scale",
+          "label": "Fade + scale (bloom)"
+        },
+        {
+          "value": "clip-reveal",
+          "label": "Clip reveal"
+        },
+        {
+          "value": "parallax",
+          "label": "Parallax media"
+        },
+        {
+          "value": "ken-burns",
+          "label": "Ken Burns (slow zoom)"
+        },
+        {
+          "value": "split-up",
+          "label": "Split rise"
+        }
       ],
-      "default": "fade-in"
+      "default": "fade-scale"
     },
     {
       "type": "range",
@@ -149,10 +198,33 @@
       "unit": "s",
       "label": "t:sections.burst_effects.settings.animation_delay.label",
       "default": 0.2
+    },
+    {
+      "type": "select",
+      "id": "mobile_animation",
+      "label": "Mobile animation",
+      "options": [
+        {
+          "value": "match",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "fade-up",
+          "label": "Simple fade up"
+        },
+        {
+          "value": "none",
+          "label": "None (static)"
+        }
+      ],
+      "default": "fade-up",
+      "info": "Lighter motion on small screens for performance"
     }
   ],
   "presets": [
-    { "name": "t:sections.burst_effects.presets.name" }
+    {
+      "name": "t:sections.burst_effects.presets.name"
+    }
   ]
 }
 {% endschema %}

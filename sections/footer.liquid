@@ -1,816 +1,416 @@
-{{ 'footer.css' | asset_url | stylesheet_tag }}
+{%- comment -%}
+  Footer — dark editorial 
+{%- endcomment -%}
+
+{%- capture social_links -%}
+  {%- if section.settings.social_instagram != blank -%}
+    <a href="{{ section.settings.social_instagram }}" class="footer__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"></circle></svg>
+    </a>
+  {%- endif -%}
+  {%- if section.settings.social_facebook != blank -%}
+    <a href="{{ section.settings.social_facebook }}" class="footer__social-link" aria-label="Facebook" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M15 3h-2a5 5 0 0 0-5 5v2H6v4h2v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path></svg>
+    </a>
+  {%- endif -%}
+  {%- if section.settings.social_x != blank -%}
+    <a href="{{ section.settings.social_x }}" class="footer__social-link" aria-label="X" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M22 5.9a8 8 0 0 1-2.36.65 4.1 4.1 0 0 0 1.8-2.27 8.2 8.2 0 0 1-2.6 1 4.1 4.1 0 0 0-7 3.74A11.6 11.6 0 0 1 3.1 4.6a4.1 4.1 0 0 0 1.27 5.47A4.1 4.1 0 0 1 2.5 9.6a4.1 4.1 0 0 0 3.29 4.02 4.1 4.1 0 0 1-1.85.07 4.1 4.1 0 0 0 3.83 2.85A8.2 8.2 0 0 1 2 18.4a11.6 11.6 0 0 0 6.29 1.84c7.55 0 11.68-6.26 11.68-11.68l-.01-.53A8.3 8.3 0 0 0 22 5.9z"></path></svg>
+    </a>
+  {%- endif -%}
+  {%- if section.settings.social_linkedin != blank -%}
+    <a href="{{ section.settings.social_linkedin }}" class="footer__social-link" aria-label="LinkedIn" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="9" width="4" height="11"></rect><circle cx="5" cy="4.5" r="1.6" fill="currentColor" stroke="none"></circle><path d="M11 20V9h4v1.8C15.7 9.6 17 9 18.3 9 21 9 22 10.9 22 13.6V20h-4v-6c0-1.4-.5-2.3-1.8-2.3-1 0-1.6.7-1.9 1.4-.1.2-.1.6-.1.9V20h-3.2z"></path></svg>
+    </a>
+  {%- endif -%}
+  {%- if section.settings.social_pinterest != blank -%}
+    <a href="{{ section.settings.social_pinterest }}" class="footer__social-link" aria-label="Pinterest" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 22c.5-2 1.2-5 1.6-6.6"></path><path d="M9.4 15c-.6-1-1-2-1-3.4a5.6 5.6 0 0 1 11.2 0c0 3.6-2 6.4-4.8 6.4-1.3 0-2.4-.7-2.8-1.5"></path><circle cx="12" cy="12" r="10"></circle></svg>
+    </a>
+  {%- endif -%}
+  {%- if section.settings.social_youtube != blank -%}
+    <a href="{{ section.settings.social_youtube }}" class="footer__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9.5v5l5-2.5z" fill="currentColor" stroke="none"></path></svg>
+    </a>
+  {%- endif -%}
+{%- endcapture -%}
 
 <footer class="footer">
-  <div class="footer__shell">
-
-    <!-- ======================================================
-         TOP BRAND / MESSAGE
-         ====================================================== -->
-
-    <div class="footer__intro">
-
-      <div class="footer__brand">
-
-        <a
-          href="{{ routes.root_url }}"
-          class="footer__logo"
-          aria-label="{{ shop.name | escape }}"
-        >
-          {%- if section.settings.logo != blank -%}
-
-            {{
-              section.settings.logo
-              | image_url: width: 360
-              | image_tag:
-                alt: shop.name,
-                widths: '180, 280, 360',
-                sizes: '(max-width: 749px) 180px, 220px',
-                class: 'footer__logo-image'
-            }}
-
-          {%- else -%}
-
-            <span class="footer__logo-text">
-              {{ shop.name }}
-            </span>
-
-          {%- endif -%}
-        </a>
-
-        {%- if section.settings.tagline != blank -%}
-          <p class="footer__tagline">
-            {{ section.settings.tagline }}
-          </p>
-        {%- endif -%}
-
-      </div>
-
-
-      <!-- Small decorative mark -->
-
-      <div
-        class="footer__mark"
-        aria-hidden="true"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-
-      <!-- Closing statement -->
-
-      <div class="footer__closing">
-
-        <p class="footer__closing-kicker">
-          {{ section.settings.closing_kicker }}
-        </p>
-
-        <h2 class="footer__closing-heading">
-          {{ section.settings.closing_heading }}
-        </h2>
-
-        <p class="footer__closing-text">
-          {{ section.settings.closing_text }}
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <!-- ======================================================
-         MAIN FOOTER CONTENT
-         ====================================================== -->
-
-    <div class="footer__main">
-
-
-      <!-- ====================================================
-           NAVIGATION
-           ==================================================== -->
-
-      <div class="footer__navigation">
-
-        {%- if section.settings.footer_menu != blank -%}
-
-          <div class="footer__menu-column">
-
-            <p class="footer__column-label">
-              {{ section.settings.menu_heading }}
-            </p>
-
-            <nav
-              class="footer__nav"
-              aria-label="Footer navigation"
-            >
-
-              <ul class="footer__menu" role="list">
-
-                {%- for link in section.settings.footer_menu.links -%}
-
-                  <li class="footer__menu-item">
-
-                    <a
-                      href="{{ link.url }}"
-                      class="footer__link"
-                      {% if link.current %}
-                        aria-current="page"
-                      {% endif %}
-                    >
-                      <span>
-                        {{ link.title | escape }}
-                      </span>
-
-                      <span
-                        class="footer__link-arrow"
-                        aria-hidden="true"
-                      >
-                        ↗
-                      </span>
-                    </a>
-
-                  </li>
-
-                {%- endfor -%}
-
-
-                {%- if section.settings.show_contact_link -%}
-
-                  <li class="footer__menu-item">
-
-                    <a
-                      href="/pages/contact"
-                      class="footer__link"
-                    >
-                      <span>
-                        Contact
-                      </span>
-
-                      <span
-                        class="footer__link-arrow"
-                        aria-hidden="true"
-                      >
-                        ↗
-                      </span>
-                    </a>
-
-                  </li>
-
-                {%- endif -%}
-
-              </ul>
-
-            </nav>
-
-          </div>
-
-        {%- endif -%}
-
-
-        <!-- ==================================================
-             ADDITIONAL BLOCKS
-             ================================================== -->
-
-        {%- for block in section.blocks -%}
-
-          {%- case block.type -%}
-
-            {%- when 'link_list' -%}
-
-              {%- if block.settings.menu != blank -%}
-
-                <div
-                  class="footer__menu-column"
-                  {{ block.shopify_attributes }}
-                >
-
-                  <p class="footer__column-label">
-
-                    {%- if block.settings.heading != blank -%}
-                      {{ block.settings.heading }}
-                    {%- else -%}
-                      {{ block.settings.menu.title }}
-                    {%- endif -%}
-
-                  </p>
-
-                  <ul
-                    class="footer__menu"
-                    role="list"
-                  >
-
-                    {%- for link in block.settings.menu.links -%}
-
-                      <li class="footer__menu-item">
-
-                        <a
-                          href="{{ link.url }}"
-                          class="footer__link"
-                        >
-                          <span>
-                            {{ link.title | escape }}
-                          </span>
-
-                          <span
-                            class="footer__link-arrow"
-                            aria-hidden="true"
-                          >
-                            ↗
-                          </span>
-                        </a>
-
-                      </li>
-
-                    {%- endfor -%}
-
-                  </ul>
-
-                </div>
-
-              {%- endif -%}
-
-
-            {%- when 'text' -%}
-
-              <div
-                class="footer__text-column"
-                {{ block.shopify_attributes }}
-              >
-
-                {%- if block.settings.heading != blank -%}
-
-                  <p class="footer__column-label">
-                    {{ block.settings.heading }}
-                  </p>
-
-                {%- endif -%}
-
-                <div class="footer__block-text">
-                  {{ block.settings.text }}
-                </div>
-
-              </div>
-
-          {%- endcase -%}
-
-        {%- endfor -%}
-
-      </div>
-
-
-      <!-- ====================================================
-           NEWSLETTER
-           ==================================================== -->
-
-      {%- if section.settings.show_newsletter -%}
-
-        <div class="footer__newsletter">
-
-          <div class="footer__newsletter-copy">
-
-            <p class="footer__column-label">
-              {{ section.settings.newsletter_heading | default: 'Stay close' }}
-            </p>
-
-            {%- if section.settings.newsletter_text != blank -%}
-
-              <p class="footer__newsletter-text">
-                {{ section.settings.newsletter_text }}
-              </p>
-
-            {%- endif -%}
-
-          </div>
-
-
-          {%- form 'customer', class: 'footer__newsletter-form' -%}
-
-            <input
-              type="hidden"
-              name="contact[tags]"
-              value="newsletter"
-            >
-
-            <label
-              for="FooterNewsletterEmail"
-              class="visually-hidden"
-            >
-              Email address
-            </label>
-
-            <input
-              id="FooterNewsletterEmail"
-              type="email"
-              name="contact[email]"
-              class="footer__newsletter-input"
-              value="{{ form.email }}"
-              placeholder="{{ section.settings.newsletter_placeholder }}"
-              required
-              autocomplete="email"
-              autocorrect="off"
-              autocapitalize="off"
-            >
-
-            <button
-              type="submit"
-              class="footer__newsletter-submit"
-              aria-label="{{ section.settings.newsletter_button_label }}"
-            >
-
-              <span>
-                {{ section.settings.newsletter_button_label }}
-              </span>
-
-              <span
-                class="footer__newsletter-arrow"
-                aria-hidden="true"
-              >
-                →
-              </span>
-
-            </button>
-
-            {%- if form.errors -%}
-
-              <p
-                class="footer__form-message footer__form-message--error"
-                role="alert"
-              >
-                {{ form.errors.translated_fields.email | capitalize }}
-                {{ form.errors.messages.email }}
-              </p>
-
-            {%- endif -%}
-
-
-            {%- if form.posted_successfully? -%}
-
-              <p
-                class="footer__form-message footer__form-message--success"
-                role="status"
-              >
-                {{ section.settings.newsletter_success_message }}
-              </p>
-
-            {%- endif -%}
-
-          {%- endform -%}
-
-          <p class="footer__newsletter-note">
-            {{ section.settings.newsletter_note }}
-          </p>
-
+  <div class="footer__glow" aria-hidden="true"></div>
+  <div class="footer__inner page-width">
+
+    {%- if section.settings.tagline != blank -%}
+      <div class="footer__rule"></div>
+      <p class="footer__tagline">{{ section.settings.tagline }}</p>
+    {%- endif -%}
+
+    <div class="footer__top">
+
+      {%- if social_links != blank -%}
+        <div class="footer__col">
+          <h3 class="footer__heading">Follow</h3>
+          <div class="footer__social">{{ social_links }}</div>
         </div>
-
       {%- endif -%}
 
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_list' -%}
+          {%- assign col_heading = block.settings.heading | default: block.settings.menu.title -%}
+          <nav class="footer__col" aria-label="{{ col_heading }}" {{ block.shopify_attributes }}>
+            {%- if col_heading != blank -%}<h3 class="footer__heading">{{ col_heading }}</h3>{%- endif -%}
+            <ul class="footer__list" role="list">
+              {%- for link in block.settings.menu.links -%}
+                {%- assign link_chars = link.title | split: '' -%}
+                <li>
+                  <a href="{{ link.url }}" class="footer__link">
+                    <span class="footer__link-text">
+                      {%- comment -%} Primary line (visible) — exits downward on hover {%- endcomment -%}
+                      <span class="footer__link-line footer__link-line--primary">
+                        {%- for ch in link_chars -%}
+                          <span class="footer__letter"{% if ch == ' ' %} style="white-space:pre"{% endif %}>{{ ch }}</span>
+                        {%- endfor -%}
+                      </span>
+                      {%- comment -%} Secondary line — enters from above (top → bottom) {%- endcomment -%}
+                      <span class="footer__link-line footer__link-line--secondary" aria-hidden="true">
+                        {%- for ch in link_chars -%}
+                          <span class="footer__letter"{% if ch == ' ' %} style="white-space:pre"{% endif %}>{{ ch }}</span>
+                        {%- endfor -%}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+      {%- endfor -%}
     </div>
-
-
-    <!-- ======================================================
-         BOTTOM
-         ====================================================== -->
 
     <div class="footer__bottom">
-
-
-      <!-- Social -->
-
-      {%- if section.settings.show_social -%}
-
-        <div class="footer__social-area">
-
-          <span class="footer__bottom-label">
-            Follow along
-          </span>
-
-          <ul
-            class="footer__social"
-            role="list"
-          >
-
-            {%- if settings.social_instagram_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_instagram_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Instagram"
-                >
-                  {% render 'icon-instagram' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_facebook_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_facebook_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Facebook"
-                >
-                  {% render 'icon-facebook' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_tiktok_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_tiktok_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="TikTok"
-                >
-                  {% render 'icon-tiktok' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_pinterest_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_pinterest_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Pinterest"
-                >
-                  {% render 'icon-pinterest' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_youtube_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_youtube_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="YouTube"
-                >
-                  {% render 'icon-youtube' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_twitter_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_twitter_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="X / Twitter"
-                >
-                  {% render 'icon-twitter' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-          </ul>
-
-        </div>
-
-      {%- endif -%}
-
-
-      <!-- Payment -->
-
-      {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-
-        <ul
-          class="footer__payment"
-          role="list"
-          aria-label="Payment methods"
-        >
-
-          {%- for type in shop.enabled_payment_types -%}
-
-            <li>
-              {{
-                type
-                | payment_type_svg_tag:
-                  class: 'footer__payment-icon'
-              }}
-            </li>
-
-          {%- endfor -%}
-
-        </ul>
-
-      {%- endif -%}
-
-
-      <!-- Copyright -->
-
-      <div class="footer__copyright">
-
-        <span>
-          © {{ 'now' | date: '%Y' }}
-        </span>
-
-        <span class="footer__dot">
-          ·
-        </span>
-
-        <a href="{{ routes.root_url }}">
-          {{ shop.name }}
-        </a>
-
-        <span class="footer__dot">
-          ·
-        </span>
-
-        <span class="footer__powered">
-          {{ powered_by_link }}
-        </span>
-
-        {%- if shop.privacy_policy != blank or shop.terms_of_service != blank or shop.refund_policy != blank or shop.shipping_policy != blank -%}
-          <span class="footer__dot">·</span>
-          <span class="footer__policies">
-            {%- if shop.privacy_policy != blank -%}
-              <a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title | default: 'Privacy' }}</a>
-            {%- endif -%}
-            {%- if shop.terms_of_service != blank -%}
-              {%- if shop.privacy_policy != blank %}<span class="footer__dot">·</span>{%- endif -%}
-              <a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title | default: 'Terms' }}</a>
-            {%- endif -%}
-            {%- if shop.refund_policy != blank -%}
-              {%- if shop.privacy_policy != blank or shop.terms_of_service != blank %}<span class="footer__dot">·</span>{%- endif -%}
-              <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | default: 'Refunds' }}</a>
-            {%- endif -%}
-            {%- if shop.shipping_policy != blank -%}
-              {%- if shop.privacy_policy != blank or shop.terms_of_service != blank or shop.refund_policy != blank %}<span class="footer__dot">·</span>{%- endif -%}
-              <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | default: 'Shipping' }}</a>
-            {%- endif -%}
-          </span>
+      <span class="footer__copyright">
+        {%- if section.settings.copyright_text != blank -%}
+          {{ section.settings.copyright_text }}
+        {%- else -%}
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
         {%- endif -%}
-
-      </div>
-
-    </div>
-
-
-    <!-- ======================================================
-         DECORATIVE FOOTER PATH
-         ====================================================== -->
-
-    <div
-      class="footer__path"
-      aria-hidden="true"
-    >
-
-      <span class="footer__path-line"></span>
-
-      <span class="footer__paw">
-        <svg
-          viewBox="0 0 40 40"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="12" r="4"/>
-          <circle cx="22" cy="8" r="4"/>
-          <circle cx="30" cy="14" r="4"/>
-          <path d="M10 25c1-6 7-9 12-8 6 1 9 6 8 11-1 5-6 7-11 6-6-1-10-4-9-9z"/>
-        </svg>
       </span>
-
+      {%- if section.settings.bottom_right_text != blank -%}
+        <span class="footer__powered">{{ section.settings.bottom_right_text }}</span>
+      {%- endif -%}
     </div>
-
   </div>
 </footer>
 
+{% stylesheet %}
+  .footer {
+    --footer-bg: oklch(0.17 0.004 80);
+    --footer-fg: oklch(0.96 0.006 80);
+    --footer-accent: oklch(0.75 0.12 190);
+    background: var(--footer-bg);
+    color: var(--footer-fg);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .footer__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 900px 500px at 85% -10%, color-mix(in oklch, var(--footer-accent) 8%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  .footer__inner {
+    position: relative;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding: 6rem 1.5rem 0;
+  }
+
+  .footer__rule {
+    width: 2rem;
+    height: 2px;
+    background: var(--footer-accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__tagline {
+    margin: 0;
+    font-size: 1.4375rem;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    max-width: 30ch;
+    color: color-mix(in oklch, var(--footer-fg) 90%, transparent);
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  .footer__top {
+    margin-top: 4.5rem;
+    padding-top: 3.5rem;
+    border-top: 1px solid color-mix(in oklch, var(--footer-fg) 14%, transparent);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .footer__heading {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin: 0 0 1.375rem;
+    color: color-mix(in oklch, var(--footer-fg) 35%, transparent);
+  }
+
+  .footer__social {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.375rem;
+  }
+  .footer__social-link {
+    width: 2.125rem;
+    height: 2.125rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid color-mix(in oklch, var(--footer-fg) 20%, transparent);
+    display: grid;
+    place-items: center;
+    color: color-mix(in oklch, var(--footer-fg) 75%, transparent);
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  }
+  .footer__social-link:hover {
+    border-color: var(--footer-accent);
+    background-color: var(--footer-accent);
+    color: var(--footer-bg);
+    transform: scale(1.12) rotate(-6deg);
+  }
+
+  .footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.875rem;
+  }
+
+  /* Dual-line letter swap: primary exits downward, secondary enters from above
+     (top → bottom — reverse of nav links that rise bottom → top). */
+  .footer__link {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: color-mix(in oklch, var(--footer-fg) 85%, transparent);
+    font-size: 0.9375rem;
+    transition: color 0.3s ease;
+  }
+  .footer__link:hover { color: var(--footer-accent); }
+
+  .footer__link-text {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    height: 1.3em;
+    line-height: 1.3em;
+    vertical-align: top;
+  }
+
+  .footer__link-line {
+    display: block;
+    white-space: nowrap;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .footer__link-line--primary {
+    transform: translateY(0);
+  }
+
+  .footer__link-line--secondary {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(-110%);
+  }
+
+  /* Hover: primary drops out (top → bottom), secondary slides in from above */
+  .footer__link:hover .footer__link-line--primary {
+    transform: translateY(110%);
+  }
+  .footer__link:hover .footer__link-line--secondary {
+    transform: translateY(0);
+  }
+
+  .footer__letter {
+    display: inline-block;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Stagger per letter for a cascading top→bottom feel */
+  .footer__link-line .footer__letter:nth-child(1) { transition-delay: 0ms; }
+  .footer__link-line .footer__letter:nth-child(2) { transition-delay: 20ms; }
+  .footer__link-line .footer__letter:nth-child(3) { transition-delay: 40ms; }
+  .footer__link-line .footer__letter:nth-child(4) { transition-delay: 60ms; }
+  .footer__link-line .footer__letter:nth-child(5) { transition-delay: 80ms; }
+  .footer__link-line .footer__letter:nth-child(6) { transition-delay: 100ms; }
+  .footer__link-line .footer__letter:nth-child(7) { transition-delay: 120ms; }
+  .footer__link-line .footer__letter:nth-child(8) { transition-delay: 140ms; }
+  .footer__link-line .footer__letter:nth-child(9) { transition-delay: 160ms; }
+  .footer__link-line .footer__letter:nth-child(10) { transition-delay: 180ms; }
+  .footer__link-line .footer__letter:nth-child(11) { transition-delay: 200ms; }
+  .footer__link-line .footer__letter:nth-child(12) { transition-delay: 220ms; }
+  .footer__link-line .footer__letter:nth-child(13) { transition-delay: 240ms; }
+  .footer__link-line .footer__letter:nth-child(14) { transition-delay: 260ms; }
+  .footer__link-line .footer__letter:nth-child(15) { transition-delay: 280ms; }
+  .footer__link-line .footer__letter:nth-child(16) { transition-delay: 300ms; }
+  .footer__link-line .footer__letter:nth-child(17) { transition-delay: 320ms; }
+  .footer__link-line .footer__letter:nth-child(18) { transition-delay: 340ms; }
+  .footer__link-line .footer__letter:nth-child(19) { transition-delay: 360ms; }
+  .footer__link-line .footer__letter:nth-child(20) { transition-delay: 380ms; }
+  .footer__link-line .footer__letter:nth-child(21) { transition-delay: 400ms; }
+  .footer__link-line .footer__letter:nth-child(22) { transition-delay: 420ms; }
+  .footer__link-line .footer__letter:nth-child(23) { transition-delay: 440ms; }
+  .footer__link-line .footer__letter:nth-child(24) { transition-delay: 460ms; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer__link-line,
+    .footer__letter {
+      transition: none !important;
+    }
+    .footer__link-line--secondary {
+      display: none;
+    }
+    .footer__link:hover .footer__link-line--primary {
+      transform: none;
+    }
+  }
+
+  .footer__bottom {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    border-top: 1px solid color-mix(in oklch, var(--footer-fg) 10%, transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer__copyright,
+  .footer__powered {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    color: color-mix(in oklch, var(--footer-fg) 40%, transparent);
+  }
+
+  .footer a:focus-visible,
+  .footer button:focus-visible {
+    outline: 2px solid var(--footer-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 990px) {
+    .footer__top {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .footer__inner {
+      padding-top: 4rem;
+    }
+    .footer__top {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .footer * { transition: none !important; }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Footer",
+  "name": "t:general.footer",
   "class": "shopify-section--footer",
-
   "settings": [
-
-    {
-      "type": "header",
-      "content": "Brand"
-    },
-
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo"
-    },
-
+    { "type": "header", "content": "t:sections.footer.settings.header__1.content" },
     {
       "type": "textarea",
       "id": "tagline",
-      "label": "Tagline",
-      "default": "Thoughtful things for the everyday moments you share."
+      "label": "t:sections.footer.settings.tagline.label",
+      "default": "Quality products, thoughtfully made."
     },
-
+    { "type": "header", "content": "t:sections.footer.settings.header__3.content" },
     {
       "type": "text",
-      "id": "closing_kicker",
-      "label": "Closing kicker",
-      "default": "FOR THE LOVE THEY GIVE"
+      "id": "social_instagram",
+      "label": "Instagram URL"
     },
-
     {
       "type": "text",
-      "id": "closing_heading",
-      "label": "Closing heading",
-      "default": "Life with them is better."
+      "id": "social_facebook",
+      "label": "Facebook URL"
     },
-
-    {
-      "type": "textarea",
-      "id": "closing_text",
-      "label": "Closing text",
-      "default": "Better care. Happier moments. Stronger together."
-    },
-
-    {
-      "type": "header",
-      "content": "Navigation"
-    },
-
-    {
-      "type": "link_list",
-      "id": "footer_menu",
-      "label": "Footer menu",
-      "info": "Select the menu to display in the footer",
-      "default": "footer"
-    },
-
     {
       "type": "text",
-      "id": "menu_heading",
-      "label": "Menu heading",
-      "default": "Explore"
+      "id": "social_x",
+      "label": "X URL"
     },
-
-    {
-      "type": "checkbox",
-      "id": "show_contact_link",
-      "label": "Show contact link",
-      "default": true
-    },
-
-    {
-      "type": "header",
-      "content": "Newsletter"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_newsletter",
-      "label": "Show newsletter signup",
-      "default": true
-    },
-
     {
       "type": "text",
-      "id": "newsletter_heading",
-      "label": "Newsletter heading",
-      "default": "Stay close"
+      "id": "social_linkedin",
+      "label": "LinkedIn URL"
     },
-
-    {
-      "type": "textarea",
-      "id": "newsletter_text",
-      "label": "Newsletter text",
-      "default": "New finds, useful ideas, and little things worth knowing."
-    },
-
     {
       "type": "text",
-      "id": "newsletter_placeholder",
-      "label": "Email placeholder",
-      "default": "Your email address"
+      "id": "social_pinterest",
+      "label": "Pinterest URL"
     },
-
     {
       "type": "text",
-      "id": "newsletter_button_label",
-      "label": "Button label",
-      "default": "Join us"
+      "id": "social_youtube",
+      "label": "YouTube URL"
     },
-
+    { "type": "header", "content": "t:general.footer" },
     {
       "type": "text",
-      "id": "newsletter_note",
-      "label": "Newsletter note",
-      "default": "No noise. Just the good stuff."
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "info": "Leave blank to auto-generate \u00a9 current year + store name."
     },
-
     {
       "type": "text",
-      "id": "newsletter_success_message",
-      "label": "Success message",
-      "default": "You're in. Welcome to Petlio."
-    },
-
-    {
-      "type": "header",
-      "content": "Social media"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_social",
-      "label": "Show social icons",
-      "default": true,
-      "info": "Set social URLs in Theme settings → Social media."
-    },
-
-    {
-      "type": "header",
-      "content": "Payment"
-    },
-
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "Show payment icons",
-      "default": true
+      "id": "bottom_right_text",
+      "label": "Bottom-right text",
+      "default": "Powered by Shopify",
+      "info": "Leave blank to hide."
     }
-
   ],
-
   "blocks": [
-
     {
       "type": "link_list",
-      "name": "Additional menu",
-
+      "name": "t:sections.footer.blocks.link_list.name",
       "settings": [
-
         {
           "type": "text",
           "id": "heading",
-          "label": "Heading",
-          "info": "Leave blank to use the menu's title."
+          "label": "t:sections.footer.blocks.link_list.settings.heading.label",
+          "info": "t:sections.footer.blocks.link_list.settings.heading.info"
         },
-
         {
           "type": "link_list",
           "id": "menu",
-          "label": "Menu"
+          "label": "t:labels.menu",
+          "default": "footer"
         }
-
-      ]
-    },
-
-    {
-      "type": "text",
-      "name": "Text column",
-
-      "settings": [
-
-        {
-          "type": "text",
-          "id": "heading",
-          "label": "Heading"
-        },
-
-        {
-          "type": "richtext",
-          "id": "text",
-          "label": "Text"
-        }
-
       ]
     }
-
   ],
-
   "max_blocks": 4,
-
   "enabled_on": {
-    "groups": [
-      "footer"
-    ]
+    "groups": ["footer"]
   }
 }
 {% endschema %}

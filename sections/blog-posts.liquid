@@ -1,4 +1,4 @@
-{{ 'section-blog-posts.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'section-blog-posts.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'blog-posts.js' | asset_url }}" defer></script>
 
@@ -7,10 +7,7 @@
   data-section-id="{{ section.id }}"
   data-layout="{{ section.settings.layout }}"
   data-columns="{{ section.settings.columns }}"
-  style="
-    --bp-bg: {{ section.settings.background_color | default: '#f7f3eb' }};
-    --color-background: {{ section.settings.background_color | default: '#f7f3eb' }};
-  "
+  style="--blog-posts-bg: {{ section.settings.background_color }};"
 >
   <div class="blog-posts__container">
     
@@ -311,8 +308,8 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
-      "default": "#f7f3eb"
+      "label": "Background color",
+      "default": "#ffffff"
     }
   ],
   "presets": [

@@ -96,8 +96,6 @@ class VariantSelects extends HTMLElement {
     const target = document.getElementById(`media-${this.sectionId}-${variant.featured_media_id}`);
     if (!target) return;
 
-    target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: 'smooth' });
-
     document
       .querySelectorAll(`#product-media-main-${this.sectionId} .product__media-item`)
       .forEach((item) => item.classList.toggle('is-active', item === target));
@@ -109,6 +107,7 @@ class VariantSelects extends HTMLElement {
         thumb.classList.toggle('is-active', isActive);
         if (isActive) {
           thumb.setAttribute('aria-current', 'true');
+          thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
         } else {
           thumb.removeAttribute('aria-current');
         }
@@ -367,14 +366,17 @@ function updatePickupAvailability(sectionId, variant) {
   }
 }
 
-// Sync active state when a thumbnail is clicked directly (not via variant change)
+// Thumbnail click: swap main image in place (no page jump from href="#…")
 document.addEventListener('click', (event) => {
   const thumb = event.target.closest('.product__media-thumb');
   if (!thumb) return;
 
-  const mediaId = thumb.dataset.mediaId;
+  event.preventDefault();
 
-  document.querySelectorAll('.product__media-thumb').forEach((t) => {
+  const mediaId = thumb.dataset.mediaId;
+  const mediaRoot = thumb.closest('.product__media') || document;
+
+  mediaRoot.querySelectorAll('.product__media-thumb').forEach((t) => {
     t.classList.toggle('is-active', t === thumb);
     if (t === thumb) {
       t.setAttribute('aria-current', 'true');
@@ -383,9 +385,14 @@ document.addEventListener('click', (event) => {
     }
   });
 
-  document.querySelectorAll('.product__media-item').forEach((item) =>
+  mediaRoot.querySelectorAll('.product__media-item').forEach((item) =>
     item.classList.toggle('is-active', item.dataset.mediaId === mediaId)
   );
+
+  // Keep active thumb visible in the horizontal strip
+  if (typeof thumb.scrollIntoView === 'function') {
+    thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+  }
 });
 
 // Modal open/close (event delegation, works after innerHTML rebuilds)

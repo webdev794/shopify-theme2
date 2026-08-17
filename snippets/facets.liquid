@@ -6,10 +6,6 @@
   Renders list, boolean, and price_range filter types using Shopify's native
   filter/URL API (works with JS off; JS just auto-submits on change so
   shoppers don't have to click a separate "Apply" button).
-
-  Supports variant-based filters (Size, Color, Material, etc.) when configured
-  in Shopify Admin → Online Store → Navigation → Filters (or Search & Discovery).
-  Color/swatch filters use visual swatches when available.
 {% endcomment %}
 
 {%- if filters.size > 0 -%}
@@ -51,124 +47,32 @@
         </div>
 
         <form id="FacetFiltersForm-{{ section.id }}" class="facets__form" data-facets-form>
-          {%- comment -%} 
-            COLLECTIONS FILTER - appears at the top of all filters
-          {%- endcomment -%}
-          {%- if section.settings.show_collections_filter -%}
-            <details class="facets__group" open>
-              <summary class="facets__group-heading">
-                {{ 'collections.title' | t }}
-                {%- if collection.handle != 'all' and collection.handle != blank -%}
-                  <span class="facets__group-active-count">1</span>
-                {%- endif -%}
-              </summary>
-              <ul class="facets__list list-unstyled">
-                <li class="facets__list-item">
-                  <a
-                    href="{{ routes.all_products_collection_url }}"
-                    class="facets__collection-link{% if collection.handle == 'all' or collection.handle == blank %} facets__collection-link--active{% endif %}"
-                  >
-                    {{ 'collections.general.view_all' | t }}
-                  </a>
-                </li>
-                {%- for col in collections -%}
-                  {%- if col.all_products_count > 0 -%}
-                    <li class="facets__list-item">
-                      <a
-                        href="{{ col.url }}"
-                        class="facets__collection-link{% if col.handle == collection.handle %} facets__collection-link--active{% endif %}"
-                      >
-                        {{ col.title | escape }}
-                        <span class="facets__count">({{ col.all_products_count }})</span>
-                      </a>
-                    </li>
-                  {%- endif -%}
-                {%- endfor -%}
-              </ul>
-            </details>
-          {%- endif -%}
-
           {%- for filter in filters -%}
-            {%- liquid
-              assign is_swatch_filter = false
-              if filter.presentation == 'swatch'
-                assign is_swatch_filter = true
-              endif
-              comment
-                Fallback: treat as swatch if any value has a swatch object
-              endcomment
-              unless is_swatch_filter
-                for value in filter.values
-                  if value.swatch
-                    assign is_swatch_filter = true
-                    break
-                  endif
-                endfor
-              endunless
-            -%}
-
             <details class="facets__group" open>
               <summary class="facets__group-heading">
                 {{ filter.label | escape }}
-                {%- if filter.active_values.size > 0 -%}
-                  <span class="facets__group-active-count">{{ filter.active_values.size }}</span>
-                {%- endif -%}
               </summary>
 
               {%- case filter.type -%}
                 {%- when 'list' -%}
-                  {%- if is_swatch_filter -%}
-                    <ul class="facets__list facets__list--swatches list-unstyled">
-                      {%- for value in filter.values -%}
-                        <li class="facets__list-item facets__list-item--swatch">
-                          <label
-                            class="facets__swatch-label{% if value.active %} facets__swatch-label--active{% endif %}{% if value.count == 0 and value.active == false %} facets__swatch-label--disabled{% endif %}"
-                            title="{{ value.label | escape }}{% if value.count %} ({{ value.count }}){% endif %}"
+                  <ul class="facets__list list-unstyled">
+                    {%- for value in filter.values -%}
+                      <li class="facets__list-item">
+                        <label class="facets__checkbox-label{% if value.count == 0 and value.active == false %} facets__checkbox-label--disabled{% endif %}">
+                          <input
+                            type="checkbox"
+                            name="{{ value.param_name }}"
+                            value="{{ value.value }}"
+                            {% if value.active %}checked{% endif %}
+                            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                            data-facet-checkbox
                           >
-                            <input
-                              type="checkbox"
-                              name="{{ value.param_name }}"
-                              value="{{ value.value }}"
-                              {% if value.active %}checked{% endif %}
-                              {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                              data-facet-checkbox
-                              class="visually-hidden"
-                            >
-                            <span
-                              class="facets__swatch"
-                              {% if value.swatch.color %}
-                                style="--swatch-color: {{ value.swatch.color }};"
-                              {% elsif value.swatch.image %}
-                                style="--swatch-image: url({{ value.swatch.image | image_url: width: 50 }});"
-                              {% endif %}
-                              aria-hidden="true"
-                            ></span>
-                            <span class="facets__swatch-text">{{ value.label | escape }}</span>
-                            <span class="facets__count">({{ value.count }})</span>
-                          </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  {%- else -%}
-                    <ul class="facets__list list-unstyled">
-                      {%- for value in filter.values -%}
-                        <li class="facets__list-item">
-                          <label class="facets__checkbox-label{% if value.count == 0 and value.active == false %} facets__checkbox-label--disabled{% endif %}">
-                            <input
-                              type="checkbox"
-                              name="{{ value.param_name }}"
-                              value="{{ value.value }}"
-                              {% if value.active %}checked{% endif %}
-                              {% if value.count == 0 and value.active == false %}disabled{% endif %}
-                              data-facet-checkbox
-                            >
-                            <span class="facets__checkbox-text">{{ value.label | escape }}</span>
-                            <span class="facets__count">({{ value.count }})</span>
-                          </label>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  {%- endif -%}
+                          <span class="facets__checkbox-text">{{ value.label | escape }}</span>
+                          <span class="facets__count">({{ value.count }})</span>
+                        </label>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
 
                 {%- when 'boolean' -%}
                   <ul class="facets__list list-unstyled">

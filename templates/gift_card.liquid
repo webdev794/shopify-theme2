@@ -1,5 +1,3 @@
-{{ 'gift-card.css' | asset_url | stylesheet_tag }}
-
 {% comment %}
   Renders a customer's gift card: balance, code, expiry/scheduled-send state,
   a QR code linking back to the store, and an Apple Wallet button when
@@ -54,12 +52,9 @@
     </div>
 
     {% unless gift_card.expired or gift_card.enabled == false %}
-      <a href="{{ routes.cart_url }}" class="button button--primary gift-card__redeem-button">
+      <a href="{{ shop.url }}" class="button button--primary gift-card__redeem-button">
         {{ 'gift_card.use_at_checkout' | t }}
       </a>
-      <p class="gift-card__hint">
-        Copy the code above, then paste it at checkout.
-      </p>
     {% endunless %}
   </div>
 

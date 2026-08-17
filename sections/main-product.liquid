@@ -1,5 +1,7 @@
 {% comment %}
-  Renders the main product section
+  Renders the main product section: media gallery, product information,
+  and add-to-cart form. Content is block-based so merchants can reorder,
+  hide, or configure each piece from the theme editor.
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
@@ -184,6 +186,12 @@
 
           {% when 'variant_picker' %}
             {% if product.has_only_default_variant == false %}
+              {% if block.settings.picker_style == 'pets' %}
+                <div {{ block.shopify_attributes }}>
+                  {% assign product_form_id = 'product-form-' | append: section.id %}
+                  {% render 'variant-picker-pets', product: product, section: section, product_form_id: product_form_id %}
+                </div>
+              {% else %}
               <variant-selects
                 class="product__variants"
                 data-section-id="{{ section.id }}"
@@ -245,6 +253,7 @@
                   </fieldset>
                 {% endfor %}
               </variant-selects>
+              {% endif %}
             {% endif %}
 
           {% when 'selling_plan_selector' %}
@@ -621,7 +630,18 @@
     { "type": "vendor", "name": "t:sections.main_product.blocks.vendor.name", "limit": 1 },
     { "type": "title", "name": "t:sections.main_product.blocks.title.name", "limit": 1 },
     { "type": "price", "name": "t:sections.main_product.blocks.price.name", "limit": 1 },
-    { "type": "variant_picker", "name": "t:sections.main_product.blocks.variant_picker.name", "limit": 1 },
+    { "type": "variant_picker", "name": "t:sections.main_product.blocks.variant_picker.name", "limit": 1, "settings": [
+      {
+        "type": "select",
+        "id": "picker_style",
+        "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.label",
+        "default": "standard",
+        "options": [
+          { "value": "standard", "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__1.label" },
+          { "value": "pets", "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__2.label" }
+        ]
+      }
+    ]},
     { "type": "selling_plan_selector", "name": "t:sections.main_product.blocks.selling_plan_selector.name", "limit": 1 },
     { "type": "quantity_selector", "name": "t:sections.main_product.blocks.quantity_selector.name", "limit": 1 },
     {

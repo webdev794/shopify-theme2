@@ -1,0 +1,310 @@
+{% comment %}
+  Contact section — split layout: concise form + direct channels.
+  Designed for clarity and low friction (not a heavy multi-field form).
+{% endcomment %}
+
+{{ 'contact.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'contact.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign section_id = section.id
+  assign form_id = 'ContactForm-' | append: section_id
+-%}
+
+<div
+  class="contact"
+  data-section-type="contact"
+  data-section-id="{{ section_id }}"
+  style="
+    --contact-bg: {{ section.settings.background_color }};
+    --contact-text: {{ section.settings.text_color }};
+    --contact-accent: {{ section.settings.accent_color }};
+    --contact-card: {{ section.settings.card_background }};
+  "
+>
+  <div class="contact__container">
+    <div class="contact__intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="contact__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="contact__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="contact__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- if section.settings.show_channels -%}
+        <ul class="contact__channels" role="list">
+          {%- if section.settings.email != blank -%}
+            <li class="contact__channel">
+              <span class="contact__channel-label">{{ 'sections.contact.email_label' | t | default: 'Email' }}</span>
+              <a class="contact__channel-value" href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
+            </li>
+          {%- endif -%}
+          {%- if section.settings.phone != blank -%}
+            <li class="contact__channel">
+              <span class="contact__channel-label">{{ 'sections.contact.phone_label' | t | default: 'Phone' }}</span>
+              <a class="contact__channel-value" href="tel:{{ section.settings.phone | replace: ' ', '' }}">{{ section.settings.phone }}</a>
+            </li>
+          {%- endif -%}
+          {%- if section.settings.hours != blank -%}
+            <li class="contact__channel">
+              <span class="contact__channel-label">{{ 'sections.contact.hours_label' | t | default: 'Hours' }}</span>
+              <span class="contact__channel-value">{{ section.settings.hours | escape }}</span>
+            </li>
+          {%- endif -%}
+          {%- if section.settings.address != blank -%}
+            <li class="contact__channel">
+              <span class="contact__channel-label">{{ 'sections.contact.address_label' | t | default: 'Address' }}</span>
+              <span class="contact__channel-value">{{ section.settings.address | escape | newline_to_br }}</span>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="contact__card">
+      {%- form 'contact', id: form_id, class: 'contact__form' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="contact__status contact__status--success" role="status">
+            <p class="contact__status-title">{{ section.settings.success_heading | default: 'Message sent' | escape }}</p>
+            <p>{{ section.settings.success_text | default: "Thanks — we'll get back to you soon." | escape }}</p>
+          </div>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="contact__status contact__status--error" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="contact__fields">
+          <div class="contact__field contact__field--half">
+            <label class="contact__label" for="ContactName-{{ section_id }}">
+              {{ 'sections.contact.name' | t | default: 'Name' }}
+            </label>
+            <input
+              class="contact__input"
+              type="text"
+              id="ContactName-{{ section_id }}"
+              name="contact[name]"
+              autocomplete="name"
+              value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+              required
+            >
+          </div>
+
+          <div class="contact__field contact__field--half">
+            <label class="contact__label" for="ContactEmail-{{ section_id }}">
+              {{ 'sections.contact.email' | t | default: 'Email' }}
+            </label>
+            <input
+              class="contact__input"
+              type="email"
+              id="ContactEmail-{{ section_id }}"
+              name="contact[email]"
+              autocomplete="email"
+              spellcheck="false"
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+              required
+            >
+          </div>
+
+          {%- if section.settings.show_phone -%}
+            <div class="contact__field contact__field--half">
+              <label class="contact__label" for="ContactPhone-{{ section_id }}">
+                {{ 'sections.contact.phone' | t | default: 'Phone' }}
+                <span class="contact__optional">{{ 'sections.contact.optional' | t | default: 'optional' }}</span>
+              </label>
+              <input
+                class="contact__input"
+                type="tel"
+                id="ContactPhone-{{ section_id }}"
+                name="contact[phone]"
+                autocomplete="tel"
+                value="{{ form.phone }}"
+              >
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.show_topic -%}
+            <div class="contact__field contact__field--half">
+              <label class="contact__label" for="ContactTopic-{{ section_id }}">
+                {{ 'sections.contact.topic' | t | default: 'Topic' }}
+              </label>
+              <select class="contact__input contact__select" id="ContactTopic-{{ section_id }}" name="contact[topic]">
+                {%- assign topics = section.settings.topics | default: 'Orders,Shipping,Returns,Product help,Other' | split: ',' -%}
+                {%- for topic in topics -%}
+                  <option value="{{ topic | strip | escape }}">{{ topic | strip | escape }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endif -%}
+
+          <div class="contact__field contact__field--full">
+            <label class="contact__label" for="ContactBody-{{ section_id }}">
+              {{ 'sections.contact.message' | t | default: 'Message' }}
+            </label>
+            <textarea
+              class="contact__input contact__textarea"
+              id="ContactBody-{{ section_id }}"
+              name="contact[body]"
+              rows="5"
+              required
+            >{{ form.body }}</textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="contact__submit button button--primary">
+          {{ section.settings.button_label | default: 'Send message' | escape }}
+        </button>
+
+        {%- if section.settings.privacy_note != blank -%}
+          <p class="contact__privacy">{{ section.settings.privacy_note | escape }}</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.contact.name",
+  "tag": "section",
+  "class": "section-contact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:sections.contact.settings.eyebrow.label",
+      "default": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.contact.settings.heading.label",
+      "default": "We're here to help"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.contact.settings.text.label",
+      "default": "<p>Questions about orders, shipping, or products? Send a message and our team will reply within one business day.</p>"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.contact.settings.header__channels.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_channels",
+      "label": "t:sections.contact.settings.show_channels.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "t:sections.contact.settings.email.label",
+      "default": "hello@example.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "t:sections.contact.settings.phone.label"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "t:sections.contact.settings.hours.label",
+      "default": "Mon–Fri, 9am–6pm"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "t:sections.contact.settings.address.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.contact.settings.header__form.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "t:sections.contact.settings.show_phone.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topic",
+      "label": "t:sections.contact.settings.show_topic.label",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "topics",
+      "label": "t:sections.contact.settings.topics.label",
+      "default": "Orders,Shipping,Returns,Product help,Other",
+      "info": "t:sections.contact.settings.topics.info"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.contact.settings.button_label.label",
+      "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "t:sections.contact.settings.success_heading.label",
+      "default": "Message sent"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "t:sections.contact.settings.success_text.label",
+      "default": "Thanks — we'll get back to you soon."
+    },
+    {
+      "type": "text",
+      "id": "privacy_note",
+      "label": "t:sections.contact.settings.privacy_note.label",
+      "default": "We only use your details to reply to this message."
+    },
+    {
+      "type": "header",
+      "content": "t:sections.contact.settings.header__colors.content"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.contact.settings.background_color.label",
+      "default": "#f7f6f3"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:sections.contact.settings.card_background.label",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:sections.contact.settings.text_color.label",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:sections.contact.settings.accent_color.label",
+      "default": "#1a1a1a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact.presets.name",
+      "category": "Forms"
+    }
+  ]
+}
+{% endschema %}

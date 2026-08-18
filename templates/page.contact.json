@@ -9,52 +9,120 @@
  */
 {
   "sections": {
-    "contact": {
-      "type": "contact",
-      "settings": {
-        "eyebrow": "Contact",
-        "heading": "We're here to help",
-        "text": "<p>Questions about orders, shipping, or products for your pets? Send a message and our team will reply within one business day.</p>",
-        "show_channels": true,
-        "email": "hello@example.com",
-        "hours": "Mon\u2013Fri, 9am\u20136pm",
-        "show_phone": true,
-        "show_topic": true,
-        "topics": "Orders,Shipping,Returns,Product help,Other",
-        "button_label": "Send message",
-        "privacy_note": "We only use your details to reply to this message."
-      }
-    },
-    "faq": {
-      "type": "faq",
+    "hero_QGi86T": {
+      "type": "hero",
       "blocks": {
-        "q1": {
-          "type": "item",
+        "heading_aV9mi7": {
+          "type": "heading",
           "settings": {
-            "question": "How fast do you reply?",
-            "answer": "<p>We respond to most messages within one business day.</p>"
-          }
-        },
-        "q2": {
-          "type": "item",
-          "settings": {
-            "question": "Can I change or cancel an order?",
-            "answer": "<p>Contact us as soon as possible with your order number and we will help.</p>"
+            "heading": "Contact Us",
+            "heading_size": "medium",
+            "heading_tag": "h2"
           }
         }
       },
       "block_order": [
-        "q1",
-        "q2"
+        "heading_aV9mi7"
       ],
+      "name": "t:sections.hero.presets.name",
       "settings": {
-        "heading": "Before you write",
-        "subheading": "Quick answers"
+        "image": "shopify://shop_images/contact.png",
+        "height": "medium",
+        "full_width": true,
+        "content_position": "middle-center",
+        "content_alignment": "center",
+        "content_max_width": 650,
+        "stack_on_mobile": false,
+        "color_overlay": "#000000",
+        "overlay_opacity": 25,
+        "color_foreground": "#ffffff",
+        "show_content_box": false,
+        "color_box_background": "#00000080"
+      }
+    },
+    "detailed_contact_form_ncpBfL": {
+      "type": "detailed-contact-form",
+      "name": "Detailed Contact Form",
+      "settings": {
+        "heading": "Get in Touch",
+        "subheading": "We'd love to hear from you. Please fill out the form below.",
+        "button_text": "Send Message",
+        "show_contact_info": true,
+        "info_heading": "Contact Information",
+        "info_text": "<p>Reach out to us through any of these channels</p>",
+        "phone": "+1 (555) 123-4567",
+        "email": "contact@example.com",
+        "address": "123 Main Street, City, State 12345",
+        "hours": "Mon-Fri 9:00 AM - 6:00 PM",
+        "background_color": "#ffffff",
+        "text_color": "#333333"
+      }
+    },
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {
+        "content_width": "medium"
+      }
+    },
+    "map_pjirip": {
+      "type": "map",
+      "blocks": {
+        "heading_hEnifA": {
+          "type": "heading",
+          "settings": {
+            "heading": "Visit our store",
+            "heading_size": "medium"
+          }
+        },
+        "text_HqAHVy": {
+          "type": "text",
+          "settings": {
+            "text": "<p>1 Times Square<br>New York, NY 10036</p>",
+            "is_address": true
+          }
+        },
+        "text_hJDU8C": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Mon–Fri: 10am–7pm<br>Sat–Sun: 11am–5pm</p>",
+            "is_address": false
+          }
+        },
+        "button_xBPzad": {
+          "type": "button",
+          "settings": {
+            "button_label": "Get directions",
+            "button_link": "",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "heading_hEnifA",
+        "text_HqAHVy",
+        "text_hJDU8C",
+        "button_xBPzad"
+      ],
+      "name": "t:sections.map.presets.name",
+      "settings": {
+        "map_address": "Times Square, New York, NY",
+        "map_type": "embed",
+        "zoom": 14,
+        "desaturate": false,
+        "layout": "overlay",
+        "card_position": "left",
+        "height": "medium",
+        "full_width": true,
+        "color_card_background": "#ffffff",
+        "color_card_foreground": "#121212"
       }
     }
   },
   "order": [
-    "contact",
-    "faq"
+    "hero_QGi86T",
+    "detailed_contact_form_ncpBfL",
+    "main",
+    "map_pjirip"
   ]
 }

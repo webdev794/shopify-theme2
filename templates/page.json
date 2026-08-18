@@ -11,12 +11,482 @@
   "sections": {
     "main": {
       "type": "page",
+      "disabled": true,
       "settings": {
         "content_width": "medium"
+      }
+    },
+    "hero_TtAfaJ": {
+      "type": "hero",
+      "blocks": {
+        "heading_yeRxzA": {
+          "type": "heading",
+          "settings": {
+            "heading": "About Us",
+            "heading_size": "medium",
+            "heading_tag": "h1"
+          }
+        },
+        "text_NAbDH6": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Beauty that embraces you.</p>",
+            "text_size": "large"
+          }
+        }
+      },
+      "block_order": [
+        "heading_yeRxzA",
+        "text_NAbDH6"
+      ],
+      "name": "t:sections.hero.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/ChatGPT_Image_Aug_11_2026_05_45_38_PM.png",
+        "image_mobile": "shopify://shop_images/ChatGPT_Image_Aug_11_2026_05_45_38_PM.png",
+        "height": "medium",
+        "full_width": true,
+        "content_position": "middle-center",
+        "content_alignment": "center",
+        "content_max_width": 800,
+        "stack_on_mobile": false,
+        "color_overlay": "#000000",
+        "overlay_opacity": 25,
+        "color_foreground": "#ffffff",
+        "show_content_box": false,
+        "color_box_background": "#00000080"
+      }
+    },
+    "scrolling_text_dFYaq7": {
+      "type": "scrolling-text",
+      "blocks": {
+        "text_item_7kKbTC": {
+          "type": "text_item",
+          "settings": {
+            "text": "Free shipping on orders over $50",
+            "icon": "truck"
+          }
+        },
+        "text_item_EnPChB": {
+          "type": "text_item",
+          "settings": {
+            "text": "30-day money-back guarantee",
+            "icon": "shield"
+          }
+        },
+        "text_item_8EMRWi": {
+          "type": "text_item",
+          "settings": {
+            "text": "Subscribe and save 10%",
+            "icon": "star"
+          }
+        },
+        "text_item_E7bfqp": {
+          "type": "text_item",
+          "settings": {
+            "text": "Customer support available 24/7",
+            "icon": "chat"
+          }
+        }
+      },
+      "block_order": [
+        "text_item_7kKbTC",
+        "text_item_EnPChB",
+        "text_item_8EMRWi",
+        "text_item_E7bfqp"
+      ],
+      "name": "t:sections.scrolling_text.presets.name",
+      "settings": {
+        "speed": 30,
+        "gap": 40,
+        "repeat_count": 3,
+        "show_divider": true,
+        "divider_symbol": "•",
+        "font_size": 20,
+        "background_color": "#1a1a1a",
+        "text_color": "#ffffff",
+        "pause_on_hover": true,
+        "aria_label": "Scrolling announcement bar",
+        "scroll_velocity": true
+      }
+    },
+    "custom_liquid_jFVFeN": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom_liquid.presets.name",
+      "settings": {
+        "title": "Welcome to Suvara — Beauty Redefined.",
+        "custom_code": "<p style=\"font-family: 'Georgia', serif; font-size: 1.4rem; line-height: 1.8; color: #3e2c2c; background: linear-gradient(135deg, #fdf6f0 0%, #f9ece4 100%); padding: 2.4rem 2.8rem; border-radius: 32px; border-left: 8px solid #d4a89b; box-shadow: 0 12px 30px rgba(0,0,0,0.06); text-align: center; max-width: 900px; margin: 2rem auto; letter-spacing: 0.02em; word-spacing: 0.05em;\">✨ At Suvara, we believe beauty is not about changing who you are — it is about celebrating what makes you uniquely you. Our collection is thoughtfully created for everyday beauty rituals, bringing together products that feel good, look beautiful, and fit naturally into your routine. 🌸</p>",
+        "layout": "contained",
+        "alignment": "left",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "custom_section_dcJcQE": {
+      "type": "custom-section",
+      "blocks": {
+        "text_izgArf": {
+          "type": "text",
+          "name": "t:general.text",
+          "settings": {
+            "text": "What We Believe In",
+            "text_style": "text--title",
+            "alignment": "center"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "text_izgArf"
+      ],
+      "name": "t:general.custom_section",
+      "settings": {}
+    },
+    "images_with_text_carousel_3PEV8M": {
+      "type": "images-with-text-carousel",
+      "blocks": {
+        "slide_aUCDt7": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/quality.png",
+            "caption": "Best",
+            "heading": "Quality Matters",
+            "text": "<p>We believe great beauty starts with products you can feel confident bringing into your routine. We focus on quality, thoughtful details, and products selected with care.</p><h3></h3>",
+            "button_label": "Shop now",
+            "button_link": "shopify://collections",
+            "button_style": "primary"
+          }
+        },
+        "slide_MAz94L": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/simple_beauty.png",
+            "caption": "Beauty",
+            "heading": "Should Be Simple",
+            "text": "<p>Less complication, more enjoyment. Our collections are designed to make discovering and enjoying beauty feel easy.</p>",
+            "button_label": "Shop now",
+            "button_link": "shopify://collections/all",
+            "button_style": "primary"
+          }
+        },
+        "slide_8PJVC3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/believe.png",
+            "caption": "Self-Care",
+            "heading": "Is for Everyone",
+            "text": "<p>Beauty is personal. There is no single definition of it, and there is no right way to enjoy it. Suvara is here to make your routine yours.</p>",
+            "button_label": "Shop now",
+            "button_link": "shopify://collections",
+            "button_style": "primary"
+          }
+        }
+      },
+      "block_order": [
+        "slide_aUCDt7",
+        "slide_MAz94L",
+        "slide_8PJVC3"
+      ],
+      "name": "t:sections.iwt_carousel.presets.name",
+      "settings": {
+        "carousel_label": "",
+        "image_position": "left",
+        "aspect_ratio": "4 / 3",
+        "heading_size": "medium",
+        "full_width": false,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "color_background": "#f3e5de",
+        "color_foreground": "#121212",
+        "color_accent": "#121212"
+      }
+    },
+    "media_grid_YaVbt8": {
+      "type": "media-grid",
+      "blocks": {
+        "media_YDHhkm": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/applying-eyeshadow.jpg",
+            "caption_heading": "Team Leader",
+            "caption_text": "",
+            "link": "",
+            "column_span": "2",
+            "row_span": "2"
+          }
+        },
+        "media_a4UBkJ": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/person-looks-forward-with-the-shadow-of-a-leaf-on.jpg",
+            "caption_heading": "Sales Lead",
+            "caption_text": "",
+            "link": "",
+            "column_span": "1",
+            "row_span": "1"
+          }
+        },
+        "media_4W6HHd": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/brushing-on-red-lipsick_1.jpg",
+            "caption_heading": "Designer",
+            "caption_text": "",
+            "link": "",
+            "column_span": "1",
+            "row_span": "1"
+          }
+        },
+        "media_qpidgc": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/slider2.png",
+            "caption_heading": "Admin",
+            "caption_text": "",
+            "link": "",
+            "column_span": "1",
+            "row_span": "1"
+          }
+        },
+        "media_4XLAiF": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Aug_11_2026_04_19_38_PM.png",
+            "caption_heading": "Advertizer",
+            "caption_text": "",
+            "link": "",
+            "column_span": "1",
+            "row_span": "1"
+          }
+        },
+        "media_qDahhV": {
+          "type": "media",
+          "settings": {
+            "image": "shopify://shop_images/face3.png",
+            "caption_heading": "Salesman",
+            "caption_text": "",
+            "link": "",
+            "column_span": "1",
+            "row_span": "1"
+          }
+        }
+      },
+      "block_order": [
+        "media_YDHhkm",
+        "media_a4UBkJ",
+        "media_4W6HHd",
+        "media_qpidgc",
+        "media_4XLAiF",
+        "media_qDahhV"
+      ],
+      "name": "t:sections.media_grid_section.presets.name",
+      "settings": {
+        "heading": "Our Team",
+        "heading_size": "medium",
+        "heading_alignment": "left",
+        "columns_desktop": 3,
+        "aspect_ratio": "16 / 9",
+        "gap": 16,
+        "border_radius": 8,
+        "full_width": true,
+        "mobile_layout": "slider",
+        "caption_position": "overlay",
+        "show_caption_on_hover": false,
+        "color_overlay_text": "#f3e5de",
+        "enable_hover_zoom": false,
+        "enable_entry_animation": true,
+        "reduced_motion_mode": "system",
+        "anim_duration": 700,
+        "anim_delay": 0,
+        "mobile_motion": "lighter",
+        "background_color": "#f3e5de"
+      }
+    },
+    "social_media_gallery_Ai4t7b": {
+      "type": "social-media-gallery",
+      "blocks": {
+        "post_nTiYjM": {
+          "type": "post",
+          "settings": {
+            "image": "shopify://shop_images/brushes-blossoms_1_1.jpg",
+            "platform": "instagram",
+            "username": "",
+            "caption": "Beautiful mackup brush",
+            "likes": "2.4k",
+            "comments": "156",
+            "link": ""
+          }
+        },
+        "post_yxGCMA": {
+          "type": "post",
+          "settings": {
+            "image": "shopify://shop_images/brushing-on-red-lipsick_1.jpg",
+            "platform": "instagram",
+            "username": "",
+            "caption": "Red lip gloss ✨",
+            "likes": "1.8k",
+            "comments": "89",
+            "link": ""
+          }
+        },
+        "post_L8fnQT": {
+          "type": "post",
+          "settings": {
+            "image": "shopify://shop_images/person-looks-forward-with-the-shadow-of-a-leaf-on.jpg",
+            "platform": "instagram",
+            "username": "",
+            "caption": "Behind the scenes 🎬",
+            "likes": "3.1k",
+            "comments": "234",
+            "link": ""
+          }
+        },
+        "post_7YA9Jg": {
+          "type": "post",
+          "settings": {
+            "image": "shopify://shop_images/applying-eyeshadow.jpg",
+            "platform": "instagram",
+            "username": "",
+            "caption": "Customer favorites 💕",
+            "likes": "967",
+            "comments": "43",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "post_nTiYjM",
+        "post_yxGCMA",
+        "post_L8fnQT",
+        "post_7YA9Jg"
+      ],
+      "name": "t:sections.social_gallery.presets.name",
+      "settings": {
+        "heading": "Follow Us on Social Media",
+        "subheading": "Join our community and stay updated",
+        "show_follow_button": true,
+        "follow_platform": "instagram",
+        "follow_text": "Follow Us",
+        "follow_link": "",
+        "aria_label": "Social media gallery"
+      }
+    },
+    "media_with_text_overlay_NP63mN": {
+      "type": "media-with-text-overlay",
+      "name": "t:sections.media_with_text_overlay.presets.name",
+      "settings": {
+        "media_type": "image",
+        "image": "shopify://shop_images/blog2.png",
+        "video_url": "",
+        "section_height": 400,
+        "preheading": "",
+        "heading": "Thoughtfully chosen. Beautifully presented. Made for your everyday.",
+        "text": "<p>Thoughtfully chosen with quality, comfort, and style in mind, every piece is beautifully presented and designed to fit effortlessly into your everyday routine. From the details you notice to the quality you can feel, we bring together products that make everyday moments a little better—simple, purposeful, and made for you.<br/></p>",
+        "button_text": "Shop Now",
+        "button_link": "",
+        "content_position": "center",
+        "content_alignment": "center",
+        "content_width": 80,
+        "overlay_color": "rgba(0, 0, 0, 0.4)",
+        "overlay_opacity": 70,
+        "preheading_color": "#ffffff",
+        "heading_color": "#ffffff",
+        "text_color": "#ffffff",
+        "button_background": "#ffffff",
+        "button_text_color": "#1a1a1a",
+        "aria_label": "Media with text overlay"
+      }
+    },
+    "testimonials_3Rhe4M": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_8X8EEz": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
+            "rating": 5,
+            "author": "Sarah Johnson",
+            "position": "Regular Customer"
+          }
+        },
+        "testimonial_YfVpRF": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Best customer service I've ever experienced. They went above and beyond to help me.",
+            "rating": 5,
+            "author": "Michael Chen",
+            "position": "Business Owner"
+          }
+        },
+        "testimonial_XCpEX8": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "The products are exactly as described and the quality is premium. Will definitely buy again.",
+            "rating": 4,
+            "author": "Emily Davis",
+            "position": "Designer"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_8X8EEz",
+        "testimonial_YfVpRF",
+        "testimonial_XCpEX8"
+      ],
+      "name": "t:sections.testimonials.presets.name",
+      "settings": {
+        "heading": "What Our Customers Say",
+        "subheading": "Real reviews from real customers",
+        "background_color": "#f3e5de",
+        "columns": "3",
+        "show_rating": true,
+        "show_view_all": false,
+        "view_all_text": "View All Testimonials",
+        "view_all_link": "",
+        "reduced_motion_mode": "system",
+        "anim_duration": 700,
+        "anim_delay": 0,
+        "mobile_motion": "lighter"
+      }
+    },
+    "newsletter_jeGAjH": {
+      "type": "newsletter",
+      "name": "t:sections.newsletter.presets.name",
+      "settings": {
+        "subheading": "Subscribe Now",
+        "heading": "Join Our Newsletter",
+        "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
+        "placeholder": "Enter your email",
+        "button_label": "Subscribe",
+        "button_style": "primary",
+        "show_icon": true,
+        "style": "default",
+        "background_color": "#f8f9fa",
+        "section_text_color": "#1a1a2e",
+        "show_note": true,
+        "note_text": "No spam. Unsubscribe anytime.",
+        "success_message": "Thanks for subscribing!",
+        "show_social": false,
+        "social_label": "Follow us:",
+        "reduced_motion_mode": "system",
+        "anim_duration": 700,
+        "anim_delay": 0,
+        "mobile_motion": "lighter"
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "hero_TtAfaJ",
+    "scrolling_text_dFYaq7",
+    "custom_liquid_jFVFeN",
+    "custom_section_dcJcQE",
+    "images_with_text_carousel_3PEV8M",
+    "media_grid_YaVbt8",
+    "social_media_gallery_Ai4t7b",
+    "media_with_text_overlay_NP63mN",
+    "testimonials_3Rhe4M",
+    "newsletter_jeGAjH"
   ]
 }

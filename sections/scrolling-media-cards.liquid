@@ -12,7 +12,7 @@
      data-pause-on-hover="{{ section.settings.pause_on_hover }}"
      role="region"
      aria-label="{{ section.settings.aria_label | escape }}"
-     style="--smc-duration: {{ section.settings.scroll_speed | default: 30 }}s;">
+     style="--smc-duration: {{ section.settings.scroll_speed | default: 30 }}s;{% if section.settings.background_color != blank %} --smc-bg: {{ section.settings.background_color }}; background-color: {{ section.settings.background_color }};{% endif %}">
   
   <div class="page-width">
     {%- if section.settings.heading != blank -%}
@@ -33,7 +33,7 @@
           <div class="scrolling-media-cards__card" {{ block.shopify_attributes }}>
             <div class="scrolling-media-cards__card-inner">
               {%- if block.settings.image != blank -%}
-                <div class="scrolling-media-cards__image-wrapper">
+                <div class="scrolling-media-cards__image-wrapper{% if block.settings.product != blank %} scrolling-media-cards__image-wrapper--product{% endif %}">
                   <img
                     src="{{ block.settings.image | image_url: width: 400, height: 400, crop: 'center' }}"
                     srcset="{{ block.settings.image | image_url: width: 400, height: 400, crop: 'center' }} 1x, {{ block.settings.image | image_url: width: 800, height: 800, crop: 'center' }} 2x"
@@ -43,6 +43,18 @@
                     height="400"
                     class="scrolling-media-cards__image"
                   >
+                  {%- if block.settings.product != blank -%}
+                    {%- assign qv_product = block.settings.product -%}
+                    <div class="scrolling-media-cards__product-layer">
+                      <p class="scrolling-media-cards__product-price">{{ qv_product.price | money }}</p>
+                      <button
+                        type="button"
+                        class="scrolling-media-cards__qv-btn"
+                        data-quick-view-open
+                        data-product-handle="{{ qv_product.handle }}"
+                      >{{ 'products.product.quick_view' | t }}</button>
+                    </div>
+                  {%- endif -%}
                 </div>
               {%- else -%}
                 <div class="scrolling-media-cards__placeholder">
@@ -122,6 +134,12 @@
       "label": "t:sections.scrolling_media_cards.settings.subheading.label",
       "default": "Discover our curated collection"
     },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
     { "type": "header", "content": "t:sections.scrolling_media_cards.settings.header__1.content" },
     {
       "type": "range",
@@ -194,6 +212,12 @@
           "id": "text",
           "label": "t:sections.scrolling_media_cards.blocks.card.settings.text.label",
           "default": "A brief description of this product"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Linked product",
+          "info": "Enables hover price + Quick view on the card image"
         },
         {
           "type": "text",

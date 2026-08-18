@@ -1,12 +1,5 @@
 {%- comment -%}
   Hero / Image Banner
-  - Image, art-directed mobile image, or looping background video
-  - Block-based content: heading, text, buttons (reorderable in the editor)
-  - 9 content positions, 5 height modes, overlay + optional content box
-  - LCP-aware: first section on the page loads its image eagerly with
-    fetchpriority="high"; every other instance lazy-loads
-  - Autoplaying video is muted, respects prefers-reduced-motion, and
-    ships a visible pause/play control (WCAG 2.2.2)
 {%- endcomment -%}
 
 {%- liquid
@@ -33,7 +26,7 @@
 {%- endif -%}
 
 <div
-  class="hero hero--{{ section.settings.height }} hero--content-{{ section.settings.content_position }}{% if section.settings.full_width %} hero--full-width{% endif %}{% if section.settings.stack_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero hero--{{ section.settings.height }} hero--content-{{ section.settings.content_position }}{% if section.settings.full_width %} hero--full-width{% endif %}{% if section.settings.stack_on_mobile %} hero--stack-mobile{% endif %}{% if video != blank %} hero--has-video{% endif %}"
   style="
     --hero-foreground: {{ section.settings.color_foreground }};
     --hero-overlay: {{ section.settings.color_overlay }};
@@ -259,7 +252,7 @@
       "max": 90,
       "step": 5,
       "unit": "%",
-      "default": 40,
+      "default": 25,
       "info": "t:sections.hero.settings.overlay_opacity.info"
     },
     { "type": "header", "content": "t:sections.hero.settings.header__4.content" },

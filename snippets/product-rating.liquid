@@ -1,0 +1,78 @@
+{% comment %}
+  Renders product star rating.
+
+  Accepts:
+  - product: {Object} Product object
+
+  Reads Shopify's native review metafields (reviews.rating / reviews.rating_count),
+  which most review apps (Judge.me, Loox, etc.) populate automatically.
+
+  Usage:
+  {% render 'product-rating', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign rating_value = 0
+  assign rating_count = 0
+
+  if product.metafields.reviews.rating.value != blank
+    assign rating_value = product.metafields.reviews.rating.value.rating | times: 1.0
+  endif
+  if product.metafields.reviews.rating_count.value != blank
+    assign rating_count = product.metafields.reviews.rating_count.value | times: 1
+  endif
+
+  assign full_stars = rating_value | floor
+-%}
+
+<div
+  class="product-rating"
+  role="img"
+  aria-label="{% if rating_count > 0 %}Rated {{ rating_value | round: 1 }} out of 5 stars, {{ rating_count }} reviews{% else %}No ratings yet{% endif %}"
+>
+  <span class="product-rating__stars" aria-hidden="true">
+    {%- for i in (1..5) -%}
+      {%- if i <= full_stars -%}
+        <span class="star star--filled">&#9733;</span>
+      {%- else -%}
+        <span class="star star--empty">&#9734;</span>
+      {%- endif -%}
+    {%- endfor -%}
+  </span>
+
+  <span class="product-rating__count">
+    {%- if rating_count > 0 -%}
+      ({{ rating_count }})
+    {%- else -%}
+      No reviews
+    {%- endif -%}
+  </span>
+</div>
+
+{% stylesheet %}
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .product-rating__stars {
+    display: flex;
+    gap: 0.1rem;
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1;
+  }
+  .product-rating__count {
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 60%, transparent);
+  }
+  /* Star colors use the theme's star color variable */
+  .star--filled {
+    color: var(--color-star, #b8860b);
+  }
+  .star--empty {
+    color: color-mix(in srgb, var(--color-foreground, #1a1a1a) 20%, transparent);
+  }
+{% endstylesheet %}

@@ -1,4 +1,4 @@
-{{ 'section-newsletter.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'section-newsletter.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'newsletter.js' | asset_url }}" defer></script>
 
 <div 
@@ -10,7 +10,7 @@
   {%- if section.settings.background_image != blank %}
   data-background-image="{{ section.settings.background_image | image_url }}"
   {%- endif %}
->
+ data-reduced-motion="{{ section.settings.reduced_motion_mode | default: 'system' }}" data-mobile-motion="{{ section.settings.mobile_motion | default: 'lighter' }}" style="--section-anim-duration: {{ section.settings.anim_duration | default: 700 | divided_by: 1000.0 }}s; --section-anim-delay: {{ section.settings.anim_delay | default: 0 | divided_by: 1000.0 }}s;">
   <div class="newsletter__container">
     <div class="newsletter__content">
       {% if section.settings.subheading != blank %}
@@ -105,7 +105,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "header", "content": "t:sections.newsletter.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__1.content"
+    },
     {
       "type": "text",
       "id": "subheading",
@@ -130,7 +133,10 @@
       "label": "t:sections.newsletter.settings.placeholder.label",
       "default": "Enter your email"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__2.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__2.content"
+    },
     {
       "type": "text",
       "id": "button_label",
@@ -142,10 +148,22 @@
       "id": "button_style",
       "label": "t:sections.newsletter.settings.button_style.label",
       "options": [
-        { "value": "primary", "label": "t:sections.newsletter.settings.button_style.options__1.label" },
-        { "value": "gradient", "label": "t:sections.newsletter.settings.button_style.options__2.label" },
-        { "value": "outline", "label": "t:sections.newsletter.settings.button_style.options__3.label" },
-        { "value": "pill", "label": "t:sections.newsletter.settings.button_style.options__4.label" }
+        {
+          "value": "primary",
+          "label": "t:sections.newsletter.settings.button_style.options__1.label"
+        },
+        {
+          "value": "gradient",
+          "label": "t:sections.newsletter.settings.button_style.options__2.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.newsletter.settings.button_style.options__3.label"
+        },
+        {
+          "value": "pill",
+          "label": "t:sections.newsletter.settings.button_style.options__4.label"
+        }
       ],
       "default": "primary"
     },
@@ -155,17 +173,35 @@
       "label": "t:sections.newsletter.settings.show_icon.label",
       "default": true
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__3.content"
+    },
     {
       "type": "select",
       "id": "style",
       "label": "t:sections.newsletter.settings.style.label",
       "options": [
-        { "value": "default", "label": "t:sections.newsletter.settings.style.options__1.label" },
-        { "value": "minimal", "label": "t:sections.newsletter.settings.style.options__2.label" },
-        { "value": "bordered", "label": "t:sections.newsletter.settings.style.options__3.label" },
-        { "value": "shadow", "label": "t:sections.newsletter.settings.style.options__4.label" },
-        { "value": "background", "label": "t:sections.newsletter.settings.style.options__5.label" }
+        {
+          "value": "default",
+          "label": "t:sections.newsletter.settings.style.options__1.label"
+        },
+        {
+          "value": "minimal",
+          "label": "t:sections.newsletter.settings.style.options__2.label"
+        },
+        {
+          "value": "bordered",
+          "label": "t:sections.newsletter.settings.style.options__3.label"
+        },
+        {
+          "value": "shadow",
+          "label": "t:sections.newsletter.settings.style.options__4.label"
+        },
+        {
+          "value": "background",
+          "label": "t:sections.newsletter.settings.style.options__5.label"
+        }
       ],
       "default": "default"
     },
@@ -187,7 +223,10 @@
       "label": "t:sections.newsletter.settings.section_text_color.label",
       "default": "#1a1a2e"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__4.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__4.content"
+    },
     {
       "type": "checkbox",
       "id": "show_note",
@@ -206,7 +245,10 @@
       "label": "t:sections.newsletter.settings.success_message.label",
       "default": "Thanks for subscribing!"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__5.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__5.content"
+    },
     {
       "type": "checkbox",
       "id": "show_social",
@@ -219,10 +261,79 @@
       "id": "social_label",
       "label": "t:sections.newsletter.settings.social_label.label",
       "default": "Follow us:"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "select",
+      "id": "reduced_motion_mode",
+      "label": "Reduced-motion behavior",
+      "options": [
+        {
+          "value": "system",
+          "label": "Follow system preference"
+        },
+        {
+          "value": "animate",
+          "label": "Always allow motion"
+        },
+        {
+          "value": "static",
+          "label": "Always static (no motion)"
+        }
+      ],
+      "default": "system",
+      "info": "Controls how this section behaves when the visitor prefers less motion"
+    },
+    {
+      "type": "range",
+      "id": "anim_duration",
+      "label": "Animation duration",
+      "min": 200,
+      "max": 1200,
+      "step": 100,
+      "default": 700,
+      "unit": "ms",
+      "info": "Entrance duration in milliseconds"
+    },
+    {
+      "type": "range",
+      "id": "anim_delay",
+      "label": "Animation delay",
+      "min": 0,
+      "max": 800,
+      "step": 100,
+      "default": 0,
+      "unit": "ms",
+      "info": "Delay before entrance starts (ms)"
+    },
+    {
+      "type": "select",
+      "id": "mobile_motion",
+      "label": "Mobile motion",
+      "options": [
+        {
+          "value": "match",
+          "label": "Same as desktop"
+        },
+        {
+          "value": "lighter",
+          "label": "Lighter"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "lighter"
     }
   ],
   "presets": [
-    { "name": "t:sections.newsletter.presets.name" }
+    {
+      "name": "t:sections.newsletter.presets.name"
+    }
   ]
 }
 {% endschema %}

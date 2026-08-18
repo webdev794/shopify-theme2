@@ -27,5 +27,6 @@
 
   <body class="gift-card-layout">
     {{ content_for_layout }}
-  </body>
+    {{ 'typography.css' | asset_url | stylesheet_tag }}
+</body>
 </html>

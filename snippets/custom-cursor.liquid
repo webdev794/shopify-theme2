@@ -1,0 +1,102 @@
+{% comment %}
+  Custom cursor styles (inlined in theme.liquid <style>).
+  Single rose-cursor.svg site-wide + interactive body classes driven by custom-cursor.js:
+    .cursor-hover  — links, buttons, product cards
+    .cursor-media  — images / lookbook / media
+{% endcomment %}
+
+/* Default cursor - everywhere on the site */
+body {
+  cursor: url('{{ "rose-cursor.svg" | asset_url }}') 16 16, auto;
+}
+
+/* Interactive: links, buttons, cards — slightly larger hotspot feel via same asset + pointer */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+.product-card,
+.card,
+.card-wrapper,
+.collection-card,
+.product-form__submit,
+.add-to-cart,
+.shopify-payment-button__button,
+[data-cursor-hover] {
+  cursor: url('{{ "rose-cursor.svg" | asset_url }}') 16 16, pointer;
+}
+
+a:hover,
+button:hover,
+input[type="submit"]:hover,
+.product-card:hover,
+.card:hover,
+.collection-card:hover,
+.product-form__submit:hover,
+.add-to-cart:hover,
+.shopify-payment-button__button:hover,
+body.cursor-hover {
+  cursor: url('{{ "rose-cursor.svg" | asset_url }}') 16 16, pointer !important;
+}
+
+/* Media / explore state — same graphic, body class can drive overlays if desired */
+body.cursor-media,
+.lookbook__image-wrapper,
+.hero__media,
+.card__media,
+[data-cursor-media] {
+  cursor: url('{{ "rose-cursor.svg" | asset_url }}') 16 16, pointer;
+}
+
+/* Optional scale feedback on a pseudo cursor ring (desktop only) */
+body.cursor-hover::after,
+body.cursor-media::after {
+  content: '';
+  position: fixed;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 107, 157, 0.35);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  /* Position is driven only when JS is present; kept subtle / optional */
+  transform: translate(-50%, -50%) scale(0.6);
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body,
+  a,
+  button,
+  a:hover,
+  button:hover {
+    cursor: auto !important;
+  }
+
+  body.cursor-hover::after,
+  body.cursor-media::after {
+    display: none !important;
+  }
+}
+
+/* Fallback for browsers that don't support SVG cursors */
+@supports not (cursor: url('x')) {
+  body {
+    cursor: auto;
+  }
+}
+
+/* Reduced motion preference - use system cursor */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    cursor: auto !important;
+  }
+
+  body.cursor-hover::after,
+  body.cursor-media::after {
+    display: none !important;
+  }
+}

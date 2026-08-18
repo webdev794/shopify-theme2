@@ -9,7 +9,9 @@
      data-section-type="mix-match-pack"
      data-max-items="{{ section.settings.max_items }}"
      role="region"
-     aria-label="{{ section.settings.aria_label | escape }}">
+     aria-label="{{ section.settings.aria_label | escape }}"
+     style="background-color: {{ section.settings.background_color }};"
+     data-background-color="{{ section.settings.background_color }}">
   
   <div class="page-width">
     {%- if section.settings.heading != blank -%}
@@ -214,6 +216,13 @@
       "id": "aria_label",
       "label": "t:sections.mix_match_pack.settings.aria_label.label",
       "default": "Mix and match pack builder"
+    },
+    { "type": "header", "content": "t:sections.mix_match_pack.settings.header__4.content" },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:sections.mix_match_pack.settings.background_color.label",
+      "default": "#ffffff"
     }
   ],
   "blocks": [

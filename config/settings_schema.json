@@ -1,11 +1,11 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Petlio",
-    "theme_version": "1.3.14",
+    "theme_name": "Velmora",
+    "theme_version": "1.0.0",
     "theme_author": "Caresort Technologies",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_documentation_url": "https://www.caresortsolutions.com/velmora-theme-documentation/",
+    "theme_support_url": "https://www.caresortsolutions.com/velmora-theme-support/"
   },
   {
     "name": "t:general.typography",
@@ -15,10 +15,62 @@
         "content": "t:general.fonts"
       },
       {
-        "type": "font_picker",
+        "type": "select",
         "id": "type_primary_font",
-        "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "label": "Body / theme text font",
+        "info": "Used for body text and most UI elements",
+        "default": "work_sans",
+        "options": [
+          { "value": "system", "label": "System default" },
+          { "value": "work_sans", "label": "Work Sans" },
+          { "value": "inter", "label": "Inter" },
+          { "value": "montserrat", "label": "Montserrat" },
+          { "value": "poppins", "label": "Poppins" },
+          { "value": "roboto", "label": "Roboto" },
+          { "value": "open_sans", "label": "Open Sans" },
+          { "value": "lato", "label": "Lato" },
+          { "value": "nunito", "label": "Nunito" },
+          { "value": "raleway", "label": "Raleway" },
+          { "value": "source_sans_3", "label": "Source Sans 3" },
+          { "value": "dm_sans", "label": "DM Sans" },
+          { "value": "plus_jakarta_sans", "label": "Plus Jakarta Sans" },
+          { "value": "outfit", "label": "Outfit" },
+          { "value": "manrope", "label": "Manrope" },
+          { "value": "space_grotesk", "label": "Space Grotesk" },
+          { "value": "playfair_display", "label": "Playfair Display" },
+          { "value": "merriweather", "label": "Merriweather" },
+          { "value": "lora", "label": "Lora" },
+          { "value": "oswald", "label": "Oswald" }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "type_heading_font",
+        "label": "Heading font",
+        "info": "Used for all headings (h1–h6)",
+        "default": "work_sans",
+        "options": [
+          { "value": "system", "label": "System default" },
+          { "value": "work_sans", "label": "Work Sans" },
+          { "value": "inter", "label": "Inter" },
+          { "value": "montserrat", "label": "Montserrat" },
+          { "value": "poppins", "label": "Poppins" },
+          { "value": "roboto", "label": "Roboto" },
+          { "value": "open_sans", "label": "Open Sans" },
+          { "value": "lato", "label": "Lato" },
+          { "value": "nunito", "label": "Nunito" },
+          { "value": "raleway", "label": "Raleway" },
+          { "value": "source_sans_3", "label": "Source Sans 3" },
+          { "value": "dm_sans", "label": "DM Sans" },
+          { "value": "plus_jakarta_sans", "label": "Plus Jakarta Sans" },
+          { "value": "outfit", "label": "Outfit" },
+          { "value": "manrope", "label": "Manrope" },
+          { "value": "space_grotesk", "label": "Space Grotesk" },
+          { "value": "playfair_display", "label": "Playfair Display" },
+          { "value": "merriweather", "label": "Merriweather" },
+          { "value": "lora", "label": "Lora" },
+          { "value": "oswald", "label": "Oswald" }
+        ]
       }
     ]
   },
@@ -44,7 +96,7 @@
       {
         "type": "range",
         "id": "min_page_margin",
-        "min": 10,
+        "min": 0,
         "max": 100,
         "step": 1,
         "unit": "px",
@@ -83,6 +135,7 @@
         "default": "#333333",
         "label": "t:labels.foreground"
       },
+
       {
         "type": "header",
         "content": "Secondary colors"
@@ -99,6 +152,7 @@
         "default": "#1A1A1A",
         "label": "Secondary foreground"
       },
+
       {
         "type": "header",
         "content": "Accent / Buttons"
@@ -125,6 +179,7 @@
         "label": "t:labels.input_corner_radius",
         "default": 4
       },
+
       {
         "type": "header",
         "content": "Status colors"
@@ -205,29 +260,6 @@
         "default": "#aaa",
         "label": "Disabled dark color",
         "info": "Darker shade for disabled elements."
-      }
-    ]
-  },
-  {
-    "name": "Story / motion",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "enable_paper_slide",
-        "label": "Homepage paper-slide sections",
-        "default": true,
-        "info": "On the homepage, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still. Turn OFF for a fully static layout (no paper motion). Respects reduced-motion preferences."
-      },
-      {
-        "type": "range",
-        "id": "paper_slide_intensity",
-        "min": 20,
-        "max": 100,
-        "step": 5,
-        "unit": "%",
-        "label": "Slide distance",
-        "default": 55,
-        "info": "How far the paper travels during the short transition animation."
       }
     ]
   },

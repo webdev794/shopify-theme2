@@ -9,12 +9,65 @@
  */
 {
   "sections": {
+    "media_with_text_overlay_B8Ax7z": {
+      "type": "media-with-text-overlay",
+      "name": "t:sections.media_with_text_overlay.presets.name",
+      "settings": {
+        "media_type": "image",
+        "image": "shopify://shop_images/blog2a.png",
+        "video_url": "",
+        "section_height": 400,
+        "preheading": "",
+        "heading": "Blogs",
+        "text": "<p><br/>Explore simple beauty tips, skincare routines, makeup inspiration, and expert advice designed to help you feel confident in your everyday beauty routine.<br/><br/></p>",
+        "button_text": "Shop Now",
+        "button_link": "",
+        "content_position": "center",
+        "content_alignment": "center",
+        "content_width": 60,
+        "overlay_color": "#00000066",
+        "overlay_opacity": 80,
+        "preheading_color": "#ffffff",
+        "heading_color": "#ffffff",
+        "text_color": "#ffffff",
+        "button_background": "#ffffff",
+        "button_text_color": "#1a1a1a",
+        "aria_label": "Media with text overlay"
+      }
+    },
     "main": {
       "type": "blog",
       "settings": {}
+    },
+    "newsletter_qyQbwb": {
+      "type": "newsletter",
+      "name": "t:sections.newsletter.presets.name",
+      "settings": {
+        "subheading": "Subscribe Now",
+        "heading": "Join Our Newsletter",
+        "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
+        "placeholder": "Enter your email",
+        "button_label": "Subscribe",
+        "button_style": "primary",
+        "show_icon": true,
+        "style": "default",
+        "background_color": "#f3e5de",
+        "section_text_color": "#1a1a2e",
+        "show_note": true,
+        "note_text": "No spam. Unsubscribe anytime.",
+        "success_message": "Thanks for subscribing!",
+        "show_social": false,
+        "social_label": "Follow us:",
+        "reduced_motion_mode": "system",
+        "anim_duration": 700,
+        "anim_delay": 0,
+        "mobile_motion": "lighter"
+      }
     }
   },
   "order": [
-    "main"
+    "media_with_text_overlay_B8Ax7z",
+    "main",
+    "newsletter_qyQbwb"
   ]
 }

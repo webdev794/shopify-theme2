@@ -6,18 +6,11 @@
   color: var(--hc-foreground, #ffffff);
 }
 
-/* ---- Scroller ---- */
+/* ---- Scroller (relative stage for absolute slides) ---- */
 .hero-carousel__scroller {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.hero-carousel__scroller::-webkit-scrollbar {
-  display: none;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
 }
 
 .hero-carousel__scroller:focus-visible {
@@ -25,20 +18,53 @@
   outline-offset: -2px;
 }
 
-/* ---- Slide ---- */
+/* ---- Slide ----
+   Absolute stacked slides with horizontal scaleX expand/collapse
+   (same signature animation as Slideshow with Marquee). */
 .hero-carousel__slide {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex: 0 0 100%;
-  min-width: 0;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   isolation: isolate;
+  opacity: 1;
+  visibility: visible;
+  transform: scaleX(0);
+  transform-origin: 0% 50%;
+  transition: transform 0.95s cubic-bezier(0.65, 0.05, 0.36, 1);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Direction-aware origins (set by JS) */
+.hero-carousel__slide[data-origin="left"] {
+  transform-origin: 0% 50%;
+}
+.hero-carousel__slide[data-origin="right"] {
+  transform-origin: 100% 50%;
+}
+
+.hero-carousel__slide[data-active="true"] {
+  transform: scaleX(1);
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Leaving slide keeps a high z-index until collapse finishes */
+.hero-carousel__slide[data-leaving="true"] {
+  z-index: 1;
+  pointer-events: none;
 }
 
 .hero-carousel__slide--empty {
   min-height: 50vh;
   background: #f0f0f0;
+  position: relative;
+  transform: none;
 }
 
 /* ---- Schedule & VIP Badges ---- */
@@ -82,34 +108,34 @@ body:not(.theme-editor) .hero-carousel__vip-badge {
   display: none;
 }
 
-/* ---- Heights ---- */
-.hero-carousel--small .hero-carousel__slide {
+/* ---- Heights (applied to the stage so absolute slides fill it) ---- */
+.hero-carousel--small .hero-carousel__scroller {
   min-height: 26rem;
 }
 
-.hero-carousel--medium .hero-carousel__slide {
+.hero-carousel--medium .hero-carousel__scroller {
   min-height: 34rem;
 }
 
-.hero-carousel--large .hero-carousel__slide {
+.hero-carousel--large .hero-carousel__scroller {
   min-height: 45rem;
 }
 
-.hero-carousel--full .hero-carousel__slide {
+.hero-carousel--full .hero-carousel__scroller {
   min-height: 100vh;
   min-height: 100svh;
 }
 
 @media (max-width: 749px) {
-  .hero-carousel--small .hero-carousel__slide {
+  .hero-carousel--small .hero-carousel__scroller {
     min-height: 20rem;
   }
 
-  .hero-carousel--medium .hero-carousel__slide {
+  .hero-carousel--medium .hero-carousel__scroller {
     min-height: 28rem;
   }
 
-  .hero-carousel--large .hero-carousel__slide {
+  .hero-carousel--large .hero-carousel__scroller {
     min-height: 36rem;
   }
 }
@@ -590,8 +616,8 @@ body:not(.theme-editor) .hero-carousel__vip-badge {
 
 /* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
-  .hero-carousel__scroller {
-    scroll-behavior: auto;
+  .hero-carousel__slide {
+    transition: none !important;
   }
 
   .hero-carousel__image,

@@ -9,13 +9,96 @@
  */
 {
   "sections": {
+    "hero_carousel_zWLH9y": {
+      "type": "hero-carousel",
+      "blocks": {
+        "slide_nbPHft": {
+          "type": "slide",
+          "settings": {
+            "is_vip_slide": false,
+            "schedule_start": "",
+            "schedule_end": "",
+            "image": "shopify://shop_images/carousel1.png",
+            "overlay_opacity": 25,
+            "caption": "YOUR DAILY RITUAL",
+            "heading": "<strong>Glow Into Your Best</strong>",
+            "text": "<p>Skincare made for naturally radiant skin.</p>",
+            "content_position": "middle-left",
+            "content_alignment": "left",
+            "button_label_1": "Discover the Collection",
+            "button_link_1": "/collections/all",
+            "button_style_1": "primary",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary"
+          }
+        },
+        "slide_XpXxjQ": {
+          "type": "slide",
+          "settings": {
+            "is_vip_slide": false,
+            "schedule_start": "",
+            "schedule_end": "",
+            "overlay_opacity": 25,
+            "caption": "New collection",
+            "heading": "Show your craft",
+            "text": "<p>Highlight your products and engage your customers.</p>",
+            "content_position": "middle-left",
+            "content_alignment": "left",
+            "button_label_1": "Explore",
+            "button_link_1": "/collections/all",
+            "button_style_1": "primary",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary"
+          }
+        },
+        "slide_PqrwTV": {
+          "type": "slide",
+          "settings": {
+            "is_vip_slide": false,
+            "schedule_start": "",
+            "schedule_end": "",
+            "overlay_opacity": 25,
+            "caption": "Special promotion",
+            "heading": "Limited time offer",
+            "text": "<p>Drive sales with a compelling call-to-action.</p>",
+            "content_position": "middle-right",
+            "content_alignment": "right",
+            "button_label_1": "Learn more",
+            "button_link_1": "/pages/about",
+            "button_style_1": "primary",
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_2": "secondary"
+          }
+        }
+      },
+      "block_order": [
+        "slide_nbPHft",
+        "slide_XpXxjQ",
+        "slide_PqrwTV"
+      ],
+      "name": "t:sections.hero_carousel.presets.name",
+      "settings": {
+        "carousel_label": "",
+        "height": "medium",
+        "heading_size": "large",
+        "vip_tags": "vip,premium,wholesale",
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "autoplay_speed": 6,
+        "color_foreground": "#ffffff",
+        "color_overlay": "#000000"
+      }
+    },
     "slideshow_with_marquee_FNTTcB": {
       "type": "slideshow-with-marquee",
       "blocks": {
         "slide_qDLmdH": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/blog2.png",
             "heading": "Beauty, Made Effortless.",
             "subheading": "Discover thoughtfully crafted beauty essentials designed to elevate your everyday routine.",
             "button_text": "Shop Now",
@@ -25,7 +108,6 @@
         "slide_qpx74X": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/blog1.png",
             "heading": "Your Beauty, Your Ritual.",
             "subheading": "Elevate your daily routine with luxurious essentials created to make every moment of self-care feel special.",
             "button_text": "Shop Now",
@@ -35,7 +117,6 @@
         "slide_4EDpqr": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/blog3a.png",
             "heading": "Glow Into Your Best.",
             "subheading": "Simple, effective beauty essentials made to bring out your natural glow—every single day.",
             "button_text": "View Deals",
@@ -77,7 +158,6 @@
         "image_gLgaHb": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/professional-makeup-pallete.png",
             "tilt": -4,
             "offset_y": 0,
             "parallax_strength": 12
@@ -93,7 +173,6 @@
         "image_EnXP7D": {
           "type": "image",
           "settings": {
-            "image": "shopify://shop_images/makeup-brushes-on-marble_2.jpg",
             "tilt": 3,
             "offset_y": 0,
             "parallax_strength": 12
@@ -138,8 +217,6 @@
       "settings": {
         "heading": "Better with Suvara",
         "subheading": "Our products blend seamlessly to blur imperfections, even tone, and deliver a natural finish that lasts all day. From first swipe to final set it's skin, elevated.",
-        "before_image": "shopify://shop_images/ChatGPT_Image_Aug_12_2026_03_03_18_PM.png",
-        "after_image": "shopify://shop_images/ChatGPT_Image_Aug_12_2026_03_01_02_PM.png",
         "show_labels": false,
         "before_label": "Before",
         "after_label": "After",
@@ -303,7 +380,6 @@
         "look_id": "",
         "heading": "Shop the Kit",
         "subheading": "Everything you need in one complete bundle",
-        "image": "shopify://shop_images/lipcare_kit.png",
         "kit_title": "The Complete Lip Care Kit",
         "kit_description": "<p>This curated bundle includes everything you need to get started. Save 20% compared to buying items separately.</p>",
         "show_variant_selector": true,
@@ -375,7 +451,7 @@
         "show_vendor": true,
         "show_variant_selector": true,
         "aria_label": "Mix and match pack builder",
-        "background_color": "#F7F4EE"
+        "background_color": "#f7f4ee"
       }
     },
     "lookbook_PJk88J": {
@@ -435,7 +511,6 @@
         "heading_size": "medium",
         "text": "<p>Tap the dots to shop every piece in this look.</p>",
         "content_position": "top",
-        "image": "shopify://shop_images/Fm43w.jpg",
         "full_width": true,
         "enable_scroll_zoom": true,
         "scroll_zoom_start": 55,
@@ -504,7 +579,6 @@
         "post_DyEXFr": {
           "type": "post",
           "settings": {
-            "image": "shopify://shop_images/brushes-blossoms_1_1.jpg",
             "platform": "instagram",
             "username": "",
             "caption": "Beautiful makup brushes 🌅",
@@ -516,7 +590,6 @@
         "post_WX3UAB": {
           "type": "post",
           "settings": {
-            "image": "shopify://shop_images/brushing-on-red-lipsick_1.jpg",
             "platform": "instagram",
             "username": "",
             "caption": "Red lip gloss ✨",
@@ -528,7 +601,6 @@
         "post_FY78Xd": {
           "type": "post",
           "settings": {
-            "image": "shopify://shop_images/person-looks-forward-with-the-shadow-of-a-leaf-on.jpg",
             "platform": "instagram",
             "username": "",
             "caption": "Behind the scenes 🎬",
@@ -540,7 +612,6 @@
         "post_pgTGRz": {
           "type": "post",
           "settings": {
-            "image": "shopify://shop_images/applying-eyeshadow.jpg",
             "platform": "instagram",
             "username": "",
             "caption": "Customer favorites 💕",
@@ -576,8 +647,7 @@
             "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
             "rating": 5,
             "author": "Sarah Johnson",
-            "position": "Regular Customer",
-            "avatar": "shopify://shop_images/ChatGPT_Image_Aug_11_2026_04_19_38_PM.png"
+            "position": "Regular Customer"
           }
         },
         "testimonial_KkiRj8": {
@@ -586,8 +656,7 @@
             "quote": "Best customer service I've ever experienced. They went above and beyond to help me.",
             "rating": 5,
             "author": "Michael Chen",
-            "position": "Business Owner",
-            "avatar": "shopify://shop_images/face2.png"
+            "position": "Business Owner"
           }
         },
         "testimonial_mULPyW": {
@@ -596,8 +665,7 @@
             "quote": "The products are exactly as described and the quality is premium. Will definitely buy again.",
             "rating": 4,
             "author": "Emily Davis",
-            "position": "Designer",
-            "avatar": "shopify://shop_images/face3.png"
+            "position": "Designer"
           }
         }
       },
@@ -610,7 +678,7 @@
       "settings": {
         "heading": "What Our Customers Say",
         "subheading": "Real reviews from real customers",
-        "background_color": "#F3E1DB",
+        "background_color": "#f3e1db",
         "columns": "3",
         "show_rating": false,
         "show_view_all": true,
@@ -674,6 +742,7 @@
     }
   },
   "order": [
+    "hero_carousel_zWLH9y",
     "slideshow_with_marquee_FNTTcB",
     "highlight_text_with_images_APQhQN",
     "image_comparison_VLNdYT",

@@ -1,11 +1,13 @@
 {%- comment -%}
-  Images with Text Carousel
+  The Suvara Ritual
+  Modified Images with Text Carousel — editorial story section
+  Large image ~60% | Text ~40%  |  2–3 lifestyle slides that continue the Hero narrative
 {%- endcomment -%}
 
 {%- liquid
   assign carousel_label = section.settings.carousel_label
   if carousel_label == blank
-    assign carousel_label = 'sections.iwt_carousel.carousel_label' | t
+    assign carousel_label = 'The Suvara Ritual'
   endif
 -%}
 
@@ -51,7 +53,7 @@
         class="iwt-carousel__slide"
         role="group"
         aria-roledescription="slide"
-        aria-label="{{ 'sections.iwt_carousel.slide_label' | t: index: forloop.index, count: forloop.length }}"
+        aria-label="Slide {{ forloop.index }} of {{ forloop.length }}"
         {{ block.shopify_attributes }}
         data-iwt-slide
       >
@@ -106,7 +108,7 @@
         <button
           type="button"
           class="iwt-carousel__arrow iwt-carousel__arrow--prev"
-          aria-label="{{ 'sections.iwt_carousel.previous_slide' | t }}"
+          aria-label="Previous slide"
           data-iwt-prev
         >
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -121,7 +123,7 @@
             <button
               type="button"
               class="iwt-carousel__dot"
-              aria-label="{{ 'sections.iwt_carousel.go_to_slide' | t: index: forloop.index }}"
+              aria-label="Go to slide {{ forloop.index }}"
               {% if forloop.first %}aria-current="true"{% endif %}
               data-iwt-dot="{{ forloop.index0 }}"
             ></button>
@@ -133,7 +135,7 @@
         <button
           type="button"
           class="iwt-carousel__arrow iwt-carousel__arrow--next"
-          aria-label="{{ 'sections.iwt_carousel.next_slide' | t }}"
+          aria-label="Next slide"
           data-iwt-next
         >
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -146,8 +148,8 @@
         <button
           type="button"
           class="iwt-carousel__playback"
-          aria-label="{{ 'sections.iwt_carousel.pause_carousel' | t }}"
-          data-play-label="{{ 'sections.iwt_carousel.play_carousel' | t }}"
+          aria-label="Pause carousel"
+          data-play-label="Play carousel"
           data-iwt-playback
         >
           <svg class="iwt-carousel__playback-icon iwt-carousel__playback-icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -164,9 +166,9 @@
 
 {% schema %}
 {
-  "name": "t:sections.iwt_carousel.name",
+  "name": "The Suvara Ritual",
   "tag": "section",
-  "class": "section-iwt-carousel",
+  "class": "section-iwt-carousel section-suvara-ritual",
   "disabled_on": {
     "groups": ["header", "footer"]
   },
@@ -174,147 +176,158 @@
     {
       "type": "text",
       "id": "carousel_label",
-      "label": "t:sections.iwt_carousel.settings.carousel_label.label",
-      "info": "t:sections.iwt_carousel.settings.carousel_label.info"
+      "label": "Accessibility label",
+      "default": "The Suvara Ritual",
+      "info": "Used by screen readers"
     },
-    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
     {
       "type": "select",
       "id": "image_position",
-      "label": "t:sections.iwt_carousel.settings.image_position.label",
+      "label": "Image position (desktop)",
       "options": [
-        { "value": "left", "label": "t:sections.iwt_carousel.settings.image_position.options__1.label" },
-        { "value": "right", "label": "t:sections.iwt_carousel.settings.image_position.options__2.label" }
+        { "value": "left", "label": "Left (~60%)" },
+        { "value": "right", "label": "Right (~60%)" }
       ],
       "default": "left"
     },
     {
       "type": "select",
       "id": "aspect_ratio",
-      "label": "t:sections.iwt_carousel.settings.aspect_ratio.label",
+      "label": "Image aspect ratio",
       "options": [
-        { "value": "1 / 1", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__1.label" },
-        { "value": "4 / 3", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__2.label" },
-        { "value": "3 / 4", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__3.label" },
-        { "value": "16 / 9", "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__4.label" }
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "16 / 9", "label": "Wide (16:9)" }
       ],
-      "default": "4 / 3"
+      "default": "4 / 3",
+      "info": "Recommended: 4:3 or 3:4 for editorial lifestyle images"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "t:sections.iwt_carousel.settings.heading_size.label",
+      "label": "Heading size",
       "options": [
-        { "value": "small", "label": "t:sections.iwt_carousel.settings.heading_size.options__1.label" },
-        { "value": "medium", "label": "t:sections.iwt_carousel.settings.heading_size.options__2.label" },
-        { "value": "large", "label": "t:sections.iwt_carousel.settings.heading_size.options__3.label" }
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
       ],
-      "default": "medium"
+      "default": "large"
     },
     {
       "type": "checkbox",
       "id": "full_width",
-      "label": "t:sections.iwt_carousel.settings.full_width.label",
+      "label": "Full width",
       "default": false
     },
-    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__2.content" },
+    {
+      "type": "header",
+      "content": "Carousel controls"
+    },
     {
       "type": "checkbox",
       "id": "show_arrows",
-      "label": "t:sections.iwt_carousel.settings.show_arrows.label",
+      "label": "Show arrows",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_dots",
-      "label": "t:sections.iwt_carousel.settings.show_dots.label",
+      "label": "Show dots",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "autoplay",
-      "label": "t:sections.iwt_carousel.settings.autoplay.label",
-      "default": false,
-      "info": "t:sections.iwt_carousel.settings.autoplay.info"
+      "label": "Autoplay",
+      "default": true,
+      "info": "Gentle auto-advance helps the story feel continuous after the Hero"
     },
     {
       "type": "range",
       "id": "autoplay_speed",
-      "label": "t:sections.iwt_carousel.settings.autoplay_speed.label",
-      "min": 3,
-      "max": 9,
+      "label": "Autoplay speed",
+      "min": 4,
+      "max": 10,
       "step": 1,
       "unit": "s",
-      "default": 5
+      "default": 6
     },
-    { "type": "header", "content": "t:sections.iwt_carousel.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
     {
       "type": "color",
       "id": "color_background",
-      "label": "t:sections.iwt_carousel.settings.color_background.label",
-      "default": "#f5f4f2"
+      "label": "Background",
+      "default": "#F7F4EE"
     },
     {
       "type": "color",
       "id": "color_foreground",
-      "label": "t:sections.iwt_carousel.settings.color_foreground.label",
-      "default": "#121212"
+      "label": "Text",
+      "default": "#1A1A1A"
     },
     {
       "type": "color",
       "id": "color_accent",
-      "label": "t:sections.iwt_carousel.settings.color_accent.label",
-      "default": "#121212"
+      "label": "Accent / buttons",
+      "default": "#1A1A1A"
     }
   ],
   "blocks": [
     {
       "type": "slide",
-      "name": "t:sections.iwt_carousel.blocks.slide.name",
-      "limit": 8,
+      "name": "Ritual slide",
+      "limit": 4,
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.image.label",
-          "info": "t:sections.iwt_carousel.blocks.slide.settings.image.info"
+          "label": "Lifestyle image",
+          "info": "Use emotional, photographic ritual imagery (woman applying serum, close-up of skin, natural light). Avoid hard product packshots."
         },
         {
           "type": "text",
           "id": "caption",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.caption.label",
-          "default": "New in"
+          "label": "Eyebrow / caption",
+          "default": "THE SUVARA RITUAL"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.heading.label",
-          "default": "Image with text"
+          "label": "Heading",
+          "default": "Your skin deserves a moment of its own."
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.text.label",
-          "default": "<p>Pair an image with a short story, collection highlight, or campaign message.</p>"
+          "label": "Text",
+          "default": "<p>Thoughtfully crafted essentials designed to make your everyday ritual feel extraordinary.</p>"
         },
         {
           "type": "text",
           "id": "button_label",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_label.label",
-          "default": "Shop now"
+          "label": "Button label",
+          "default": "Discover Our Story"
         },
         {
           "type": "url",
           "id": "button_link",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_link.label"
+          "label": "Button link"
         },
         {
           "type": "select",
           "id": "button_style",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.label",
+          "label": "Button style",
           "options": [
-            { "value": "primary", "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__1.label" },
-            { "value": "secondary", "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__2.label" }
+            { "value": "primary", "label": "Primary" },
+            { "value": "secondary", "label": "Secondary" }
           ],
           "default": "primary"
         }
@@ -323,11 +336,38 @@
   ],
   "presets": [
     {
-      "name": "t:sections.iwt_carousel.presets.name",
+      "name": "The Suvara Ritual",
       "blocks": [
-        { "type": "slide" },
-        { "type": "slide" },
-        { "type": "slide" }
+        {
+          "type": "slide",
+          "settings": {
+            "caption": "THE SUVARA RITUAL",
+            "heading": "Your skin deserves a moment of its own.",
+            "text": "<p>Thoughtfully crafted essentials designed to make your everyday ritual feel extraordinary.</p>",
+            "button_label": "Discover Our Story",
+            "button_style": "primary"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "caption": "THE SUVARA RITUAL",
+            "heading": "Nourish. Restore. Glow.",
+            "text": "<p>A simple, intentional sequence that turns daily care into a quiet luxury.</p>",
+            "button_label": "Discover Our Story",
+            "button_style": "primary"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "caption": "THE SUVARA RITUAL",
+            "heading": "Made for the everyday extraordinary.",
+            "text": "<p>Clean formulas. Sensorial textures. Results you can feel and see.</p>",
+            "button_label": "Discover Our Story",
+            "button_style": "primary"
+          }
+        }
       ]
     }
   ]

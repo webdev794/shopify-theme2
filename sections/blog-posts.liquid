@@ -94,11 +94,7 @@
             
             {% if section.settings.show_excerpt %}
               <div class="blog-posts__excerpt">
-                {% if article.excerpt != blank %}
-                  {{ article.excerpt | truncatewords: section.settings.excerpt_words }}
-                {% else %}
-                  {{ article.content | strip_html | truncatewords: section.settings.excerpt_words }}
-                {% endif %}
+                {{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}
               </div>
             {% endif %}
             

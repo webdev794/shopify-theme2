@@ -485,6 +485,7 @@
     transparent
   );
   border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   opacity: 0;
   transform: translateY(7px);

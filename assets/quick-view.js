@@ -16,16 +16,15 @@
     if (customElements.get('model-viewer')) return Promise.resolve();
     if (modelViewerLoading) return modelViewerLoading;
 
-    // Google's official @google/model-viewer library — the same open-source
-    // library Shopify's own model_viewer_tag/Hydrogen components use
-    // internally. Shopify's own hosted copy lives at a shop-specific path
-    // (not a fixed URL a theme can reference), so we load the official
-    // upstream distribution instead, matching main-product.liquid's visual
-    // behavior since it's the same underlying component.
+    // Google's official @google/model-viewer library, vendored as a theme
+    // asset (assets/model-viewer.min.js) and served from Shopify's CDN via
+    // asset_url — see the data-model-viewer-src attribute on #QuickViewModal
+    // in snippets/quick-view-modal.liquid. Scripts must be hosted on
+    // Shopify's servers rather than loaded from a third-party CDN.
     modelViewerLoading = new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.type = 'module';
-      script.src = 'https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js';
+      script.src = modal.dataset.modelViewerSrc;
       script.onload = resolve;
       script.onerror = reject;
       document.head.appendChild(script);

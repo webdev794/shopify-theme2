@@ -196,17 +196,25 @@
                     </h3>
 
                     <div class="product-card__price">
+                      {% assign product_on_sale = false %}
+                      {% if product.compare_at_price_max > product.price_min %}
+                        {% assign product_on_sale = true %}
+                      {% endif %}
+
                       {% if product.price_varies %}
-                        <span class="price price--range">
+                        <span class="price price--range{% if product_on_sale %} price--sale{% endif %}">
                           {{ product.price_min | money }} &ndash; {{ product.price_max | money }}
                         </span>
-                      {% elsif product.compare_at_price_max > product.price_min %}
+                      {% elsif product_on_sale %}
                         <span class="price price--sale">{{ product.price_min | money }}</span>
+                      {% else %}
+                        <span class="price">{{ product.price_min | money }}</span>
+                      {% endif %}
+
+                      {% if product_on_sale %}
                         <span class="price price--compare">
                           <s>{{ product.compare_at_price_max | money }}</s>
                         </span>
-                      {% else %}
-                        <span class="price">{{ product.price_min | money }}</span>
                       {% endif %}
                     </div>
                     {% render 'unit-price', object: product.selected_or_first_available_variant %}

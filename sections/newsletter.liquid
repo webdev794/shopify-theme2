@@ -25,7 +25,7 @@
         <div class="newsletter__description">{{ section.settings.description }}</div>
       {% endif %}
       
-      {% form 'customer', id: 'newsletter-form' %}
+      {% form 'customer', id: 'newsletter-form-' | append: section.id %}
         {{ form.errors | default_errors }}
         
         {% if form.posted_successfully? %}
@@ -44,6 +44,12 @@
               value="newsletter"
             >
             <div class="newsletter__field-group">
+              <label
+                for="NewsletterForm-{{ section.id }}"
+                class="visually-hidden"
+              >
+                {{ 'sections.newsletter.email_label' | t | default: 'Email address' }}
+              </label>
               <input
                 type="email"
                 name="contact[email]"
@@ -105,7 +111,10 @@
   "tag": "section",
   "class": "section",
   "settings": [
-    { "type": "header", "content": "t:sections.newsletter.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__1.content"
+    },
     {
       "type": "text",
       "id": "subheading",
@@ -130,7 +139,10 @@
       "label": "t:sections.newsletter.settings.placeholder.label",
       "default": "Enter your email"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__2.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__2.content"
+    },
     {
       "type": "text",
       "id": "button_label",
@@ -142,10 +154,22 @@
       "id": "button_style",
       "label": "t:sections.newsletter.settings.button_style.label",
       "options": [
-        { "value": "primary", "label": "t:sections.newsletter.settings.button_style.options__1.label" },
-        { "value": "gradient", "label": "t:sections.newsletter.settings.button_style.options__2.label" },
-        { "value": "outline", "label": "t:sections.newsletter.settings.button_style.options__3.label" },
-        { "value": "pill", "label": "t:sections.newsletter.settings.button_style.options__4.label" }
+        {
+          "value": "primary",
+          "label": "t:sections.newsletter.settings.button_style.options__1.label"
+        },
+        {
+          "value": "gradient",
+          "label": "t:sections.newsletter.settings.button_style.options__2.label"
+        },
+        {
+          "value": "outline",
+          "label": "t:sections.newsletter.settings.button_style.options__3.label"
+        },
+        {
+          "value": "pill",
+          "label": "t:sections.newsletter.settings.button_style.options__4.label"
+        }
       ],
       "default": "primary"
     },
@@ -155,17 +179,35 @@
       "label": "t:sections.newsletter.settings.show_icon.label",
       "default": true
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__3.content"
+    },
     {
       "type": "select",
       "id": "style",
       "label": "t:sections.newsletter.settings.style.label",
       "options": [
-        { "value": "default", "label": "t:sections.newsletter.settings.style.options__1.label" },
-        { "value": "minimal", "label": "t:sections.newsletter.settings.style.options__2.label" },
-        { "value": "bordered", "label": "t:sections.newsletter.settings.style.options__3.label" },
-        { "value": "shadow", "label": "t:sections.newsletter.settings.style.options__4.label" },
-        { "value": "background", "label": "t:sections.newsletter.settings.style.options__5.label" }
+        {
+          "value": "default",
+          "label": "t:sections.newsletter.settings.style.options__1.label"
+        },
+        {
+          "value": "minimal",
+          "label": "t:sections.newsletter.settings.style.options__2.label"
+        },
+        {
+          "value": "bordered",
+          "label": "t:sections.newsletter.settings.style.options__3.label"
+        },
+        {
+          "value": "shadow",
+          "label": "t:sections.newsletter.settings.style.options__4.label"
+        },
+        {
+          "value": "background",
+          "label": "t:sections.newsletter.settings.style.options__5.label"
+        }
       ],
       "default": "default"
     },
@@ -187,7 +229,10 @@
       "label": "t:sections.newsletter.settings.section_text_color.label",
       "default": "#1a1a2e"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__4.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__4.content"
+    },
     {
       "type": "checkbox",
       "id": "show_note",
@@ -206,11 +251,14 @@
       "label": "t:sections.newsletter.settings.success_message.label",
       "default": "Thanks for subscribing!"
     },
-    { "type": "header", "content": "t:sections.newsletter.settings.header__5.content" },
+    {
+      "type": "header",
+      "content": "t:sections.newsletter.settings.header__5.content"
+    },
     {
       "type": "checkbox",
       "id": "show_social",
-      "label": "t:sections.newsletter.settings.show_social.label",
+      "label": "Show social media icons",
       "default": true,
       "info": "t:sections.newsletter.settings.show_social.info"
     },
@@ -222,7 +270,9 @@
     }
   ],
   "presets": [
-    { "name": "t:sections.newsletter.presets.name" }
+    {
+      "name": "t:sections.newsletter.presets.name"
+    }
   ]
 }
 {% endschema %}

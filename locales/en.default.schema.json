@@ -324,7 +324,7 @@
           "content": "Social media links"
         },
         "show_social": {
-          "label": "Show social icons",
+          "label": "Show social media icons",
           "info": "Set your social media URLs in Theme settings → Social media."
         },
         "social_label": {
@@ -367,7 +367,7 @@
           "options__3": {
             "label": "Beside image, right"
           },
-          "info": "On mobile, content always shows above the image"
+          "info": "On mobile, content always shows above the image."
         },
         "header__1": {
           "content": "Image"
@@ -566,7 +566,7 @@
       "settings": {
         "title": {
           "label": "Section title",
-          "info": "Optional heading above custom content"
+          "info": "Optional heading above custom content."
         },
         "header__1": {
           "content": "Custom code"
@@ -705,7 +705,7 @@
         },
         "products_per_row": {
           "label": "Products per row",
-          "info": "Number of products to display per row on desktop"
+          "info": "Number of products to display per row on desktop."
         },
         "gap": {
           "label": "Gap between products"
@@ -740,7 +740,7 @@
         },
         "view_all_link": {
           "label": "Button link",
-          "info": "Leave empty to link to /collections/all"
+          "info": "Leave empty to link to /collections/all."
         },
         "header__4": {
           "content": "Product display settings"
@@ -750,7 +750,7 @@
         },
         "show_rating": {
           "label": "Show product rating",
-          "info": "Shown for products that have a reviews.rating metafield"
+          "info": "Shown for products that have a reviews.rating metafield."
         },
         "show_quick_add": {
           "label": "Show quick add button",
@@ -758,11 +758,11 @@
         },
         "show_compare_at": {
           "label": "Show compare at price",
-          "info": "Shows the original price for products that have a compare-at price set in the admin"
+          "info": "Shows the original price for products that have a compare-at price set in the admin."
         },
         "image_size": {
           "label": "Image size",
-          "info": "Controls the height of the product image area",
+          "info": "Controls the height of the product image area.",
           "options__1": {
             "label": "Small"
           },
@@ -886,7 +886,7 @@
           "content": "Social media"
         },
         "show_social": {
-          "label": "Show social icons",
+          "label": "Show social media icons",
           "info": "Set your social media URLs in Theme settings → Social media."
         },
         "social_instagram": {
@@ -963,7 +963,7 @@
         },
         "image_size": {
           "label": "Image size",
-          "info": "Relative to the text height, so images scale with the text on every screen"
+          "info": "Relative to the text height, so images scale with the text on every screen."
         },
         "image_shape": {
           "label": "Image shape",
@@ -1016,7 +1016,7 @@
         },
         "color_accent": {
           "label": "Accent",
-          "info": "Used for accented and highlighted phrases"
+          "info": "Used for accented and highlighted phrases."
         }
       },
       "blocks": {
@@ -1052,7 +1052,7 @@
             },
             "tilt": {
               "label": "Tilt",
-              "info": "A slight tilt gives a hand-placed, editorial feel"
+              "info": "A slight tilt gives a hand-placed, editorial feel."
             }
           }
         }
@@ -1097,10 +1097,10 @@
           "label": "Show description below"
         },
         "header__3": {
-          "content": "Slider settings"
+          "content": "Comparison control"
         },
         "default_position": {
-          "label": "Default slider position"
+          "label": "Default handle position"
         },
         "section_height": {
           "label": "Section height"
@@ -1255,7 +1255,7 @@
           "label": "Enable email signup"
         },
         "show_social_icons": {
-          "label": "Show social icons"
+          "label": "Show social media icons"
         }
       }
     },
@@ -1281,7 +1281,7 @@
         },
         "zoom": {
           "label": "Map zoom",
-          "info": "Applies to the interactive map"
+          "info": "Applies to the interactive map."
         },
         "image": {
           "label": "Image",
@@ -1289,7 +1289,7 @@
         },
         "desaturate": {
           "label": "Desaturate map",
-          "info": "Shows the map or image in black and white to match minimal designs"
+          "info": "Shows the map or image in black and white to match minimal designs."
         },
         "header__2": {
           "content": "Layout"
@@ -1366,7 +1366,7 @@
             },
             "is_address": {
               "label": "This text is an address",
-              "info": "Marks the text as a physical address for screen readers and search engines"
+              "info": "Marks the text as a physical address for screen readers and search engines."
             }
           }
         },
@@ -1378,7 +1378,7 @@
             },
             "button_link": {
               "label": "Button link",
-              "info": "Leave empty to open directions to the address on Google Maps"
+              "info": "Leave empty to open directions to the address on Google Maps."
             },
             "button_style": {
               "label": "Button style",
@@ -1467,7 +1467,7 @@
           "options__3": {
             "label": "Swipeable slideshow"
           },
-          "info": "Column and row spans only apply on desktop"
+          "info": "Column and row spans only apply on desktop."
         },
         "header__2": {
           "content": "Captions"
@@ -1515,7 +1515,7 @@
             },
             "link": {
               "label": "Link",
-              "info": "Makes the whole tile clickable"
+              "info": "Makes the whole tile clickable."
             },
             "column_span": {
               "label": "Column span",
@@ -1635,7 +1635,7 @@
         },
         "visible_count": {
           "label": "Visible products at a time",
-          "info": "Number of products visible before scrolling"
+          "info": "Number of products visible before scrolling."
         },
         "header__1": {
           "content": "Display options"
@@ -1704,7 +1704,7 @@
         },
         "repeat_count": {
           "label": "Repeat count",
-          "info": "Number of times to repeat cards for seamless scrolling"
+          "info": "Number of times to repeat cards for seamless scrolling."
         },
         "header__2": {
           "content": "View all button"
@@ -1731,7 +1731,7 @@
           "settings": {
             "image": {
               "label": "Image",
-              "info": "400 x 400px recommended (square image)"
+              "info": "400 x 400px recommended (square image)."
             },
             "tag": {
               "label": "Tag"
@@ -1789,7 +1789,7 @@
         },
         "repeat_count": {
           "label": "Repeat count",
-          "info": "Number of times to repeat the text for seamless scrolling"
+          "info": "Number of times to repeat the text for seamless scrolling."
         },
         "show_divider": {
           "label": "Show divider"
@@ -1814,7 +1814,7 @@
         },
         "pause_on_hover": {
           "label": "Pause on hover",
-          "info": "Pause animation when user hovers over the text"
+          "info": "Pause animation when user hovers over the text."
         },
         "aria_label": {
           "label": "Screen reader label"
@@ -1826,7 +1826,7 @@
           "settings": {
             "text": {
               "label": "Text",
-              "info": "This text will scroll across the screen"
+              "info": "This text will scroll across the screen."
             },
             "icon": {
               "label": "Icon",
@@ -1885,7 +1885,7 @@
         },
         "image": {
           "label": "Kit image",
-          "info": "800 x 800px recommended (square image)"
+          "info": "800 x 800px recommended (square image)."
         },
         "kit_title": {
           "label": "Kit title"
@@ -2501,7 +2501,7 @@
         },
         "separator_symbol": {
           "label": "Separator symbol",
-          "info": "Symbol between text items (e.g. •, —, ★)"
+          "info": "Symbol between text items (e.g. •, —, ★)."
         },
         "header__5": {
           "content": "Accessibility"
@@ -2523,7 +2523,7 @@
         },
         "logo": {
           "label": "Logo",
-          "info": "180 x 60px .png recommended"
+          "info": "180 x 60px .png recommended."
         },
         "logo_width": {
           "label": "Logo width"
@@ -2533,7 +2533,7 @@
         },
         "menu": {
           "label": "Main menu",
-          "info": "Select the menu to display in the header"
+          "info": "Select the menu to display in the header."
         },
         "open_on_hover": {
           "label": "Open navigation on hover",
@@ -2551,7 +2551,7 @@
         },
         "enable_mega_menu": {
           "label": "Enable mega menu",
-          "info": "Enable mega menu layout for selected parent menu items"
+          "info": "Enable mega menu layout for selected parent menu items."
         },
         "mega_menu_parents": {
           "label": "Main menu items with a mega menu",
@@ -2559,15 +2559,15 @@
         },
         "mega_show_images": {
           "label": "Show collection images",
-          "info": "Show the collection image above each mega menu column when the menu item links to a collection"
+          "info": "Show the collection image above each mega menu column when the menu item links to a collection."
         },
         "mega_show_featured": {
           "label": "Show featured content",
-          "info": "Display featured content in the mega menu"
+          "info": "Display featured content in the mega menu."
         },
         "mega_featured_image": {
           "label": "Featured image",
-          "info": "Shown at the top of the featured card. 600 x 340px recommended"
+          "info": "Shown at the top of the featured card. 600 x 340px recommended."
         },
         "mega_featured_title": {
           "label": "Featured title"
@@ -2610,7 +2610,7 @@
         },
         "color_hover": {
           "label": "Hover color",
-          "info": "Color used for hover states and active links"
+          "info": "Color used for hover states and active links."
         }
       }
     },
@@ -2703,7 +2703,7 @@
         },
         "stack_on_mobile": {
           "label": "Show content below media on mobile",
-          "info": "Improves readability on small screens"
+          "info": "Improves readability on small screens."
         },
         "header__3": {
           "content": "Overlay"
@@ -2713,7 +2713,7 @@
         },
         "overlay_opacity": {
           "label": "Overlay opacity",
-          "info": "Keep enough contrast between the text and the media behind it"
+          "info": "Keep enough contrast between the text and the media behind it."
         },
         "header__4": {
           "content": "Colors"
@@ -2879,7 +2879,7 @@
         },
         "color_overlay": {
           "label": "Overlay color",
-          "info": "Set overlay opacity per slide"
+          "info": "Set overlay opacity per slide."
         }
       },
       "blocks": {
@@ -2914,7 +2914,7 @@
             },
             "overlay_opacity": {
               "label": "Overlay opacity",
-              "info": "Keep enough contrast between the text and the image behind it"
+              "info": "Keep enough contrast between the text and the image behind it."
             },
             "header__3": {
               "content": "Content"
@@ -3217,7 +3217,7 @@
         },
         "follow_link": {
           "label": "Follow link",
-          "info": "Link to your social media profile"
+          "info": "Link to your social media profile."
         },
         "header__2": {
           "content": "Accessibility"
@@ -3232,7 +3232,7 @@
           "settings": {
             "image": {
               "label": "Image",
-              "info": "Recommended: Square images"
+              "info": "Recommended: Square images."
             },
             "platform": {
               "label": "Platform",
@@ -3263,7 +3263,7 @@
             },
             "username": {
               "label": "Username",
-              "info": "Displayed when no image is uploaded"
+              "info": "Displayed when no image is uploaded."
             },
             "caption": {
               "label": "Caption"
@@ -3276,7 +3276,7 @@
             },
             "link": {
               "label": "Post link",
-              "info": "Link to the post on social media"
+              "info": "Link to the post on social media."
             }
           }
         }
@@ -3691,7 +3691,7 @@
             },
             "link": {
               "label": "Link",
-              "info": "Used if no collection is selected"
+              "info": "Used if no collection is selected."
             },
             "button_label": {
               "label": "Button label"
@@ -3749,7 +3749,7 @@
             },
             "rows": {
               "label": "Rows",
-              "info": "One row per line. Separate columns with |"
+              "info": "One row per line. Separate columns with |."
             },
             "note": {
               "label": "Note"

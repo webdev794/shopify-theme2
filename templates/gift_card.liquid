@@ -71,17 +71,35 @@
       </a>
     {% endif %}
 
-    {% comment %} QR code library is loaded by layout/gift_card.liquid via shopify_asset_url. {% endcomment %}
+    {% comment %} QR code library (qrcode.js) is loaded by layout/gift_card.liquid via asset_url. {% endcomment %}
     <div id="qr-code" class="gift-card__qr"></div>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const qrEl = document.getElementById('qr-code');
-        if (typeof QRCode !== 'undefined' && qrEl) {
-          new QRCode(qrEl, {
-            text: '{{ shop.url }}',
-            width: 120,
-            height: 120
+        const qrTarget = '{{ shop.url | append: gift_card.url }}';
+
+        if (typeof qrcode !== 'undefined' && qrEl) {
+          const qr = qrcode(0, 'M');
+          qr.addData(qrTarget);
+          qr.make();
+
+          const minSize = 120;
+          const moduleCount = qr.getModuleCount();
+          const cellSize = Math.ceil(minSize / moduleCount);
+          const renderedSize = cellSize * moduleCount;
+
+          qrEl.innerHTML = qr.createSvgTag({
+            cellSize: cellSize,
+            margin: 0
           });
+
+          const svg = qrEl.querySelector('svg');
+          if (svg) {
+            svg.setAttribute('width', renderedSize);
+            svg.setAttribute('height', renderedSize);
+            svg.style.minWidth = minSize + 'px';
+            svg.style.minHeight = minSize + 'px';
+          }
         }
       });
     </script>

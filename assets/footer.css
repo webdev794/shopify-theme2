@@ -7,8 +7,9 @@
   --footer-bg: #f4efe6;
   --footer-surface: #ebe4d7;
   --footer-text: #26362c;
-  --footer-muted: #69736a;
-  --footer-soft: #8b938b;
+  /* Tuned for ≥4.5:1 (muted) and ≥3:1 (soft) on footer surfaces */
+  --footer-muted: #4f5851;
+  --footer-soft: #5a635c;
   --footer-line: rgba(38, 54, 44, 0.13);
   --footer-accent: #304b38;
   --footer-accent-soft: #d8c7b0;

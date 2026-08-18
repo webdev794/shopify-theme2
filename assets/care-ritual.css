@@ -8,7 +8,8 @@
   --care-bg: #e9e2d7;
   --care-text: #1d2921;
   --care-accent: #71806d;
-  --care-muted: rgba(29, 41, 33, 0.58);
+  /* Solid color for ≥4.5:1 contrast (was low-alpha rgba failing WCAG) */
+  --care-muted: #4f5851;
   --care-line: rgba(29, 41, 33, 0.14);
 
   position: relative;
@@ -127,6 +128,7 @@
   background: rgba(255, 255, 255, 0.8);
   border-radius: 100px;
   box-shadow: 0 12px 30px rgba(29, 41, 33, 0.08);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   font-size: 0.62rem;
   font-weight: 600;

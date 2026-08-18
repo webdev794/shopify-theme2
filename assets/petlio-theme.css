@@ -19,10 +19,11 @@
   /* Story / editorial */
   --petlio-story: #e9e2d7;
 
-  /* Ink & text */
+  /* Ink & text — tuned for WCAG AA contrast on paper surfaces
+     muted ≥4.5:1 for body text; soft ≥3:1 (preferably ≥4.5) for secondary text */
   --petlio-ink: #273028;
-  --petlio-muted: #69736a;
-  --petlio-soft: #8b938b;
+  --petlio-muted: #4f5851;
+  --petlio-soft: #5a635c;
 
   /* Accent */
   --petlio-accent: #71806d;
@@ -91,7 +92,7 @@ body {
   line-height: 1.2;
   text-transform: uppercase;
   color: var(--petlio-muted);
-  opacity: 0.72;
+  /* opacity removed from text for WCAG 4.5:1 body/small-text contrast */
 }
 
 .petlio-chapter__number {

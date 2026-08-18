@@ -135,16 +135,16 @@
                 {%- endfor -%}
 
 
-                {%- if section.settings.show_contact_link -%}
+                {%- if section.settings.show_contact_link and section.settings.contact_link != blank -%}
 
                   <li class="footer__menu-item">
 
                     <a
-                      href="/pages/contact"
+                      href="{{ section.settings.contact_link.url }}"
                       class="footer__link"
                     >
                       <span>
-                        Contact
+                        {{ section.settings.contact_link.title | default: 'Contact' | escape }}
                       </span>
 
                       <span
@@ -378,123 +378,12 @@
       <!-- Social -->
 
       {%- if section.settings.show_social -%}
-
         <div class="footer__social-area">
-
           <span class="footer__bottom-label">
             Follow along
           </span>
-
-          <ul
-            class="footer__social"
-            role="list"
-          >
-
-            {%- if settings.social_instagram_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_instagram_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Instagram"
-                >
-                  {% render 'icon-instagram' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_facebook_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_facebook_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Facebook"
-                >
-                  {% render 'icon-facebook' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_tiktok_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_tiktok_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="TikTok"
-                >
-                  {% render 'icon-tiktok' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_pinterest_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_pinterest_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="Pinterest"
-                >
-                  {% render 'icon-pinterest' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_youtube_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_youtube_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="YouTube"
-                >
-                  {% render 'icon-youtube' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-
-            {%- if settings.social_twitter_link != blank -%}
-
-              <li>
-                <a
-                  href="{{ settings.social_twitter_link }}"
-                  class="footer__social-link"
-                  target="_blank"
-                  rel="noopener"
-                  aria-label="X / Twitter"
-                >
-                  {% render 'icon-twitter' %}
-                </a>
-              </li>
-
-            {%- endif -%}
-
-          </ul>
-
+          {%- render 'social-icon', wrapper_class: 'footer__social', link_class: 'footer__social-link' -%}
         </div>
-
       {%- endif -%}
 
 
@@ -608,205 +497,173 @@
 {
   "name": "Footer",
   "class": "shopify-section--footer",
-
   "settings": [
-
     {
       "type": "header",
       "content": "Brand"
     },
-
     {
       "type": "image_picker",
       "id": "logo",
       "label": "Logo"
     },
-
     {
       "type": "textarea",
       "id": "tagline",
       "label": "Tagline",
       "default": "Thoughtful things for the everyday moments you share."
     },
-
     {
       "type": "text",
       "id": "closing_kicker",
       "label": "Closing kicker",
       "default": "FOR THE LOVE THEY GIVE"
     },
-
     {
       "type": "text",
       "id": "closing_heading",
       "label": "Closing heading",
       "default": "Life with them is better."
     },
-
     {
       "type": "textarea",
       "id": "closing_text",
       "label": "Closing text",
       "default": "Better care. Happier moments. Stronger together."
     },
-
     {
       "type": "header",
       "content": "Navigation"
     },
-
     {
       "type": "link_list",
       "id": "footer_menu",
       "label": "Footer menu",
-      "info": "Select the menu to display in the footer",
+      "info": "Select the menu to display in the footer.",
       "default": "footer"
     },
-
     {
       "type": "text",
       "id": "menu_heading",
       "label": "Menu heading",
       "default": "Explore"
     },
-
     {
       "type": "checkbox",
       "id": "show_contact_link",
       "label": "Show contact link",
       "default": true
     },
-
+    {
+      "type": "url",
+      "id": "contact_link",
+      "label": "Contact link",
+      "default": "/pages/contact"
+    },
     {
       "type": "header",
       "content": "Newsletter"
     },
-
     {
       "type": "checkbox",
       "id": "show_newsletter",
       "label": "Show newsletter signup",
       "default": true
     },
-
     {
       "type": "text",
       "id": "newsletter_heading",
       "label": "Newsletter heading",
       "default": "Stay close"
     },
-
     {
       "type": "textarea",
       "id": "newsletter_text",
       "label": "Newsletter text",
       "default": "New finds, useful ideas, and little things worth knowing."
     },
-
     {
       "type": "text",
       "id": "newsletter_placeholder",
       "label": "Email placeholder",
       "default": "Your email address"
     },
-
     {
       "type": "text",
       "id": "newsletter_button_label",
       "label": "Button label",
       "default": "Join us"
     },
-
     {
       "type": "text",
       "id": "newsletter_note",
       "label": "Newsletter note",
       "default": "No noise. Just the good stuff."
     },
-
     {
       "type": "text",
       "id": "newsletter_success_message",
       "label": "Success message",
       "default": "You're in. Welcome to Petlio."
     },
-
     {
       "type": "header",
       "content": "Social media"
     },
-
     {
       "type": "checkbox",
       "id": "show_social",
-      "label": "Show social icons",
+      "label": "Show social media icons",
       "default": true,
-      "info": "Set social URLs in Theme settings → Social media."
+      "info": "Set social URLs in Theme settings \u2192 Social media."
     },
-
     {
       "type": "header",
       "content": "Payment"
     },
-
     {
       "type": "checkbox",
       "id": "show_payment_icons",
       "label": "Show payment icons",
       "default": true
     }
-
   ],
-
   "blocks": [
-
     {
       "type": "link_list",
       "name": "Additional menu",
-
       "settings": [
-
         {
           "type": "text",
           "id": "heading",
           "label": "Heading",
           "info": "Leave blank to use the menu's title."
         },
-
         {
           "type": "link_list",
           "id": "menu",
           "label": "Menu"
         }
-
       ]
     },
-
     {
       "type": "text",
       "name": "Text column",
-
       "settings": [
-
         {
           "type": "text",
           "id": "heading",
           "label": "Heading"
         },
-
         {
           "type": "richtext",
           "id": "text",
           "label": "Text"
         }
-
       ]
     }
-
   ],
-
   "max_blocks": 4,
-
   "enabled_on": {
     "groups": [
       "footer"

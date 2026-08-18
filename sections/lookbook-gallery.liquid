@@ -341,11 +341,15 @@
 
 {% schema %}
 {
-  "name": "Lookbook Gallery",
+  "name": "Lookbook gallery",
   "tag": "section",
   "class": "section-lookbook-gallery",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -365,15 +369,19 @@
       "default": false
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
+      "label": "Background color",
       "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text",
+      "label": "Text color",
       "default": "#1a1a1a"
     },
     {
@@ -468,7 +476,7 @@
   ],
   "presets": [
     {
-      "name": "Lookbook Gallery",
+      "name": "Lookbook gallery",
       "blocks": [
         {
           "type": "look"

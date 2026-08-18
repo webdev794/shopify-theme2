@@ -214,11 +214,15 @@
 
 {% schema %}
 {
-  "name": "Shoppable Lookbook",
+  "name": "Shoppable lookbook",
   "tag": "section",
   "class": "section-shoppable-lookbook",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
     {
       "type": "richtext",
       "id": "heading",
@@ -228,7 +232,7 @@
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
+      "label": "Body text",
       "default": "<p><em>Take the whole look home.</em></p>"
     },
     {
@@ -236,11 +240,24 @@
       "id": "heading_size",
       "label": "Heading size",
       "options": [
-        { "value": "small", "label": "Small" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "large", "label": "Large" }
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
       ],
       "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
@@ -270,10 +287,14 @@
   ],
   "presets": [
     {
-      "name": "Shoppable Lookbook",
+      "name": "Shoppable lookbook",
       "blocks": [
-        { "type": "hotspot" },
-        { "type": "hotspot" }
+        {
+          "type": "hotspot"
+        },
+        {
+          "type": "hotspot"
+        }
       ]
     }
   ]

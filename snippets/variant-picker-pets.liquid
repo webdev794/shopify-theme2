@@ -15,7 +15,13 @@
           <div class="variant-picker__value">
             <input type="radio" id="{{ input_id }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" form="{{ product_form_id | default: 'product-form' }}" {% if option.selected_value == value %}checked{% endif %} data-option-value data-option-position="{{ option.position }}" class="variant-picker__input visually-hidden">
             <label for="{{ input_id }}" class="variant-picker__chip{% if is_pet_type %} variant-picker__chip--pet{% endif %}">
-              {%- if is_pet_type -%}
+              {%- if value.swatch.image -%}
+                <span class="variant-picker__swatch" aria-hidden="true">
+                  {{ value.swatch.image | image_url: width: 80 | image_tag: loading: 'lazy', alt: '', width: 40, height: 40, class: 'variant-picker__swatch-image' }}
+                </span>
+              {%- elsif value.swatch.color -%}
+                <span class="variant-picker__swatch" aria-hidden="true" style="background-color: {{ value.swatch.color }};"></span>
+              {%- elsif is_pet_type -%}
                 <span class="variant-picker__pet-icon" aria-hidden="true">
                   {%- if value_down contains 'dog' or value_down contains 'puppy' -%}🐕
                   {%- elsif value_down contains 'cat' or value_down contains 'kitten' -%}🐈

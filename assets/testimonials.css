@@ -17,7 +17,7 @@
 
 .testimonials__subheading {
   font-size: 16px;
-  color: var(--t-subheading-color, var(--petlio-muted, #69736a));
+  color: var(--t-subheading-color, var(--petlio-muted, #4f5851));
   margin: 0;
 }
 

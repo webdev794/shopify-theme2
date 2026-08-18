@@ -101,7 +101,7 @@
       },
       {
         "type": "header",
-        "content": "Accent / Buttons"
+        "content": "Accent / buttons"
       },
       {
         "type": "color",
@@ -190,21 +190,21 @@
         "id": "color_star",
         "default": "#b8860b",
         "label": "Star rating color",
-        "info": "Color for product review stars."
+        "info": "Color for product review stars. Aim for enough contrast against the page background."
       },
       {
         "type": "color",
         "id": "color_disabled",
-        "default": "#888",
+        "default": "#666666",
         "label": "Disabled color",
-        "info": "Color for disabled buttons and inactive elements."
+        "info": "Color for disabled buttons and inactive elements. Choose a shade that remains readable on light backgrounds."
       },
       {
         "type": "color",
         "id": "color_disabled_dark",
-        "default": "#aaa",
+        "default": "#555555",
         "label": "Disabled dark color",
-        "info": "Darker shade for disabled elements."
+        "info": "Darker shade for disabled elements on light backgrounds."
       }
     ]
   },
@@ -214,9 +214,9 @@
       {
         "type": "checkbox",
         "id": "enable_paper_slide",
-        "label": "Homepage paper-slide sections",
+        "label": "Home page paper-slide sections",
         "default": true,
-        "info": "On the homepage, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still. Turn OFF for a fully static layout (no paper motion). Respects reduced-motion preferences."
+        "info": "On the home page, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still. Turn OFF for a fully static layout (no paper motion). Respects reduced-motion preferences."
       },
       {
         "type": "range",
@@ -236,7 +236,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Leave a URL blank to hide that icon. Icons only appear for platforms with a URL entered."
+        "content": "Enter a profile URL for each platform you want to show. Leave blank to hide that icon. Icons appear in the footer, newsletter, and password page."
       },
       {
         "type": "text",
@@ -251,7 +251,7 @@
       {
         "type": "text",
         "id": "social_twitter_link",
-        "label": "Twitter / X URL"
+        "label": "X (Twitter) URL"
       },
       {
         "type": "text",
@@ -265,8 +265,33 @@
       },
       {
         "type": "text",
+        "id": "social_pinterest_link",
+        "label": "Pinterest URL"
+      },
+      {
+        "type": "text",
         "id": "social_linkedin_link",
         "label": "LinkedIn URL"
+      },
+      {
+        "type": "text",
+        "id": "social_snapchat_link",
+        "label": "Snapchat URL"
+      },
+      {
+        "type": "text",
+        "id": "social_threads_link",
+        "label": "Threads URL"
+      },
+      {
+        "type": "text",
+        "id": "social_tumblr_link",
+        "label": "Tumblr URL"
+      },
+      {
+        "type": "text",
+        "id": "social_vimeo_link",
+        "label": "Vimeo URL"
       }
     ]
   }

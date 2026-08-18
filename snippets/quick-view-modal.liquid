@@ -7,7 +7,7 @@
   Render this once, e.g. near the end of theme.liquid.
 {%- endcomment -%}
 
-<dialog id="QuickViewModal" class="quick-view-modal">
+<dialog id="QuickViewModal" class="quick-view-modal" data-model-viewer-src="{{ 'model-viewer.min.js' | asset_url }}">
   <div class="quick-view-modal__overlay" data-quick-view-close></div>
   <div class="quick-view-modal__dialog" role="document">
     <button type="button" class="quick-view-modal__close" data-quick-view-close aria-label="{{ 'general.close' | t | default: 'Close' }}">

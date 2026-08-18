@@ -138,10 +138,14 @@
 
 {% schema %}
 {
-  "name": "Care Ritual",
+  "name": "Care ritual",
   "tag": "section",
   "class": "section-care-ritual",
   "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
     {
       "type": "image_picker",
       "id": "image",
@@ -156,7 +160,7 @@
     {
       "type": "richtext",
       "id": "text",
-      "label": "Text",
+      "label": "Body text",
       "default": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>"
     },
     {
@@ -177,27 +181,31 @@
       "default": "The best things are often the little things."
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
+      "label": "Background color",
       "default": "#e9e2d7"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text",
+      "label": "Text color",
       "default": "#1d2921"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Accent",
+      "label": "Accent color",
       "default": "#71806d"
     }
   ],
   "presets": [
     {
-      "name": "Care Ritual"
+      "name": "Care ritual"
     }
   ]
 }

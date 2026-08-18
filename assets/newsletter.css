@@ -7,7 +7,8 @@
 .shopify-section--newsletter {
   --newsletter-bg: #dfe6d9;
   --newsletter-text: #273028;
-  --newsletter-muted: #69736a;
+  /* Tuned for ≥4.5:1 on newsletter surface */
+  --newsletter-muted: #4f5851;
   --newsletter-accent: #304b38;
   --newsletter-line: rgba(39, 48, 40, 0.18);
 

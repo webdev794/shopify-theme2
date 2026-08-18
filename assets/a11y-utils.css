@@ -1,6 +1,72 @@
-.visually-hidden,.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.visually-hidden-focusable:not(:focus):not(:focus-within),.skip-link:not(:focus){position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.skip-link:focus,.visually-hidden-focusable:focus,.visually-hidden-focusable:focus-within{position:fixed;top:.75rem;left:.75rem;z-index:10000;width:auto;height:auto;padding:.75rem 1.25rem;margin:0;overflow:visible;clip:auto;white-space:normal;background:var(--color-accent-background,#121212);color:var(--color-accent-foreground,#fff);border-radius:var(--style-border-radius-inputs,.4rem);font-weight:600;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.2)}
-body.scroll-locked{position:fixed;top:var(--scroll-lock-top,0);left:0;right:0;width:100%;overflow:hidden}
-.focus-ring:focus-visible{outline:2px solid var(--color-accent-background,#121212);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.visually-hidden,
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.visually-hidden-focusable:not(:focus):not(:focus-within),
+.skip-link:not(:focus) {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link:focus,
+.visually-hidden-focusable:focus,
+.visually-hidden-focusable:focus-within {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10000;
+  width: auto;
+  height: auto;
+  padding: 0.75rem 1.25rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background: var(--color-accent-background, #121212);
+  color: var(--color-accent-foreground, #fff);
+  border-radius: var(--style-border-radius-inputs, 0.4rem);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+body.scroll-locked {
+  position: fixed;
+  top: var(--scroll-lock-top, 0);
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-accent-background, #121212);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

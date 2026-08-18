@@ -1,6 +1,6 @@
 {% comment %}
   Featured Products Section
-  Version: 1.12 (Space above/below for scroll + hide products_per_row on scroll)
+  Version: 1.13 (Editorial card redesign — scroll effect preserved)
 {% endcomment %}
 
 {{ 'featured-products.css' | asset_url | stylesheet_tag }}
@@ -222,9 +222,9 @@
       "id": "gap",
       "label": "t:sections.featured_products.settings.gap.label",
       "min": 4,
-      "max": 40,
+      "max": 48,
       "step": 2,
-      "default": 20,
+      "default": 28,
       "unit": "px"
     },
     {
@@ -258,7 +258,7 @@
       "min": 0,
       "max": 30,
       "step": 2,
-      "default": 8,
+      "default": 4,
       "unit": "px"
     },
     {
@@ -273,19 +273,19 @@
       "type": "text",
       "id": "heading",
       "label": "t:sections.featured_products.settings.heading.label",
-      "default": "Featured Products"
+      "default": "Start your ritual"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "t:sections.featured_products.settings.subheading.label",
-      "default": "Our Best Sellers"
+      "default": "THE ESSENTIALS"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "t:sections.featured_products.settings.description.label",
-      "default": "<p>Discover our most popular products loved by our customers</p>"
+      "default": "<p>A curated selection of our most-loved formulas — the foundation of every Suvara ritual.</p>"
     },
     { "type": "header", "content": "t:sections.featured_products.settings.header__3.content" },
     {

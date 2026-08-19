@@ -141,11 +141,11 @@
                   <li class="footer__menu-item">
 
                     <a
-                      href="{{ section.settings.contact_link.url }}"
+                      href="{{ section.settings.contact_link }}"
                       class="footer__link"
                     >
                       <span>
-                        {{ section.settings.contact_link.title | default: 'Contact' | escape }}
+                        Contact
                       </span>
 
                       <span
@@ -559,7 +559,7 @@
       "type": "url",
       "id": "contact_link",
       "label": "Contact link",
-      "default": "/pages/contact"
+      "info": "Leave blank to hide, even if \"Show contact link\" is on."
     },
     {
       "type": "header",

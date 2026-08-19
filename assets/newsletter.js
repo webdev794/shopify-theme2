@@ -1,18 +1,21 @@
 // newsletter.js
 
-document.addEventListener('DOMContentLoaded', function() {
-  const sections = document.querySelectorAll('.newsletter');
-  
-  sections.forEach(function(section) {
-    const style = section.dataset.style || 'default';
-    let bgColor = section.dataset.bgColor || '#f8f9fa';
-    let textColor = section.dataset.textColor || '#1a1a2e';
-    let bgImage = section.dataset.backgroundImage || '';
-    
+(function () {
+  'use strict';
+
+  function init(section) {
+    if (!section || section.dataset.newsletterInit) return;
+    section.dataset.newsletterInit = 'true';
+
+    var style = section.dataset.style || 'default';
+    var bgColor = section.dataset.bgColor || '#f8f9fa';
+    var textColor = section.dataset.textColor || '#1a1a2e';
+    var bgImage = section.dataset.backgroundImage || '';
+
     // ============================================
     // 1. APPLY BACKGROUND IMAGE
     // ============================================
-    
+
     if (style === 'background' && bgImage && bgImage !== '') {
       section.style.backgroundImage = 'url(' + bgImage + ')';
       section.style.backgroundSize = 'cover';
@@ -23,22 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
       // ============================================
       // 2. APPLY BACKGROUND COLOR
       // ============================================
-      
+
       if (bgColor && bgColor !== '') {
         section.style.backgroundColor = bgColor;
       }
     }
-    
+
     // ============================================
     // 3. APPLY TEXT COLOR - FIXED
     // ============================================
-    
+
     if (textColor && textColor !== '') {
-      const heading = section.querySelector('.newsletter__heading');
-      const description = section.querySelector('.newsletter__description');
-      const socialLabel = section.querySelector('.newsletter__social-label');
-      const subheading = section.querySelector('.newsletter__subheading');
-      
+      var heading = section.querySelector('.newsletter__heading');
+      var description = section.querySelector('.newsletter__description');
+      var socialLabel = section.querySelector('.newsletter__social-label');
+      var subheading = section.querySelector('.newsletter__subheading');
+
       // For background style, use white text
       if (style === 'background') {
         if (heading) heading.style.color = '#ffffff';
@@ -53,37 +56,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (subheading) subheading.style.color = textColor;
       }
     }
-    
+
     // ============================================
     // 4. FORM VALIDATION
     // ============================================
-    
-    const form = section.querySelector('form');
-    const input = section.querySelector('.newsletter__input');
-    
-    if (form && input) {
-      input.addEventListener('blur', function() {
-        validateEmail(input);
-      });
-      
-      input.addEventListener('input', function() {
-        if (input.classList.contains('error')) {
-          validateEmail(input);
-        }
-      });
-      
-      form.addEventListener('submit', function(e) {
-        if (!validateEmail(input)) {
-          e.preventDefault();
-          input.focus();
-        }
-      });
-    }
-    
+
+    var form = section.querySelector('form');
+    var input = section.querySelector('.newsletter__input');
+
     function validateEmail(input) {
-      const email = input.value.trim();
-      const isValid = email !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      
+      var email = input.value.trim();
+      var isValid = email !== '' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
       if (!isValid && email !== '') {
         input.classList.add('error');
         input.style.borderColor = '#ef4444';
@@ -96,19 +80,38 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid || email === '';
       }
     }
-    
+
+    if (form && input) {
+      input.addEventListener('blur', function () {
+        validateEmail(input);
+      });
+
+      input.addEventListener('input', function () {
+        if (input.classList.contains('error')) {
+          validateEmail(input);
+        }
+      });
+
+      form.addEventListener('submit', function (e) {
+        if (!validateEmail(input)) {
+          e.preventDefault();
+          input.focus();
+        }
+      });
+    }
+
     // ============================================
     // 5. ANIMATE ON SCROLL
     // ============================================
-    
-    const content = section.querySelector('.newsletter__content');
+
+    var content = section.querySelector('.newsletter__content');
     if (content) {
       content.style.opacity = '0';
       content.style.transform = 'translateY(30px)';
       content.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             content.style.opacity = '1';
             content.style.transform = 'translateY(0)';
@@ -118,25 +121,42 @@ document.addEventListener('DOMContentLoaded', function() {
         threshold: 0.1,
         rootMargin: '50px'
       });
-      
+
       observer.observe(content);
     }
-    
+
     // ============================================
     // 6. SUCCESS MESSAGE AUTO-HIDE
     // ============================================
-    
-    const success = section.querySelector('.newsletter__success');
+
+    var success = section.querySelector('.newsletter__success');
     if (success) {
-      setTimeout(function() {
+      setTimeout(function () {
         success.style.opacity = '0';
         success.style.transform = 'translateY(-10px)';
         success.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        
-        setTimeout(function() {
+
+        setTimeout(function () {
           success.style.display = 'none';
         }, 500);
       }, 5000);
     }
+  }
+
+  function initAll(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('.newsletter').forEach(init);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      initAll();
+    });
+  } else {
+    initAll();
+  }
+
+  document.addEventListener('shopify:section:load', function (event) {
+    initAll(event.target);
   });
-});
+})();

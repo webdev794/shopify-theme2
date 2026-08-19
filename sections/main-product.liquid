@@ -73,7 +73,7 @@
                 {{
                   media.preview_image
                   | image_url: width: 200
-                  | image_tag: alt: '', loading: 'lazy', widths: '100,150,200'
+                  | image_tag: alt: '', loading: 'lazy', widths: '100,150,200', sizes: '64px'
                 }}
               </a>
             {% endfor %}
@@ -771,7 +771,7 @@
           "id": "enable_shop_pay_installments",
           "label": "Enable Shop Pay installments",
           "default": true,
-          "info": "Show installment payment options on the product page."
+          "info": "Shows installment payment options on the product page."
         },
         {
           "type": "range",
@@ -782,7 +782,7 @@
           "step": 1,
           "default": 6,
           "unit": "x",
-          "info": "Number of monthly payments (e.g., 6 = 6 months)"
+          "info": "Number of monthly payments (e.g., 6 = 6 months)."
         },
         {
           "type": "number",
@@ -803,7 +803,7 @@
           "id": "installments_label",
           "label": "Installment label",
           "default": "/mo for",
-          "info": "Label after the installment amount (e.g., '/mo for')"
+          "info": "Label after the installment amount (e.g., '/mo for')."
         },
         {
           "type": "text",
@@ -824,7 +824,7 @@
           "id": "installments_tooltip",
           "label": "Tooltip text",
           "default": "Interest-free payments with Shop Pay.",
-          "info": "Text shown when hovering or focusing the info icon. If a terms URL is set below, a \"See terms\" link is appended automatically."
+          "info": "Text shown when hovering over or focusing on the info icon. If a terms URL is set below, a \"See terms\" link is appended automatically."
         },
         {
           "type": "url",

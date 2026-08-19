@@ -490,7 +490,7 @@
     "cart": {
       "settings": {
         "enable_note": {
-          "label": "Enable order note"
+          "label": "Show order note"
         }
       }
     },
@@ -565,7 +565,7 @@
       "name": "Custom liquid",
       "settings": {
         "title": {
-          "label": "Section title",
+          "label": "Heading",
           "info": "Optional heading above custom content."
         },
         "header__1": {
@@ -678,7 +678,7 @@
           "content": "Story layout"
         },
         "story_display_font": {
-          "label": "Display font (title and numerals)"
+          "label": "Display font (heading and numerals)"
         },
         "story_body_font": {
           "label": "Body / label font"
@@ -754,7 +754,7 @@
         },
         "show_quick_add": {
           "label": "Show quick add button",
-          "info": "Adds an 'Add to Cart' button on product cards. On desktop it appears when hovering a card."
+          "info": "Adds an 'Add to Cart' button on product cards. On desktop it appears when hovering over a card."
         },
         "show_compare_at": {
           "label": "Show compare at price",
@@ -852,7 +852,7 @@
           "label": "Show tags"
         },
         "enable_sharing": {
-          "label": "Enable social sharing"
+          "label": "Show social media icons"
         },
         "show_navigation": {
           "label": "Show previous/next article links"
@@ -1252,7 +1252,7 @@
           "label": "Subheading"
         },
         "enable_newsletter": {
-          "label": "Enable email signup"
+          "label": "Show newsletter signup"
         },
         "show_social_icons": {
           "label": "Show social media icons"
@@ -1285,7 +1285,7 @@
         },
         "image": {
           "label": "Image",
-          "info": "Shows when you set map style to image, or as a fallback if you don't enter an address. 3000 x 1500px recommended."
+          "info": "Shows when you set the map style to Image, or as a fallback if you don't enter an address. 3000 x 1500px recommended."
         },
         "desaturate": {
           "label": "Desaturate map",
@@ -2526,7 +2526,7 @@
           "info": "180 x 60px .png recommended."
         },
         "logo_width": {
-          "label": "Logo width"
+          "label": "Width"
         },
         "header__2": {
           "content": "Navigation"
@@ -2537,14 +2537,14 @@
         },
         "open_on_hover": {
           "label": "Open navigation on hover",
-          "info": "On desktop, dropdowns and mega menus open on mouse hover. Click and keyboard still work."
+          "info": "On desktop, dropdowns and mega menus open on mouse hover. Clicking and keyboard navigation still work."
         },
         "enable_sticky_header": {
           "label": "Enable sticky header"
         },
         "sticky_hide_on_scroll": {
           "label": "Hide sticky header when scrolling down",
-          "info": "The header slides away while scrolling down and reappears when scrolling up. Requires sticky header."
+          "info": "The header slides away while scrolling down and reappears when scrolling up. Requires a sticky header."
         },
         "header__3": {
           "content": "Mega menu"
@@ -2570,7 +2570,7 @@
           "info": "Shown at the top of the featured card. 600 x 340px recommended."
         },
         "mega_featured_title": {
-          "label": "Featured title"
+          "label": "Featured heading"
         },
         "mega_featured_text": {
           "label": "Featured text"
@@ -2709,10 +2709,10 @@
           "content": "Overlay"
         },
         "color_overlay": {
-          "label": "Overlay color"
+          "label": "Color"
         },
         "overlay_opacity": {
-          "label": "Overlay opacity",
+          "label": "Opacity",
           "info": "Keep enough contrast between the text and the media behind it."
         },
         "header__4": {
@@ -3088,7 +3088,7 @@
           "label": "Overlay color"
         },
         "overlay_opacity": {
-          "label": "Overlay opacity"
+          "label": "Opacity"
         },
         "text_color": {
           "label": "Text color"
@@ -3291,7 +3291,7 @@
           "content": "Media"
         },
         "media_position": {
-          "label": "Media position",
+          "label": "Position",
           "options__1": {
             "label": "Left"
           },
@@ -3407,7 +3407,7 @@
       }
     },
     "outfit_builder": {
-      "name": "Outfit Builder",
+      "name": "Outfit builder",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -3460,12 +3460,12 @@
         }
       },
       "presets": {
-        "name": "Outfit Builder",
+        "name": "Outfit builder",
         "category": "Product"
       }
     },
     "lookbook_gallery": {
-      "name": "Lookbook Gallery",
+      "name": "Lookbook gallery",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -3503,7 +3503,7 @@
               "content": "Hotspot 1"
             },
             "product_1": {
-              "label": "Product 1"
+              "label": "First product"
             },
             "x1": {
               "label": "Horizontal position"
@@ -3515,7 +3515,7 @@
               "content": "Hotspot 2"
             },
             "product_2": {
-              "label": "Product 2"
+              "label": "Second product"
             },
             "x2": {
               "label": "Horizontal position"
@@ -3527,7 +3527,7 @@
               "content": "Hotspot 3"
             },
             "product_3": {
-              "label": "Product 3"
+              "label": "Third product"
             },
             "x3": {
               "label": "Horizontal position"
@@ -3539,7 +3539,7 @@
         }
       },
       "presets": {
-        "name": "Lookbook Gallery",
+        "name": "Lookbook gallery",
         "category": "Image"
       }
     },
@@ -3733,19 +3733,19 @@
           "name": "Size chart",
           "settings": {
             "title": {
-              "label": "Tab title"
+              "label": "Tab heading"
             },
             "howto": {
               "label": "How to measure"
             },
             "col_size": {
-              "label": "Column 1 heading"
+              "label": "Size column heading"
             },
             "col_measure": {
-              "label": "Column 2 heading"
+              "label": "Measurement column heading"
             },
             "col_extra": {
-              "label": "Column 3 heading"
+              "label": "Extra column heading"
             },
             "rows": {
               "label": "Rows",

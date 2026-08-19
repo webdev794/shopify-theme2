@@ -25,7 +25,10 @@
         <div class="newsletter__description">{{ section.settings.description }}</div>
       {% endif %}
       
-      {% form 'customer', id: 'newsletter-form-' | append: section.id %}
+      {%- liquid
+        assign newsletter_form_id = 'newsletter-form-' | append: section.id
+      -%}
+      {% form 'customer', id: newsletter_form_id %}
         {{ form.errors | default_errors }}
         
         {% if form.posted_successfully? %}

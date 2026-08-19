@@ -138,10 +138,24 @@
       },
       {
         "type": "color",
+        "id": "color_sale_text",
+        "default": "#ffffff",
+        "label": "Sale text color",
+        "info": "Text color for sale badges."
+      },
+      {
+        "type": "color",
         "id": "color_sold_out",
         "default": "#767676",
         "label": "Sold-out color",
         "info": "Used for sold-out badges and unavailable products."
+      },
+      {
+        "type": "color",
+        "id": "color_sold_out_text",
+        "default": "#ffffff",
+        "label": "Sold-out text color",
+        "info": "Text color for sold-out badges."
       },
       {
         "type": "color",

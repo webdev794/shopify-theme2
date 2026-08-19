@@ -51,8 +51,8 @@
       "color_error_bg": "#fee2e2",
       "color_error_text": "#991b1b",
       "color_star": "#b8860b",
-      "color_disabled": "#888",
-      "color_disabled_dark": "#aaa"
+      "color_disabled": "#666666",
+      "color_disabled_dark": "#555555"
     }
   }
 }

@@ -43,9 +43,7 @@
 
           {% else %}
 
-            <div class="petlio-care__placeholder">
-              <span>CARE</span>
-            </div>
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'petlio-care__placeholder' }}
 
           {% endif %}
 
@@ -138,7 +136,7 @@
 
 {% schema %}
 {
-  "name": "Care ritual",
+  "name": "Image with text",
   "tag": "section",
   "class": "section-care-ritual",
   "settings": [
@@ -205,7 +203,7 @@
   ],
   "presets": [
     {
-      "name": "Care ritual"
+      "name": "Image with text"
     }
   ]
 }

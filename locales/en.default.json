@@ -448,7 +448,7 @@
     }
   },
   "info": {
-    "favicon": "Upload a square PNG or ICO file to replace the browser tab icon. Recommended size: 32x32 or 96x96 pixels."
+    "favicon": "Upload a square .png or .ico file to replace the browser tab icon. 32 x 32px or 96 x 96px recommended."
   },
   "contact": {
     "form": {

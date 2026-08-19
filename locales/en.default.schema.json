@@ -565,7 +565,7 @@
       "name": "Custom liquid",
       "settings": {
         "title": {
-          "label": "Section title",
+          "label": "Heading",
           "info": "Optional heading above custom content."
         },
         "header__1": {
@@ -678,7 +678,7 @@
           "content": "Story layout"
         },
         "story_display_font": {
-          "label": "Display font (title and numerals)"
+          "label": "Display font (heading and numerals)"
         },
         "story_body_font": {
           "label": "Body / label font"
@@ -852,7 +852,7 @@
           "label": "Show tags"
         },
         "enable_sharing": {
-          "label": "Show social media buttons"
+          "label": "Show social media icons"
         },
         "show_navigation": {
           "label": "Show previous/next article links"
@@ -2526,7 +2526,7 @@
           "info": "180 x 60px .png recommended."
         },
         "logo_width": {
-          "label": "Logo width"
+          "label": "Width"
         },
         "header__2": {
           "content": "Navigation"
@@ -2570,7 +2570,7 @@
           "info": "Shown at the top of the featured card. 600 x 340px recommended."
         },
         "mega_featured_title": {
-          "label": "Featured title"
+          "label": "Featured heading"
         },
         "mega_featured_text": {
           "label": "Featured text"
@@ -2709,10 +2709,10 @@
           "content": "Overlay"
         },
         "color_overlay": {
-          "label": "Overlay color"
+          "label": "Color"
         },
         "overlay_opacity": {
-          "label": "Overlay opacity",
+          "label": "Opacity",
           "info": "Keep enough contrast between the text and the media behind it."
         },
         "header__4": {
@@ -3088,7 +3088,7 @@
           "label": "Overlay color"
         },
         "overlay_opacity": {
-          "label": "Overlay opacity"
+          "label": "Opacity"
         },
         "text_color": {
           "label": "Text color"
@@ -3291,7 +3291,7 @@
           "content": "Media"
         },
         "media_position": {
-          "label": "Media position",
+          "label": "Position",
           "options__1": {
             "label": "Left"
           },
@@ -3465,7 +3465,7 @@
       }
     },
     "lookbook_gallery": {
-      "name": "Lookbook Gallery",
+      "name": "Lookbook gallery",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -3503,7 +3503,7 @@
               "content": "Hotspot 1"
             },
             "product_1": {
-              "label": "Product 1"
+              "label": "First product"
             },
             "x1": {
               "label": "Horizontal position"
@@ -3515,7 +3515,7 @@
               "content": "Hotspot 2"
             },
             "product_2": {
-              "label": "Product 2"
+              "label": "Second product"
             },
             "x2": {
               "label": "Horizontal position"
@@ -3527,7 +3527,7 @@
               "content": "Hotspot 3"
             },
             "product_3": {
-              "label": "Product 3"
+              "label": "Third product"
             },
             "x3": {
               "label": "Horizontal position"
@@ -3539,7 +3539,7 @@
         }
       },
       "presets": {
-        "name": "Lookbook Gallery",
+        "name": "Lookbook gallery",
         "category": "Image"
       }
     },
@@ -3733,7 +3733,7 @@
           "name": "Size chart",
           "settings": {
             "title": {
-              "label": "Tab title"
+              "label": "Tab heading"
             },
             "howto": {
               "label": "How to measure"

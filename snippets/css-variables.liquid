@@ -1,110 +1,18 @@
-{% liquid
-  assign primary_key = settings.type_primary_font | default: 'work_sans'
-  assign heading_key = settings.type_heading_font | default: 'work_sans'
-
-  case primary_key
-    when 'system'
-      assign primary_family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-    when 'work_sans'
-      assign primary_family = '"Work Sans", sans-serif'
-    when 'inter'
-      assign primary_family = 'Inter, sans-serif'
-    when 'montserrat'
-      assign primary_family = 'Montserrat, sans-serif'
-    when 'poppins'
-      assign primary_family = 'Poppins, sans-serif'
-    when 'roboto'
-      assign primary_family = 'Roboto, sans-serif'
-    when 'open_sans'
-      assign primary_family = '"Open Sans", sans-serif'
-    when 'lato'
-      assign primary_family = 'Lato, sans-serif'
-    when 'nunito'
-      assign primary_family = 'Nunito, sans-serif'
-    when 'raleway'
-      assign primary_family = 'Raleway, sans-serif'
-    when 'source_sans_3'
-      assign primary_family = '"Source Sans 3", sans-serif'
-    when 'dm_sans'
-      assign primary_family = '"DM Sans", sans-serif'
-    when 'plus_jakarta_sans'
-      assign primary_family = '"Plus Jakarta Sans", sans-serif'
-    when 'outfit'
-      assign primary_family = 'Outfit, sans-serif'
-    when 'manrope'
-      assign primary_family = 'Manrope, sans-serif'
-    when 'space_grotesk'
-      assign primary_family = '"Space Grotesk", sans-serif'
-    when 'playfair_display'
-      assign primary_family = '"Playfair Display", serif'
-    when 'merriweather'
-      assign primary_family = 'Merriweather, serif'
-    when 'lora'
-      assign primary_family = 'Lora, serif'
-    when 'oswald'
-      assign primary_family = 'Oswald, sans-serif'
-    else
-      assign primary_family = '"Work Sans", sans-serif'
-  endcase
-
-  case heading_key
-    when 'system'
-      assign heading_family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-    when 'work_sans'
-      assign heading_family = '"Work Sans", sans-serif'
-    when 'inter'
-      assign heading_family = 'Inter, sans-serif'
-    when 'montserrat'
-      assign heading_family = 'Montserrat, sans-serif'
-    when 'poppins'
-      assign heading_family = 'Poppins, sans-serif'
-    when 'roboto'
-      assign heading_family = 'Roboto, sans-serif'
-    when 'open_sans'
-      assign heading_family = '"Open Sans", sans-serif'
-    when 'lato'
-      assign heading_family = 'Lato, sans-serif'
-    when 'nunito'
-      assign heading_family = 'Nunito, sans-serif'
-    when 'raleway'
-      assign heading_family = 'Raleway, sans-serif'
-    when 'source_sans_3'
-      assign heading_family = '"Source Sans 3", sans-serif'
-    when 'dm_sans'
-      assign heading_family = '"DM Sans", sans-serif'
-    when 'plus_jakarta_sans'
-      assign heading_family = '"Plus Jakarta Sans", sans-serif'
-    when 'outfit'
-      assign heading_family = 'Outfit, sans-serif'
-    when 'manrope'
-      assign heading_family = 'Manrope, sans-serif'
-    when 'space_grotesk'
-      assign heading_family = '"Space Grotesk", sans-serif'
-    when 'playfair_display'
-      assign heading_family = '"Playfair Display", serif'
-    when 'merriweather'
-      assign heading_family = 'Merriweather, serif'
-    when 'lora'
-      assign heading_family = 'Lora, serif'
-    when 'oswald'
-      assign heading_family = 'Oswald, sans-serif'
-    else
-      assign heading_family = '"Work Sans", sans-serif'
-  endcase
-%}
 {% style %}
+  {% # Loads all font variants with display: swap %}
+  {{ settings.type_primary_font | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+
   :root {
     /* ============================================
        TYPOGRAPHY
        ============================================ */
-    --font-primary--family: {{ primary_family }};
-    --font-primary--style: normal;
-    --font-primary--weight: 400;
-
-    --font-heading--family: {{ heading_family }};
-    --font-heading--style: normal;
-    --font-heading--weight: 700;
-
+    --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
+    --font-primary--style: {{ settings.type_primary_font.style }};
+    --font-primary--weight: {{ settings.type_primary_font.weight }};
+ 
     /* ============================================
        LAYOUT
        ============================================ */

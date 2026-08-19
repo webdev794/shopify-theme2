@@ -1,38 +1,51 @@
 {% comment %}
-  Featured Products Section
-  Version: 1.13 (Editorial card redesign — scroll effect preserved)
+  Petlio — Everyday Essentials
+  Section 03 / the bridge from discovering their world to shopping what belongs in it.
 {% endcomment %}
 
-{{ 'featured-products.css' | asset_url | stylesheet_tag }}
+{{ 'featured-products.css' | asset_url | stylesheet_tag: preload: true }}
 
-<div class="featured-products{% if section.settings.layout == 'scroll' %} featured-products--scroll{% endif %}"
-     data-section-id="{{ section.id }}"
-     data-section-type="featured-products"
-     data-layout="{{ section.settings.layout }}"
-     data-products-per-row="{{ section.settings.products_per_row }}"
-     data-text-adding="{{ 'sections.featured_products.adding' | t }}"
-     data-text-added="{{ 'sections.featured_products.added' | t }}"
-     data-text-error="{{ 'sections.featured_products.error' | t }}"
-     data-text-added-notice="{{ 'sections.featured_products.added_notice' | t }}"
-     role="region"
-     aria-label="{{ section.settings.aria_label | default: 'Featured products' | escape }}"
-     style="
-       --fp-bg: {{ section.settings.background_color }};
-       --fp-text-color: {{ section.settings.text_color }};
-       --fp-heading-color: {{ section.settings.heading_color }};
-       --fp-card-bg: {{ section.settings.card_background }};
-       --fp-card-shadow: {{ section.settings.card_shadow }};
-       --fp-border-radius: {{ section.settings.border_radius }}px;
-       --fp-gap: {{ section.settings.gap }}px;
-       --fp-products-per-row: {{ section.settings.products_per_row | default: 4 }};
-       --fp-space-above: {{ section.settings.space_above | default: 40 }}px;
-       --fp-space-below: {{ section.settings.space_below | default: 40 }}px;
-     ">
+<section
+  class="featured-products"
+  data-section-id="{{ section.id }}"
+  data-section-type="featured-products"
+  data-layout="{{ section.settings.layout }}"
+  data-products-per-row="{{ section.settings.products_per_row }}"
+  data-text-adding="{{ 'sections.featured_products.adding' | t }}"
+  data-text-added="{{ 'sections.featured_products.added' | t }}"
+  data-text-error="{{ 'sections.featured_products.error' | t }}"
+  data-text-added-notice="{{ 'sections.featured_products.added_notice' | t }}"
+  role="region"
+  aria-label="{{ section.settings.aria_label | default: 'Everyday essentials' | escape }}"
+  style="
+    --fp-bg: {{ section.settings.background_color }};
+    --fp-text-color: {{ section.settings.text_color }};
+    --fp-heading-color: {{ section.settings.heading_color }};
+    --fp-card-bg: {{ section.settings.card_background }};
+    --fp-card-shadow: {{ section.settings.card_shadow }};
+    --fp-border-radius: {{ section.settings.border_radius }}px;
+    --fp-gap: {{ section.settings.gap }}px;
+    --fp-products-per-row: {{ section.settings.products_per_row }};
+  "
+>
+  <div class="featured-products__story-shape" aria-hidden="true"></div>
 
   <div class="featured-products__container{% if section.settings.full_width %} featured-products__container--full{% endif %}">
 
-    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
-      <div class="featured-products__header">
+    <div class="featured-products__header">
+      {%- if section.settings.chapter_number != blank or section.settings.chapter_label != blank -%}
+        <div class="featured-products__chapter" aria-hidden="true">
+          {%- if section.settings.chapter_number != blank -%}
+            <span class="featured-products__chapter-number">{{ section.settings.chapter_number | escape }}</span>
+          {%- endif -%}
+          <span class="featured-products__chapter-line"></span>
+          {%- if section.settings.chapter_label != blank -%}
+            <span>{{ section.settings.chapter_label | escape }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="featured-products__header-main">
         {%- if section.settings.subheading != blank -%}
           <p class="featured-products__subheading">{{ section.settings.subheading | escape }}</p>
         {%- endif -%}
@@ -44,32 +57,38 @@
         {%- if section.settings.description != blank -%}
           <div class="featured-products__description">{{ section.settings.description }}</div>
         {%- endif -%}
+      </div>
 
+      <div class="featured-products__header-aside">
+        <span class="featured-products__paw" aria-hidden="true">🐾</span>
         {%- if section.settings.show_view_all and section.settings.view_all_link != blank -%}
-          <a href="{{ section.settings.view_all_link }}" class="featured-products__view-all">
-            {{ section.settings.view_all_text | default: 'View All' | escape }}
+          <a href="{{ section.settings.view_all_link }}" class="featured-products__view-all featured-products__view-all--top">
+            {{ section.settings.view_all_text | default: 'Explore everything' | escape }}
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M13 5L21 12L13 19V14H3V10H13V5Z"/>
             </svg>
           </a>
         {%- endif -%}
       </div>
-    {%- endif -%}
+    </div>
 
-    <div class="featured-products__grid-wrapper{% if section.settings.layout == 'scroll' %} featured-products__grid-wrapper--scroll{% endif %}">
-      {%- if section.settings.layout == 'scroll' -%}
-        <div class="featured-products__scroll-pin" data-fp-scroll-pin>
-          <div class="featured-products__scroll-track" data-fp-scroll-track>
-      {%- endif -%}
+    <div class="featured-products__bridge" aria-hidden="true">
+      <span class="featured-products__bridge-dot"></span>
+      <span class="featured-products__bridge-line"></span>
+      <span class="featured-products__bridge-copy">Picked for everyday moments</span>
+      <span class="featured-products__bridge-line"></span>
+      <span class="featured-products__bridge-dot"></span>
+    </div>
 
-      <div class="featured-products__grid{% if section.settings.layout == 'carousel' %} featured-products__grid--carousel{% endif %}{% if section.settings.layout == 'scroll' %} featured-products__grid--scroll{% endif %}"
+    <div class="featured-products__grid-wrapper">
+      <div class="featured-products__grid{% if section.settings.layout == 'carousel' %} featured-products__grid--carousel{% endif %}"
            role="list"
            data-fp-grid>
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'product' -%}
               {%- if block.settings.product != blank -%}
-                <div class="featured-products__item"
+                <div class="featured-products__item featured-products__item--{{ forloop.index }}"
                      role="listitem"
                      {{ block.shopify_attributes }}>
                   {%- render 'featured-products',
@@ -82,7 +101,7 @@
                       card_style: section.settings.card_style -%}
                 </div>
               {%- else -%}
-                <div class="featured-products__item featured-products__item--placeholder" role="listitem" {{ block.shopify_attributes }}>
+                <div class="featured-products__item featured-products__item--placeholder featured-products__item--{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
                   <div class="product-card product-card--{{ section.settings.card_style }}">
                     <div class="product-card__image-wrapper product-card__image-wrapper--{{ section.settings.image_size }}">
                       <div class="product-card__image-placeholder">
@@ -90,23 +109,17 @@
                       </div>
                       {%- if section.settings.show_compare_at -%}
                         <div class="product-card__badges">
-                          <span class="product-card__badge product-card__badge--sale">
-                            {{ 'products.product.on_sale' | t }}
-                          </span>
+                          <span class="product-card__badge product-card__badge--sale">{{ 'products.product.on_sale' | t }}</span>
                         </div>
                       {%- endif -%}
                     </div>
                     <div class="product-card__info">
-                      {%- if section.settings.show_vendor -%}
-                        <p class="product-card__vendor">Sample Vendor</p>
-                      {%- endif -%}
+                      {%- if section.settings.show_vendor -%}<p class="product-card__vendor">Sample Vendor</p>{%- endif -%}
                       <p class="product-card__title">Sample Product</p>
                       {%- if section.settings.show_rating -%}
                         <div class="product-card__rating">
                           <span class="product-card__stars" aria-hidden="true">
-                            {%- for i in (1..4) -%}
-                              <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-                            {%- endfor -%}
+                            {%- for i in (1..4) -%}<svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>{%- endfor -%}
                             <svg class="empty" viewBox="0 0 24 24"><path d="M22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21.02L12 17.27L18.18 21.02L16.54 13.97L22 9.24ZM12 15.4V6.1L13.71 10.13L18.09 10.5L14.77 13.39L15.76 17.67L12 15.4Z"/></svg>
                           </span>
                           <span class="product-card__rating-count">(12)</span>
@@ -114,9 +127,7 @@
                       {%- endif -%}
                       <div class="product-card__price{% if section.settings.show_compare_at %} product-card__price--sale{% endif %}">
                         <span class="product-card__price-current">{{ 4999 | money }}</span>
-                        {%- if section.settings.show_compare_at -%}
-                          <span class="product-card__price-compare">{{ 6999 | money }}</span>
-                        {%- endif -%}
+                        {%- if section.settings.show_compare_at -%}<span class="product-card__price-compare">{{ 6999 | money }}</span>{%- endif -%}
                       </div>
                     </div>
                   </div>
@@ -124,46 +135,26 @@
               {%- endif -%}
 
             {%- when '@app' -%}
-              <div class="featured-products__item featured-products__item--app"
-                   role="listitem"
-                   {{ block.shopify_attributes }}>
+              <div class="featured-products__item featured-products__item--app" role="listitem" {{ block.shopify_attributes }}>
                 {% render block %}
               </div>
 
             {%- when 'custom_liquid' -%}
-              <div class="featured-products__item featured-products__item--custom-liquid"
-                   role="listitem"
-                   {{ block.shopify_attributes }}>
+              <div class="featured-products__item featured-products__item--custom-liquid" role="listitem" {{ block.shopify_attributes }}>
                 {{ block.settings.custom_liquid }}
               </div>
-
           {%- endcase -%}
         {%- endfor -%}
       </div>
-
-      {%- if section.settings.layout == 'scroll' -%}
-          </div><!-- /.scroll-track -->
-        </div><!-- /.scroll-pin -->
-      {%- endif -%}
     </div>
 
     {%- if section.settings.layout == 'carousel' and section.blocks.size > 1 -%}
       <div class="featured-products__carousel-nav" data-fp-nav hidden>
-        <button class="featured-products__carousel-btn featured-products__carousel-btn--prev"
-                type="button"
-                aria-label="{{ 'sections.featured_products.previous' | t }}"
-                data-fp-prev>
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"/>
-          </svg>
+        <button class="featured-products__carousel-btn featured-products__carousel-btn--prev" type="button" aria-label="{{ 'sections.featured_products.previous' | t }}" data-fp-prev>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z"/></svg>
         </button>
-        <button class="featured-products__carousel-btn featured-products__carousel-btn--next"
-                type="button"
-                aria-label="{{ 'sections.featured_products.next' | t }}"
-                data-fp-next>
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12L10 6Z"/>
-          </svg>
+        <button class="featured-products__carousel-btn featured-products__carousel-btn--next" type="button" aria-label="{{ 'sections.featured_products.next' | t }}" data-fp-next>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12L10 6Z"/></svg>
         </button>
       </div>
     {%- endif -%}
@@ -171,16 +162,17 @@
     {%- if section.settings.show_view_all and section.settings.view_all_link == blank -%}
       <div class="featured-products__footer">
         <a href="{{ routes.all_products_collection_url }}" class="featured-products__view-all featured-products__view-all--centered">
-          {{ section.settings.view_all_text | default: 'View All Products' | escape }}
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M13 5L21 12L13 19V14H3V10H13V5Z"/>
-          </svg>
+          {{ section.settings.view_all_text | default: 'Explore everything' | escape }}
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 5L21 12L13 19V14H3V10H13V5Z"/></svg>
         </a>
       </div>
     {%- endif -%}
 
+    <div class="featured-products__end-note" aria-hidden="true">
+      <span>Good things for the moments that make them, them.</span>
+    </div>
   </div>
-</div>
+</section>
 
 <script src="{{ 'featured-products.js' | asset_url }}" defer></script>
 
@@ -199,8 +191,7 @@
       "default": "grid",
       "options": [
         { "value": "grid", "label": "t:sections.featured_products.settings.layout.options__1.label" },
-        { "value": "carousel", "label": "t:sections.featured_products.settings.layout.options__2.label" },
-        { "value": "scroll", "label": "t:sections.featured_products.settings.layout.options__3.label" }
+        { "value": "carousel", "label": "t:sections.featured_products.settings.layout.options__2.label" }
       ]
     },
     {
@@ -214,42 +205,17 @@
         { "value": "4", "label": "4" },
         { "value": "5", "label": "5" }
       ],
-      "info": "t:sections.featured_products.settings.products_per_row.info",
-      "visible_if": "{{ section.settings.layout != 'scroll' }}"
+      "info": "t:sections.featured_products.settings.products_per_row.info"
     },
     {
       "type": "range",
       "id": "gap",
       "label": "t:sections.featured_products.settings.gap.label",
       "min": 4,
-      "max": 48,
+      "max": 40,
       "step": 2,
-      "default": 28,
+      "default": 20,
       "unit": "px"
-    },
-    {
-      "type": "range",
-      "id": "space_above",
-      "label": "Space above products",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 40,
-      "unit": "px",
-      "info": "Vertical space above the products (Scroll layout only)",
-      "visible_if": "{{ section.settings.layout == 'scroll' }}"
-    },
-    {
-      "type": "range",
-      "id": "space_below",
-      "label": "Space below products",
-      "min": 0,
-      "max": 120,
-      "step": 4,
-      "default": 40,
-      "unit": "px",
-      "info": "Vertical space below the products (Scroll layout only)",
-      "visible_if": "{{ section.settings.layout == 'scroll' }}"
     },
     {
       "type": "range",
@@ -258,7 +224,7 @@
       "min": 0,
       "max": 30,
       "step": 2,
-      "default": 4,
+      "default": 8,
       "unit": "px"
     },
     {
@@ -271,21 +237,33 @@
     { "type": "header", "content": "t:sections.featured_products.settings.header__2.content" },
     {
       "type": "text",
+      "id": "chapter_number",
+      "label": "Chapter number",
+      "default": "03"
+    },
+    {
+      "type": "text",
+      "id": "chapter_label",
+      "label": "Chapter label",
+      "default": "Everyday"
+    },
+    {
+      "type": "text",
       "id": "heading",
       "label": "t:sections.featured_products.settings.heading.label",
-      "default": "Start your ritual"
+      "default": "Everything they need for everyday life."
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "t:sections.featured_products.settings.subheading.label",
-      "default": "THE ESSENTIALS"
+      "default": "Made for their everyday"
     },
     {
       "type": "richtext",
       "id": "description",
       "label": "t:sections.featured_products.settings.description.label",
-      "default": "<p>A curated selection of our most-loved formulas — the foundation of every Suvara ritual.</p>"
+      "default": "<p>From playtime to quiet moments, these are the things that naturally belong in their world.</p>"
     },
     { "type": "header", "content": "t:sections.featured_products.settings.header__3.content" },
     {
@@ -298,7 +276,7 @@
       "type": "text",
       "id": "view_all_text",
       "label": "t:sections.featured_products.settings.view_all_text.label",
-      "default": "View All"
+      "default": "Explore everything"
     },
     {
       "type": "url",
@@ -393,7 +371,7 @@
       "type": "text",
       "id": "aria_label",
       "label": "t:sections.featured_products.settings.aria_label.label",
-      "default": "Featured products"
+      "default": "Everyday essentials"
     }
   ],
   "blocks": [

@@ -4,7 +4,7 @@
 
 .facets__mobile-toggle {
   border: 1px solid var(--color-border, #ddd);
-  border-radius: 2px;
+  border-radius: 0.4rem;
 }
 
 .facets__mobile-summary {
@@ -29,11 +29,10 @@
   min-width: 1.25rem;
   height: 1.25rem;
   padding-inline: 0.35rem;
-  border-radius: 2px;
+  border-radius: 999px;
   background: var(--color-foreground, #1a1a1a);
   color: var(--color-background, #fff);
   font-size: 0.7rem;
-  font-weight: 600;
 }
 
 .facets__panel {
@@ -49,10 +48,8 @@
 }
 
 .facets__heading {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   margin: 0;
 }
 
@@ -74,10 +71,6 @@
   letter-spacing: 0.03em;
   cursor: pointer;
   list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
 }
 
 .facets__group-heading::-webkit-details-marker {
@@ -145,97 +138,6 @@
 /* JS marks the form as auto-submitting; hide the manual button once JS confirms it works */
 [data-facets-form].facets__form--js-enabled .facets__submit {
   display: none;
-}
-
-/* Active filter count badge on group headings */
-.facets__group-active-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.1rem;
-  height: 1.1rem;
-  padding-inline: 0.3rem;
-  border-radius: 999px;
-  background: var(--color-foreground, #1a1a1a);
-  color: var(--color-background, #fff);
-  font-size: 0.65rem;
-  font-weight: 600;
-}
-
-/* Collection links in facets */
-.facets__collection-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  color: inherit;
-  text-decoration: none;
-  padding: 0.15rem 0;
-  transition: color 0.15s ease;
-}
-
-.facets__collection-link:hover {
-  color: var(--color-accent-background, #c9a063);
-}
-
-.facets__collection-link--active {
-  font-weight: 600;
-  color: var(--color-foreground, #1a1a1a);
-}
-
-/* Swatch filters (Color / variant options with swatch presentation) */
-.facets__list--swatches {
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.facets__swatch-label {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.facets__swatch-label--disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.facets__swatch {
-  flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--color-foreground, #1a1a1a) 20%, transparent);
-  background-color: var(--swatch-color, #ccc);
-  background-image: var(--swatch-image, none);
-  background-size: cover;
-  background-position: center;
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
-}
-
-.facets__swatch-label--active .facets__swatch {
-  box-shadow:
-    0 0 0 2px var(--color-background, #fff),
-    0 0 0 3px var(--color-foreground, #1a1a1a);
-}
-
-.facets__swatch-text {
-  flex: 1;
-}
-
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
 }
 
 @media screen and (min-width: 990px) {

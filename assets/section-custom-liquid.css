@@ -1,5 +1,15 @@
 /* ============================================
    CUSTOM LIQUID SECTION
+   Fixed: padding CSS variables were being set inline but never
+   consumed anywhere in this file - now applied to .custom-liquid.
+   Reverted: an earlier pass incorrectly assumed this theme uses a
+   color_scheme_group / multi-scheme system (--color-text, --color-links,
+   a "color_scheme" section setting). This theme actually uses flat
+   global color settings (foreground_color, accent_background, etc.)
+   - reverted to --color-foreground / --color-accent-background to match,
+   and removed the color_scheme picker from the section schema, since it
+   requires a color_scheme_group that doesn't exist here.
+   Still worth confirming against snippets/css-variables.liquid directly.
    ============================================ */
 
 .custom-liquid {
@@ -44,8 +54,7 @@
 /* Title */
 .custom-liquid__title {
   font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: -0.2px;
+  font-weight: 700;
   margin: 0 0 1.5rem;
   color: var(--color-foreground, #1a1a2e);
 }

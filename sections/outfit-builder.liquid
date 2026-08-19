@@ -239,10 +239,15 @@
   "max_blocks": 16,
   "settings": [
     {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
       "type": "text",
       "id": "chapter_label",
       "label": "Chapter label",
-      "default": "04 · THEIR KIT"
+      "default": "04 \u00b7 THEIR KIT",
+      "info": "Short label shown with the chapter marker (for example, \"Build a kit\")."
     },
     {
       "type": "text",
@@ -260,40 +265,37 @@
       "type": "richtext",
       "id": "description",
       "label": "Description",
-      "default": "<p>Choose the pieces that belong in their day — walk, rest, play, or travel. Build a small kit that feels made for them.</p>"
+      "default": "<p>Choose the pieces that belong in their day \u2014 walk, rest, play, or travel. Build a small kit that feels made for them.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Labels and copy"
     },
     {
       "type": "text",
       "id": "catalog_label",
       "label": "Catalog label",
-      "default": "Choose pieces for their kit"
+      "default": "Choose pieces for their kit",
+      "info": "Heading shown above the product catalog list."
     },
     {
       "type": "text",
       "id": "selection_eyebrow",
-      "label": "Selection eyebrow",
-      "default": "THEIR KIT"
+      "label": "Selection eyebrow label",
+      "default": "THEIR KIT",
+      "info": "Small label shown above the selection summary title."
     },
     {
       "type": "text",
       "id": "summary_note",
       "label": "Summary note",
-      "default": "Add a few things they’ll actually use."
+      "default": "Add a few things they\u2019ll actually use."
     },
     {
       "type": "text",
       "id": "footer_text",
       "label": "Footer text",
-      "default": "Pick · mix · make it theirs"
-    },
-    {
-      "type": "range",
-      "id": "max_items",
-      "label": "t:sections.outfit_builder.settings.max_items.label",
-      "min": 2,
-      "max": 8,
-      "step": 1,
-      "default": 4
+      "default": "Pick \u00b7 mix \u00b7 make it theirs"
     },
     {
       "type": "text",
@@ -326,6 +328,19 @@
       "default": "Pieces for their kit will appear here."
     },
     {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "range",
+      "id": "max_items",
+      "label": "t:sections.outfit_builder.settings.max_items.label",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
       "type": "checkbox",
       "id": "show_variant_selector",
       "label": "t:sections.outfit_builder.settings.show_variant_selector.label",
@@ -338,19 +353,19 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
+      "label": "Background color",
       "default": "#F4F0E8"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text",
+      "label": "Text color",
       "default": "#273028"
     },
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Accent",
+      "label": "Accent color",
       "default": "#273028"
     }
   ],
@@ -372,10 +387,18 @@
       "name": "t:sections.outfit_builder.presets.name",
       "category": "Product",
       "blocks": [
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" }
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        },
+        {
+          "type": "product"
+        }
       ]
     }
   ]

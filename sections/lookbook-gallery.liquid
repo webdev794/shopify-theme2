@@ -341,11 +341,15 @@
 
 {% schema %}
 {
-  "name": "Lookbook Gallery",
+  "name": "Lookbook gallery",
   "tag": "section",
   "class": "section-lookbook-gallery",
   "max_blocks": 8,
   "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -365,15 +369,19 @@
       "default": false
     },
     {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
+      "label": "Background color",
       "default": "#ffffff"
     },
     {
       "type": "color",
       "id": "text_color",
-      "label": "Text",
+      "label": "Text color",
       "default": "#1a1a1a"
     },
     {
@@ -397,12 +405,12 @@
         {
           "type": "product",
           "id": "product_1",
-          "label": "Product 1"
+          "label": "First product"
         },
         {
           "type": "range",
           "id": "x1",
-          "label": "Product 1 horizontal position",
+          "label": "First product horizontal position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -411,7 +419,7 @@
         {
           "type": "range",
           "id": "y1",
-          "label": "Product 1 vertical position",
+          "label": "First product vertical position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -420,12 +428,12 @@
         {
           "type": "product",
           "id": "product_2",
-          "label": "Product 2"
+          "label": "Second product"
         },
         {
           "type": "range",
           "id": "x2",
-          "label": "Product 2 horizontal position",
+          "label": "Second product horizontal position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -434,7 +442,7 @@
         {
           "type": "range",
           "id": "y2",
-          "label": "Product 2 vertical position",
+          "label": "Second product vertical position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -443,12 +451,12 @@
         {
           "type": "product",
           "id": "product_3",
-          "label": "Product 3"
+          "label": "Third product"
         },
         {
           "type": "range",
           "id": "x3",
-          "label": "Product 3 horizontal position",
+          "label": "Third product horizontal position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -457,7 +465,7 @@
         {
           "type": "range",
           "id": "y3",
-          "label": "Product 3 vertical position",
+          "label": "Third product vertical position",
           "min": 5,
           "max": 95,
           "step": 1,
@@ -468,7 +476,7 @@
   ],
   "presets": [
     {
-      "name": "Lookbook Gallery",
+      "name": "Lookbook gallery",
       "blocks": [
         {
           "type": "look"

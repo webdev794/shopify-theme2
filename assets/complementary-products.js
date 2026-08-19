@@ -1,9 +1,14 @@
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-complementary-placeholder]').forEach((placeholder) => {
-    const wrapper = placeholder.closest('.product__complementary');
+(function () {
+  'use strict';
+
+  function init(placeholder) {
+    if (!placeholder || placeholder.dataset.complementaryInit) return;
+    placeholder.dataset.complementaryInit = 'true';
+
+    var wrapper = placeholder.closest('.product__complementary');
     if (!wrapper) return;
 
-    const url = wrapper.dataset.url;
+    var url = wrapper.dataset.url;
     if (!url) return;
 
     fetch(url)
@@ -24,5 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(() => {
         wrapper.remove();
       });
+  }
+
+  function initAll(root) {
+    var scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('[data-complementary-placeholder]').forEach(init);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      initAll();
+    });
+  } else {
+    initAll();
+  }
+
+  document.addEventListener('shopify:section:load', function (event) {
+    initAll(event.target);
   });
-});
+})();

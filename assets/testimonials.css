@@ -1,6 +1,6 @@
 .testimonials {
   padding: 60px 0;
-  background-color: var(--t-bg, #ffffff);
+  background-color: var(--t-bg, var(--petlio-paper, #f7f3eb));
 }
 
 .testimonials__header {
@@ -10,15 +10,14 @@
 
 .testimonials__heading {
   font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
+  font-weight: 700;
   margin: 0 0 12px;
-  color: var(--t-heading-color, #1a1a1a);
+  color: var(--t-heading-color, var(--petlio-ink, #273028));
 }
 
 .testimonials__subheading {
   font-size: 16px;
-  color: var(--t-subheading-color, #666666);
+  color: var(--t-subheading-color, var(--petlio-muted, #4f5851));
   margin: 0;
 }
 
@@ -60,14 +59,15 @@
   flex-direction: column;
   height: 100%;
   padding: 30px;
-  background: var(--t-card-bg, #f8f8f8);
-  border-radius: 2px;
+  background: var(--t-card-bg, var(--petlio-paper-light, #faf7f0));
+  border: 1px solid var(--petlio-line, rgba(39,48,40,0.12));
+  border-radius: 12px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .testimonials__card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
 .testimonials__stars {
@@ -167,10 +167,7 @@
 }
 
 .testimonials__author-position {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 13px;
   color: var(--t-position-color, #666666);
   margin: 0;
 }
@@ -182,23 +179,19 @@
 
 .testimonials__footer .btn {
   display: inline-block;
-  padding: 14px 40px;
-  border: 1px solid var(--t-btn-border, #1a1a1a);
-  border-radius: 2px;
+  padding: 12px 40px;
+  border: 2px solid var(--t-btn-border, #1a1a1a);
+  border-radius: 6px;
   color: var(--t-btn-text, #1a1a1a);
   text-decoration: none;
   font-weight: 600;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  transition: all 0.3s ease;
   background: transparent;
 }
 
 .testimonials__footer .btn:hover {
   background: var(--t-btn-hover-bg, #1a1a1a);
   color: var(--t-btn-hover-text, #ffffff);
-  transform: translateY(-3px);
 }
 
 /* Empty-state text: was a fixed #999 (fails 4.5:1 on white ~2.85:1),

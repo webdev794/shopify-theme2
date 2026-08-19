@@ -2,245 +2,59 @@
 <html lang="{{ request.locale.iso_code }}">
   <head>
     {% render 'meta-tags' %}
-
-    {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
-
-    {% comment %}
-      Font loading via Google Fonts based on theme select settings.
-    {% endcomment %}
-    {% liquid
-      assign primary_font = settings.type_primary_font | default: 'work_sans'
-      assign heading_font = settings.type_heading_font | default: 'work_sans'
-      assign font_query_parts = ''
-
-      if primary_font != 'system'
-        case primary_font
-          when 'work_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'inter'
-            assign font_query_parts = font_query_parts | append: 'family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'montserrat'
-            assign font_query_parts = font_query_parts | append: 'family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'poppins'
-            assign font_query_parts = font_query_parts | append: 'family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'roboto'
-            assign font_query_parts = font_query_parts | append: 'family=Roboto:ital,wght@0,400;0,500;0,700;1,400'
-          when 'open_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'lato'
-            assign font_query_parts = font_query_parts | append: 'family=Lato:ital,wght@0,400;0,700;1,400'
-          when 'nunito'
-            assign font_query_parts = font_query_parts | append: 'family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'raleway'
-            assign font_query_parts = font_query_parts | append: 'family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'source_sans_3'
-            assign font_query_parts = font_query_parts | append: 'family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'dm_sans'
-            assign font_query_parts = font_query_parts | append: 'family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'plus_jakarta_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'outfit'
-            assign font_query_parts = font_query_parts | append: 'family=Outfit:wght@400;500;600;700'
-          when 'manrope'
-            assign font_query_parts = font_query_parts | append: 'family=Manrope:wght@400;500;600;700'
-          when 'space_grotesk'
-            assign font_query_parts = font_query_parts | append: 'family=Space+Grotesk:wght@400;500;600;700'
-          when 'playfair_display'
-            assign font_query_parts = font_query_parts | append: 'family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400'
-          when 'merriweather'
-            assign font_query_parts = font_query_parts | append: 'family=Merriweather:ital,wght@0,400;0,700;1,400'
-          when 'lora'
-            assign font_query_parts = font_query_parts | append: 'family=Lora:ital,wght@0,400;0,600;0,700;1,400'
-          when 'oswald'
-            assign font_query_parts = font_query_parts | append: 'family=Oswald:wght@400;500;600;700'
-        endcase
-      endif
-
-      if heading_font != 'system' and heading_font != primary_font
-        if font_query_parts != blank
-          assign font_query_parts = font_query_parts | append: '&'
-        endif
-        case heading_font
-          when 'work_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'inter'
-            assign font_query_parts = font_query_parts | append: 'family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'montserrat'
-            assign font_query_parts = font_query_parts | append: 'family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'poppins'
-            assign font_query_parts = font_query_parts | append: 'family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'roboto'
-            assign font_query_parts = font_query_parts | append: 'family=Roboto:ital,wght@0,400;0,500;0,700;1,400'
-          when 'open_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'lato'
-            assign font_query_parts = font_query_parts | append: 'family=Lato:ital,wght@0,400;0,700;1,400'
-          when 'nunito'
-            assign font_query_parts = font_query_parts | append: 'family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'raleway'
-            assign font_query_parts = font_query_parts | append: 'family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'source_sans_3'
-            assign font_query_parts = font_query_parts | append: 'family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'dm_sans'
-            assign font_query_parts = font_query_parts | append: 'family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'plus_jakarta_sans'
-            assign font_query_parts = font_query_parts | append: 'family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400'
-          when 'outfit'
-            assign font_query_parts = font_query_parts | append: 'family=Outfit:wght@400;500;600;700'
-          when 'manrope'
-            assign font_query_parts = font_query_parts | append: 'family=Manrope:wght@400;500;600;700'
-          when 'space_grotesk'
-            assign font_query_parts = font_query_parts | append: 'family=Space+Grotesk:wght@400;500;600;700'
-          when 'playfair_display'
-            assign font_query_parts = font_query_parts | append: 'family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400'
-          when 'merriweather'
-            assign font_query_parts = font_query_parts | append: 'family=Merriweather:ital,wght@0,400;0,700;1,400'
-          when 'lora'
-            assign font_query_parts = font_query_parts | append: 'family=Lora:ital,wght@0,400;0,600;0,700;1,400'
-          when 'oswald'
-            assign font_query_parts = font_query_parts | append: 'family=Oswald:wght@400;500;600;700'
-        endcase
-      endif
-    %}
-    {% if font_query_parts != blank %}
+    {% unless settings.type_primary_font.system? %}
       {% # theme-check-disable RemoteAsset %}
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{{ font_query_parts }}&display=swap">
+      <link rel="preconnect" href="//fonts.shopifycdn.com" crossorigin>
       {% # theme-check-enable RemoteAsset %}
-    {% endif %}
-
-    {% # Load critical CSS (includes minimal-header + slideshow FOUC safety net) %}
+    {% endunless %}
     {{ 'critical.css' | asset_url | stylesheet_tag }}
-    {{ 'theme-polish.css' | asset_url | stylesheet_tag }}
+    {{ 'petlio-theme.css' | asset_url | stylesheet_tag }}
     {{ 'buttons.css' | asset_url | stylesheet_tag }}
     {{ 'unit-price.css' | asset_url | stylesheet_tag }}
-
-    {% comment %}
-      Above-the-fold CSS — header + hero (common first sections).
-      Section-specific CSS (e.g. slideshow-with-marquee) loads from its own section file.
-    {% endcomment %}
-    {{ 'header.css' | asset_url | stylesheet_tag }}
-    {{ 'hero.css' | asset_url | stylesheet_tag }}
-
-    {% comment %}
-      Non-critical motion CSS — use stylesheet_tag with preload so Theme Check is happy
-      and Shopify can emit Link headers / Early Hints. These files are small.
-    {% endcomment %}
-    {{ 'section-reveal.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'product-image-reveal.css' | asset_url | stylesheet_tag: preload: true }}
-
-    {% # Social, title, etc. %}
-
+    {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
+    {{ 'dog-cursor.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-bird.css' | asset_url | stylesheet_tag }}
+    {{ 'petlio-toast.css' | asset_url | stylesheet_tag }}
+    {% if request.page_type == 'index' %}
+      {{ 'petlio-story.css' | asset_url | stylesheet_tag }}
+    {% endif %}
     {{ content_for_header }}
-
-    <!-- Custom Cursor -->
-    <style>
-      {% render 'custom-cursor' %}
-    </style>
-    <script src="{{ 'custom-cursor.js' | asset_url }}" defer></script>
-
-    <!-- Shop Pay Installments (official Shopify CDN script) -->
     {% # theme-check-disable RemoteAsset %}
     <script src="//cdn.shopify.com/shopifycloud/shop-js/shop-installments.js" defer></script>
     {% # theme-check-enable RemoteAsset %}
-    
-    <!-- ===== Global layout safety net ===== -->
-    <style>
-      /* Force full height on body */
-      html, body {
-        min-height: 100vh !important;
-        min-height: 100dvh !important;
-      }
-
-      .shopify-section-group-footer-group {
-        position: relative !important;
-      }
-
-      /* Header always above page sections (mega menu background + clicks).
-         Do NOT force position:relative when sticky is enabled — that would
-         override header.css `.shopify-section:has(.header--sticky) { position: sticky }`. */
-      .shopify-section-group-header-group,
-      .shopify-section:has(> .header) {
-        z-index: 200 !important;
-        isolation: isolate;
-      }
-
-      /* Only force relative when sticky is off */
-      .shopify-section-group-header-group:not(:has(.header--sticky)),
-      .shopify-section:has(> .header:not(.header--sticky)) {
-        position: relative !important;
-      }
-
-      /* Ensure sticky works when enabled */
-      .shopify-section:has(.header--sticky) {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 200 !important;
-      }
-
-      /* Hide dev-only elements */
-      #PBarNextFrameWrapper {
-        display: none !important;
-      }
-    </style>
-
-  </head>
-
-  <body>
-    {% sections 'header-group' %}
-
-    {{ content_for_layout }}
-
-    {% sections 'footer-group' %}
-
-    {% render 'quick-view-modal' %}
-
-    <script src="{{ 'section-reveal.js' | asset_url }}" defer></script>
-    <script src="{{ 'product-image-reveal.js' | asset_url }}" defer></script>
-    <script src="{{ 'word-reveal.js' | asset_url }}" defer></script>
-
-    <!-- Back to Top (styles in critical.css) -->
-    <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
-      <svg class="back-to-top__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M18 15l-6-6-6 6"/>
-      </svg>
-      <span>Back to Top</span>
-    </button>
     <script>
-      (function () {
-        var btn = document.getElementById('back-to-top');
-        if (!btn) return;
-        var threshold = 400;
-        var ticking = false;
-
-        function update() {
-          if (window.scrollY > threshold) {
-            btn.classList.add('is-visible');
-          } else {
-            btn.classList.remove('is-visible');
-          }
-          ticking = false;
-        }
-
-        window.addEventListener('scroll', function () {
-          if (!ticking) {
-            window.requestAnimationFrame(update);
-            ticking = true;
-          }
-        }, { passive: true });
-
-        btn.addEventListener('click', function () {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Initial check (e.g. page restored with scroll position)
-        update();
-      })();
+      window.theme = window.theme || {};
+      window.theme.moneyFormat = {{ shop.money_format | json }};
     </script>
-
-      <script src="{{ 'theme-polish.js' | asset_url }}" defer></script>
-    {{ 'typography.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'theme-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
+    <script src="{{ 'dog-cursor.js' | asset_url }}" defer></script>
+    <script src="{{ 'scroll-bird.js' | asset_url }}" defer></script>
+    <script src="{{ 'petlio-toast.js' | asset_url }}" defer></script>
+    {% if request.page_type == 'index' %}
+      <script src="{{ 'petlio-story.js' | asset_url }}" defer></script>
+    {% endif %}
+    <style>
+      html, body { min-height: 100vh !important; min-height: 100dvh !important; }
+      .shopify-section-group-footer-group { position: relative !important; }
+      #PBarNextFrameWrapper { display: none !important; }
+    </style>
+  </head>
+  <body
+    class="template-{{ request.page_type }}{% if request.page_type == 'index' %} template-index{% endif %}{% if request.page_type == 'index' and settings.enable_paper_slide %} petlio-paper-slide{% endif %}"
+    style="{% if settings.paper_slide_intensity %}--petlio-paper-slide: {{ settings.paper_slide_intensity | divided_by: 100.0 }};{% endif %}"
+  >
+    <a class="skip-link visually-hidden-focusable" href="#MainContent">
+      {{ 'accessibility.skip_to_content' | t | default: 'Skip to content' }}
+    </a>
+    {% sections 'header-group' %}
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+    {% sections 'footer-group' %}
+    {% render 'quick-view-modal' %}
   </body>
 </html>
+
+

@@ -45,8 +45,15 @@
 
 .quick-view-modal__close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.8: minimum 24×24 CSS px touch target */
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
   background: none;
   border: none;
   font-size: 1.5rem;

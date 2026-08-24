@@ -1,34 +1,320 @@
 /**
  * PETLIO — UNIVERSAL DOG CURSOR
+ * A realistically-illustrated running dog (instead of the old dot-matrix
+ * silhouette) that follows the pointer, with a run/sniff/sit/bite idle
+ * chain. Kept deliberately compact and semi-translucent so it doesn't sit
+ * heavily over body text while it roams.
  */
 
 /* ==========================================================
-   DOG CANVAS
+   DOG
    ========================================================== */
 
-#dog-cursor-canvas {
+#dog-cursor-dog {
   position: fixed;
-
   top: 0;
   left: 0;
 
-  width: 100%;
-  height: 100%;
-  right: 0;
-  bottom: 0;
+  width: 66px;
+  height: 50px;
+
+  margin: -25px 0 0 -33px;
 
   pointer-events: none;
-
   z-index: 2147483000;
 
+  overflow: visible;
+  will-change: transform;
+
+  /* Multiply blends it into the page rather than sitting as an opaque
+     sticker, and the moderated opacity keeps it from obscuring text it
+     crosses. */
   mix-blend-mode: multiply;
+  opacity: 0.82;
 
-  opacity: 0.9;
+  filter: drop-shadow(0 3px 5px rgba(60, 40, 20, 0.18));
 
-  transition:
-    opacity 450ms ease;
+  transition: opacity 350ms ease;
 }
 
+#dog-cursor-dog svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Dwelling states (sitting / biting) linger in one spot longer than a
+   run, so they get a touch more transparency to reduce how much they
+   sit on top of anything being read underneath. */
+#dog-cursor-dog[data-dog-mode='sit'],
+#dog-cursor-dog[data-dog-mode='bite'] {
+  opacity: 0.7;
+}
+
+/* ==========================================================
+   PARTS — shared transform origins
+   ========================================================== */
+
+.dog-cursor__tail {
+  transform-origin: 26px 40px;
+  transform-box: fill-box;
+}
+
+.dog-cursor__head {
+  transform-origin: 78px 30px;
+  transform-box: fill-box;
+  transition: transform 0.3s ease;
+}
+
+.dog-cursor__legs-back,
+.dog-cursor__legs-front {
+  transform-box: fill-box;
+}
+
+.dog-cursor__legs-back {
+  transform-origin: 34px 46px;
+}
+
+.dog-cursor__legs-front {
+  transform-origin: 70px 46px;
+}
+
+.dog-cursor__body {
+  transform-origin: 55px 42px;
+  transform-box: fill-box;
+}
+
+.dog-cursor__mouth-open {
+  opacity: 0;
+}
+
+/* ==========================================================
+   RUN
+   ========================================================== */
+
+#dog-cursor-dog[data-dog-mode='run'] .dog-cursor__legs-back {
+  animation: dog-cursor-legs-back-run 0.26s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='run'] .dog-cursor__legs-front {
+  animation: dog-cursor-legs-front-run 0.26s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='run'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.22s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='run'] .dog-cursor__body {
+  animation: dog-cursor-body-bounce 0.26s ease-in-out infinite;
+}
+
+@keyframes dog-cursor-legs-back-run {
+  0% {
+    transform: rotate(24deg);
+  }
+  50% {
+    transform: rotate(-26deg);
+  }
+  100% {
+    transform: rotate(24deg);
+  }
+}
+
+@keyframes dog-cursor-legs-front-run {
+  0% {
+    transform: rotate(-26deg);
+  }
+  50% {
+    transform: rotate(24deg);
+  }
+  100% {
+    transform: rotate(-26deg);
+  }
+}
+
+@keyframes dog-cursor-body-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+/* ==========================================================
+   SNIFF
+   ========================================================== */
+
+#dog-cursor-dog[data-dog-mode='sniff'] .dog-cursor__head {
+  transform: rotate(22deg) translate(-2px, 6px);
+}
+
+#dog-cursor-dog[data-dog-mode='sniff'] .dog-cursor__legs-back,
+#dog-cursor-dog[data-dog-mode='sniff'] .dog-cursor__legs-front {
+  animation: dog-cursor-legs-shuffle 0.9s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='sniff'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.5s ease-in-out infinite;
+}
+
+@keyframes dog-cursor-legs-shuffle {
+  0%,
+  100% {
+    transform: rotate(4deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+/* ==========================================================
+   SIT
+   ========================================================== */
+
+#dog-cursor-dog[data-dog-mode='sit'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+#dog-cursor-dog[data-dog-mode='sit'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+#dog-cursor-dog[data-dog-mode='sit'] .dog-cursor__body {
+  animation: dog-cursor-breathe 2.4s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='sit'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.7s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='sit'] .dog-cursor__head {
+  transform: rotate(0deg) translate(0, 0);
+}
+
+@keyframes dog-cursor-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.015);
+  }
+}
+
+/* ==========================================================
+   BITE
+   ========================================================== */
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__head {
+  animation: dog-cursor-head-nod 0.42s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.24s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__mouth-open {
+  animation: dog-cursor-mouth-chomp 0.42s ease-in-out infinite;
+}
+
+#dog-cursor-dog[data-dog-mode='bite'] .dog-cursor__mouth-closed {
+  animation: dog-cursor-mouth-chomp-invert 0.42s ease-in-out infinite;
+}
+
+@keyframes dog-cursor-head-nod {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  40% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+  60% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+}
+
+@keyframes dog-cursor-mouth-chomp {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  40%,
+  60% {
+    opacity: 1;
+  }
+}
+
+@keyframes dog-cursor-mouth-chomp-invert {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  40%,
+  60% {
+    opacity: 0;
+  }
+}
+
+/* ==========================================================
+   SHARED — tail wag (reused across states with different durations)
+   ========================================================== */
+
+@keyframes dog-cursor-tail-wag {
+  0%,
+  100% {
+    transform: rotate(-16deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+/* ==========================================================
+   CRUMBS (bite mode only) — spawned/removed by dog-cursor.js
+   ========================================================== */
+
+#dog-cursor-crumbs {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style;
+}
+
+.dog-cursor__crumb {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 1px;
+  background: #b45309;
+  opacity: 0.75;
+  pointer-events: none;
+  animation: dog-cursor-crumb-fall 550ms ease-in forwards;
+}
+
+@keyframes dog-cursor-crumb-fall {
+  0% {
+    opacity: 0.75;
+    transform: translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--crumb-dx, 6px), var(--crumb-dy, 14px));
+  }
+}
 
 /* ==========================================================
    TOY CURSOR
@@ -83,62 +369,44 @@
    ========================================================== */
 
 /*
- * These are only subtle visual differences.
- *
- * The JavaScript controls movement and animation.
+ * These set the dog's baseline opacity per section personality.
+ * The JavaScript controls movement, pose and animation.
  */
 
-body[data-dog-cursor-mode="default"]
-  #dog-cursor-canvas {
-  opacity: 0.9;
+body[data-dog-cursor-mode="default"] #dog-cursor-dog {
+  opacity: 0.82;
 }
 
-
-body[data-dog-cursor-mode="explore"]
-  #dog-cursor-canvas {
-  opacity: 0.9;
+body[data-dog-cursor-mode="explore"] #dog-cursor-dog {
+  opacity: 0.82;
 }
 
-
-body[data-dog-cursor-mode="shop"]
-  #dog-cursor-canvas {
-  opacity: 0.95;
+body[data-dog-cursor-mode="shop"] #dog-cursor-dog {
+  opacity: 0.86;
 }
 
-
-body[data-dog-cursor-mode="build"]
-  #dog-cursor-canvas {
-  opacity: 0.92;
+body[data-dog-cursor-mode="build"] #dog-cursor-dog {
+  opacity: 0.84;
 }
 
-
-body[data-dog-cursor-mode="discover"]
-  #dog-cursor-canvas {
-  opacity: 0.88;
+body[data-dog-cursor-mode="discover"] #dog-cursor-dog {
+  opacity: 0.8;
 }
 
-
-body[data-dog-cursor-mode="calm"]
-  #dog-cursor-canvas {
-  opacity: 0.72;
+body[data-dog-cursor-mode="calm"] #dog-cursor-dog {
+  opacity: 0.65;
 }
 
-
-body[data-dog-cursor-mode="read"]
-  #dog-cursor-canvas {
-  opacity: 0.68;
+body[data-dog-cursor-mode="read"] #dog-cursor-dog {
+  opacity: 0.6;
 }
 
-
-body[data-dog-cursor-mode="minimal"]
-  #dog-cursor-canvas {
-  opacity: 0.58;
+body[data-dog-cursor-mode="minimal"] #dog-cursor-dog {
+  opacity: 0.52;
 }
 
-
-body[data-dog-cursor-mode="settle"]
-  #dog-cursor-canvas {
-  opacity: 0.48;
+body[data-dog-cursor-mode="settle"] #dog-cursor-dog {
+  opacity: 0.44;
 }
 
 
@@ -164,7 +432,8 @@ body.dog-cursor-active label {
 
 @media (pointer: coarse) {
 
-  #dog-cursor-canvas,
+  #dog-cursor-dog,
+  #dog-cursor-crumbs,
   #dog-cursor-toy {
     display: none !important;
   }
@@ -188,7 +457,8 @@ body.dog-cursor-active label {
 
 @media (prefers-reduced-motion: reduce) {
 
-  #dog-cursor-canvas,
+  #dog-cursor-dog,
+  #dog-cursor-crumbs,
   #dog-cursor-toy {
     display: none !important;
   }

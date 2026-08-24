@@ -30,15 +30,20 @@
  * - Reorder sections → cursor still works.
  * - Add a custom section → cursor still works.
  *
- * Existing dog behavior preserved:
- * - bone / ball / food bowl
- * - one dotted dog
- * - smooth following
- * - run
- * - sniff
- * - sit
- * - bite
+ * Dog behavior (unchanged from the previous dot-matrix version):
+ * - bone / ball / food bowl toy cursor
+ * - smooth spring-following
+ * - run / sniff / sit / bite idle chain
  * - dog faces the toy when idle
+ *
+ * Rendering (new):
+ * - The dog is now an illustrated SVG (gradient fur, ears, tail, legs)
+ *   positioned with a DOM transform, instead of a canvas dot-cloud.
+ * - Pose per mode (run/sniff/sit/bite) is driven by CSS via a
+ *   data-dog-mode attribute; this file only decides *which* mode is
+ *   active and where the dog sits, same as before.
+ * - Kept semi-translucent and modestly sized so it doesn't sit heavily
+ *   over page text as it roams.
  */
 
 (function () {
@@ -76,14 +81,12 @@
     'plate'
   ];
 
-  var TOY_CYCLE_MS = 14000;
-
-  var IDLE_AFTER_MS = 500;
-
   var DOG_SCALE = 1.12;
 
   /* Stop the rAF loop after the dog has fully settled (saves main-thread work / Lighthouse). */
   var LOOP_PAUSE_AFTER_MS = 1800;
+
+  var CRUMB_INTERVAL_MS = 190;
 
 
   /* ==========================================================
@@ -122,94 +125,50 @@
 
 
   /* ==========================================================
-     DOG FRAME DATA
+     DOG SVG
+     ------------------------------------------------------------
+     Drawn facing right (snout toward high x). The container is
+     mirrored with scaleX(-1) at runtime when the dog is facing left,
+     same convention as the old point-cloud data used.
      ========================================================== */
 
-  var RUN = [
-
-    [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-6],[-14,-12],[-18,-8],[42,8],[44,16],[46,24],[50,8],[52,14],[54,20],[10,6],[8,14],[6,22],[18,6],[20,14],[22,22]],
-
-    [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-8,-4],[-12,-10],[-16,-6],[42,6],[40,12],[38,18],[50,8],[54,12],[58,16],[10,8],[14,14],[18,18],[18,4],[16,10],[12,16]],
-
-    [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-6,-8],[-12,-14],[-16,-10],[44,6],[48,14],[52,22],[48,8],[46,16],[44,24],[8,4],[4,10],[0,16],[20,8],[24,14],[28,20]],
-
-    [[0,0],[8,-2],[16,-1],[24,0],[32,1],[40,0],[48,-2],[56,-6],[62,-10],[66,-8],[68,-4],[64,0],[58,-14],[54,-16],[62,-15],[72,-6],[74,-4],[-10,-5],[-15,-11],[-18,-7],[40,8],[38,14],[36,20],[52,6],[56,12],[60,18],[12,6],[16,12],[20,18],[16,6],[12,12],[8,18]]
-  ];
-
-
-  var SIT = [
-
-    [[0,2],[8,0],[16,0],[24,1],[32,1],[40,0],[48,-2],[54,-6],[60,-10],[64,-8],[66,-4],[62,0],[56,-14],[52,-16],[60,-15],[70,-6],[72,-4],[-6,-2],[-10,-6],[-12,-2],[42,8],[44,14],[46,16],[50,6],[52,10],[10,10],[8,16],[6,18],[18,10],[20,16],[22,18]]
-  ];
-
-
-  var SNIFF = [
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-2],[64,-3],[70,-2],[74,0],[70,3],[58,-8],[54,-10],[62,-9],[78,0],[80,2],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,1],[40,0],[48,-1],[56,-3],[64,-4],[70,-3],[74,-1],[70,2],[58,-9],[54,-11],[62,-10],[78,-1],[80,1],[-8,-4],[-12,-8],[-16,-4],[42,8],[44,14],[46,18],[50,8],[52,12],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]]
-  ];
-
-
-  var BITE = [
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-2],[60,-4],[64,-2],[66,2],[62,4],[56,-8],[52,-10],[60,-9],[70,0],[72,2],[-8,-4],[-12,-8],[-16,-5],[42,10],[44,16],[46,20],[50,10],[52,14],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,0],[58,-1],[62,1],[64,5],[60,7],[54,-5],[50,-7],[58,-6],[68,4],[70,6],[-8,-3],[-11,-6],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]],
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[54,-3],[60,-5],[64,-2],[66,3],[62,5],[56,-8],[52,-10],[60,-9],[70,1],[72,3],[-8,-4],[-12,-8],[-15,-5],[42,10],[44,15],[46,19],[50,10],[52,14],[10,8],[8,14],[6,18],[18,8],[20,14],[22,18]],
-
-    [[0,0],[8,-1],[16,0],[24,1],[32,2],[40,1],[48,-1],[52,-1],[58,-2],[62,0],[64,4],[60,6],[54,-6],[50,-8],[58,-7],[68,3],[70,5],[-8,-3],[-11,-7],[-14,-4],[42,10],[44,15],[46,18],[50,10],[52,14],[10,8],[8,13],[6,17],[18,8],[20,13],[22,17]]
-  ];
-
-
-  function densify(frame) {
-
-    var out = [];
-
-    for (
-      var i = 0;
-      i < frame.length;
-      i++
-    ) {
-
-      var x = frame[i][0];
-      var y = frame[i][1];
-
-      out.push([
-        x,
-        y
-      ]);
-
-      var a =
-        (
-          i * 2.4
-        ) %
-        (
-          Math.PI * 2
-        );
-
-      out.push([
-        x +
-          Math.cos(a) *
-          1.6,
-
-        y +
-          Math.sin(a) *
-          1.6
-      ]);
-    }
-
-    return out;
-  }
-
-
-  var FRAMES = {
-    run: RUN.map(densify),
-    sit: SIT.map(densify),
-    sniff: SNIFF.map(densify),
-    bite: BITE.map(densify)
-  };
+  var DOG_SVG =
+    '<svg viewBox="0 0 130 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+    '<defs>' +
+    '<linearGradient id="dogFur" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#c9812f"/>' +
+    '<stop offset="45%" stop-color="#e2a35c"/>' +
+    '<stop offset="100%" stop-color="#f6dfb0"/>' +
+    '</linearGradient>' +
+    '</defs>' +
+    '<ellipse class="dog-cursor__shadow" cx="58" cy="57" rx="30" ry="4.5" fill="rgba(60,40,20,0.16)"/>' +
+    '<g class="dog-cursor__tail">' +
+    '<path d="M30 38C18 30 8 18 12 10C18 14 24 22 30 30C34 26 34 20 30 14C38 20 40 30 34 38Z" fill="url(#dogFur)"/>' +
+    '<path d="M18 20C16 16 16 12 19 10C22 14 24 20 26 26" stroke="#f8ecd4" stroke-width="0.8" fill="none" opacity="0.5"/>' +
+    '</g>' +
+    '<g class="dog-cursor__legs-back">' +
+    '<path d="M32 48C30 48 29 52 30 58L36 58C37 52 36 48 34 48Z" fill="#8a5a2e"/>' +
+    '<path d="M38 48C36 48 35 52 36 58L42 58C43 52 42 48 40 48Z" fill="#c98a4a"/>' +
+    '</g>' +
+    '<g class="dog-cursor__body">' +
+    '<ellipse cx="56" cy="40" rx="28" ry="18" fill="url(#dogFur)"/>' +
+    '<ellipse cx="52" cy="50" rx="20" ry="10" fill="#faeccb" opacity="0.65"/>' +
+    '</g>' +
+    '<g class="dog-cursor__legs-front">' +
+    '<path d="M68 46C66 46 65 50 66 58L72 58C73 50 72 46 70 46Z" fill="#8a5a2e"/>' +
+    '<path d="M76 46C74 46 73 50 74 58L80 58C81 50 80 46 78 46Z" fill="#c98a4a"/>' +
+    '</g>' +
+    '<g class="dog-cursor__head">' +
+    '<path d="M84 16C76 10 70 14 70 24C70 34 78 37 84 31C80 27 78 21 84 16Z" fill="#8a5a2e"/>' +
+    '<circle cx="94" cy="27" r="15" fill="url(#dogFur)"/>' +
+    '<path d="M90 33C100 32 112 31 118 34C112 39 100 41 92 40Z" fill="#e7bd85"/>' +
+    '<ellipse cx="116" cy="34" rx="3" ry="2.3" fill="#3b2417"/>' +
+    '<circle cx="97" cy="24" r="2.3" fill="#241408"/>' +
+    '<circle cx="97.8" cy="23.2" r="0.7" fill="#fff6df"/>' +
+    '<path class="dog-cursor__mouth-closed" d="M92 40C97 42.5 104 42.5 109 40" stroke="#5c3a1c" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+    '<path class="dog-cursor__mouth-open" d="M92 40C96 46 105 46 109 40C104 43.5 97 43.5 92 40Z" fill="#7a2e2e"/>' +
+    '</g>' +
+    '</svg>';
 
 
   /* ==========================================================
@@ -339,9 +298,9 @@
      STATE
      ========================================================== */
 
-  var canvas = null;
-  var ctx = null;
+  var dogEl = null;
   var toyEl = null;
+  var crumbEl = null;
 
   var mouseX = -9999;
   var mouseY = -9999;
@@ -359,15 +318,14 @@
 
   var mode = 'run';
 
-  var frameIndex = 0;
-  var frameTimer = 0;
+  var idleTimer = 0;
 
   var lastMoveTime = 0;
   var lastTime = 0;
-  var idleTimer = 0;
 
   var toyIndex = 0;
   var lastToySwitch = 0;
+  var lastCrumbAt = 0;
 
   var activeCursorMode = 'default';
 
@@ -403,10 +361,6 @@
     mode = 'run';
 
     idleTimer = 0;
-
-    frameIndex = 0;
-
-    frameTimer = 0;
   }
 
 
@@ -607,32 +561,48 @@
     );
 
 
-    canvas =
+    dogEl =
       document.createElement(
-        'canvas'
+        'div'
       );
 
-    canvas.id =
-      'dog-cursor-canvas';
+    dogEl.id =
+      'dog-cursor-dog';
 
-    canvas.setAttribute(
+    dogEl.setAttribute(
       'aria-hidden',
       'true'
     );
 
+    dogEl.setAttribute(
+      'data-dog-mode',
+      'run'
+    );
+
+    dogEl.innerHTML =
+      DOG_SVG;
 
     document.body.appendChild(
-      canvas
+      dogEl
     );
 
 
-    ctx =
-      canvas.getContext(
-        '2d',
-        {
-          alpha: true
-        }
+    crumbEl =
+      document.createElement(
+        'div'
       );
+
+    crumbEl.id =
+      'dog-cursor-crumbs';
+
+    crumbEl.setAttribute(
+      'aria-hidden',
+      'true'
+    );
+
+    document.body.appendChild(
+      crumbEl
+    );
 
 
     toyEl =
@@ -660,18 +630,6 @@
 
     document.body.classList.add(
       'dog-cursor-active'
-    );
-
-
-    resize();
-
-
-    window.addEventListener(
-      'resize',
-      resize,
-      {
-        passive: true
-      }
     );
 
 
@@ -730,57 +688,9 @@
       performance.now();
 
 
+    applyDogTransform();
+
     startLoop();
-  }
-
-
-  /* ==========================================================
-     RESIZE
-     ========================================================== */
-
-  function resize() {
-
-    if (
-      !canvas ||
-      !ctx
-    ) {
-      return;
-    }
-
-
-    var dpr =
-      Math.min(
-        window.devicePixelRatio || 1,
-        2
-      );
-
-
-    canvas.width =
-      window.innerWidth *
-      dpr;
-
-    canvas.height =
-      window.innerHeight *
-      dpr;
-
-
-    canvas.style.width =
-      window.innerWidth +
-      'px';
-
-    canvas.style.height =
-      window.innerHeight +
-      'px';
-
-
-    ctx.setTransform(
-      dpr,
-      0,
-      0,
-      dpr,
-      0,
-      0
-    );
   }
 
 
@@ -896,6 +806,131 @@
 
 
   /* ==========================================================
+     CRUMBS (bite mode flourish)
+     ========================================================== */
+
+  function spawnCrumb(x, y) {
+
+    if (!crumbEl) {
+      return;
+    }
+
+    var crumb =
+      document.createElement(
+        'span'
+      );
+
+    crumb.className =
+      'dog-cursor__crumb';
+
+    crumb.style.left =
+      x.toFixed(1) +
+      'px';
+
+    crumb.style.top =
+      y.toFixed(1) +
+      'px';
+
+    var dx =
+      (
+        Math.random() * 12 - 6
+      ).toFixed(1) +
+      'px';
+
+    var dy =
+      (
+        8 + Math.random() * 10
+      ).toFixed(1) +
+      'px';
+
+    crumb.style.setProperty(
+      '--crumb-dx',
+      dx
+    );
+
+    crumb.style.setProperty(
+      '--crumb-dy',
+      dy
+    );
+
+    crumbEl.appendChild(
+      crumb
+    );
+
+    crumb.addEventListener(
+      'animationend',
+      function () {
+
+        if (crumb.parentNode) {
+          crumb.parentNode.removeChild(
+            crumb
+          );
+        }
+      },
+      {
+        once: true
+      }
+    );
+  }
+
+
+  /* ==========================================================
+     RENDER (DOM transform, mode attribute)
+     ========================================================== */
+
+  function applyDogTransform() {
+
+    if (!dogEl) {
+      return;
+    }
+
+    var profile =
+      getProfile();
+
+    var direction =
+      facing >= 0
+        ? 1
+        : -1;
+
+    var scale =
+      DOG_SCALE *
+      profile.scale;
+
+    dogEl.style.transform =
+      'translate3d(' +
+      dogX.toFixed(1) +
+      'px,' +
+      dogY.toFixed(1) +
+      'px,0) scaleX(' +
+      direction +
+      ') scale(' +
+      scale.toFixed(3) +
+      ')';
+  }
+
+
+  function applyDogMode() {
+
+    if (!dogEl) {
+      return;
+    }
+
+    if (
+      dogEl.getAttribute(
+        'data-dog-mode'
+      ) === mode
+    ) {
+      return;
+    }
+
+    dogEl.setAttribute(
+      'data-dog-mode',
+      mode
+    );
+  }
+
+
+  /* ==========================================================
      UPDATE
      ========================================================== */
 
@@ -964,10 +999,6 @@
         'sniff';
 
       idleTimer = 0;
-
-      frameIndex = 0;
-
-      frameTimer = 0;
     }
 
 
@@ -1221,53 +1252,15 @@
 
 
     /* --------------------------------------------------------
-       ANIMATION
+       MODE TIMING (run → sniff → sit → bite)
        -------------------------------------------------------- */
 
     if (
       mode === 'run'
     ) {
 
-      var speed =
-        Math.hypot(
-          velX,
-          velY
-        );
-
-
-      var speedMultiplier =
-        (
-          profile.idleType === 'calm' ||
-          profile.idleType === 'settle'
-        )
-          ? 0.65
-          : 1;
-
-
-      frameTimer +=
-        dt *
-        (
-          0.012 +
-          speed *
-          0.03
-        ) *
-        speedMultiplier;
-
-
-      if (
-        frameTimer >
-        1
-      ) {
-
-        frameTimer = 0;
-
-        frameIndex =
-          (
-            frameIndex + 1
-          ) %
-          FRAMES.run.length;
-      }
-
+      applyDogMode();
+      applyDogTransform();
 
       return;
     }
@@ -1277,38 +1270,11 @@
       dt;
 
 
-    frameTimer +=
-      dt *
-      (
-        profile.idleType === 'calm' ||
-        profile.idleType === 'settle'
-          ? 0.006
-          : 0.01
-      );
-
-
-    /* --------------------------------------------------------
-       SNIFF
-       -------------------------------------------------------- */
+    /* SNIFF */
 
     if (
       mode === 'sniff'
     ) {
-
-      if (
-        frameTimer >
-        1
-      ) {
-
-        frameTimer = 0;
-
-        frameIndex =
-          (
-            frameIndex + 1
-          ) %
-          FRAMES.sniff.length;
-      }
-
 
       var sniffDuration =
         (
@@ -1328,25 +1294,21 @@
           'sit';
 
         idleTimer = 0;
-
-        frameIndex = 0;
       }
 
+
+      applyDogMode();
+      applyDogTransform();
 
       return;
     }
 
 
-    /* --------------------------------------------------------
-       SIT
-       -------------------------------------------------------- */
+    /* SIT */
 
     if (
       mode === 'sit'
     ) {
-
-      frameIndex = 0;
-
 
       /*
        * Calm sections remain calm.
@@ -1356,6 +1318,9 @@
         profile.idleType === 'calm' ||
         profile.idleType === 'settle'
       ) {
+
+        applyDogMode();
+        applyDogTransform();
 
         return;
       }
@@ -1370,250 +1335,68 @@
           'bite';
 
         idleTimer = 0;
-
-        frameIndex = 0;
       }
 
+
+      applyDogMode();
+      applyDogTransform();
 
       return;
     }
 
 
-    /* --------------------------------------------------------
-       BITE
-       -------------------------------------------------------- */
+    /* BITE */
 
     if (
       mode === 'bite'
     ) {
+
+      applyDogMode();
+      applyDogTransform();
 
       if (
-        frameTimer >
-        1
+        now -
+        lastCrumbAt >
+        CRUMB_INTERVAL_MS
       ) {
 
-        frameTimer = 0;
+        lastCrumbAt =
+          now;
 
-        frameIndex =
-          (
-            frameIndex + 1
-          ) %
-          FRAMES.bite.length;
-      }
-    }
-  }
+        var direction =
+          facing >= 0
+            ? 1
+            : -1;
 
+        var scale =
+          DOG_SCALE *
+          profile.scale;
 
-  /* ==========================================================
-     DRAW DOT
-     ========================================================== */
+        var sx =
+          dogX +
+          direction *
+          52 *
+          scale *
+          0.78;
 
-  function drawDot(
-    x,
-    y,
-    radius,
-    alpha
-  ) {
+        var sy =
+          dogY +
+          2;
 
-    ctx.beginPath();
-
-    ctx.arc(
-      x,
-      y,
-      radius,
-      0,
-      Math.PI * 2
-    );
-
-    ctx.fillStyle =
-      'rgba(0,0,0,' +
-      alpha +
-      ')';
-
-    ctx.fill();
-  }
-
-
-  /* ==========================================================
-     DRAW DOG
-     ========================================================== */
-
-  function drawDog() {
-
-    var profile =
-      getProfile();
-
-
-    var set =
-      FRAMES[
-        mode
-      ] ||
-      FRAMES.run;
-
-
-    var points =
-      set[
-        frameIndex %
-        set.length
-      ] ||
-      set[0];
-
-
-    var direction =
-      facing >= 0
-        ? 1
-        : -1;
-
-
-    var scale =
-      DOG_SCALE *
-      profile.scale;
-
-
-    /*
-     * Ground shadow.
-     */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-      dogX,
-      dogY + 20,
-      26 * profile.scale,
-      7 * profile.scale,
-      0,
-      0,
-      Math.PI * 2
-    );
-
-
-    ctx.fillStyle =
-      'rgba(0,0,0,0.1)';
-
-    ctx.fill();
-
-
-    /*
-     * Dog body.
-     */
-
-    for (
-      var i = 0;
-      i < points.length;
-      i++
-    ) {
-
-      var x =
-        dogX +
-        points[i][0] *
-        scale *
-        direction;
-
-
-      var y =
-        dogY +
-        points[i][1] *
-        scale;
-
-
-      drawDot(
-        x,
-        y,
-        (
-          1.55 +
-          (
-            i % 3
-          ) *
-          0.3
-        ) *
-        profile.scale,
-        0.92
-      );
-    }
-
-
-    /*
-     * Food crumbs only when biting.
-     */
-
-    if (
-      mode === 'bite'
-    ) {
-
-      var sx =
-        dogX +
-        direction *
-        52 *
-        scale *
-        0.78;
-
-
-      var sy =
-        dogY + 2;
-
-
-      for (
-        var j = 0;
-        j < 4;
-        j++
-      ) {
-
-        drawDot(
+        spawnCrumb(
           sx +
             (
-              Math.random() -
-              0.5
-            ) *
-            10,
-
-          sy +
-            (
-              Math.random() -
-              0.5
+              Math.random() - 0.5
             ) *
             8,
-
-          1 +
-            Math.random(),
-
-          0.28
+          sy +
+            (
+              Math.random() - 0.5
+            ) *
+            6
         );
       }
     }
-  }
-
-
-  /* ==========================================================
-     RENDER
-     ========================================================== */
-
-  function render() {
-
-    if (
-      !ctx ||
-      !canvas
-    ) {
-      return;
-    }
-
-
-    ctx.clearRect(
-      0,
-      0,
-      window.innerWidth,
-      window.innerHeight
-    );
-
-
-    if (
-      mouseX <
-      -1000
-    ) {
-      return;
-    }
-
-
-    drawDog();
   }
 
 
@@ -1643,9 +1426,6 @@
       dt,
       time
     );
-
-
-    render();
 
 
     /*

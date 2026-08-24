@@ -1,7 +1,8 @@
 /* ==========================================================================
-   PETLIO — SCROLL BIRD
-   Realistic songbird that flies on the right while scrolling,
-   and perches on section lines when the page is still.
+   PETLIO — SCROLL PHOENIX
+   A legendary firebird that flies on the right while scrolling, trailing
+   embers, and perches with a low glowing aura on section lines when the
+   page is still.
    ========================================================================== */
 
 #scroll-bird-root {
@@ -18,8 +19,8 @@
 #scroll-bird {
   position: fixed;
   right: clamp(12px, 2.4vw, 36px);
-  width: 56px;
-  height: 48px;
+  width: 60px;
+  height: 52px;
   margin: 0;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -35,7 +36,7 @@
 }
 
 #scroll-bird.is-flying .scroll-bird__wing {
-  animation: scroll-bird-flap 0.18s ease-in-out infinite alternate;
+  animation: scroll-bird-flap 0.16s ease-in-out infinite alternate;
 }
 
 #scroll-bird.is-landing .scroll-bird__wing {
@@ -56,7 +57,10 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 4px 8px rgba(39, 48, 40, 0.18));
+  /* Warm double glow standing in for the phoenix's own light, on top of a
+     normal grounding shadow. */
+  filter: drop-shadow(0 4px 8px rgba(120, 40, 10, 0.22))
+    drop-shadow(0 0 10px rgba(255, 150, 60, 0.35));
 }
 
 .scroll-bird__wing {
@@ -66,6 +70,33 @@
 
 .scroll-bird__body {
   transition: transform 0.35s ease;
+}
+
+/* Soft radiant halo behind the body — brighter and slightly larger while
+   in flight, calmer at rest. */
+.scroll-bird__aura {
+  transform-origin: 30px 27px;
+  transform-box: fill-box;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+#scroll-bird.is-flying .scroll-bird__aura {
+  animation: scroll-bird-aura-pulse 0.55s ease-in-out infinite;
+}
+
+#scroll-bird.is-perched .scroll-bird__aura {
+  opacity: 0.32;
+}
+
+/* Tail feathers flicker like flame while flying */
+.scroll-bird__tail {
+  transform-origin: 22px 30px;
+  transform-box: fill-box;
+}
+
+#scroll-bird.is-flying .scroll-bird__tail {
+  animation: scroll-bird-tail-flicker 0.5s ease-in-out infinite;
 }
 
 @keyframes scroll-bird-flap {
@@ -86,6 +117,63 @@
   }
   100% {
     transform: rotate(8deg);
+  }
+}
+
+@keyframes scroll-bird-aura-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes scroll-bird-tail-flicker {
+  0% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: rotate(-4deg);
+  }
+}
+
+/* Embers trailing off the phoenix as it flies / a small flourish as it
+   lands. Spawned and removed by scroll-bird.js. */
+#scroll-bird-embers {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style;
+}
+
+.scroll-bird__ember {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(0.2px);
+  animation: scroll-bird-ember-drift var(--ember-duration, 900ms) ease-out
+    forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes scroll-bird-ember-drift {
+  0% {
+    opacity: 0.95;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--ember-dx, -14px), var(--ember-dy, 20px))
+      scale(0.25);
   }
 }
 
@@ -115,9 +203,11 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--petlio-accent, #71806d);
-  opacity: 0.45;
-  box-shadow: 0 0 0 2px var(--petlio-paper, #f7f3eb);
+  background: #ff8a3d;
+  opacity: 0.55;
+  box-shadow:
+    0 0 0 2px var(--petlio-paper, #f7f3eb),
+    0 0 6px 1px rgba(255, 138, 61, 0.5);
 }
 
 .shopify-section {
@@ -130,6 +220,7 @@
   (prefers-reduced-motion: reduce) {
   #scroll-bird-root,
   #scroll-bird,
+  #scroll-bird-embers,
   .scroll-bird-perch {
     display: none !important;
   }

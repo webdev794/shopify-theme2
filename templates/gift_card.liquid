@@ -1,3 +1,5 @@
+{{ 'gift-card.css' | asset_url | stylesheet_tag }}
+
 {% comment %}
   Renders a customer's gift card: balance, code, expiry/scheduled-send state,
   a QR code linking back to the store, and an Apple Wallet button when
@@ -52,9 +54,12 @@
     </div>
 
     {% unless gift_card.expired or gift_card.enabled == false %}
-      <a href="{{ shop.url }}" class="button button--primary gift-card__redeem-button">
+      <a href="{{ routes.cart_url }}" class="button button--primary gift-card__redeem-button">
         {{ 'gift_card.use_at_checkout' | t }}
       </a>
+      <p class="gift-card__hint">
+        Copy the code above, then paste it at checkout.
+      </p>
     {% endunless %}
   </div>
 
@@ -71,35 +76,17 @@
       </a>
     {% endif %}
 
-    {% comment %} QR code library (qrcode.js) is loaded by layout/gift_card.liquid via asset_url. {% endcomment %}
+    {% comment %} QR code library is loaded by layout/gift_card.liquid via shopify_asset_url. {% endcomment %}
     <div id="qr-code" class="gift-card__qr"></div>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const qrEl = document.getElementById('qr-code');
-        const qrTarget = '{{ shop.url | append: gift_card.url }}';
-
-        if (typeof qrcode !== 'undefined' && qrEl) {
-          const qr = qrcode(0, 'M');
-          qr.addData(qrTarget);
-          qr.make();
-
-          const minSize = 120;
-          const moduleCount = qr.getModuleCount();
-          const cellSize = Math.ceil(minSize / moduleCount);
-          const renderedSize = cellSize * moduleCount;
-
-          qrEl.innerHTML = qr.createSvgTag({
-            cellSize: cellSize,
-            margin: 0
+        if (typeof QRCode !== 'undefined' && qrEl) {
+          new QRCode(qrEl, {
+            text: '{{ shop.url }}',
+            width: 120,
+            height: 120
           });
-
-          const svg = qrEl.querySelector('svg');
-          if (svg) {
-            svg.setAttribute('width', renderedSize);
-            svg.setAttribute('height', renderedSize);
-            svg.style.minWidth = minSize + 'px';
-            svg.style.minHeight = minSize + 'px';
-          }
         }
       });
     </script>

@@ -1,4 +1,4 @@
-{{ 'section-blog-posts.css' | asset_url | stylesheet_tag: preload: true }}
+{{ 'section-blog-posts.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'blog-posts.js' | asset_url }}" defer></script>
 
@@ -7,10 +7,7 @@
   data-section-id="{{ section.id }}"
   data-layout="{{ section.settings.layout }}"
   data-columns="{{ section.settings.columns }}"
-  style="
-    --bp-bg: {{ section.settings.background_color | default: '#f7f3eb' }};
-    --color-background: {{ section.settings.background_color | default: '#f7f3eb' }};
-  "
+  style="--blog-posts-bg: {{ section.settings.background_color }};"
 >
   <div class="blog-posts__container">
     
@@ -46,14 +43,8 @@
                     class: 'blog-posts__image',
                     alt: article.image.alt | default: article.title
                 }}
-                
-                {% if section.settings.show_category and article.tags.size > 0 %}
-                  <span class="blog-posts__category">
-                    {{ article.tags.first | capitalize }}
-                  </span>
-                {% endif %}
-                
-                {% if section.settings.show_date %}
+
+                {% if section.settings.show_date and section.settings.date_position == 'badge' %}
                   <span class="blog-posts__date-badge">
                     <span class="blog-posts__date-day">{{ article.published_at | date: '%d' }}</span>
                     <span class="blog-posts__date-month">{{ article.published_at | date: '%b' }}</span>
@@ -64,37 +55,32 @@
           {% endif %}
           
           <div class="blog-posts__content">
-            <div class="blog-posts__meta">
-              {% if section.settings.show_author %}
-                <span class="blog-posts__author">
-                  <svg class="blog-posts__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  {{ article.author }}
-                </span>
-              {% endif %}
-              
-              {% if section.settings.show_date and section.settings.date_position == 'meta' %}
-                <span class="blog-posts__date">
-                  <svg class="blog-posts__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                  {{ article.published_at | date: format: 'date' }}
-                </span>
-              {% endif %}
-            </div>
-            
+            {% if section.settings.show_category and article.tags.size > 0 %}
+              <span class="blog-posts__kicker">{{ article.tags.first | capitalize }}</span>
+            {% endif %}
+
             <h3 class="blog-posts__title">
               <a href="{{ article.url }}">{{ article.title }}</a>
             </h3>
+
+            {% if section.settings.show_author or section.settings.show_date %}
+              <p class="blog-posts__byline">
+                {% if section.settings.show_author and article.author != blank %}
+                  <span class="blog-posts__author">By {{ article.author }}</span>
+                {% endif %}
+                {% if section.settings.show_date and section.settings.date_position == 'meta' %}
+                  <span class="blog-posts__date">{{ article.published_at | date: format: 'date' }}</span>
+                {% endif %}
+              </p>
+            {% endif %}
             
             {% if section.settings.show_excerpt %}
               <div class="blog-posts__excerpt">
-                {{ article.excerpt_or_content | strip_html | truncatewords: section.settings.excerpt_words }}
+                {% if article.excerpt != blank %}
+                  {{ article.excerpt | truncatewords: section.settings.excerpt_words }}
+                {% else %}
+                  {{ article.content | strip_html | truncatewords: section.settings.excerpt_words }}
+                {% endif %}
               </div>
             {% endif %}
             
@@ -119,16 +105,11 @@
               </svg>
             </div>
             <div class="blog-posts__content">
-              <div class="blog-posts__meta">
-                <span class="blog-posts__author">
-                  <svg class="blog-posts__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  Author Name
-                </span>
-              </div>
+              <span class="blog-posts__kicker">Category</span>
               <h3 class="blog-posts__title">Sample Blog Post Title</h3>
+              <p class="blog-posts__byline">
+                <span class="blog-posts__author">By Author Name</span>
+              </p>
               <div class="blog-posts__excerpt">This is a sample blog post excerpt. Add a blog to display your posts here.</div>
               <a href="#" class="blog-posts__read-more">
                 <span>Read More</span>
@@ -241,7 +222,8 @@
       "type": "checkbox",
       "id": "show_category",
       "label": "t:sections.blog_posts.settings.show_category.label",
-      "default": true
+      "default": true,
+      "info": "Shown as a kicker label above the title."
     },
     {
       "type": "checkbox",
@@ -307,8 +289,8 @@
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
-      "default": "#f7f3eb"
+      "label": "Background color",
+      "default": "#ffffff"
     }
   ],
   "presets": [

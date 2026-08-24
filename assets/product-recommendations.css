@@ -4,6 +4,8 @@
 
 .product-recommendations__heading {
   font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.2px;
   margin-bottom: 1.25rem;
   max-width: var(--page-width, 1200px);
   margin-inline: auto;
@@ -33,7 +35,7 @@
 
 .product-recommendations__media {
   aspect-ratio: 1 / 1;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   overflow: hidden;
   background: var(--color-background-secondary, #f4f4f4);
   margin-bottom: 0.5rem;
@@ -44,10 +46,15 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s ease;
+}
+
+.product-recommendations__card:hover .product-recommendations__image {
+  transform: scale(1.03);
 }
 
 .product-recommendations__title {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   margin-bottom: 0.25rem;
   color: var(--color-foreground, #1a1a1a);
 }
@@ -71,7 +78,7 @@
 
 .product-recommendations__skeleton {
   aspect-ratio: 1 / 1;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   background: var(--color-background-secondary, #f0f0f0);
   animation: product-recommendations-pulse 1.5s ease-in-out infinite;
 }

@@ -85,7 +85,6 @@
         type="date"
         id="Recipient-send-on-{{ section.id }}"
         name="properties[Send on]"
-        value="{{ gift_card.send_on | default: form.send_on }}"
         min="{{ 'now' | date: '%Y-%m-%d' }}"
       >
     </div>

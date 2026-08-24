@@ -313,8 +313,8 @@
             "platform": "instagram",
             "username": "",
             "caption": "Beautiful mackup brush",
-            "likes": "2.4k",
-            "comments": "156",
+            "likes": "217",
+            "comments": "14",
             "link": ""
           }
         },
@@ -325,8 +325,8 @@
             "platform": "instagram",
             "username": "",
             "caption": "Red lip gloss ✨",
-            "likes": "1.8k",
-            "comments": "89",
+            "likes": "115",
+            "comments": "21",
             "link": ""
           }
         },
@@ -337,8 +337,8 @@
             "platform": "instagram",
             "username": "",
             "caption": "Behind the scenes 🎬",
-            "likes": "3.1k",
-            "comments": "234",
+            "likes": "124",
+            "comments": "8",
             "link": ""
           }
         },
@@ -349,8 +349,8 @@
             "platform": "instagram",
             "username": "",
             "caption": "Customer favorites 💕",
-            "likes": "967",
-            "comments": "43",
+            "likes": "86",
+            "comments": "5",
             "link": ""
           }
         }
@@ -388,7 +388,7 @@
         "content_position": "center",
         "content_alignment": "center",
         "content_width": 80,
-        "overlay_color": "rgba(0, 0, 0, 0.4)",
+        "overlay_color": "#00000066",
         "overlay_opacity": 70,
         "preheading_color": "#ffffff",
         "heading_color": "#ffffff",
@@ -439,6 +439,7 @@
         "heading": "What Our Customers Say",
         "subheading": "Real reviews from real customers",
         "background_color": "#f3e5de",
+        "layout": "featured",
         "columns": "3",
         "show_rating": true,
         "show_view_all": false,

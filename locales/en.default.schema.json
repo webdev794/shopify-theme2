@@ -90,7 +90,7 @@
   },
   "sections": {
     "featured_collections_tabs": {
-      "name": "Featured collections tabs",
+      "name": "Collection chapters",
       "settings": {
         "heading": "Heading",
         "subheading": "Subheading",
@@ -120,7 +120,7 @@
       }
     },
     "blog_posts": {
-      "name": "Blog posts",
+      "name": "Journal",
       "settings": {
         "header__1": {
           "content": "Content"
@@ -236,7 +236,7 @@
       }
     },
     "newsletter": {
-      "name": "Newsletter",
+      "name": "Stay close",
       "settings": {
         "header__1": {
           "content": "Content"
@@ -324,7 +324,7 @@
           "content": "Social media links"
         },
         "show_social": {
-          "label": "Show social media icons",
+          "label": "Show social icons",
           "info": "Set your social media URLs in Theme settings → Social media."
         },
         "social_label": {
@@ -336,7 +336,7 @@
       }
     },
     "lookbook": {
-      "name": "Lookbook",
+      "name": "Complete the look",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -367,7 +367,7 @@
           "options__3": {
             "label": "Beside image, right"
           },
-          "info": "On mobile, content always shows above the image."
+          "info": "On mobile, content always shows above the image"
         },
         "header__1": {
           "content": "Image"
@@ -413,7 +413,7 @@
       }
     },
     "burst_effects": {
-      "name": "Image banner",
+      "name": "Impact moment",
       "settings": {
         "header__1": {
           "content": "Content"
@@ -490,7 +490,7 @@
     "cart": {
       "settings": {
         "enable_note": {
-          "label": "Show order note"
+          "label": "Enable order note"
         }
       }
     },
@@ -565,8 +565,8 @@
       "name": "Custom liquid",
       "settings": {
         "title": {
-          "label": "Heading",
-          "info": "Optional heading above custom content."
+          "label": "Section title",
+          "info": "Optional heading above custom content"
         },
         "header__1": {
           "content": "Custom code"
@@ -620,7 +620,7 @@
       }
     },
     "detailed_contact_form": {
-      "name": "Detailed contact form",
+      "name": "Contact desk",
       "settings": {
         "header__1": {
           "content": "Content"
@@ -678,7 +678,7 @@
           "content": "Story layout"
         },
         "story_display_font": {
-          "label": "Display font (heading and numerals)"
+          "label": "Display font (title and numerals)"
         },
         "story_body_font": {
           "label": "Body / label font"
@@ -689,7 +689,7 @@
       }
     },
     "featured_products": {
-      "name": "Featured products",
+      "name": "Featured edit",
       "settings": {
         "header__1": {
           "content": "Layout settings"
@@ -701,11 +701,14 @@
           },
           "options__2": {
             "label": "Carousel"
+          },
+          "options__3": {
+            "label": "Scroll gallery"
           }
         },
         "products_per_row": {
           "label": "Products per row",
-          "info": "Number of products to display per row on desktop."
+          "info": "Number of products to display per row on desktop"
         },
         "gap": {
           "label": "Gap between products"
@@ -740,7 +743,7 @@
         },
         "view_all_link": {
           "label": "Button link",
-          "info": "Leave empty to link to /collections/all."
+          "info": "Leave empty to link to /collections/all"
         },
         "header__4": {
           "content": "Product display settings"
@@ -750,19 +753,19 @@
         },
         "show_rating": {
           "label": "Show product rating",
-          "info": "Shown for products that have a reviews.rating metafield."
+          "info": "Shown for products that have a reviews.rating metafield"
         },
         "show_quick_add": {
           "label": "Show quick add button",
-          "info": "Adds an 'Add to Cart' button on product cards. On desktop it appears when hovering over a card."
+          "info": "Adds an 'Add to Cart' button on product cards. On desktop it appears when hovering a card."
         },
         "show_compare_at": {
           "label": "Show compare at price",
-          "info": "Shows the original price for products that have a compare-at price set in the admin."
+          "info": "Shows the original price for products that have a compare-at price set in the admin"
         },
         "image_size": {
           "label": "Image size",
-          "info": "Controls the height of the product image area.",
+          "info": "Controls the height of the product image area",
           "options__1": {
             "label": "Small"
           },
@@ -852,7 +855,7 @@
           "label": "Show tags"
         },
         "enable_sharing": {
-          "label": "Show social media icons"
+          "label": "Enable social sharing"
         },
         "show_navigation": {
           "label": "Show previous/next article links"
@@ -886,7 +889,7 @@
           "content": "Social media"
         },
         "show_social": {
-          "label": "Show social media icons",
+          "label": "Show social icons",
           "info": "Set your social media URLs in Theme settings → Social media."
         },
         "social_instagram": {
@@ -932,7 +935,7 @@
       }
     },
     "highlight_text_with_images": {
-      "name": "Highlight text and images",
+      "name": "Woven statement",
       "settings": {
         "caption": {
           "label": "Caption"
@@ -963,7 +966,7 @@
         },
         "image_size": {
           "label": "Image size",
-          "info": "Relative to the text height, so images scale with the text on every screen."
+          "info": "Relative to the text height, so images scale with the text on every screen"
         },
         "image_shape": {
           "label": "Image shape",
@@ -1016,7 +1019,7 @@
         },
         "color_accent": {
           "label": "Accent",
-          "info": "Used for accented and highlighted phrases."
+          "info": "Used for accented and highlighted phrases"
         }
       },
       "blocks": {
@@ -1052,7 +1055,7 @@
             },
             "tilt": {
               "label": "Tilt",
-              "info": "A slight tilt gives a hand-placed, editorial feel."
+              "info": "A slight tilt gives a hand-placed, editorial feel"
             }
           }
         }
@@ -1062,7 +1065,7 @@
       }
     },
     "image_comparison": {
-      "name": "Image comparison",
+      "name": "Transform view",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1097,10 +1100,10 @@
           "label": "Show description below"
         },
         "header__3": {
-          "content": "Comparison control"
+          "content": "Slider settings"
         },
         "default_position": {
-          "label": "Default handle position"
+          "label": "Default slider position"
         },
         "section_height": {
           "label": "Section height"
@@ -1120,7 +1123,7 @@
       }
     },
     "iwt_carousel": {
-      "name": "Images with text carousel",
+      "name": "Image story carousel",
       "settings": {
         "carousel_label": {
           "label": "Carousel label",
@@ -1252,15 +1255,15 @@
           "label": "Subheading"
         },
         "enable_newsletter": {
-          "label": "Show newsletter signup"
+          "label": "Enable email signup"
         },
         "show_social_icons": {
-          "label": "Show social media icons"
+          "label": "Show social icons"
         }
       }
     },
     "map": {
-      "name": "Map",
+      "name": "Find us",
       "settings": {
         "header__1": {
           "content": "Map"
@@ -1281,15 +1284,15 @@
         },
         "zoom": {
           "label": "Map zoom",
-          "info": "Applies to the interactive map."
+          "info": "Applies to the interactive map"
         },
         "image": {
           "label": "Image",
-          "info": "Shows when you set the map style to Image, or as a fallback if you don't enter an address. 3000 x 1500px recommended."
+          "info": "Shows when you set map style to image, or as a fallback if you don't enter an address. 3000 x 1500px recommended."
         },
         "desaturate": {
           "label": "Desaturate map",
-          "info": "Shows the map or image in black and white to match minimal designs."
+          "info": "Shows the map or image in black and white to match minimal designs"
         },
         "header__2": {
           "content": "Layout"
@@ -1366,7 +1369,7 @@
             },
             "is_address": {
               "label": "This text is an address",
-              "info": "Marks the text as a physical address for screen readers and search engines."
+              "info": "Marks the text as a physical address for screen readers and search engines"
             }
           }
         },
@@ -1378,7 +1381,7 @@
             },
             "button_link": {
               "label": "Button link",
-              "info": "Leave empty to open directions to the address on Google Maps."
+              "info": "Leave empty to open directions to the address on Google Maps"
             },
             "button_style": {
               "label": "Button style",
@@ -1397,7 +1400,7 @@
       }
     },
     "media_grid_section": {
-      "name": "Media grid",
+      "name": "Frame grid",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1467,7 +1470,7 @@
           "options__3": {
             "label": "Swipeable slideshow"
           },
-          "info": "Column and row spans only apply on desktop."
+          "info": "Column and row spans only apply on desktop"
         },
         "header__2": {
           "content": "Captions"
@@ -1493,6 +1496,17 @@
         },
         "enable_hover_zoom": {
           "label": "Zoom media on hover"
+        },
+        "enable_entry_animation": {
+          "label": "Animate on scroll entry",
+          "info": "Horizontal blind wipe and staggered tile reveal when the section enters the viewport. Disabled for visitors who prefer reduced motion."
+        },
+        "header__4": {
+          "content": "Background"
+        },
+        "background_color": {
+          "label": "Background color",
+          "info": "Shows behind the grid. Leave unset for a transparent background."
         }
       },
       "blocks": {
@@ -1515,7 +1529,7 @@
             },
             "link": {
               "label": "Link",
-              "info": "Makes the whole tile clickable."
+              "info": "Makes the whole tile clickable"
             },
             "column_span": {
               "label": "Column span",
@@ -1543,7 +1557,7 @@
       }
     },
     "mix_match_pack": {
-      "name": "Mix and match pack",
+      "name": "Build a set",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1586,6 +1600,12 @@
         },
         "aria_label": {
           "label": "Screen reader label"
+        },
+        "header__4": {
+          "content": "Styling"
+        },
+        "background_color": {
+          "label": "Background color"
         }
       },
       "blocks": {
@@ -1619,7 +1639,7 @@
       }
     },
     "scrollable_collection": {
-      "name": "Scrollable collection",
+      "name": "Horizon row",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1635,7 +1655,7 @@
         },
         "visible_count": {
           "label": "Visible products at a time",
-          "info": "Number of products visible before scrolling."
+          "info": "Number of products visible before scrolling"
         },
         "header__1": {
           "content": "Display options"
@@ -1682,7 +1702,7 @@
       }
     },
     "scrolling_media_cards": {
-      "name": "Scrolling media cards",
+      "name": "Drift cards",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1704,7 +1724,7 @@
         },
         "repeat_count": {
           "label": "Repeat count",
-          "info": "Number of times to repeat cards for seamless scrolling."
+          "info": "Number of times to repeat cards for seamless scrolling"
         },
         "header__2": {
           "content": "View all button"
@@ -1731,7 +1751,7 @@
           "settings": {
             "image": {
               "label": "Image",
-              "info": "400 x 400px recommended (square image)."
+              "info": "400 x 400px recommended (square image)"
             },
             "tag": {
               "label": "Tag"
@@ -1775,7 +1795,7 @@
       }
     },
     "scrolling_text": {
-      "name": "Scrolling text",
+      "name": "Ticker line",
       "settings": {
         "header__1": {
           "content": "Content settings"
@@ -1789,7 +1809,7 @@
         },
         "repeat_count": {
           "label": "Repeat count",
-          "info": "Number of times to repeat the text for seamless scrolling."
+          "info": "Number of times to repeat the text for seamless scrolling"
         },
         "show_divider": {
           "label": "Show divider"
@@ -1814,7 +1834,7 @@
         },
         "pause_on_hover": {
           "label": "Pause on hover",
-          "info": "Pause animation when user hovers over the text."
+          "info": "Pause animation when user hovers over the text"
         },
         "aria_label": {
           "label": "Screen reader label"
@@ -1826,7 +1846,7 @@
           "settings": {
             "text": {
               "label": "Text",
-              "info": "This text will scroll across the screen."
+              "info": "This text will scroll across the screen"
             },
             "icon": {
               "label": "Icon",
@@ -1875,7 +1895,7 @@
       }
     },
     "shop_the_kit": {
-      "name": "Shop the kit",
+      "name": "Complete the kit",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -1885,7 +1905,7 @@
         },
         "image": {
           "label": "Kit image",
-          "info": "800 x 800px recommended (square image)."
+          "info": "800 x 800px recommended (square image)"
         },
         "kit_title": {
           "label": "Kit title"
@@ -1933,7 +1953,7 @@
       }
     },
     "slideshow_with_marquee": {
-      "name": "Slideshow with marquee",
+      "name": "Stage + ticker",
       "settings": {
         "header__1": {
           "content": "Slideshow settings"
@@ -2012,7 +2032,7 @@
       }
     },
     "sticky_media_cards": {
-      "name": "Sticky media cards",
+      "name": "Story steps",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -2103,7 +2123,7 @@
       }
     },
     "testimonials": {
-      "name": "Testimonials",
+      "name": "Voices",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -2160,7 +2180,7 @@
       }
     },
     "text_with_icons": {
-      "name": "Text with icons",
+      "name": "Signal strip",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -2185,6 +2205,12 @@
           "options__3": {
             "label": "Right"
           }
+        },
+        "header__2": {
+          "content": "Styling"
+        },
+        "background_color": {
+          "label": "Background color"
         }
       },
       "blocks": {
@@ -2256,7 +2282,7 @@
       }
     },
     "trending_products": {
-      "name": "Trending products",
+      "name": "Rising picks",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -2288,7 +2314,7 @@
       }
     },
     "vertical_carousel": {
-      "name": "Vertical carousel",
+      "name": "Vertical story",
       "settings": {
         "header__1": {
           "content": "Carousel settings"
@@ -2405,7 +2431,7 @@
       }
     },
     "wavy_marquee": {
-      "name": "Wavy marquee",
+      "name": "Wave ticker",
       "settings": {
         "text": {
           "label": "Text",
@@ -2501,7 +2527,7 @@
         },
         "separator_symbol": {
           "label": "Separator symbol",
-          "info": "Symbol between text items (e.g. •, —, ★)."
+          "info": "Symbol between text items (e.g. •, —, ★)"
         },
         "header__5": {
           "content": "Accessibility"
@@ -2523,35 +2549,35 @@
         },
         "logo": {
           "label": "Logo",
-          "info": "180 x 60px .png recommended."
+          "info": "180 x 60px .png recommended"
         },
         "logo_width": {
-          "label": "Width"
+          "label": "Logo width"
         },
         "header__2": {
           "content": "Navigation"
         },
         "menu": {
           "label": "Main menu",
-          "info": "Select the menu to display in the header."
+          "info": "Select the menu to display in the header"
         },
         "open_on_hover": {
           "label": "Open navigation on hover",
-          "info": "On desktop, dropdowns and mega menus open on mouse hover. Clicking and keyboard navigation still work."
+          "info": "On desktop, dropdowns and mega menus open on mouse hover. Click and keyboard still work."
         },
         "enable_sticky_header": {
           "label": "Enable sticky header"
         },
         "sticky_hide_on_scroll": {
           "label": "Hide sticky header when scrolling down",
-          "info": "The header slides away while scrolling down and reappears when scrolling up. Requires a sticky header."
+          "info": "The header slides away while scrolling down and reappears when scrolling up. Requires sticky header."
         },
         "header__3": {
           "content": "Mega menu"
         },
         "enable_mega_menu": {
           "label": "Enable mega menu",
-          "info": "Enable mega menu layout for selected parent menu items."
+          "info": "Enable mega menu layout for selected parent menu items"
         },
         "mega_menu_parents": {
           "label": "Main menu items with a mega menu",
@@ -2559,18 +2585,18 @@
         },
         "mega_show_images": {
           "label": "Show collection images",
-          "info": "Show the collection image above each mega menu column when the menu item links to a collection."
+          "info": "Show the collection image above each mega menu column when the menu item links to a collection"
         },
         "mega_show_featured": {
           "label": "Show featured content",
-          "info": "Display featured content in the mega menu."
+          "info": "Display featured content in the mega menu"
         },
         "mega_featured_image": {
           "label": "Featured image",
-          "info": "Shown at the top of the featured card. 600 x 340px recommended."
+          "info": "Shown at the top of the featured card. 600 x 340px recommended"
         },
         "mega_featured_title": {
-          "label": "Featured heading"
+          "label": "Featured title"
         },
         "mega_featured_text": {
           "label": "Featured text"
@@ -2610,12 +2636,12 @@
         },
         "color_hover": {
           "label": "Hover color",
-          "info": "Color used for hover states and active links."
+          "info": "Color used for hover states and active links"
         }
       }
     },
     "hero": {
-      "name": "Hero",
+      "name": "Opening frame",
       "settings": {
         "header__1": {
           "content": "Media"
@@ -2703,17 +2729,17 @@
         },
         "stack_on_mobile": {
           "label": "Show content below media on mobile",
-          "info": "Improves readability on small screens."
+          "info": "Improves readability on small screens"
         },
         "header__3": {
           "content": "Overlay"
         },
         "color_overlay": {
-          "label": "Color"
+          "label": "Overlay color"
         },
         "overlay_opacity": {
-          "label": "Opacity",
-          "info": "Keep enough contrast between the text and the media behind it."
+          "label": "Overlay opacity",
+          "info": "Keep enough contrast between the text and the media behind it"
         },
         "header__4": {
           "content": "Colors"
@@ -2815,7 +2841,7 @@
       }
     },
     "hero_carousel": {
-      "name": "Hero carousel",
+      "name": "Opening carousel",
       "settings": {
         "carousel_label": {
           "label": "Carousel label",
@@ -2879,7 +2905,7 @@
         },
         "color_overlay": {
           "label": "Overlay color",
-          "info": "Set overlay opacity per slide."
+          "info": "Set overlay opacity per slide"
         }
       },
       "blocks": {
@@ -2914,7 +2940,7 @@
             },
             "overlay_opacity": {
               "label": "Overlay opacity",
-              "info": "Keep enough contrast between the text and the image behind it."
+              "info": "Keep enough contrast between the text and the image behind it"
             },
             "header__3": {
               "content": "Content"
@@ -3011,7 +3037,7 @@
       }
     },
     "media_with_text_overlay": {
-      "name": "Media with text overlay",
+      "name": "Story frame",
       "settings": {
         "header__1": {
           "content": "Media settings"
@@ -3088,7 +3114,7 @@
           "label": "Overlay color"
         },
         "overlay_opacity": {
-          "label": "Opacity"
+          "label": "Overlay opacity"
         },
         "text_color": {
           "label": "Text color"
@@ -3111,7 +3137,7 @@
       }
     },
     "pairing_products": {
-      "name": "Pairing products",
+      "name": "Pair with",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -3171,7 +3197,7 @@
       }
     },
     "social_gallery": {
-      "name": "Social media gallery",
+      "name": "Social wall",
       "settings": {
         "heading": {
           "label": "Heading"
@@ -3217,7 +3243,7 @@
         },
         "follow_link": {
           "label": "Follow link",
-          "info": "Link to your social media profile."
+          "info": "Link to your social media profile"
         },
         "header__2": {
           "content": "Accessibility"
@@ -3232,7 +3258,7 @@
           "settings": {
             "image": {
               "label": "Image",
-              "info": "Recommended: Square images."
+              "info": "Recommended: Square images"
             },
             "platform": {
               "label": "Platform",
@@ -3263,7 +3289,7 @@
             },
             "username": {
               "label": "Username",
-              "info": "Displayed when no image is uploaded."
+              "info": "Displayed when no image is uploaded"
             },
             "caption": {
               "label": "Caption"
@@ -3276,7 +3302,7 @@
             },
             "link": {
               "label": "Post link",
-              "info": "Link to the post on social media."
+              "info": "Link to the post on social media"
             }
           }
         }
@@ -3291,7 +3317,7 @@
           "content": "Media"
         },
         "media_position": {
-          "label": "Position",
+          "label": "Media position",
           "options__1": {
             "label": "Left"
           },
@@ -3311,18 +3337,7 @@
           "name": "Price"
         },
         "variant_picker": {
-          "name": "Variant picker",
-          "settings": {
-            "picker_style": {
-              "label": "Picker style",
-              "options__1": {
-                "label": "Standard"
-              },
-              "options__2": {
-                "label": "Multiple pets (icons)"
-              }
-            }
-          }
+          "name": "Variant picker"
         },
         "selling_plan_selector": {
           "name": "Purchase options"
@@ -3349,416 +3364,6 @@
             }
           }
         }
-      }
-    },
-    "faq": {
-      "name": "FAQ",
-      "settings": {
-        "heading": {
-          "label": "Heading"
-        },
-        "subheading": {
-          "label": "Subheading"
-        },
-        "description": {
-          "label": "Description"
-        },
-        "layout": {
-          "label": "Layout",
-          "options__1": {
-            "label": "Narrow"
-          },
-          "options__2": {
-            "label": "Wide"
-          }
-        },
-        "open_first": {
-          "label": "Open first item by default"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "accent_color": {
-          "label": "Accent"
-        }
-      },
-      "blocks": {
-        "item": {
-          "name": "Question",
-          "settings": {
-            "question": {
-              "label": "Question"
-            },
-            "answer": {
-              "label": "Answer"
-            }
-          }
-        }
-      },
-      "presets": {
-        "name": "FAQ",
-        "category": "Text"
-      }
-    },
-    "outfit_builder": {
-      "name": "Outfit builder",
-      "settings": {
-        "heading": {
-          "label": "Heading"
-        },
-        "subheading": {
-          "label": "Subheading"
-        },
-        "max_items": {
-          "label": "Max items in outfit"
-        },
-        "selection_label": {
-          "label": "Selection label"
-        },
-        "total_label": {
-          "label": "Total label"
-        },
-        "select_button_text": {
-          "label": "Select button text"
-        },
-        "add_outfit_text": {
-          "label": "Add outfit button text"
-        },
-        "empty_text": {
-          "label": "Empty state text"
-        },
-        "show_variant_selector": {
-          "label": "Show variant selector"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "accent_color": {
-          "label": "Accent"
-        }
-      },
-      "blocks": {
-        "product": {
-          "name": "Product",
-          "settings": {
-            "product": {
-              "label": "Product"
-            }
-          }
-        }
-      },
-      "presets": {
-        "name": "Outfit builder",
-        "category": "Product"
-      }
-    },
-    "lookbook_gallery": {
-      "name": "Lookbook gallery",
-      "settings": {
-        "heading": {
-          "label": "Heading"
-        },
-        "subheading": {
-          "label": "Subheading"
-        },
-        "full_width": {
-          "label": "Full width"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "dot_color": {
-          "label": "Hotspot color"
-        }
-      },
-      "blocks": {
-        "look": {
-          "name": "Look",
-          "settings": {
-            "image": {
-              "label": "Image"
-            },
-            "caption": {
-              "label": "Caption"
-            },
-            "header__hotspot1": {
-              "content": "Hotspot 1"
-            },
-            "product_1": {
-              "label": "First product"
-            },
-            "x1": {
-              "label": "Horizontal position"
-            },
-            "y1": {
-              "label": "Vertical position"
-            },
-            "header__hotspot2": {
-              "content": "Hotspot 2"
-            },
-            "product_2": {
-              "label": "Second product"
-            },
-            "x2": {
-              "label": "Horizontal position"
-            },
-            "y2": {
-              "label": "Vertical position"
-            },
-            "header__hotspot3": {
-              "content": "Hotspot 3"
-            },
-            "product_3": {
-              "label": "Third product"
-            },
-            "x3": {
-              "label": "Horizontal position"
-            },
-            "y3": {
-              "label": "Vertical position"
-            }
-          }
-        }
-      },
-      "presets": {
-        "name": "Lookbook gallery",
-        "category": "Image"
-      }
-    },
-    "contact": {
-      "name": "Contact",
-      "settings": {
-        "eyebrow": {
-          "label": "Eyebrow"
-        },
-        "heading": {
-          "label": "Heading"
-        },
-        "text": {
-          "label": "Text"
-        },
-        "header__channels": {
-          "content": "Direct channels"
-        },
-        "show_channels": {
-          "label": "Show contact channels"
-        },
-        "email": {
-          "label": "Email"
-        },
-        "phone": {
-          "label": "Phone"
-        },
-        "hours": {
-          "label": "Hours"
-        },
-        "address": {
-          "label": "Address"
-        },
-        "header__form": {
-          "content": "Form"
-        },
-        "show_phone": {
-          "label": "Show phone field"
-        },
-        "show_topic": {
-          "label": "Show topic dropdown"
-        },
-        "topics": {
-          "label": "Topic options",
-          "info": "Comma-separated list"
-        },
-        "button_label": {
-          "label": "Button label"
-        },
-        "success_heading": {
-          "label": "Success heading"
-        },
-        "success_text": {
-          "label": "Success message"
-        },
-        "privacy_note": {
-          "label": "Privacy note"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "card_background": {
-          "label": "Card background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "accent_color": {
-          "label": "Accent"
-        }
-      },
-      "presets": {
-        "name": "Contact"
-      }
-    },
-    "shop_by_pet": {
-      "name": "Shop by pet",
-      "settings": {
-        "heading": {
-          "label": "Heading"
-        },
-        "subheading": {
-          "label": "Subheading"
-        },
-        "text": {
-          "label": "Text"
-        },
-        "columns": {
-          "label": "Columns"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "accent_color": {
-          "label": "Accent"
-        }
-      },
-      "blocks": {
-        "pet": {
-          "name": "Pet type",
-          "settings": {
-            "title": {
-              "label": "Title"
-            },
-            "caption": {
-              "label": "Caption"
-            },
-            "pet_icon": {
-              "label": "Icon",
-              "options__1": {
-                "label": "Dog"
-              },
-              "options__2": {
-                "label": "Cat"
-              },
-              "options__3": {
-                "label": "Bird"
-              },
-              "options__4": {
-                "label": "Fish"
-              },
-              "options__5": {
-                "label": "Rabbit"
-              },
-              "options__6": {
-                "label": "Reptile"
-              },
-              "options__7": {
-                "label": "Horse"
-              },
-              "options__8": {
-                "label": "Paw"
-              }
-            },
-            "image": {
-              "label": "Image"
-            },
-            "collection": {
-              "label": "Collection"
-            },
-            "link": {
-              "label": "Link",
-              "info": "Used if no collection is selected."
-            },
-            "button_label": {
-              "label": "Button label"
-            }
-          }
-        }
-      },
-      "presets": {
-        "name": "Shop by pet"
-      }
-    },
-    "pet_size_guide": {
-      "name": "Pet size guide",
-      "settings": {
-        "heading": {
-          "label": "Heading"
-        },
-        "subheading": {
-          "label": "Subheading"
-        },
-        "text": {
-          "label": "Text"
-        },
-        "header__colors": {
-          "content": "Colors"
-        },
-        "background_color": {
-          "label": "Background"
-        },
-        "text_color": {
-          "label": "Text"
-        },
-        "accent_color": {
-          "label": "Accent"
-        }
-      },
-      "blocks": {
-        "chart": {
-          "name": "Size chart",
-          "settings": {
-            "title": {
-              "label": "Tab heading"
-            },
-            "howto": {
-              "label": "How to measure"
-            },
-            "col_size": {
-              "label": "Size column heading"
-            },
-            "col_measure": {
-              "label": "Measurement column heading"
-            },
-            "col_extra": {
-              "label": "Extra column heading"
-            },
-            "rows": {
-              "label": "Rows",
-              "info": "One row per line. Separate columns with |."
-            },
-            "note": {
-              "label": "Note"
-            }
-          }
-        }
-      },
-      "presets": {
-        "name": "Pet size guide"
       }
     }
   }

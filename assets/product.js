@@ -25,7 +25,14 @@ class VariantSelects extends HTMLElement {
     );
 
     this.updateOptionLabels(selectedOptions);
-    this.updateVariant(variant);
+    this.updateURL(variant);
+    this.updateVariantInput(variant);
+    this.updatePrice(variant);
+    this.updateMedia(variant);
+    this.updateAddToCart(variant);
+    updateSellingPlanUI(this.sectionId);
+    updateShopPayInstallments(this.sectionId, variant);
+    updatePickupAvailability(this.sectionId, variant);
   }
 
   updateOptionLabels(selectedOptions) {
@@ -33,18 +40,6 @@ class VariantSelects extends HTMLElement {
       const label = fieldset.querySelector('[data-selected-value]');
       if (label) label.textContent = selectedOptions[index];
     });
-  }
-
-  updateVariant(variant) {
-    if (!this.sectionId) return;
-
-    this.updateURL(variant);
-    this.updateVariantInput(variant);
-    this.updatePrice(variant);
-    this.updateMedia(variant);
-    this.updateAddToCart(variant);
-    updateSellingPlanUI(this.sectionId);
-    updatePickupAvailability(this.sectionId, variant);
   }
 
   updateURL(variant) {
@@ -55,7 +50,7 @@ class VariantSelects extends HTMLElement {
   updateVariantInput(variant) {
     if (!variant) return;
     document
-      .querySelectorAll(`#product-${this.sectionId} [data-variant-id-input]`)
+      .querySelectorAll(`#product-form-${this.sectionId} [data-variant-id-input]`)
       .forEach((input) => {
         input.value = variant.id;
         input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -101,8 +96,6 @@ class VariantSelects extends HTMLElement {
     const target = document.getElementById(`media-${this.sectionId}-${variant.featured_media_id}`);
     if (!target) return;
 
-    target.scrollIntoView({ block: 'nearest', inline: 'start', behavior: 'smooth' });
-
     document
       .querySelectorAll(`#product-media-main-${this.sectionId} .product__media-item`)
       .forEach((item) => item.classList.toggle('is-active', item === target));
@@ -114,6 +107,7 @@ class VariantSelects extends HTMLElement {
         thumb.classList.toggle('is-active', isActive);
         if (isActive) {
           thumb.setAttribute('aria-current', 'true');
+          thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
         } else {
           thumb.removeAttribute('aria-current');
         }
@@ -139,22 +133,6 @@ class VariantSelects extends HTMLElement {
 }
 
 customElements.define('variant-selects', VariantSelects);
-
-/* ========================================
-   PET PICKER VARIANT CHANGE SUPPORT
-   ======================================== */
-
-document.addEventListener('variant:change', (event) => {
-  const detail = event.detail || {};
-  const variant = detail.variant;
-  const sectionId = detail.sectionId;
-
-  if (!variant || !sectionId) return;
-
-  const updater = Object.create(VariantSelects.prototype);
-  updater.sectionId = sectionId;
-  updater.updateVariant(variant);
-});
 
 /* ========================================
    UTILITY FUNCTIONS
@@ -282,6 +260,44 @@ function updateTotalPriceForSection(sectionId) {
 }
 
 /* ========================================
+   SHOP PAY INSTALLMENTS
+   ======================================== */
+
+function updateShopPayInstallments(sectionId, variant) {
+  const installmentsWrapper = document.getElementById(`shop-pay-installments-${sectionId}`);
+  if (!installmentsWrapper || !variant) return;
+
+  const installmentsCount = parseInt(installmentsWrapper.dataset.installments) || 6;
+  const minPrice = parseInt(installmentsWrapper.dataset.minPrice) || 5000;
+
+  if (variant.price < minPrice) {
+    installmentsWrapper.style.display = 'none';
+    return;
+  } else {
+    installmentsWrapper.style.display = 'block';
+  }
+
+  const priceEl = installmentsWrapper.querySelector('[data-installments-price]');
+  const amountEl = installmentsWrapper.querySelector('[data-installments-amount]');
+  const monthsEl = installmentsWrapper.querySelector('[data-installments-months]');
+
+  if (priceEl && variant.price_formatted) {
+    priceEl.textContent = variant.price_formatted;
+  }
+
+  if (amountEl && variant.price) {
+    const installmentPrice = variant.price / installmentsCount;
+    const moneyFormat = document.querySelector(`#product-price-${sectionId}`)?.dataset.moneyFormat || '${{amount}}';
+    const formattedInstallment = formatMoney(installmentPrice, moneyFormat);
+    amountEl.textContent = formattedInstallment;
+  }
+
+  if (monthsEl) {
+    monthsEl.textContent = installmentsCount;
+  }
+}
+
+/* ========================================
    PICKUP AVAILABILITY
    ======================================== */
 
@@ -350,14 +366,17 @@ function updatePickupAvailability(sectionId, variant) {
   }
 }
 
-// Sync active state when a thumbnail is clicked directly (not via variant change)
+// Thumbnail click: swap main image in place (no page jump from href="#…")
 document.addEventListener('click', (event) => {
   const thumb = event.target.closest('.product__media-thumb');
   if (!thumb) return;
 
-  const mediaId = thumb.dataset.mediaId;
+  event.preventDefault();
 
-  document.querySelectorAll('.product__media-thumb').forEach((t) => {
+  const mediaId = thumb.dataset.mediaId;
+  const mediaRoot = thumb.closest('.product__media') || document;
+
+  mediaRoot.querySelectorAll('.product__media-thumb').forEach((t) => {
     t.classList.toggle('is-active', t === thumb);
     if (t === thumb) {
       t.setAttribute('aria-current', 'true');
@@ -366,9 +385,14 @@ document.addEventListener('click', (event) => {
     }
   });
 
-  document.querySelectorAll('.product__media-item').forEach((item) =>
+  mediaRoot.querySelectorAll('.product__media-item').forEach((item) =>
     item.classList.toggle('is-active', item.dataset.mediaId === mediaId)
   );
+
+  // Keep active thumb visible in the horizontal strip
+  if (typeof thumb.scrollIntoView === 'function') {
+    thumb.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+  }
 });
 
 // Modal open/close (event delegation, works after innerHTML rebuilds)
@@ -453,15 +477,24 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTotalPriceForSection(wrapper.dataset.sectionId);
   });
 
-  // Initialize pickup availability.
-  document.querySelectorAll('.pickup-availability').forEach((wrapper) => {
-    const sectionId = wrapper.dataset.sectionId;
+  // Initialize Shop Pay Installments and Pickup Availability
+  document.querySelectorAll('.product__buy-buttons, .product__info').forEach(() => {});
+
+  document.querySelectorAll('.shop-pay-installments, .pickup-availability').forEach((wrapper) => {
+    const sectionId = wrapper.dataset.sectionId || wrapper.id.replace('shop-pay-installments-', '');
     const variants = window.themeProductVariants[sectionId];
     if (!variants || variants.length === 0) return;
 
     const variantInput = document.querySelector(`#product-form-${sectionId} [data-variant-id-input]`);
     const variantId = variantInput ? variantInput.value : null;
     const variant = variants.find((item) => String(item.id) === String(variantId));
-    if (variant) updatePickupAvailability(sectionId, variant);
+    if (!variant) return;
+
+    if (wrapper.classList.contains('shop-pay-installments')) {
+      updateShopPayInstallments(sectionId, variant);
+    }
+    if (wrapper.classList.contains('pickup-availability')) {
+      updatePickupAvailability(sectionId, variant);
+    }
   });
 });

@@ -1,160 +1,318 @@
 {%- comment -%}
-  Images with Text Carousel / The Suvara Ritual
-  Large image ~60% | Text ~40% — editorial story section
+  Hero Carousel / Slideshow
 {%- endcomment -%}
 
 {%- liquid
   assign carousel_label = section.settings.carousel_label
   if carousel_label == blank
-    assign carousel_label = 'sections.iwt_carousel.carousel_label' | t
+    assign carousel_label = 'sections.hero_carousel.carousel_label' | t
   endif
+
+  # ===== SCHEDULING & VIP ORDERING =====
+  # Get current time for scheduling
+  assign now = 'now' | date: '%s'
+
+  # ===== CHECK VIP STATUS =====
+  assign is_vip = false
+  if customer
+    # Get customer tags as array
+    assign customer_tags = customer.tags | split: ','
+    assign vip_tags = section.settings.vip_tags | split: ','
+    
+    # Convert to lowercase for comparison
+    assign customer_tags_lower = ''
+    for tag in customer_tags
+      assign customer_tags_lower = customer_tags_lower | append: tag | downcase | strip | append: ','
+    endfor
+    
+    for vip_tag in vip_tags
+      assign vip_tag_clean = vip_tag | strip | downcase
+      if vip_tag_clean != blank and customer_tags_lower contains vip_tag_clean
+        assign is_vip = true
+        break
+      endif
+    endfor
+  endif
+
+  # ===== BUILD SLIDE ORDER BASED ON VIP STATUS =====
+  # Instead of using block IDs, we'll use the block index position
+  assign vip_slides = ''
+  assign regular_slides = ''
+  assign visible_slides = ''
+  
+  # First pass: collect all visible slides and categorize them by position
+  for block in section.blocks
+    assign show_slide = true
+    assign block_index = forloop.index0
+    
+    # Check scheduling
+    if block.settings.schedule_start != blank
+      assign start_time = block.settings.schedule_start | date: '%s'
+      if start_time > now
+        assign show_slide = false
+      endif
+    endif
+    if block.settings.schedule_end != blank and show_slide
+      assign end_time = block.settings.schedule_end | date: '%s'
+      if end_time < now
+        assign show_slide = false
+      endif
+    endif
+    
+    # Categorize visible slides by their position index
+    if show_slide
+      if block.settings.is_vip_slide
+        assign vip_slides = vip_slides | append: block_index | append: '|'
+      else
+        assign regular_slides = regular_slides | append: block_index | append: '|'
+      endif
+    endif
+  endfor
+
+  # ===== DETERMINE FINAL ORDER =====
+  # If VIP customer: VIP slides first, then regular slides
+  # If non-VIP: regular slides only (or all slides if no VIP slides exist)
+  if is_vip
+    # VIP customer: show VIP slides first, then regular slides
+    assign visible_slides = vip_slides | append: regular_slides
+  else
+    # Non-VIP customer: show regular slides only (skip VIP slides)
+    assign visible_slides = regular_slides
+  endif
+  
+  # Clean up: remove empty strings and create array
+  assign ordered_indices = visible_slides | split: '|'
+  assign cleaned_indices = ''
+  for index in ordered_indices
+    if index != blank
+      assign cleaned_indices = cleaned_indices | append: index | append: '|'
+    endif
+  endfor
+  assign ordered_indices = cleaned_indices | split: '|'
+  assign visible_count = ordered_indices | size
+  
+  assign has_multiple_slides = false
+  if visible_count > 1
+    assign has_multiple_slides = true
+  endif
+
 -%}
 
-{{ 'images-with-text-carousel.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'images-with-text-carousel.js' | asset_url }}" defer></script>
+{{ 'hero-carousel.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'hero-carousel.js' | asset_url }}" defer></script>
 
 <div
-  class="iwt-carousel iwt-carousel--image-{{ section.settings.image_position }}{% if section.settings.full_width %} iwt-carousel--full-width{% endif %}"
+  class="hero-carousel hero-carousel--{{ section.settings.height }}"
   style="
-    --iwt-background: {{ section.settings.color_background }};
-    --iwt-foreground: {{ section.settings.color_foreground }};
-    --iwt-accent: {{ section.settings.color_accent }};
-    --iwt-aspect: {{ section.settings.aspect_ratio }};
+    --hc-foreground: {{ section.settings.color_foreground }};
+    --hc-overlay: {{ section.settings.color_overlay }};
   "
   role="region"
   aria-roledescription="carousel"
   aria-label="{{ carousel_label | escape }}"
-  data-iwt-carousel
+  data-hero-carousel
   {% if section.settings.autoplay %}
     data-autoplay
     data-autoplay-speed="{{ section.settings.autoplay_speed }}"
   {% endif %}
 >
-  <div class="iwt-carousel__scroller" data-iwt-scroller tabindex="0">
-    {%- for block in section.blocks -%}
-      {%- liquid
-        assign image = block.settings.image
-        assign focal_style = nil
-        if image.presentation.focal_point
-          assign focal_style = 'object-position: ' | append: image.presentation.focal_point
-        endif
 
-        if section.index == 1 and forloop.first
-          assign loading = 'eager'
-          assign fetchpriority = 'high'
-        else
-          assign loading = 'lazy'
-          assign fetchpriority = 'auto'
-        endif
-      -%}
+  <div class="hero-carousel__scroller" data-hc-scroller tabindex="0">
+    {%- if visible_count > 0 -%}
+      {%- for slide_index in ordered_indices -%}
+        {%- assign block_index = slide_index | plus: 0 -%}
+        {%- assign block = section.blocks[block_index] -%}
+        
+        {%- if block != blank -%}
+          {%- liquid
+            assign image = block.settings.image
+            assign mobile_image = block.settings.image_mobile
 
-      <div
-        class="iwt-carousel__slide"
-        role="group"
-        aria-roledescription="slide"
-        aria-label="{{ 'sections.iwt_carousel.slide_label' | t: index: forloop.index, count: forloop.length }}"
-        {{ block.shopify_attributes }}
-        data-iwt-slide
-      >
-        <div class="iwt-carousel__media">
-          {%- if image != blank -%}
-            {{
-              image
-              | image_url: width: 2000
-              | image_tag:
-                class: 'iwt-carousel__image',
-                widths: '550, 750, 1100, 1500, 2000',
-                sizes: '(max-width: 989px) 100vw, 60vw',
-                loading: loading,
-                fetchpriority: fetchpriority,
-                alt: image.alt,
-                style: focal_style
-            }}
-          {%- else -%}
-            {%- assign placeholder_index = forloop.index0 | modulo: 2 | plus: 1 -%}
-            {{ 'lifestyle-' | append: placeholder_index | placeholder_svg_tag: 'iwt-carousel__placeholder' }}
-          {%- endif -%}
-        </div>
+            assign focal_style = nil
+            if image.presentation.focal_point
+              assign focal_style = 'object-position: ' | append: image.presentation.focal_point
+            endif
 
-        <div class="iwt-carousel__content">
-          {%- if block.settings.caption != blank -%}
-            <p class="iwt-carousel__caption">{{ block.settings.caption | escape }}</p>
-          {%- endif -%}
-          {%- if block.settings.heading != blank -%}
-            <h2 class="iwt-carousel__heading iwt-carousel__heading--{{ section.settings.heading_size }}">
-              {{ block.settings.heading }}
-            </h2>
-          {%- endif -%}
-          {%- if block.settings.text != blank -%}
-            <div class="iwt-carousel__text">{{ block.settings.text }}</div>
-          {%- endif -%}
-          {%- if block.settings.button_label != blank -%}
-            <a
-              {% if block.settings.button_link != blank %}href="{{ block.settings.button_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
-              class="iwt-carousel__button button {% if block.settings.button_style == 'secondary' %}button--secondary iwt-carousel__button--secondary{% else %}button--primary iwt-carousel__button--primary{% endif %}"
-            >
-              {{ block.settings.button_label | escape }}
-            </a>
-          {%- endif -%}
+            if section.index == 1 and forloop.first
+              assign loading = 'eager'
+              assign fetchpriority = 'high'
+            else
+              assign loading = 'lazy'
+              assign fetchpriority = 'auto'
+            endif
+          -%}
+
+          <div
+            class="hero-carousel__slide{% if block.settings.is_vip_slide %} hero-carousel__slide--vip{% endif %}"
+            role="group"
+            aria-roledescription="slide"
+            aria-label="{{ 'sections.hero_carousel.slide_label' | t: index: forloop.index, count: visible_count }}"
+            style="--hc-overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
+            {{ block.shopify_attributes }}
+            data-hc-slide
+            data-slide-index="{{ block_index }}"
+            {% if block.settings.is_vip_slide %}data-vip-slide{% endif %}
+            {% if block.settings.schedule_start != blank %}data-schedule-start="{{ block.settings.schedule_start }}"{% endif %}
+            {% if block.settings.schedule_end != blank %}data-schedule-end="{{ block.settings.schedule_end }}"{% endif %}
+          >
+            <!-- Schedule indicator for merchants -->
+            {%- if block.settings.schedule_start != blank or block.settings.schedule_end != blank -%}
+              <div class="hero-carousel__schedule-badge" aria-hidden="true">
+                {%- if block.settings.schedule_start != blank -%}
+                  <span class="hero-carousel__schedule-start">Starts: {{ block.settings.schedule_start | date: '%b %d, %Y' }}</span>
+                {%- endif -%}
+                {%- if block.settings.schedule_end != blank -%}
+                  <span class="hero-carousel__schedule-end">Ends: {{ block.settings.schedule_end | date: '%b %d, %Y' }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if block.settings.is_vip_slide -%}
+              <div class="hero-carousel__vip-badge" aria-hidden="true">VIP</div>
+            {%- endif -%}
+
+            <div class="hero-carousel__media">
+              {%- if image != blank -%}
+                <picture>
+                  {%- if mobile_image != blank -%}
+                    <source
+                      media="(max-width: 749px)"
+                      srcset="{{ mobile_image | image_url: width: 375 }} 375w, {{ mobile_image | image_url: width: 750 }} 750w, {{ mobile_image | image_url: width: 1100 }} 1100w"
+                      sizes="100vw"
+                    >
+                  {%- endif -%}
+                  {{
+                    image
+                    | image_url: width: 3840
+                    | image_tag:
+                      class: 'hero-carousel__image',
+                      widths: '750, 1100, 1500, 1780, 2000, 3000, 3840',
+                      sizes: '100vw',
+                      loading: loading,
+                      fetchpriority: fetchpriority,
+                      alt: image.alt,
+                      style: focal_style
+                  }}
+                </picture>
+              {%- else -%}
+                {%- assign placeholder_index = forloop.index0 | modulo: 2 | plus: 1 -%}
+                {{ 'lifestyle-' | append: placeholder_index | placeholder_svg_tag: 'hero-carousel__placeholder' }}
+              {%- endif -%}
+
+              <div class="hero-carousel__overlay" aria-hidden="true"></div>
+            </div>
+
+            <div class="hero-carousel__content-wrapper hero-carousel__content-wrapper--{{ block.settings.content_position }}">
+              <div class="hero-carousel__content hero-carousel__content--align-{{ block.settings.content_alignment }}">
+                {%- if block.settings.caption != blank -%}
+                  <p class="hero-carousel__caption">{{ block.settings.caption | escape }}</p>
+                {%- endif -%}
+                {%- if block.settings.heading != blank -%}
+                  {%- if forloop.first and section.index == 1 -%}
+                    <h1 class="hero-carousel__heading hero-carousel__heading--{{ section.settings.heading_size }}">
+                      {{ block.settings.heading }}
+                    </h1>
+                  {%- else -%}
+                    <h2 class="hero-carousel__heading hero-carousel__heading--{{ section.settings.heading_size }}">
+                      {{ block.settings.heading }}
+                    </h2>
+                  {%- endif -%}
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="hero-carousel__text">{{ block.settings.text }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.button_label_1 != blank or block.settings.button_label_2 != blank -%}
+                  <div class="hero-carousel__buttons">
+                    {%- if block.settings.button_label_1 != blank -%}
+                      <a
+                        {% if block.settings.button_link_1 != blank %}href="{{ block.settings.button_link_1 }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                        class="hero-carousel__button button {% if block.settings.button_style_1 == 'secondary' %}button--secondary hero-carousel__button--secondary{% else %}button--primary hero-carousel__button--primary{% endif %}"
+                      >
+                        {{ block.settings.button_label_1 | escape }}
+                      </a>
+                    {%- endif -%}
+                    {%- if block.settings.button_label_2 != blank -%}
+                      <a
+                        {% if block.settings.button_link_2 != blank %}href="{{ block.settings.button_link_2 }}"{% else %}role="link" aria-disabled="true"{% endif %}
+                        class="hero-carousel__button button {% if block.settings.button_style_2 == 'secondary' %}button--secondary hero-carousel__button--secondary{% else %}button--primary hero-carousel__button--primary{% endif %}"
+                      >
+                        {{ block.settings.button_label_2 | escape }}
+                      </a>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      <!-- No visible slides due to scheduling -->
+      <div class="hero-carousel__slide hero-carousel__slide--empty">
+        <div class="hero-carousel__media">
+          <div class="hero-carousel__placeholder" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #666;">
+            <p style="text-align: center; padding: 2rem;">
+              <strong>No slides are currently active</strong><br>
+              Check your slide scheduling settings.
+            </p>
+          </div>
         </div>
       </div>
-    {%- endfor -%}
+    {%- endif -%}
   </div>
 
-  {%- if section.blocks.size > 1 -%}
-    <div class="iwt-carousel__controls">
-      {%- if section.settings.show_arrows -%}
-        <button
-          type="button"
-          class="iwt-carousel__arrow iwt-carousel__arrow--prev"
-          aria-label="{{ 'sections.iwt_carousel.previous_slide' | t }}"
-          data-iwt-prev
-        >
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      {%- endif -%}
+  {%- if has_multiple_slides -%}
+    {%- if section.settings.show_arrows -%}
+      <button
+        type="button"
+        class="hero-carousel__arrow hero-carousel__arrow--prev"
+        aria-label="{{ 'sections.hero_carousel.previous_slide' | t }}"
+        data-hc-prev
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="hero-carousel__arrow hero-carousel__arrow--next"
+        aria-label="{{ 'sections.hero_carousel.next_slide' | t }}"
+        data-hc-next
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    {%- endif -%}
 
+    <div class="hero-carousel__bar">
       {%- if section.settings.show_dots -%}
-        <div class="iwt-carousel__dots" data-iwt-dots>
-          {%- for block in section.blocks -%}
+        <div class="hero-carousel__dots" data-hc-dots>
+          {%- for index in ordered_indices -%}
             <button
               type="button"
-              class="iwt-carousel__dot"
-              aria-label="{{ 'sections.iwt_carousel.go_to_slide' | t: index: forloop.index }}"
+              class="hero-carousel__dot"
+              aria-label="{{ 'sections.hero_carousel.go_to_slide' | t: index: forloop.index }}"
               {% if forloop.first %}aria-current="true"{% endif %}
-              data-iwt-dot="{{ forloop.index0 }}"
+              data-hc-dot="{{ forloop.index0 }}"
             ></button>
           {%- endfor -%}
         </div>
       {%- endif -%}
 
-      {%- if section.settings.show_arrows -%}
-        <button
-          type="button"
-          class="iwt-carousel__arrow iwt-carousel__arrow--next"
-          aria-label="{{ 'sections.iwt_carousel.next_slide' | t }}"
-          data-iwt-next
-        >
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      {%- endif -%}
-
       {%- if section.settings.autoplay -%}
         <button
           type="button"
-          class="iwt-carousel__playback"
-          aria-label="{{ 'sections.iwt_carousel.pause_carousel' | t }}"
-          data-play-label="{{ 'sections.iwt_carousel.play_carousel' | t }}"
-          data-iwt-playback
+          class="hero-carousel__playback"
+          aria-label="{{ 'sections.hero_carousel.pause_carousel' | t }}"
+          data-play-label="{{ 'sections.hero_carousel.play_carousel' | t }}"
+          data-hc-playback
         >
-          <svg class="iwt-carousel__playback-icon iwt-carousel__playback-icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <svg class="hero-carousel__playback-icon hero-carousel__playback-icon--pause" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <svg class="iwt-carousel__playback-icon iwt-carousel__playback-icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <svg class="hero-carousel__playback-icon hero-carousel__playback-icon--play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M7 4.5v15l13-7.5-13-7.5z"/>
           </svg>
         </button>
@@ -165,9 +323,9 @@
 
 {% schema %}
 {
-  "name": "t:sections.iwt_carousel.name",
+  "name": "t:sections.hero_carousel.name",
   "tag": "section",
-  "class": "section-iwt-carousel",
+  "class": "section-hero-carousel",
   "disabled_on": {
     "groups": ["header", "footer"]
   },
@@ -175,228 +333,265 @@
     {
       "type": "text",
       "id": "carousel_label",
-      "label": "t:sections.iwt_carousel.settings.carousel_label.label",
-      "info": "t:sections.iwt_carousel.settings.carousel_label.info",
-      "default": "The Suvara Ritual"
-    },
-    {
-      "type": "header",
-      "content": "t:sections.iwt_carousel.settings.header__1.content"
+      "label": "t:sections.hero_carousel.settings.carousel_label.label",
+      "info": "t:sections.hero_carousel.settings.carousel_label.info"
     },
     {
       "type": "select",
-      "id": "image_position",
-      "label": "t:sections.iwt_carousel.settings.image_position.label",
+      "id": "height",
+      "label": "t:sections.hero_carousel.settings.height.label",
       "options": [
-        {
-          "value": "left",
-          "label": "t:sections.iwt_carousel.settings.image_position.options__1.label"
-        },
-        {
-          "value": "right",
-          "label": "t:sections.iwt_carousel.settings.image_position.options__2.label"
-        }
+        { "value": "small", "label": "t:sections.hero_carousel.settings.height.options__1.label" },
+        { "value": "medium", "label": "t:sections.hero_carousel.settings.height.options__2.label" },
+        { "value": "large", "label": "t:sections.hero_carousel.settings.height.options__3.label" },
+        { "value": "full", "label": "t:sections.hero_carousel.settings.height.options__4.label" }
       ],
-      "default": "left"
-    },
-    {
-      "type": "select",
-      "id": "aspect_ratio",
-      "label": "t:sections.iwt_carousel.settings.aspect_ratio.label",
-      "options": [
-        {
-          "value": "1 / 1",
-          "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__1.label"
-        },
-        {
-          "value": "4 / 3",
-          "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__2.label"
-        },
-        {
-          "value": "3 / 4",
-          "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__3.label"
-        },
-        {
-          "value": "16 / 9",
-          "label": "t:sections.iwt_carousel.settings.aspect_ratio.options__4.label"
-        }
-      ],
-      "default": "4 / 3"
+      "default": "medium"
     },
     {
       "type": "select",
       "id": "heading_size",
-      "label": "t:sections.iwt_carousel.settings.heading_size.label",
+      "label": "t:sections.hero_carousel.settings.heading_size.label",
       "options": [
-        {
-          "value": "small",
-          "label": "t:sections.iwt_carousel.settings.heading_size.options__1.label"
-        },
-        {
-          "value": "medium",
-          "label": "t:sections.iwt_carousel.settings.heading_size.options__2.label"
-        },
-        {
-          "value": "large",
-          "label": "t:sections.iwt_carousel.settings.heading_size.options__3.label"
-        }
+        { "value": "small", "label": "t:sections.hero_carousel.settings.heading_size.options__1.label" },
+        { "value": "medium", "label": "t:sections.hero_carousel.settings.heading_size.options__2.label" },
+        { "value": "large", "label": "t:sections.hero_carousel.settings.heading_size.options__3.label" }
       ],
       "default": "large"
     },
+    { "type": "header", "content": "t:sections.hero_carousel.settings.header__1.content" },
     {
-      "type": "checkbox",
-      "id": "full_width",
-      "label": "t:sections.iwt_carousel.settings.full_width.label",
-      "default": false
+      "type": "text",
+      "id": "vip_tags",
+      "label": "t:sections.hero_carousel.settings.vip_tags.label",
+      "default": "vip,premium,wholesale",
+      "info": "t:sections.hero_carousel.settings.vip_tags.info"
     },
-    {
-      "type": "header",
-      "content": "t:sections.iwt_carousel.settings.header__2.content"
-    },
+    { "type": "header", "content": "t:sections.hero_carousel.settings.header__2.content" },
     {
       "type": "checkbox",
       "id": "show_arrows",
-      "label": "t:sections.iwt_carousel.settings.show_arrows.label",
+      "label": "t:sections.hero_carousel.settings.show_arrows.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_dots",
-      "label": "t:sections.iwt_carousel.settings.show_dots.label",
+      "label": "t:sections.hero_carousel.settings.show_dots.label",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "autoplay",
-      "label": "t:sections.iwt_carousel.settings.autoplay.label",
-      "default": true,
-      "info": "t:sections.iwt_carousel.settings.autoplay.info"
+      "label": "t:sections.hero_carousel.settings.autoplay.label",
+      "default": false,
+      "info": "t:sections.hero_carousel.settings.autoplay.info"
     },
     {
       "type": "range",
       "id": "autoplay_speed",
-      "label": "t:sections.iwt_carousel.settings.autoplay_speed.label",
+      "label": "t:sections.hero_carousel.settings.autoplay_speed.label",
       "min": 3,
       "max": 9,
       "step": 1,
       "unit": "s",
       "default": 6
     },
-    {
-      "type": "header",
-      "content": "t:sections.iwt_carousel.settings.header__3.content"
-    },
-    {
-      "type": "color",
-      "id": "color_background",
-      "label": "t:sections.iwt_carousel.settings.color_background.label",
-      "default": "#F7F4EE"
-    },
+    { "type": "header", "content": "t:sections.hero_carousel.settings.header__3.content" },
     {
       "type": "color",
       "id": "color_foreground",
-      "label": "t:sections.iwt_carousel.settings.color_foreground.label",
-      "default": "#1A1A1A"
+      "label": "t:sections.hero_carousel.settings.color_foreground.label",
+      "default": "#ffffff"
     },
     {
       "type": "color",
-      "id": "color_accent",
-      "label": "t:sections.iwt_carousel.settings.color_accent.label",
-      "default": "#1A1A1A"
+      "id": "color_overlay",
+      "label": "t:sections.hero_carousel.settings.color_overlay.label",
+      "default": "#000000",
+      "info": "t:sections.hero_carousel.settings.color_overlay.info"
     }
   ],
   "blocks": [
     {
       "type": "slide",
-      "name": "t:sections.iwt_carousel.blocks.slide.name",
-      "limit": 8,
+      "name": "t:sections.hero_carousel.blocks.slide.name",
+      "limit": 12,
       "settings": [
+        { "type": "header", "content": "t:sections.hero_carousel.blocks.slide.settings.header__1.content" },
         {
-          "type": "image_picker",
-          "id": "image",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.image.label",
-          "info": "t:sections.iwt_carousel.blocks.slide.settings.image.info"
+          "type": "checkbox",
+          "id": "is_vip_slide",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.is_vip_slide.label",
+          "default": false,
+          "info": "t:sections.hero_carousel.blocks.slide.settings.is_vip_slide.info"
         },
         {
           "type": "text",
+          "id": "schedule_start",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.schedule_start.label",
+          "info": "t:sections.hero_carousel.blocks.slide.settings.schedule_start.info",
+          "placeholder": "2026-07-16"
+        },
+        {
+          "type": "text",
+          "id": "schedule_end",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.schedule_end.label",
+          "info": "t:sections.hero_carousel.blocks.slide.settings.schedule_end.info",
+          "placeholder": "2026-08-16"
+        },
+        { "type": "header", "content": "t:sections.hero_carousel.blocks.slide.settings.header__2.content" },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.image.label",
+          "info": "t:sections.hero_carousel.blocks.slide.settings.image.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.image_mobile.label",
+          "info": "t:sections.hero_carousel.blocks.slide.settings.image_mobile.info"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.overlay_opacity.label",
+          "min": 0,
+          "max": 90,
+          "step": 5,
+          "unit": "%",
+          "default": 25,
+          "info": "t:sections.hero_carousel.blocks.slide.settings.overlay_opacity.info"
+        },
+        { "type": "header", "content": "t:sections.hero_carousel.blocks.slide.settings.header__3.content" },
+        {
+          "type": "text",
           "id": "caption",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.caption.label",
-          "default": "THE SUVARA RITUAL"
+          "label": "t:sections.hero_carousel.blocks.slide.settings.caption.label"
         },
         {
           "type": "inline_richtext",
           "id": "heading",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.heading.label",
-          "default": "Your skin deserves a moment of its own."
+          "label": "t:sections.hero_carousel.blocks.slide.settings.heading.label",
+          "default": "Tell your story"
         },
         {
           "type": "richtext",
           "id": "text",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.text.label",
-          "default": "<p>Thoughtfully crafted essentials designed to make your everyday ritual feel extraordinary.</p>"
-        },
-        {
-          "type": "text",
-          "id": "button_label",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_label.label",
-          "default": "Discover Our Story"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_link.label"
+          "label": "t:sections.hero_carousel.blocks.slide.settings.text.label"
         },
         {
           "type": "select",
-          "id": "button_style",
-          "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.label",
+          "id": "content_position",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.label",
           "options": [
-            {
-              "value": "primary",
-              "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__1.label"
-            },
-            {
-              "value": "secondary",
-              "label": "t:sections.iwt_carousel.blocks.slide.settings.button_style.options__2.label"
-            }
+            { "value": "top-left", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__1.label" },
+            { "value": "top-center", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__2.label" },
+            { "value": "top-right", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__3.label" },
+            { "value": "middle-left", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__4.label" },
+            { "value": "middle-center", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__5.label" },
+            { "value": "middle-right", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__6.label" },
+            { "value": "bottom-left", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__7.label" },
+            { "value": "bottom-center", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__8.label" },
+            { "value": "bottom-right", "label": "t:sections.hero_carousel.blocks.slide.settings.content_position.options__9.label" }
+          ],
+          "default": "middle-center"
+        },
+        {
+          "type": "select",
+          "id": "content_alignment",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.content_alignment.label",
+          "options": [
+            { "value": "left", "label": "t:sections.hero_carousel.blocks.slide.settings.content_alignment.options__1.label" },
+            { "value": "center", "label": "t:sections.hero_carousel.blocks.slide.settings.content_alignment.options__2.label" },
+            { "value": "right", "label": "t:sections.hero_carousel.blocks.slide.settings.content_alignment.options__3.label" }
+          ],
+          "default": "center"
+        },
+        { "type": "header", "content": "t:sections.hero_carousel.blocks.slide.settings.header__4.content" },
+        {
+          "type": "text",
+          "id": "button_label_1",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_label_1.label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_link_1",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_link_1.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style_1",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_1.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_1.options__1.label" },
+            { "value": "secondary", "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_1.options__2.label" }
           ],
           "default": "primary"
+        },
+        {
+          "type": "text",
+          "id": "button_label_2",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_label_2.label"
+        },
+        {
+          "type": "url",
+          "id": "button_link_2",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_link_2.label"
+        },
+        {
+          "type": "select",
+          "id": "button_style_2",
+          "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_2.label",
+          "options": [
+            { "value": "primary", "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_2.options__1.label" },
+            { "value": "secondary", "label": "t:sections.hero_carousel.blocks.slide.settings.button_style_2.options__2.label" }
+          ],
+          "default": "secondary"
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "t:sections.iwt_carousel.presets.name",
+      "name": "t:sections.hero_carousel.presets.name",
       "blocks": [
         {
           "type": "slide",
           "settings": {
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Your skin deserves a moment of its own.",
-            "text": "<p>Thoughtfully crafted essentials designed to make your everyday ritual feel extraordinary.</p>",
-            "button_label": "Discover Our Story",
-            "button_style": "primary"
+            "heading": "Tell your story",
+            "caption": "Welcome to our store",
+            "text": "<p>Showcase your brand with a stunning hero carousel.</p>",
+            "button_label_1": "Shop now",
+            "button_link_1": "/collections/all",
+            "content_position": "middle-center",
+            "content_alignment": "center"
           }
         },
         {
           "type": "slide",
           "settings": {
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Nourish. Restore. Glow.",
-            "text": "<p>A simple, intentional sequence that turns daily care into a quiet luxury.</p>",
-            "button_label": "Discover Our Story",
-            "button_style": "primary"
+            "heading": "Show your craft",
+            "caption": "New collection",
+            "text": "<p>Highlight your products and engage your customers.</p>",
+            "button_label_1": "Explore",
+            "button_link_1": "/collections/all",
+            "content_position": "middle-left",
+            "content_alignment": "left"
           }
         },
         {
           "type": "slide",
           "settings": {
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Made for the everyday extraordinary.",
-            "text": "<p>Clean formulas. Sensorial textures. Results you can feel and see.</p>",
-            "button_label": "Discover Our Story",
-            "button_style": "primary"
+            "heading": "Limited time offer",
+            "caption": "Special promotion",
+            "text": "<p>Drive sales with a compelling call-to-action.</p>",
+            "button_label_1": "Learn more",
+            "button_link_1": "/pages/about",
+            "content_position": "middle-right",
+            "content_alignment": "right"
           }
         }
       ]

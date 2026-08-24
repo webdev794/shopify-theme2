@@ -9,12 +9,56 @@
  */
 {
   "type": "footer",
-  "name": "Footer",
+  "name": "t:general.footer",
   "sections": {
     "footer": {
       "type": "footer",
+      "blocks": {
+        "menu-2": {
+          "type": "link_list",
+          "settings": {
+            "heading": "About",
+            "menu": "about"
+          }
+        },
+        "menu-1": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Links",
+            "menu": "important-pages"
+          }
+        },
+        "link_list_xHctfk": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Blogs",
+            "menu": "blogs"
+          }
+        },
+        "link_list_Tby4jC": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Legal",
+            "menu": "legal-menu"
+          }
+        }
+      },
+      "block_order": [
+        "menu-2",
+        "menu-1",
+        "link_list_xHctfk",
+        "link_list_Tby4jC"
+      ],
       "settings": {
-        "tagline": "Thoughtful things for the everyday moments you share."
+        "tagline": "Quality products, thoughtfully made.",
+        "social_instagram": "www.instagram.com",
+        "social_facebook": "www.facebook.com",
+        "social_x": "www.x.com",
+        "social_linkedin": "www.linkedin.com",
+        "social_pinterest": "www.pinterest.com",
+        "social_youtube": "www.youtube.com",
+        "copyright_text": "© Suvara 2026",
+        "bottom_right_text": "Powered by Suvara"
       }
     }
   },

@@ -50,9 +50,9 @@
         "show_contact_info": true,
         "info_heading": "Contact Information",
         "info_text": "<p>Reach out to us through any of these channels</p>",
-        "phone": "+1 (555) 123-4567",
-        "email": "contact@example.com",
-        "address": "123 Main Street, City, State 12345",
+        "phone": "+1 (212) 947-3820",
+        "email": "hello@suvara.com",
+        "address": "482 Grand Avenue, Los Angeles, CA 90015",
         "hours": "Mon-Fri 9:00 AM - 6:00 PM",
         "background_color": "#ffffff",
         "text_color": "#333333"
@@ -78,7 +78,7 @@
         "text_HqAHVy": {
           "type": "text",
           "settings": {
-            "text": "<p>1 Times Square<br>New York, NY 10036</p>",
+            "text": "<p>482 Grand Avenue<br/>Los Angeles, CA 90015</p>",
             "is_address": true
           }
         },
@@ -106,7 +106,7 @@
       ],
       "name": "t:sections.map.presets.name",
       "settings": {
-        "map_address": "Times Square, New York, NY",
+        "map_address": "482 Grand Avenue, Los Angeles, CA 90015",
         "map_type": "embed",
         "zoom": 14,
         "desaturate": false,

@@ -1,18 +1,19 @@
 {% comment %}
   Mix & Match Pack Section
+  Version: 2.0 — "Build your pack" redesign
 {% endcomment %}
 
 {{ 'mix-match-pack.css' | asset_url | stylesheet_tag }}
 
-<div class="mix-match-pack" 
-     data-section-id="{{ section.id }}" 
+<div class="mix-match-pack"
+     data-section-id="{{ section.id }}"
      data-section-type="mix-match-pack"
      data-max-items="{{ section.settings.max_items }}"
      role="region"
      aria-label="{{ section.settings.aria_label | escape }}"
      style="background-color: {{ section.settings.background_color }};"
      data-background-color="{{ section.settings.background_color }}">
-  
+
   <div class="page-width">
     {%- if section.settings.heading != blank -%}
       <div class="mix-match-pack__header">
@@ -31,13 +32,26 @@
             <span class="mix-match-pack__selected-count" id="selected-count-{{ section.id }}">0</span> / {{ section.settings.max_items | default: 4 }} {{ 'products.product.items' | t | default: 'items' }}
           </span>
         </div>
+
+        <div class="mix-match-pack__progress" aria-hidden="true">
+          <div class="mix-match-pack__progress-fill" id="progress-fill-{{ section.id }}" style="width: 0%;"></div>
+        </div>
+
+        <div class="mix-match-pack__tray" id="tray-{{ section.id }}">
+          <p class="mix-match-pack__tray-empty" id="tray-empty-{{ section.id }}">{{ section.settings.tray_empty_text | default: 'Tap products to start building your pack' | escape }}</p>
+        </div>
+
         <div class="mix-match-pack__total">
           <span class="mix-match-pack__total-label">{{ section.settings.total_label | default: 'Total' | escape }}:</span>
           <span class="mix-match-pack__total-price" id="pack-total-price-{{ section.id }}">{{ 0 | money }}</span>
         </div>
+
+        <p class="mix-match-pack__savings" id="pack-savings-{{ section.id }}" hidden></p>
+
         <button class="mix-match-pack__add-pack btn btn--primary" type="button" disabled>
           {{ section.settings.add_pack_text | default: 'Add Pack to Cart' | escape }}
         </button>
+
         {%- if section.settings.free_shipping_text != blank -%}
           <p class="mix-match-pack__free-shipping">
             <span class="mix-match-pack__free-shipping-icon">✓</span>
@@ -83,7 +97,7 @@
 
                   <div class="mix-match-pack__product-info">
                     <h3 class="mix-match-pack__product-title">{{ product.title }}</h3>
-                    
+
                     {%- if section.settings.show_vendor and product.vendor != blank -%}
                       <p class="mix-match-pack__product-vendor">{{ product.vendor }}</p>
                     {%- endif -%}
@@ -101,7 +115,7 @@
                       <div class="mix-match-pack__product-options">
                         <select class="mix-match-pack__variant-selector" data-product-id="{{ product.id }}">
                           {%- for variant in product.variants -%}
-                            <option value="{{ variant.id }}" 
+                            <option value="{{ variant.id }}"
                                     data-price="{{ variant.price }}"
                                     {%- if forloop.first %}selected{% endif -%}>
                               {{ variant.title }} - {{ variant.price | money }}
@@ -111,12 +125,15 @@
                       </div>
                     {%- endif -%}
 
-                    <button class="mix-match-pack__select-product btn btn--secondary btn--small" 
+                    <button class="mix-match-pack__select-product btn btn--secondary btn--small"
                             data-product-id="{{ product.id }}"
                             data-variant-id="{{ product.first_available_variant.id }}"
                             data-price="{{ product.price }}"
+                            data-compare-price="{{ product.compare_at_price | default: 0 }}"
+                            data-title="{{ product.title | escape }}"
+                            data-image="{{ product.featured_image | image_url: width: 120, height: 120, crop: 'center' }}"
                             type="button">
-                      {{ section.settings.select_button_text | default: 'Select' | escape }}
+                      <span class="mix-match-pack__select-product-label">{{ section.settings.select_button_text | default: 'Select' | escape }}</span>
                     </button>
                   </div>
                 </div>
@@ -172,6 +189,12 @@
       "id": "selection_label",
       "label": "t:sections.mix_match_pack.settings.selection_label.label",
       "default": "Your Selection"
+    },
+    {
+      "type": "text",
+      "id": "tray_empty_text",
+      "label": "Empty tray text",
+      "default": "Tap products to start building your pack"
     },
     {
       "type": "text",

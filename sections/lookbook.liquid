@@ -81,12 +81,12 @@
       </div>
 
 
-      <!-- Featured products inside the scene (first 2) -->
+      <!-- Featured products inside the scene (first 8) -->
       <div class="petlio-lookbook__scene-products">
         {% assign featured_index = 0 %}
         {% for block in section.blocks %}
           {% assign product = block.settings.product %}
-          {% if product != blank and featured_index < 2 %}
+          {% if product != blank and featured_index < 8 %}
             <div class="petlio-lookbook__scene-card" {{ block.shopify_attributes }}>
               <a href="{{ product.url }}" class="petlio-lookbook__scene-card-image">
                 {% if product.featured_image %}
@@ -149,7 +149,7 @@
       {% for block in section.blocks %}
         {% assign product = block.settings.product %}
         {% if product != blank %}
-          {% if grid_index >= 2 %}
+          {% if grid_index >= 8 %}
             <div class="petlio-lookbook__product-card" {{ block.shopify_attributes }}>
               <a href="{{ product.url }}" class="petlio-lookbook__product-card-image">
                 {% if product.featured_image %}
@@ -217,7 +217,7 @@
   "name": "Shoppable lookbook",
   "tag": "section",
   "class": "section-shoppable-lookbook",
-  "max_blocks": 8,
+  "max_blocks": 14,
   "settings": [
     {
       "type": "header",

@@ -38,7 +38,7 @@
     "social_youtube_link": "",
     "social_linkedin_link": "",
     "content_for_index": [],
-    "enable_paper_slide": true,
+    "enable_paper_slide": false,
     "paper_slide_intensity": 55
   },
   "presets": {

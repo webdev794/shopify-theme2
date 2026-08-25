@@ -9,17 +9,16 @@
  */
 {
   "current": {
-    "type_primary_font": "montserrat",
-    "type_heading_font": "playfair_display",
-    "max_page_width": "110rem",
-    "min_page_margin": 0,
-    "favicon": "shopify://shop_images/favi.png",
-    "background_color": "#FAF7F4",
-    "foreground_color": "#252525",
-    "background_color_secondary": "#ffffff",
-    "foreground_color_secondary": "#97c0c0",
-    "accent_background": "#252525",
-    "accent_foreground": "#ffffff",
+    "type_primary_font": "work_sans_n4",
+    "max_page_width": "90rem",
+    "min_page_margin": 20,
+    "favicon": "",
+    "background_color": "#FFFFFF",
+    "foreground_color": "#333333",
+    "background_color_secondary": "#F5F5F5",
+    "foreground_color_secondary": "#1A1A1A",
+    "accent_background": "#121212",
+    "accent_foreground": "#FFFFFF",
     "input_corner_radius": 4,
     "color_sale": "#c62828",
     "color_sold_out": "#767676",
@@ -30,18 +29,20 @@
     "color_error_bg": "#fee2e2",
     "color_error_text": "#991b1b",
     "color_star": "#b8860b",
-    "color_disabled": "#888888",
-    "color_disabled_dark": "#aaaaaa",
-    "social_instagram_link": "www.instagram.com",
-    "social_facebook_link": "www.facebook.com",
-    "social_twitter_link": "www.x.com",
-    "social_tiktok_link": "www.tiktok.com",
+    "color_disabled": "#666666",
+    "color_disabled_dark": "#555555",
+    "social_instagram_link": "",
+    "social_facebook_link": "",
+    "social_twitter_link": "",
+    "social_tiktok_link": "",
     "social_youtube_link": "",
-    "social_linkedin_link": "www.linkedin.com",
-    "content_for_index": []
+    "social_linkedin_link": "",
+    "content_for_index": [],
+    "enable_paper_slide": true,
+    "paper_slide_intensity": 55
   },
   "presets": {
-    "Velmora": {
+    "Petlio": {
       "type_primary_font": "work_sans_n4",
       "max_page_width": "90rem",
       "min_page_margin": 20,
@@ -61,9 +62,8 @@
       "color_error_bg": "#fee2e2",
       "color_error_text": "#991b1b",
       "color_star": "#b8860b",
-      "color_disabled": "#888",
-      "color_disabled_dark": "#aaa",
-      "type_heading_font": "work_sans_n4"
+      "color_disabled": "#666666",
+      "color_disabled_dark": "#555555"
     }
   }
 }

@@ -31,15 +31,15 @@
     "color_star": "#b8860b",
     "color_disabled": "#666666",
     "color_disabled_dark": "#555555",
+    "enable_paper_slide": true,
+    "paper_slide_intensity": 55,
     "social_instagram_link": "",
     "social_facebook_link": "",
     "social_twitter_link": "",
     "social_tiktok_link": "",
     "social_youtube_link": "",
     "social_linkedin_link": "",
-    "content_for_index": [],
-    "enable_paper_slide": false,
-    "paper_slide_intensity": 55
+    "content_for_index": []
   },
   "presets": {
     "Petlio": {

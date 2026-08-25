@@ -357,9 +357,14 @@ body.petlio-paper-slide #MainContent {
 }
 
 /* Base: sections never carry a horizontal offset unless actively entering.
-   This prevents any residual translate from a failed/interrupted animation. */
+   This prevents any residual translate from a failed/interrupted animation
+   and eliminates empty space on the left caused by a stuck translateX. */
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
   position: relative;
+  left: 0;
+  right: 0;
+  margin-left: 0;
+  margin-right: 0;
   transform: translate3d(0, 0, 0);
   opacity: 1;
   transform-origin: center center;
@@ -369,6 +374,10 @@ body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
 
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-settled,
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section:not(.paper-enter-from-left):not(.paper-enter-from-right) {
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   transform: translate3d(0, 0, 0) !important;
   opacity: 1 !important;
   animation: none !important;

@@ -48,10 +48,7 @@
       {% for block in section.blocks %}
 
         <article
-          class="
-            lookbook-gallery__look
-            {% if forloop.index == 2 %}lookbook-gallery__look--offset{% endif %}
-          "
+          class="lookbook-gallery__look"
           data-look
           data-look-index="{{ forloop.index }}"
           {{ block.shopify_attributes }}

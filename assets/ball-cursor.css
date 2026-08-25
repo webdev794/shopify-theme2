@@ -1,0 +1,147 @@
+/**
+ * PETLIO — BALL CURSOR
+ * Simple rolling ball replacing the old illustrated dog cursor.
+ * Position + rotation are JS-driven on the outer element; the idle
+ * wobble and press-squash animate an inner wrapper instead, so the
+ * two never fight over the same `transform` property.
+ */
+
+#ball-cursor-ball {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  margin: 0;
+  pointer-events: none;
+  z-index: 2147483000;
+  opacity: 0;
+  overflow: visible;
+  will-change: transform;
+  filter: drop-shadow(0 3px 5px rgba(60, 40, 20, 0.18));
+  transition: opacity 0.25s ease;
+}
+
+body.ball-cursor-active #ball-cursor-ball {
+  opacity: 1;
+}
+
+#ball-cursor-ball svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ball-cursor__inner {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transition: transform 0.12s ease;
+}
+
+#ball-cursor-ball.is-idle .ball-cursor__inner {
+  animation: ball-cursor-breathe 2.2s ease-in-out infinite;
+}
+
+#ball-cursor-ball.is-pressed .ball-cursor__inner {
+  transform: scale(0.82, 1.16);
+}
+
+#ball-cursor-ball.is-hover {
+  filter: drop-shadow(0 4px 8px rgba(60, 40, 20, 0.28));
+}
+
+#ball-cursor-ball.is-hover .ball-cursor__inner {
+  transform: scale(1.35);
+}
+
+#ball-cursor-ball.is-hover.is-pressed .ball-cursor__inner {
+  transform: scale(1.18, 1.5);
+}
+
+#ball-cursor-ball.is-hover::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(224, 122, 44, 0.55);
+  animation: ball-cursor-ring-pulse 0.9s ease-out infinite;
+}
+
+@keyframes ball-cursor-ring-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes ball-cursor-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+/* ==========================================================
+   FOOTER YARD HANDOFF — see footer-yard.js. Fades out and hands
+   the real pointer back once the footer's own ball takes over.
+   ========================================================== */
+
+body.petlio-footer-yard-active #ball-cursor-ball {
+  opacity: 0 !important;
+}
+
+body.petlio-footer-yard-active.ball-cursor-active,
+body.petlio-footer-yard-active.ball-cursor-active a,
+body.petlio-footer-yard-active.ball-cursor-active button,
+body.petlio-footer-yard-active.ball-cursor-active input,
+body.petlio-footer-yard-active.ball-cursor-active textarea,
+body.petlio-footer-yard-active.ball-cursor-active select,
+body.petlio-footer-yard-active.ball-cursor-active [role="button"],
+body.petlio-footer-yard-active.ball-cursor-active label {
+  cursor: auto;
+}
+
+/* ==========================================================
+   NORMAL CURSOR — replaced by the ball while active
+   ========================================================== */
+
+body.ball-cursor-active,
+body.ball-cursor-active a,
+body.ball-cursor-active button,
+body.ball-cursor-active input,
+body.ball-cursor-active textarea,
+body.ball-cursor-active select,
+body.ball-cursor-active [role="button"],
+body.ball-cursor-active label {
+  cursor: none;
+}
+
+/* ==========================================================
+   TOUCH DEVICES / REDUCED MOTION
+   ========================================================== */
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  #ball-cursor-ball {
+    display: none !important;
+  }
+
+  body.ball-cursor-active,
+  body.ball-cursor-active a,
+  body.ball-cursor-active button,
+  body.ball-cursor-active input,
+  body.ball-cursor-active textarea,
+  body.ball-cursor-active select,
+  body.ball-cursor-active [role="button"],
+  body.ball-cursor-active label {
+    cursor: auto;
+  }
+}

@@ -1,0 +1,379 @@
+/* ==========================================================================
+   PETLIO — FOOTER YARD
+   A thin strip sitting right above the footer, using its top edge as
+   "ground". Dog, cat and bird cross it left-to-right on a loop; the dog
+   occasionally gets close enough to startle the cat into a short dash,
+   reusing the exact startle/flee choreography already defined in
+   scroll-cat.css. No new physics, no new keyframes — this file only adds
+   trigger selectors that point at animations that already exist.
+   ========================================================================== */
+
+#footer-yard {
+  position: relative;
+  width: 100%;
+  height: 108px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#footer-yard .footer-yard__ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 6%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 94%,
+    transparent 100%
+  );
+}
+
+.footer-yard__dog,
+.footer-yard__cat,
+.footer-yard__bird {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  will-change: transform;
+  transform: translate3d(-100px, 0, 0);
+}
+
+.footer-yard__dog {
+  width: 62px;
+  height: 44px;
+}
+
+.footer-yard__cat {
+  width: 54px;
+  height: 42px;
+}
+
+.footer-yard__bird {
+  width: 48px;
+  height: 40px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.footer-yard__rabbit,
+.footer-yard__butterfly {
+  position: absolute;
+  left: 0;
+  will-change: transform;
+}
+
+.footer-yard__rabbit {
+  bottom: 20px;
+  width: 42px;
+  height: 30px;
+}
+
+.footer-yard__butterfly {
+  bottom: 20px; /* JS moves it further UP (negative translateY) from here — see start() */
+  width: 28px;
+  height: 22px;
+}
+
+.footer-yard__plate {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: 46px;
+  height: 20px;
+  will-change: auto;
+  z-index: 1;
+}
+
+.footer-yard__water-bowl {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: 36px;
+  height: 18px;
+  will-change: auto;
+  z-index: 1;
+}
+
+.footer-yard__ball {
+  position: absolute;
+  left: 0;
+  bottom: 20px;
+  width: 26px;
+  height: 26px;
+  will-change: transform;
+  transform: translate3d(-100px, 0, 0);
+  /* The only interactive element in an otherwise decorative,
+     pass-through scene — everything else stays pointer-events:none. */
+  pointer-events: auto;
+  cursor: grab;
+  z-index: 6;
+}
+
+.footer-yard__ball.is-held {
+  cursor: grabbing;
+}
+
+.footer-yard__dog svg,
+.footer-yard__cat svg,
+.footer-yard__bird svg,
+.footer-yard__rabbit svg,
+.footer-yard__butterfly svg,
+.footer-yard__ball svg,
+.footer-yard__plate svg,
+.footer-yard__water-bowl svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ==========================================================
+   DOG — reuses .dog-cursor__* transform-origins (already global,
+   loaded via dog-cursor.css) and dog-cursor-*-run / tail-wag keyframes.
+   ========================================================== */
+
+.footer-yard__dog[data-dog-mode='run'] .dog-cursor__legs-back {
+  animation: dog-cursor-legs-back-run 0.26s ease-in-out infinite;
+}
+
+.footer-yard__dog[data-dog-mode='run'] .dog-cursor__legs-front {
+  animation: dog-cursor-legs-front-run 0.26s ease-in-out infinite;
+}
+
+.footer-yard__dog[data-dog-mode='run'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.22s ease-in-out infinite;
+}
+
+.footer-yard__dog[data-dog-mode='run'] .dog-cursor__body {
+  animation: dog-cursor-body-bounce 0.26s ease-in-out infinite;
+}
+
+.footer-yard__dog[data-dog-mode='sit'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+.footer-yard__dog[data-dog-mode='sit'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+.footer-yard__dog[data-dog-mode='sit'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.7s ease-in-out infinite;
+}
+
+/* Catching the ball. No mouth-chomp here (unlike the cursor dog) --
+   this SVG only has a closed-mouth path, no open-mouth one to
+   animate between, so the nod + fast tail-wag alone read as the
+   "got it!" beat. */
+.footer-yard__dog[data-dog-mode='bite'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+.footer-yard__dog[data-dog-mode='bite'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+.footer-yard__dog[data-dog-mode='bite'] .dog-cursor__head {
+  animation: dog-cursor-head-nod 0.42s ease-in-out infinite;
+}
+
+.footer-yard__dog[data-dog-mode='bite'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.24s ease-in-out infinite;
+}
+
+/* ==========================================================
+   CAT — reuses .scroll-cat__* transform-origins + keyframes.
+   ========================================================== */
+
+.footer-yard__cat.is-running .scroll-cat__legs-back {
+  animation: scroll-cat-legs-back-run 0.28s ease-in-out infinite;
+}
+
+.footer-yard__cat.is-running .scroll-cat__legs-front {
+  animation: scroll-cat-legs-front-run 0.28s ease-in-out infinite;
+}
+
+.footer-yard__cat.is-running .scroll-cat__tail {
+  animation: scroll-cat-tail-swish 0.36s ease-in-out infinite;
+}
+
+.footer-yard__cat.is-running .scroll-cat__body {
+  animation: scroll-cat-body-bounce 0.28s ease-in-out infinite;
+}
+
+.footer-yard__cat.is-sitting .scroll-cat__legs-back {
+  transform: rotate(56deg);
+}
+
+.footer-yard__cat.is-sitting .scroll-cat__legs-front {
+  transform: rotate(-4deg);
+}
+
+.footer-yard__cat.is-sitting .scroll-cat__tail {
+  animation: scroll-cat-tail-curl 3.6s ease-in-out infinite;
+}
+
+.footer-yard__cat.is-startled .scroll-cat__ears {
+  animation: scroll-cat-ears-flat 0.18s ease-out forwards;
+}
+
+.footer-yard__cat.is-startled .scroll-cat__body {
+  animation: scroll-cat-flinch 0.18s ease-out;
+}
+
+.footer-yard__cat.is-startled .scroll-cat__tail {
+  animation: scroll-cat-tail-puff 0.18s ease-in-out infinite;
+}
+
+/* ==========================================================
+   BIRD — reuses .scroll-bird__* transform-origins + keyframes.
+   ========================================================== */
+
+.footer-yard__bird.is-flying .scroll-bird__wing {
+  animation: scroll-bird-flap 0.16s ease-in-out infinite alternate;
+}
+
+.footer-yard__bird.is-flying .scroll-bird__tail {
+  animation: scroll-bird-tail-flicker 0.5s ease-in-out infinite;
+}
+
+.footer-yard__bird.is-flying .scroll-bird__aura {
+  animation: scroll-bird-aura-pulse 0.55s ease-in-out infinite;
+}
+
+.footer-yard__bird.is-perched .scroll-bird__wing {
+  animation: none;
+  transform: rotate(8deg);
+}
+
+/* ==========================================================
+   RABBIT — new, but minimal: one keyframe for ear flick during
+   idle, reused (faster) during the hop itself. Everything else
+   (the hop arc) is JS-driven position, no leg-rig needed.
+   ========================================================== */
+
+.footer-yard__rabbit-ears {
+  transform-origin: 34px 20px;
+  transform-box: fill-box;
+}
+
+.footer-yard__rabbit-tail {
+  transform-origin: 14px 38px;
+  transform-box: fill-box;
+}
+
+.footer-yard__rabbit.is-idle .footer-yard__rabbit-ears {
+  animation: footer-yard-rabbit-ear-flick 2.6s ease-in-out infinite;
+}
+
+.footer-yard__rabbit.is-hopping .footer-yard__rabbit-ears {
+  animation: footer-yard-rabbit-ear-flick 0.26s ease-in-out infinite;
+}
+
+@keyframes footer-yard-rabbit-ear-flick {
+  0%,
+  85%,
+  100% {
+    transform: rotate(0deg);
+  }
+  92% {
+    transform: rotate(-6deg);
+  }
+}
+
+/* ==========================================================
+   BUTTERFLY — new, but minimal: one keyframe, always running
+   (cheap — two small path groups oscillating scaleX).
+   ========================================================== */
+
+.footer-yard__wing-left {
+  /* Inner (body-adjacent) edge is the max-x side of this wing's own
+     bounding box — 100% anchors the scale there so it always
+     collapses toward the body, never away from it. */
+  transform-origin: 100% 50%;
+  transform-box: fill-box;
+}
+
+.footer-yard__wing-right {
+  /* Inner edge is the min-x side of this wing's own bounding box. */
+  transform-origin: 0% 50%;
+  transform-box: fill-box;
+}
+
+.footer-yard__butterfly .footer-yard__wing-left {
+  animation: footer-yard-wing-flutter-left 0.22s ease-in-out infinite;
+}
+
+.footer-yard__butterfly .footer-yard__wing-right {
+  animation: footer-yard-wing-flutter-right 0.22s ease-in-out infinite;
+}
+
+@keyframes footer-yard-wing-flutter-left {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.55);
+  }
+}
+
+@keyframes footer-yard-wing-flutter-right {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.55);
+  }
+}
+
+/* ==========================================================
+   EATING FACE MOVEMENT
+   ------------------------------------------------------------
+   One shared keyframe (a small dip toward the food, translateY
+   only — no transform-origin needed, so it's safe to reuse as-is
+   across every species regardless of head position/shape).
+   Scoped to a distinct .is-eating class, not the plain idle/sit
+   pose, so it only plays while actually at the plate.
+   ========================================================== */
+
+@keyframes footer-yard-eat-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40%,
+  60% {
+    transform: translateY(3px);
+  }
+}
+
+.footer-yard__cat.is-eating .scroll-cat__head {
+  animation: footer-yard-eat-bob 0.5s ease-in-out infinite;
+}
+
+.footer-yard__rabbit.is-eating .footer-yard__rabbit-head {
+  animation: footer-yard-eat-bob 0.42s ease-in-out infinite;
+}
+
+.footer-yard__bird.is-eating .scroll-bird__body {
+  animation: footer-yard-eat-bob 0.46s ease-in-out infinite;
+}
+
+.footer-yard__dog.is-eating .dog-cursor__head {
+  animation: footer-yard-eat-bob 0.48s ease-in-out infinite;
+}
+
+/* ==========================================================
+   SAFETY — same convention as scroll-bird.css / scroll-cat.css
+   ========================================================== */
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  #footer-yard {
+    display: none !important;
+  }
+}

@@ -427,6 +427,32 @@ body.dog-cursor-active label {
 
 
 /* ==========================================================
+   FOOTER YARD HANDOFF
+   ------------------------------------------------------------
+   When footer-yard.js sees the footer come into view, it adds
+   this class to <body>. The cursor dog fades out and the real
+   pointer comes back — it's "moved" to the yard below.
+   ========================================================== */
+
+body.petlio-footer-yard-active #dog-cursor-dog,
+body.petlio-footer-yard-active #dog-cursor-toy,
+body.petlio-footer-yard-active #dog-cursor-crumbs {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease;
+}
+
+body.petlio-footer-yard-active.dog-cursor-active,
+body.petlio-footer-yard-active.dog-cursor-active a,
+body.petlio-footer-yard-active.dog-cursor-active button,
+body.petlio-footer-yard-active.dog-cursor-active input,
+body.petlio-footer-yard-active.dog-cursor-active textarea,
+body.petlio-footer-yard-active.dog-cursor-active select,
+body.petlio-footer-yard-active.dog-cursor-active [role="button"],
+body.petlio-footer-yard-active.dog-cursor-active label {
+  cursor: auto;
+}
+
+/* ==========================================================
    TOUCH DEVICES
    ========================================================== */
 

@@ -130,10 +130,6 @@
   position: relative;
 }
 
-.lookbook-gallery__look--offset {
-  margin-left: clamp(0rem, 7vw, 7rem);
-}
-
 /* =========================================================
    LOOK HEADER
    ========================================================= */
@@ -624,10 +620,6 @@
 
   .lookbook-gallery__product {
     width: clamp(145px, 30vw, 260px);
-  }
-
-  .lookbook-gallery__look--offset {
-    margin-left: 0;
   }
 }
 

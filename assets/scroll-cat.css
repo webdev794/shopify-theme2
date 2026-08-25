@@ -315,6 +315,15 @@
   position: relative;
 }
 
+/* ==========================================================
+   FOOTER YARD HANDOFF — see footer-yard.js / dog-cursor.css.
+   ========================================================== */
+
+body.petlio-footer-yard-active #scroll-cat {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease;
+}
+
 /* Hide on small screens / reduced motion / coarse pointers */
 @media (max-width: 989px),
   (pointer: coarse),

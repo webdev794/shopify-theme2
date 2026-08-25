@@ -353,6 +353,11 @@
     }
 
     function tick() {
+      if (window.PetlioFooterYardActive) {
+        requestAnimationFrame(tick);
+        return;
+      }
+
       var inFlight = isScrolling || isFleeing;
       var lerp = inFlight ? LERP_FLY : LERP_LAND;
       var prev = currentY;

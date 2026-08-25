@@ -1,5 +1,5 @@
 /**
- * PETLIO — UNIVERSAL DOG CURSOR
+ * PETLIO -- UNIVERSAL DOG CURSOR
  * ============================================================
  *
  * Theme-level cursor system.
@@ -25,13 +25,13 @@
  * If no mode exists, "default" behavior is used.
  *
  * Therefore:
- * - Remove a section → cursor still works.
- * - Add a section → cursor still works.
- * - Reorder sections → cursor still works.
- * - Add a custom section → cursor still works.
+ * - Remove a section -> cursor still works.
+ * - Add a section -> cursor still works.
+ * - Reorder sections -> cursor still works.
+ * - Add a custom section -> cursor still works.
  *
  * Dog behavior (unchanged from the previous dot-matrix version):
- * - bone / ball / food bowl toy cursor
+ * - ball / food bowl toy cursor
  * - smooth spring-following
  * - run / sniff / sit / bite idle chain
  * - dog faces the toy when idle
@@ -76,7 +76,6 @@
      ========================================================== */
 
   var TOYS = [
-    'bone',
     'ball',
     'plate'
   ];
@@ -94,12 +93,6 @@
      ========================================================== */
 
   var TOY_SVG = {
-
-    bone:
-      '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<path fill="#E8D5B5" stroke="#8B6914" stroke-width="1.5" stroke-linejoin="round" d="M14 28c-4-4-10-3-12 1s1 9 5 10c2.5.6 5-.2 7-2l6 6c-2 2-2.5 4.5-2 7 1 4 6 7 10 5s5-8 1-12l6-6c2 2 4.5 2.5 7 2 4-1 7-6 5-10s-8-4-12 0l-6 6-6-6c-2-2-4.5-2.5-7-2z"/>' +
-      '<path fill="#F5E6C8" d="M20 32l12 12 4-4-12-12z" opacity=".5"/>' +
-      '</svg>',
 
     ball:
       '<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
@@ -620,7 +613,7 @@
 
 
     toyEl.innerHTML =
-      TOY_SVG.bone;
+      TOY_SVG[TOYS[0]];
 
 
     document.body.appendChild(
@@ -681,7 +674,7 @@
     /*
      * Publish position for other on-page creatures (the scroll bird
      * and scroll monkey use this to notice the dog getting close and
-     * flee). Cheap shared object, no dependency in either direction —
+     * flee). Cheap shared object, no dependency in either direction --
      * if this script isn't loaded, the others just never see a threat.
      */
 
@@ -1281,7 +1274,7 @@
 
 
     /* --------------------------------------------------------
-       MODE TIMING (run → sniff → sit → bite)
+       MODE TIMING (run -> sniff -> sit -> bite)
        -------------------------------------------------------- */
 
     if (

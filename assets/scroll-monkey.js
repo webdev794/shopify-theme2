@@ -1,15 +1,15 @@
 /**
- * PETLIO — SCROLL CAT
+ * PETLIO — SCROLL MONKEY
  * ============================================================
- * An orange tabby on the left edge of the page. Companion to
- * scroll-bird.js — same scroll-driven approach, mirrored to the left,
- * running/sitting instead of flying/landing.
+ * A monkey on the left edge of the page. Companion to scroll-bird.js —
+ * same scroll-driven approach, mirrored to the left, swinging/hanging
+ * instead of flying/landing.
  *
- * - Trots (leg cycle + tail swish) while the user scrolls
- * - When scrolling stops, sits on a perch line of the current section
- * - If the dog cursor gets close while it's sitting, it startles
- *   (ears back, tail puffs) and bolts to a different spot — clears the
- *   spot for reading, and a cat fleeing a dog needs no explanation
+ * - Swings hand-over-hand while the user scrolls
+ * - When scrolling stops, hangs from a perch line of the current section
+ * - If the dog cursor gets close while it's hanging, it startles and
+ *   swings off to the farthest visible perch — clears the spot for
+ *   reading and adds a bit of interaction between the two creatures
  * - Always faces right (toward page content)
  *
  * Respects prefers-reduced-motion and coarse pointers. Desktop only.
@@ -35,81 +35,74 @@
   }
 
   var IDLE_MS = 180;
-  var LERP_RUN = 0.22;
+  var LERP_SWING = 0.22;
   var LERP_LAND = 0.16;
-  var CAT_HEIGHT = 46;
+  var MONKEY_HEIGHT = 60;
   var PERCH_OFFSET_Y = 0.16;
+  var GRIP_RATIO = 0.1; // hands sit ~10% down from the top of the artwork
   var FLEE_RADIUS = 150;
   var FLEE_CHECK_MS = 120;
   var FLEE_COOLDOWN_MS = 1700;
   var STARTLE_MS = 180;
-  var MIN_FLEE_DISTANCE = 160;
 
-  var CAT_SVG =
-    '<svg viewBox="0 0 130 58" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+  var MONKEY_SVG =
+    '<svg viewBox="0 0 56 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
     '<defs>' +
-    '<linearGradient id="catFur" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0%" stop-color="#d97b3a"/>' +
-    '<stop offset="45%" stop-color="#eb9c55"/>' +
-    '<stop offset="100%" stop-color="#f8dfc0"/>' +
+    '<linearGradient id="monkeyFur" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#6b4a2f"/>' +
+    '<stop offset="55%" stop-color="#8a6440"/>' +
+    '<stop offset="100%" stop-color="#a9805a"/>' +
     '</linearGradient>' +
     '</defs>' +
-    '<ellipse class="scroll-cat__shadow" cx="58" cy="53" rx="26" ry="4" fill="rgba(60,40,10,0.14)"/>' +
-    '<g class="scroll-cat__tail">' +
-    '<path d="M28 40C16 44 6 40 4 30C10 34 18 38 24 34C20 28 17 23 21 17C26 22 29 32 28 40Z" fill="url(#catFur)"/>' +
-    '<path d="M12 33C10 29 10 25 13 22" stroke="#c56a2c" stroke-width="1.3" fill="none" opacity="0.55" stroke-linecap="round"/>' +
+    '<g class="scroll-monkey__tail">' +
+    '<path d="M16 40C6 44 4 34 10 26C14 30 14 36 18 38C22 34 24 28 22 22C26 26 28 34 24 40C21 44.5 18.5 43 16 40Z" fill="url(#monkeyFur)"/>' +
     '</g>' +
-    '<g class="scroll-cat__legs-back">' +
-    '<path d="M32 44C30 44 29 48 30 54L35 54C36 48 35 44 33 44Z" fill="#c56a2c"/>' +
-    '<path d="M38 44C36 44 35 48 36 54L41 54C42 48 41 44 39 44Z" fill="#e08c46"/>' +
+    '<g class="scroll-monkey__arm-a">' +
+    '<path d="M20 26C14 20 12 12 18 6C20 10 22 16 24 24Z" fill="#7a5738"/>' +
+    '<circle cx="18" cy="6" r="2.4" fill="#5c4128"/>' +
     '</g>' +
-    '<g class="scroll-cat__body">' +
-    '<ellipse cx="54" cy="36" rx="24" ry="14" fill="url(#catFur)"/>' +
-    '<ellipse cx="50" cy="44" rx="16" ry="8" fill="#faeccb" opacity="0.6"/>' +
-    '<path d="M44 27C48 25 52 25 56 27" stroke="#c56a2c" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>' +
-    '<path d="M40 33C44 31.5 48 31.5 52 33" stroke="#c56a2c" stroke-width="2" fill="none" opacity="0.35" stroke-linecap="round"/>' +
+    '<g class="scroll-monkey__arm-b">' +
+    '<path d="M32 26C38 20 40 12 34 6C32 10 30 16 28 24Z" fill="#8a6440"/>' +
+    '<circle cx="34" cy="6" r="2.4" fill="#5c4128"/>' +
     '</g>' +
-    '<g class="scroll-cat__legs-front">' +
-    '<path d="M66 42C64 42 63 46 64 54L69 54C70 46 69 42 67 42Z" fill="#c56a2c"/>' +
-    '<path d="M74 42C72 42 71 46 72 54L77 54C78 46 77 42 75 42Z" fill="#e08c46"/>' +
-    '</g>' +
-    '<g class="scroll-cat__head">' +
-    '<g class="scroll-cat__ears">' +
-    '<path d="M80 15L74 3L88 12Z" fill="url(#catFur)"/>' +
-    '<path d="M80 13L76 6L85 12Z" fill="#f6c2c2"/>' +
-    '<path d="M100 15L106 3L92 12Z" fill="url(#catFur)"/>' +
-    '<path d="M100 13L104 6L95 12Z" fill="#f6c2c2"/>' +
-    '</g>' +
-    '<circle cx="90" cy="24" r="12" fill="url(#catFur)"/>' +
-    '<path d="M85 13C87 11 91 11 93 13" stroke="#c56a2c" stroke-width="1.2" fill="none" opacity="0.6" stroke-linecap="round"/>' +
-    '<path d="M84 29C92 28 102 27 108 30C102 34 92 36 86 35Z" fill="#f3e6cf"/>' +
-    '<ellipse cx="106" cy="30" rx="2" ry="1.6" fill="#e8879a"/>' +
-    '<path d="M86 30L72 27M86 32L71 32M86 34L72 37" stroke="#fff" stroke-width="0.6" opacity="0.75" stroke-linecap="round"/>' +
-    '<ellipse cx="94" cy="21" rx="2.6" ry="2.2" fill="#c98a35"/>' +
-    '<ellipse cx="94" cy="21" rx="0.6" ry="1.8" fill="#1a1a1a"/>' +
-    '<circle cx="94.6" cy="20" r="0.5" fill="#fff6df"/>' +
-    '<path d="M88 35C91 37 95 37 98 35" stroke="#5c3a1c" stroke-width="1" fill="none" stroke-linecap="round"/>' +
+    '<g class="scroll-monkey__body">' +
+    '<ellipse cx="26" cy="34" rx="11" ry="14" fill="url(#monkeyFur)"/>' +
+    '<ellipse cx="26" cy="38" rx="6" ry="8" fill="#f0dcc0" opacity="0.85"/>' +
+    '<path d="M20 46C18 46 17 50 18 56L23 56C24 50 23 46 21 46Z" fill="#6b4a2f"/>' +
+    '<path d="M30 46C28 46 27 50 28 56L33 56C34 50 33 46 31 46Z" fill="#7a5738"/>' +
+    '<circle cx="19" cy="14" r="3" fill="#8a6440"/>' +
+    '<circle cx="19" cy="14" r="1.6" fill="#e8cba3"/>' +
+    '<circle cx="37" cy="14" r="3" fill="#8a6440"/>' +
+    '<circle cx="37" cy="14" r="1.6" fill="#e8cba3"/>' +
+    '<circle cx="28" cy="16" r="9" fill="url(#monkeyFur)"/>' +
+    '<ellipse cx="28" cy="18" rx="6" ry="6.5" fill="#f0dcc0"/>' +
+    '<circle cx="25" cy="16" r="1.8" fill="#241408"/>' +
+    '<circle cx="25.5" cy="15.3" r="0.5" fill="#fff6df"/>' +
+    '<circle cx="31" cy="16" r="1.8" fill="#241408"/>' +
+    '<circle cx="31.5" cy="15.3" r="0.5" fill="#fff6df"/>' +
+    '<ellipse cx="28" cy="20" rx="1.6" ry="1.1" fill="#4a2f1c"/>' +
+    '<path d="M25 22.5C26.5 24 29.5 24 31 22.5" stroke="#4a2f1c" stroke-width="0.9" fill="none" stroke-linecap="round"/>' +
     '</g>' +
     '</svg>';
 
   function mount() {
-    if (document.getElementById('scroll-cat')) return;
+    if (document.getElementById('scroll-monkey')) return;
 
     var root = document.createElement('div');
-    root.id = 'scroll-cat-root';
+    root.id = 'scroll-monkey-root';
 
-    var cat = document.createElement('div');
-    cat.id = 'scroll-cat';
-    cat.setAttribute('aria-hidden', 'true');
-    cat.innerHTML = CAT_SVG;
+    var monkey = document.createElement('div');
+    monkey.id = 'scroll-monkey';
+    monkey.setAttribute('aria-hidden', 'true');
+    monkey.innerHTML = MONKEY_SVG;
 
-    root.appendChild(cat);
+    root.appendChild(monkey);
     document.body.appendChild(root);
 
-    start(cat);
+    start(monkey);
   }
 
-  function start(cat) {
+  function start(monkey) {
     var targetY = window.innerHeight * 0.32;
     var currentY = targetY;
     var velocity = 0;
@@ -136,10 +129,10 @@
       sections.forEach(function (section) {
         if (section.offsetHeight < 100) return;
 
-        var perch = section.querySelector('.scroll-cat-perch');
+        var perch = section.querySelector('.scroll-monkey-perch');
         if (!perch) {
           perch = document.createElement('div');
-          perch.className = 'scroll-cat-perch';
+          perch.className = 'scroll-monkey-perch';
           perch.setAttribute('aria-hidden', 'true');
           section.appendChild(perch);
         }
@@ -163,26 +156,31 @@
 
         if (dist < bestDist) {
           bestDist = dist;
-          best = perchViewportY - CAT_HEIGHT * 0.55;
+          best = perchViewportY - MONKEY_HEIGHT * GRIP_RATIO;
         }
       });
 
       if (best !== null) {
-        return Math.max(20, Math.min(vh - CAT_HEIGHT - 16, best));
+        return Math.max(20, Math.min(vh - MONKEY_HEIGHT - 16, best));
       }
       return vh * 0.32;
     }
 
+    // Same perch list, but picks whichever visible perch is FARTHEST from
+    // a given point — used when fleeing.
+    //
+    // A perch-only pick can fail near the top/bottom of the page, where
+    // often only one section is in view: the "farthest visible perch"
+    // is then the monkey's own perch, which looked like it never moved.
+    // So this always also considers a guaranteed-far fallback (flip to
+    // the opposite half of the viewport) and returns whichever of the
+    // two actually ends up farther from the danger point.
+    var MIN_FLEE_DISTANCE = 160;
+
     function clampToViewport(y, vh) {
-      return Math.max(20, Math.min(vh - CAT_HEIGHT - 16, y));
+      return Math.max(20, Math.min(vh - MONKEY_HEIGHT - 16, y));
     }
 
-    // Same perch list, but picks whichever visible perch is FARTHEST
-    // from the danger point — used when fleeing. Always also considers
-    // a guaranteed-far fallback (flip to the opposite half of the
-    // viewport), since near the top/bottom of the page often only one
-    // section is in view, where "farthest visible perch" would just be
-    // the cat's own perch.
     function getFleeTargetY(dangerY, fromY) {
       var vh = window.innerHeight || document.documentElement.clientHeight;
       var bestPerch = null;
@@ -201,7 +199,10 @@
 
         if (distFromDanger > bestPerchDist) {
           bestPerchDist = distFromDanger;
-          bestPerch = clampToViewport(perchViewportY - CAT_HEIGHT * 0.55, vh);
+          bestPerch = clampToViewport(
+            perchViewportY - MONKEY_HEIGHT * GRIP_RATIO,
+            vh
+          );
         }
       });
 
@@ -223,18 +224,17 @@
     }
 
     function setState(state) {
-      cat.classList.remove(
-        'is-running',
+      monkey.classList.remove(
+        'is-swinging',
         'is-landing',
-        'is-sitting',
+        'is-hanging',
         'is-startled'
       );
-      if (state) cat.classList.add(state);
+      if (state) monkey.classList.add(state);
     }
 
-    // The dog got close while the cat was sitting still — flinch (ears
-    // back, tail puffs), then bolt to the farthest visible perch from
-    // the danger point.
+    // The dog got close while the monkey was hanging still — flinch,
+    // then swing off to the farthest visible perch from the danger point.
     function triggerFlee(dangerX, dangerY) {
       lastFleeAt = performance.now();
       setState('is-startled');
@@ -243,7 +243,7 @@
         if (isScrolling) return;
 
         isFleeing = true;
-        setState('is-running');
+        setState('is-swinging');
         targetY = getFleeTargetY(dangerY, currentY);
 
         setTimeout(function () {
@@ -253,7 +253,7 @@
           setState('is-landing');
 
           setTimeout(function () {
-            if (!isScrolling) setState('is-sitting');
+            if (!isScrolling) setState('is-hanging');
           }, 400);
         }, 550);
       }, STARTLE_MS);
@@ -266,12 +266,12 @@
       var pet = window.PetlioCursorPet;
       if (!pet || typeof pet.x !== 'number' || pet.x < -1000) return;
 
-      var rect = cat.getBoundingClientRect();
+      var rect = monkey.getBoundingClientRect();
       if (!rect.width) return;
 
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-      var dist = Math.hypot(pet.x - cx, pet.y - cy);
+      var mx = rect.left + rect.width / 2;
+      var my = rect.top + rect.height / 2;
+      var dist = Math.hypot(pet.x - mx, pet.y - my);
 
       if (dist < FLEE_RADIUS) {
         triggerFlee(pet.x, pet.y);
@@ -279,20 +279,15 @@
     }
 
     function tick() {
-      if (window.PetlioFooterYardActive) {
-        requestAnimationFrame(tick);
-        return;
-      }
-
-      var lerp = isScrolling ? LERP_RUN : LERP_LAND;
+      var inMotion = isScrolling || isFleeing;
+      var lerp = inMotion ? LERP_SWING : LERP_LAND;
       var prev = currentY;
       currentY += (targetY - currentY) * lerp;
       velocity = currentY - prev;
 
-      var inMotion = isScrolling || isFleeing;
-      var bank = inMotion ? Math.max(-9, Math.min(9, velocity * 2)) : 0;
+      var bank = inMotion ? Math.max(-10, Math.min(10, velocity * 2)) : 0;
 
-      cat.style.transform =
+      monkey.style.transform =
         'translate3d(0, ' +
         currentY.toFixed(2) +
         'px, 0) rotate(' +
@@ -315,7 +310,7 @@
 
       if (!isScrolling) {
         isScrolling = true;
-        setState('is-running');
+        setState('is-swinging');
       }
 
       var docH = Math.max(
@@ -328,7 +323,7 @@
       targetY = base + Math.max(-50, Math.min(50, delta * 0.5));
       targetY = Math.max(
         20,
-        Math.min(window.innerHeight - CAT_HEIGHT - 20, targetY)
+        Math.min(window.innerHeight - MONKEY_HEIGHT - 20, targetY)
       );
 
       clearTimeout(idleTimer);
@@ -340,7 +335,7 @@
       setState('is-landing');
 
       setTimeout(function () {
-        if (!isScrolling) setState('is-sitting');
+        if (!isScrolling) setState('is-hanging');
       }, 400);
 
       targetY = getActivePerchY();
@@ -356,11 +351,11 @@
     ensurePerches();
     targetY = getActivePerchY();
     currentY = targetY;
-    cat.style.transform = 'translate3d(0, ' + currentY + 'px, 0)';
-    setState('is-sitting');
+    monkey.style.transform = 'translate3d(0, ' + currentY + 'px, 0)';
+    setState('is-hanging');
 
     requestAnimationFrame(function () {
-      cat.classList.add('is-ready');
+      monkey.classList.add('is-ready');
     });
 
     window.addEventListener('scroll', onScroll, { passive: true });

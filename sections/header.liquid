@@ -431,7 +431,7 @@
       {%- if section.settings.show_account_link and shop.customer_accounts_enabled -%}
         <shopify-account
           menu="{{ section.settings.customer_account_menu | default: 'customer-account-main-menu' }}"
-          class="header__account"
+          class="header__account header__icon-button"
         >
           <div slot="signed-out-avatar" class="header__account-icon-wrapper" aria-hidden="true">
             {% render 'icon-account' %}

@@ -1,0 +1,297 @@
+/* ==========================================================================
+   PETLIO — SCROLL MONKEY
+   A monkey that swings hand-over-hand along the left edge while
+   scrolling, and hangs from section perch lines when the page is still.
+   Companion to scroll-bird.css/js — same idea, mirrored to the left,
+   climbing/swinging instead of flying.
+   ========================================================================== */
+
+#scroll-monkey-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 40;
+  pointer-events: none;
+  contain: layout style;
+}
+
+#scroll-monkey {
+  position: fixed;
+  left: clamp(12px, 2.4vw, 36px);
+  width: 52px;
+  height: 60px;
+  margin: 0;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  transition: none;
+  z-index: 41;
+  pointer-events: none;
+  opacity: 0;
+}
+
+#scroll-monkey.is-ready {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+#scroll-monkey svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 8px rgba(39, 30, 20, 0.2));
+}
+
+/* Shared transform origins */
+
+.scroll-monkey__arm-a {
+  transform-origin: 20px 26px;
+  transform-box: fill-box;
+}
+
+.scroll-monkey__arm-b {
+  transform-origin: 32px 26px;
+  transform-box: fill-box;
+}
+
+.scroll-monkey__body {
+  transform-origin: 26px 30px;
+  transform-box: fill-box;
+}
+
+.scroll-monkey__tail {
+  transform-origin: 16px 40px;
+  transform-box: fill-box;
+}
+
+/* ==========================================================
+   SWINGING (while scrolling)
+   ========================================================== */
+
+#scroll-monkey.is-swinging .scroll-monkey__arm-a {
+  animation: scroll-monkey-swing-a 0.32s ease-in-out infinite;
+}
+
+#scroll-monkey.is-swinging .scroll-monkey__arm-b {
+  animation: scroll-monkey-swing-b 0.32s ease-in-out infinite;
+}
+
+#scroll-monkey.is-swinging .scroll-monkey__body {
+  animation: scroll-monkey-body-sway 0.32s ease-in-out infinite;
+}
+
+#scroll-monkey.is-swinging .scroll-monkey__tail {
+  animation: scroll-monkey-tail-trail 0.4s ease-in-out infinite;
+}
+
+/* ==========================================================
+   LANDING (brief settle into a hang)
+   ========================================================== */
+
+#scroll-monkey.is-landing .scroll-monkey__arm-a {
+  animation: scroll-monkey-settle-a 0.4s ease-out forwards;
+}
+
+#scroll-monkey.is-landing .scroll-monkey__arm-b {
+  animation: scroll-monkey-settle-b 0.4s ease-out forwards;
+}
+
+/* ==========================================================
+   HANGING (idle, gripping a perch line)
+   ========================================================== */
+
+#scroll-monkey.is-hanging .scroll-monkey__arm-a,
+#scroll-monkey.is-hanging .scroll-monkey__arm-b {
+  animation: none;
+  transform: rotate(0deg);
+}
+
+#scroll-monkey.is-hanging .scroll-monkey__body {
+  animation: scroll-monkey-idle-sway 3.2s ease-in-out infinite;
+}
+
+#scroll-monkey.is-hanging .scroll-monkey__tail {
+  animation: scroll-monkey-tail-curl 4s ease-in-out infinite;
+}
+
+/* ==========================================================
+   STARTLED — the dog got close. A quick flinch before it bolts.
+   ========================================================== */
+
+#scroll-monkey.is-startled .scroll-monkey__arm-a {
+  animation: scroll-monkey-startle-a 0.09s ease-in-out infinite alternate;
+}
+
+#scroll-monkey.is-startled .scroll-monkey__arm-b {
+  animation: scroll-monkey-startle-b 0.09s ease-in-out infinite alternate;
+}
+
+#scroll-monkey.is-startled .scroll-monkey__body {
+  animation: scroll-monkey-flinch 0.18s ease-out;
+}
+
+#scroll-monkey.is-startled .scroll-monkey__tail {
+  animation: scroll-monkey-tail-trail 0.18s ease-in-out infinite;
+}
+
+@keyframes scroll-monkey-swing-a {
+  from {
+    transform: rotate(-24deg);
+  }
+  to {
+    transform: rotate(20deg);
+  }
+}
+
+@keyframes scroll-monkey-swing-b {
+  from {
+    transform: rotate(20deg);
+  }
+  to {
+    transform: rotate(-24deg);
+  }
+}
+
+@keyframes scroll-monkey-body-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes scroll-monkey-tail-trail {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(9deg);
+  }
+}
+
+@keyframes scroll-monkey-settle-a {
+  0% {
+    transform: rotate(20deg);
+  }
+  60% {
+    transform: rotate(-8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes scroll-monkey-settle-b {
+  0% {
+    transform: rotate(-24deg);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes scroll-monkey-idle-sway {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes scroll-monkey-tail-curl {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+@keyframes scroll-monkey-startle-a {
+  from {
+    transform: rotate(-34deg);
+  }
+  to {
+    transform: rotate(28deg);
+  }
+}
+
+@keyframes scroll-monkey-startle-b {
+  from {
+    transform: rotate(28deg);
+  }
+  to {
+    transform: rotate(-34deg);
+  }
+}
+
+@keyframes scroll-monkey-flinch {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Decorative perch lines injected on sections (left edge) — same idea
+   as .scroll-bird-perch, mirrored, with the site's original green
+   accent instead of the phoenix's warm ember tone. */
+.scroll-monkey-perch {
+  position: absolute;
+  left: 0;
+  top: 55%;
+  width: clamp(48px, 8vw, 96px);
+  height: 1px;
+  background: linear-gradient(
+    270deg,
+    transparent 0%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 35%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.scroll-monkey-perch::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--petlio-accent, #71806d);
+  opacity: 0.45;
+  box-shadow: 0 0 0 2px var(--petlio-paper, #f7f3eb);
+}
+
+.shopify-section {
+  position: relative;
+}
+
+/* Hide on small screens / reduced motion / coarse pointers */
+@media (max-width: 989px),
+  (pointer: coarse),
+  (prefers-reduced-motion: reduce) {
+  #scroll-monkey-root,
+  #scroll-monkey,
+  .scroll-monkey-perch {
+    display: none !important;
+  }
+}

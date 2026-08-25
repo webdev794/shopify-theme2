@@ -9,66 +9,29 @@
  */
 {
   "sections": {
-    "hero_carousel_8FFQXy": {
-      "type": "hero-carousel",
+    "hero": {
+      "type": "hero",
       "blocks": {
-        "slide_GWjLfh": {
-          "type": "slide",
+        "heading_pJr7Kk": {
+          "type": "heading",
           "settings": {
-            "is_vip_slide": false,
-            "schedule_start": "",
-            "schedule_end": "",
-            "image": "shopify://shop_images/carousel1.png",
-            "overlay_opacity": 25,
-            "caption": "YOUR DAILY RITUAL",
-            "heading": "<strong>Glow Into Your Best</strong>",
-            "text": "<p>Skincare made for naturally radiant skin.</p>",
-            "content_position": "middle-left",
-            "content_alignment": "left",
-            "button_label_1": "Discover the Collection",
-            "button_link_1": "/collections/all",
-            "button_style_1": "primary",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary"
+            "heading": "Life with them starts here.",
+            "heading_size": "medium",
+            "heading_tag": "h2"
           }
         },
-        "slide_EGEtA6": {
-          "type": "slide",
+        "text_cCixxP": {
+          "type": "text",
           "settings": {
-            "is_vip_slide": false,
-            "schedule_start": "",
-            "schedule_end": "",
-            "image": "shopify://shop_images/slide2.png",
-            "overlay_opacity": 25,
-            "caption": "THE SUVARA DIFFERENCE",
-            "heading": "<strong>Reveal Your Natural Glow</strong>",
-            "text": "<p>Thoughtfully crafted essentials for skin that feels beautifully balanced.</p>",
-            "content_position": "middle-left",
-            "content_alignment": "left",
-            "button_label_1": "Explore Bestsellers",
-            "button_link_1": "/collections/all",
-            "button_style_1": "primary",
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_2": "secondary"
+            "text": "<p>Everything you need, for every moment together. </p>",
+            "text_size": "medium"
           }
         },
-        "slide_q7768X": {
-          "type": "slide",
+        "buttons_4j4kYY": {
+          "type": "buttons",
           "settings": {
-            "is_vip_slide": false,
-            "schedule_start": "",
-            "schedule_end": "",
-            "image": "shopify://shop_images/slide3.png",
-            "overlay_opacity": 25,
-            "caption": "MADE FOR YOU",
-            "heading": "<strong>Build Your Perfect Ritual</strong>",
-            "text": "<p>Create a simple routine designed around your skin.</p>",
-            "content_position": "middle-left",
-            "content_alignment": "left",
-            "button_label_1": "Build Your Routine",
-            "button_link_1": "/pages/about",
+            "button_label_1": "Shop now",
+            "button_link_1": "",
             "button_style_1": "primary",
             "button_label_2": "",
             "button_link_2": "",
@@ -77,180 +40,137 @@
         }
       },
       "block_order": [
-        "slide_GWjLfh",
-        "slide_EGEtA6",
-        "slide_q7768X"
+        "heading_pJr7Kk",
+        "text_cCixxP",
+        "buttons_4j4kYY"
       ],
-      "name": "t:sections.hero_carousel.presets.name",
       "settings": {
-        "carousel_label": "",
+        "image": "shopify://shop_images/hero.webp",
+        "image_mobile": "shopify://shop_images/hero.webp",
         "height": "medium",
-        "heading_size": "large",
-        "vip_tags": "vip,premium,wholesale",
-        "show_arrows": false,
-        "show_dots": true,
-        "autoplay": true,
-        "autoplay_speed": 6,
+        "full_width": true,
+        "content_position": "middle-left",
+        "content_alignment": "left",
+        "content_max_width": 650,
+        "stack_on_mobile": false,
+        "color_overlay": "#000000",
+        "overlay_opacity": 25,
         "color_foreground": "#ffffff",
-        "color_overlay": "#000000"
+        "show_content_box": false,
+        "color_box_background": "#00000080"
       }
     },
-    "images_with_text_carousel_Umaybx": {
-      "type": "images-with-text-carousel",
+    "shop_by_pet": {
+      "type": "shop-by-pet",
       "blocks": {
-        "slide_ptcgAt": {
-          "type": "slide",
+        "dog": {
+          "type": "pet",
           "settings": {
-            "image": "shopify://shop_images/section2_slide1.png",
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Your skin deserves a moment of its own.",
-            "text": "<p>Thoughtfully crafted essentials designed to make your everyday ritual feel extraordinary.</p>",
-            "button_label": "Discover Our Story",
-            "button_link": "",
-            "button_style": "primary"
+            "title": "Dogs",
+            "caption": "Food, toys & gear",
+            "pet_icon": "dog",
+            "collection": "dogs",
+            "link": "",
+            "button_label": "Shop dogs"
           }
         },
-        "slide_hPjfcp": {
-          "type": "slide",
+        "cat": {
+          "type": "pet",
           "settings": {
-            "image": "shopify://shop_images/section2_slide2.png",
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Nourish. Restore. Glow.",
-            "text": "<p>A simple, intentional sequence that turns daily care into a quiet luxury.</p>",
-            "button_label": "Discover Our Story",
-            "button_link": "",
-            "button_style": "primary"
+            "title": "Cats",
+            "caption": "Treats & essentials",
+            "pet_icon": "cat",
+            "collection": "cats",
+            "link": "",
+            "button_label": "Shop cats"
           }
         },
-        "slide_nje3ez": {
-          "type": "slide",
+        "bird": {
+          "type": "pet",
           "settings": {
-            "image": "shopify://shop_images/section2_slide3.png",
-            "caption": "THE SUVARA RITUAL",
-            "heading": "Made for the everyday extraordinary.",
-            "text": "<p>Clean formulas. Sensorial textures. Results you can feel and see.</p>",
-            "button_label": "Discover Our Story",
-            "button_link": "",
-            "button_style": "primary"
+            "title": "Birds",
+            "caption": "Cages & care",
+            "pet_icon": "bird",
+            "collection": "birds",
+            "link": "",
+            "button_label": "Shop birds"
+          }
+        },
+        "small": {
+          "type": "pet",
+          "settings": {
+            "title": "Small pets",
+            "caption": "Habitat & feed",
+            "pet_icon": "rabbit",
+            "collection": "small-pets",
+            "link": "",
+            "button_label": "Shop now"
           }
         }
       },
       "block_order": [
-        "slide_ptcgAt",
-        "slide_hPjfcp",
-        "slide_nje3ez"
+        "dog",
+        "cat",
+        "bird",
+        "small"
       ],
-      "name": "t:sections.iwt_carousel.presets.name",
       "settings": {
-        "carousel_label": "The Suvara Ritual",
-        "image_position": "left",
-        "aspect_ratio": "4 / 3",
-        "heading_size": "large",
-        "full_width": false,
-        "show_arrows": true,
-        "show_dots": true,
-        "autoplay": true,
-        "autoplay_speed": 6,
-        "color_background": "#f7f4ee",
-        "color_foreground": "#1a1a1a",
-        "color_accent": "#1a1a1a"
+        "chapter_number": "02",
+        "chapter_label": "Pet worlds",
+        "heading": "Find their world.",
+        "subheading": "PET WORLDS",
+        "text": "<p><em>Every companion has their own way of living, playing and resting.</em></p>",
+        "columns": 4,
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "accent_color": "#1a1a1a"
       }
     },
-    "featured_products_KhYjYk": {
+    "featured_products": {
       "type": "featured-products",
       "blocks": {
-        "product_nF8z6f": {
+        "product_1": {
           "type": "product",
           "settings": {
-            "product": "sunset-bloom-perfume"
+            "product": "bird-food-treats"
           }
         },
-        "product_yg4xnQ": {
+        "product_2": {
           "type": "product",
           "settings": {
-            "product": "nail-polish-set"
+            "product": "cat-food-treats"
           }
         },
-        "product_dpD4V6": {
+        "product_3": {
           "type": "product",
           "settings": {
-            "product": "pink-lip-gloss"
+            "product": "dog-food-treats"
           }
         },
-        "product_48Ni8m": {
+        "product_4": {
           "type": "product",
           "settings": {
-            "product": "charcoal-face-mask"
-          }
-        },
-        "product_ppX3zR": {
-          "type": "product",
-          "settings": {
-            "product": "hair-tools"
-          }
-        },
-        "product_igJKU9": {
-          "type": "product",
-          "settings": {
-            "product": "body-wash-scrub-serum-lotion"
-          }
-        },
-        "product_hjWXeA": {
-          "type": "product",
-          "settings": {
-            "product": "suvara-beauty-advanced-brightening-moisturizer"
-          }
-        },
-        "product_FE7Yfd": {
-          "type": "product",
-          "settings": {
-            "product": "blush-rose-perfume"
-          }
-        },
-        "product_Ke44Gx": {
-          "type": "product",
-          "settings": {
-            "product": "body-lotion"
-          }
-        },
-        "product_ye8JHG": {
-          "type": "product",
-          "settings": {
-            "product": "beard-oil"
-          }
-        },
-        "product_68QWPK": {
-          "type": "product",
-          "settings": {
-            "product": "moisturiser"
+            "product": "cat-grooming-care"
           }
         }
       },
       "block_order": [
-        "product_nF8z6f",
-        "product_yg4xnQ",
-        "product_dpD4V6",
-        "product_48Ni8m",
-        "product_ppX3zR",
-        "product_igJKU9",
-        "product_hjWXeA",
-        "product_FE7Yfd",
-        "product_Ke44Gx",
-        "product_ye8JHG",
-        "product_68QWPK"
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
       ],
-      "name": "t:sections.featured_products.presets.name",
       "settings": {
-        "layout": "scroll",
+        "layout": "grid",
         "products_per_row": "4",
         "gap": 20,
-        "space_above": 0,
-        "space_below": 0,
         "border_radius": 8,
         "full_width": false,
-        "heading": "Featured Products",
-        "subheading": "Our Best Sellers",
-        "description": "<p>Discover our most popular products loved by our customers</p>",
+        "chapter_number": "03",
+        "chapter_label": "Everyday",
+        "heading": "EVERYDAY ESSENTIALS",
+        "subheading": "",
+        "description": "<p><em>Everything they need, for every day.</em></p>",
         "show_view_all": true,
         "view_all_text": "View All",
         "view_all_link": "",
@@ -260,7 +180,7 @@
         "show_compare_at": true,
         "image_size": "medium",
         "card_style": "standard",
-        "background_color": "#f5e4df",
+        "background_color": "#ffffff",
         "text_color": "#1a1a1a",
         "heading_color": "#1a1a1a",
         "card_background": "#ffffff",
@@ -268,314 +188,175 @@
         "aria_label": "Featured products"
       }
     },
-    "shop_the_kit_NLcrJy": {
-      "type": "shop-the-kit",
+    "outfit_builder": {
+      "type": "outfit-builder",
       "blocks": {
-        "product_ttqkCp": {
+        "product_1": {
           "type": "product",
           "settings": {
-            "product": "pink-lip-gloss"
+            "product": "small-pet-habitat-cages-pens"
           }
         },
-        "product_KNzkU8": {
+        "product_2": {
           "type": "product",
           "settings": {
-            "product": "lipstick-shade-of-red"
+            "product": "dog-collar-harness-lashes"
           }
         },
-        "product_jpKEDz": {
+        "product_3": {
           "type": "product",
           "settings": {
-            "product": "lip-balm"
+            "product": "bird-cages-aviaries"
           }
         },
-        "product_WaGCxg": {
+        "product_4": {
           "type": "product",
           "settings": {
-            "product": "suvara-beauty-luxe-lip-nourishing-oil-with-hyaluronic-and-vitamin-e"
+            "product": "cat-beds-scratching"
           }
         }
       },
       "block_order": [
-        "product_ttqkCp",
-        "product_KNzkU8",
-        "product_jpKEDz",
-        "product_WaGCxg"
+        "product_1",
+        "product_2",
+        "product_3",
+        "product_4"
       ],
-      "name": "Shop the Kit",
       "settings": {
-        "look_id": "",
-        "eyebrow": "Curated Edit",
-        "heading": "Shop the Kit",
-        "subheading": "Everything you need in one complete bundle",
-        "section_width": "full_bleed",
-        "image": "shopify://shop_images/lipcare_kit.png",
-        "kit_title": "The Complete Lip Care Kit",
-        "auto_calc_savings": true,
-        "savings_text": "Save 20%",
-        "kit_description": "<p>This curated bundle includes everything you need to get started. Save 20% compared to buying items separately.</p>",
-        "show_variant_selector": true,
-        "add_to_cart_text": "Add Kit to Cart",
+        "chapter_label": "EVERYDAY / YOUR WAY",
+        "heading": "KIT BUILDER",
+        "subheading": "Make it theirs.",
+        "description": "<p>Pick the pieces that belong together. Build a little everyday setup that&rsquo;s made just for them.</p>",
+        "catalog_label": "Choose your pieces",
+        "selection_eyebrow": "YOUR COLLECTION",
+        "summary_note": "Choose a few things they’ll love.",
+        "footer_text": "Pick · mix · make it theirs",
+        "selection_label": "Your kit",
         "total_label": "Total",
-        "free_shipping_text": "Free shipping on this kit",
-        "aria_label": "Shop the kit",
-        "complete_look_mode": true
-      }
-    },
-    "mix_match_pack_zfbxLA": {
-      "type": "mix-match-pack",
-      "blocks": {
-        "product_qXbtjP": {
-          "type": "product",
-          "settings": {
-            "product": "pink-lip-gloss"
-          }
-        },
-        "product_V9hXnp": {
-          "type": "product",
-          "settings": {
-            "product": "suvara-beauty-luxe-lip-nourishing-oil-with-hyaluronic-and-vitamin-e"
-          }
-        },
-        "product_Tz4ypj": {
-          "type": "product",
-          "settings": {
-            "product": "moisturiser"
-          }
-        },
-        "product_KkbT8r": {
-          "type": "product",
-          "settings": {
-            "product": "suvara-beauty-advanced-brightening-moisturizer"
-          }
-        },
-        "product_YdFVVh": {
-          "type": "product",
-          "settings": {
-            "product": "midnight-ocean-perfume"
-          }
-        },
-        "product_8mnNiK": {
-          "type": "product",
-          "settings": {
-            "product": "blush-rose-perfume"
-          }
-        }
-      },
-      "block_order": [
-        "product_qXbtjP",
-        "product_V9hXnp",
-        "product_Tz4ypj",
-        "product_KkbT8r",
-        "product_YdFVVh",
-        "product_8mnNiK"
-      ],
-      "name": "t:sections.mix_match_pack.presets.name",
-      "settings": {
-        "heading": "Build Your Own Pack",
-        "subheading": "Mix and match your favorite items",
+        "select_button_text": "Add to kit",
+        "add_outfit_text": "Add kit to cart",
+        "empty_text": "Select items to build your kit",
         "max_items": 4,
-        "selection_label": "Your Selection",
-        "tray_empty_text": "Tap products to start building your pack",
-        "total_label": "Total",
-        "add_pack_text": "Add Pack to Cart",
-        "select_button_text": "Select",
-        "free_shipping_text": "Free shipping on this pack",
-        "show_vendor": true,
         "show_variant_selector": true,
-        "aria_label": "Mix and match pack builder",
-        "background_color": "#f7f4ee"
+        "background_color": "#f8f7f5",
+        "text_color": "#1a1a1a",
+        "accent_color": "#121212"
       }
     },
-    "lookbook_PJk88J": {
+    "lookbook_gallery": {
+      "type": "lookbook-gallery",
+      "blocks": {
+        "look_1": {
+          "type": "look",
+          "settings": {
+            "caption": "Cozy nights and quiet naps.",
+            "product_1": "cat-beds-scratching",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "cat-grooming-care",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "cat-toys",
+            "x3": 45,
+            "y3": 70
+          }
+        },
+        "look_2": {
+          "type": "look",
+          "settings": {
+            "caption": "Built for busy little paws.",
+            "product_1": "small-pet-habitat-cages-pens",
+            "x1": 30,
+            "y1": 40,
+            "product_2": "small-pet-toys-enrichment",
+            "x2": 60,
+            "y2": 55,
+            "product_3": "small-pet-grooming-care",
+            "x3": 45,
+            "y3": 70
+          }
+        }
+      },
+      "block_order": [
+        "look_1",
+        "look_2"
+      ],
+      "settings": {
+        "heading": "SEE LIFE WITH THEM",
+        "subheading": "Shop the looks",
+        "full_width": false,
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "dot_color": "#ffffff"
+      }
+    },
+    "lookbook": {
       "type": "lookbook",
       "blocks": {
-        "hotspot_MTTT7y": {
+        "hotspot_eQpEcw": {
           "type": "hotspot",
           "settings": {
-            "product": "fresh-face-cream-anti-aging-tallow-moisturizer",
-            "position_x": 28,
-            "position_y": 83
+            "product": "cat-food-treats"
           }
         },
-        "hotspot_yhdxTb": {
+        "hotspot_MrWPCg": {
           "type": "hotspot",
           "settings": {
-            "product": "suvara-beauty-clarifying-cleansing-oil-for-acne-prone-skin",
-            "position_x": 63,
-            "position_y": 50
+            "product": "cat-beds-scratching"
           }
         },
-        "hotspot_y7V447": {
+        "hotspot_1": {
           "type": "hotspot",
           "settings": {
-            "product": "super-serum-silk-bronzing-drops",
-            "position_x": 50,
-            "position_y": 56
+            "product": "cat-beds-scratching"
           }
         },
-        "hotspot_mJ8zd9": {
+        "hotspot_2": {
           "type": "hotspot",
           "settings": {
-            "product": "charcoal-face-mask",
-            "position_x": 79,
-            "position_y": 64
-          }
-        },
-        "hotspot_4ycDmf": {
-          "type": "hotspot",
-          "settings": {
-            "product": "suvara-beauty-advanced-brightening-moisturizer",
-            "position_x": 28,
-            "position_y": 35
+            "product": "dog-beds-crates"
           }
         }
       },
       "block_order": [
-        "hotspot_MTTT7y",
-        "hotspot_yhdxTb",
-        "hotspot_y7V447",
-        "hotspot_mJ8zd9",
-        "hotspot_4ycDmf"
+        "hotspot_eQpEcw",
+        "hotspot_MrWPCg",
+        "hotspot_1",
+        "hotspot_2"
       ],
-      "name": "Lookbook",
       "settings": {
-        "heading": "Shop the look",
+        "heading": "<p><strong>SHOPPABLE LOOKBOOK</strong></p>",
+        "text": "<p><em>Take the whole look home.</em></p>",
         "heading_size": "medium",
-        "text": "<p>Tap the dots to shop every piece in this look.</p>",
-        "content_position": "top",
-        "image": "shopify://shop_images/Fm43w.jpg",
-        "full_width": true,
-        "enable_scroll_zoom": true,
-        "scroll_zoom_start": 55,
-        "color_dot": "#ffffff",
-        "color_dot_foreground": "#121212",
-        "color_card_background": "#f3e5de",
-        "color_card_foreground": "#121212",
-        "look_id": "",
-        "complete_look_label": "Complete the Look"
+        "color_card_background": "#ffffff",
+        "color_card_foreground": "#121212"
       }
     },
-    "text_with_icons_kcfmqC": {
-      "type": "text-with-icons",
-      "blocks": {
-        "item_ikLqcg": {
-          "type": "item",
-          "settings": {
-            "icon": "truck",
-            "title": "Free Shipping",
-            "text": "<p>Enjoy free shipping on all orders over $50</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "item_HrbAca": {
-          "type": "item",
-          "settings": {
-            "icon": "shield",
-            "title": "Secure Payments",
-            "text": "<p>Your payment information is always secure</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        },
-        "item_L6TRXY": {
-          "type": "item",
-          "settings": {
-            "icon": "star",
-            "title": "Premium Quality",
-            "text": "<p>Handpicked products from trusted brands</p>",
-            "button_text": "",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "item_ikLqcg",
-        "item_HrbAca",
-        "item_L6TRXY"
-      ],
-      "name": "t:sections.text_with_icons.presets.name",
+    "care_ritual_WTwbiB": {
+      "type": "care-ritual",
+      "name": "Care Ritual",
       "settings": {
-        "heading": "Why Choose Us",
-        "subheading": "Discover what makes us different",
-        "layout": "row",
-        "columns": "3",
-        "alignment": "center",
-        "background_color": "#dde5dc",
-        "reduced_motion_mode": "system",
-        "anim_duration": 700,
-        "anim_delay": 0,
-        "mobile_motion": "lighter"
+        "image": "shopify://shop_images/petlio_hero.webp",
+        "heading": "<p>For every little moment.</p>",
+        "text": "<p>Because caring for them is part of the everyday. Thoughtful essentials, made to fit naturally into the life you share.</p>",
+        "button_label": "Explore care",
+        "button_link": "",
+        "closing_text": "The best things are often the little things.",
+        "background_color": "#e9e2d7",
+        "text_color": "#1d2921",
+        "accent_color": "#71806d"
       }
     },
-    "testimonials_wwx7nK": {
-      "type": "testimonials",
-      "blocks": {
-        "testimonial_YQWt4M": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
-            "rating": 5,
-            "author": "Sarah Johnson",
-            "position": "Regular Customer",
-            "avatar": "shopify://shop_images/ChatGPT_Image_Aug_11_2026_04_19_38_PM.png"
-          }
-        },
-        "testimonial_KkiRj8": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "Best customer service I've ever experienced. They went above and beyond to help me.",
-            "rating": 5,
-            "author": "Michael Chen",
-            "position": "Business Owner",
-            "avatar": "shopify://shop_images/face2.png"
-          }
-        },
-        "testimonial_mULPyW": {
-          "type": "testimonial",
-          "settings": {
-            "quote": "The products are exactly as described and the quality is premium. Will definitely buy again.",
-            "rating": 4,
-            "author": "Emily Davis",
-            "position": "Designer",
-            "avatar": "shopify://shop_images/face3.png"
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_YQWt4M",
-        "testimonial_KkiRj8",
-        "testimonial_mULPyW"
-      ],
-      "name": "Testimonials",
-      "settings": {
-        "heading": "What Our Customers Say",
-        "subheading": "Real reviews from real customers",
-        "background_color": "#f3e1db",
-        "layout": "grid",
-        "columns": "3",
-        "show_rating": false,
-        "show_view_all": true,
-        "view_all_text": "View All Testimonials",
-        "view_all_link": "",
-        "reduced_motion_mode": "system",
-        "anim_duration": 700,
-        "anim_delay": 0,
-        "mobile_motion": "lighter"
-      }
-    },
-    "blog_posts_TUtF9Y": {
+    "blog_posts": {
       "type": "blog-posts",
-      "name": "Blog Posts",
       "settings": {
         "blog": "news",
         "posts_limit": 3,
         "layout": "grid",
         "columns": "3",
         "card_style": "default",
-        "heading": "Latest Articles",
-        "subheading": "From our blog",
+        "heading": "CARE / STORIES",
+        "subheading": "Live better together.",
         "description": "<p>Discover insights, tips, and stories from our community.</p>",
         "show_image": true,
         "show_category": true,
@@ -587,115 +368,137 @@
         "read_more_label": "Read More",
         "show_view_all": true,
         "view_all_label": "View All Articles",
-        "background_color": "#faf7f4"
+        "background_color": "#f7f3eb"
       }
     },
-    "social_media_gallery_mTtQC4": {
-      "type": "social-media-gallery",
+    "faq": {
+      "type": "faq",
       "blocks": {
-        "post_DyEXFr": {
-          "type": "post",
+        "item_MGVwGR": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/brushes-blossoms_1_1.jpg",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Beautiful makup brushes 🌅",
-            "likes": "2.4k",
-            "comments": "156",
-            "link": "https://www.instagram.com"
+            "question": "Do you restock sold-out items?",
+            "answer": "<p>Yes. Join the waitlist on the product page or the newsletter—we restock popular items regularly and notify subscribers first.</p>"
           }
         },
-        "post_WX3UAB": {
-          "type": "post",
+        "item_QQk3Qt": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/brushing-on-red-lipsick_1.jpg",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Red lip gloss ✨",
-            "likes": "1.8k",
-            "comments": "89",
-            "link": "https://www.instagram.com"
+            "question": "How should I clean beds, collars, and fabric items?",
+            "answer": "<p>Most fabric items are machine-washable on gentle cycle; check the care label on each product. Wipe harnesses and plastic parts with mild soap and water; avoid harsh chemicals.</p>"
           }
         },
-        "post_FY78Xd": {
-          "type": "post",
+        "item_4GfhAc": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/person-looks-forward-with-the-shadow-of-a-leaf-on.jpg",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Behind the scenes 🎬",
-            "likes": "3.1k",
-            "comments": "234",
-            "link": "https://www.instagram.com"
+            "question": "What if my pet doesn’t like a product?",
+            "answer": "<p>Contact us within 30 days. We’ll help with a return or exchange so you can find a better fit.</p>"
           }
         },
-        "post_pgTGRz": {
-          "type": "post",
+        "item_A9LCz7": {
+          "type": "item",
           "settings": {
-            "image": "shopify://shop_images/applying-eyeshadow.jpg",
-            "platform": "instagram",
-            "username": "",
-            "caption": "Customer favorites 💕",
-            "likes": "967",
-            "comments": "43",
-            "link": "https://www.instagram.com"
+            "question": "Do you offer subscriptions or auto-delivery?",
+            "answer": "<p>Not yet. We’re exploring subscription options for food and essentials—join the newsletter to be notified when it launches.</p>"
+          }
+        },
+        "q1": {
+          "type": "item",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>We offer free returns within 30 days of delivery. Items must be unused and in original packaging. Start a return from your order confirmation email or contact care@petlio.com.</p>"
+          }
+        },
+        "q2": {
+          "type": "item",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders ship within 1–2 business days. Standard delivery takes 3–7 business days in the US. You will receive tracking as soon as your order leaves our warehouse.</p>"
+          }
+        },
+        "q3": {
+          "type": "item",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes. We ship to most countries. International delivery typically takes 7–14 business days. Duties and taxes may apply depending on your region.</p>"
+          }
+        },
+        "q4": {
+          "type": "item",
+          "settings": {
+            "question": "How do I choose the right size for collars, harnesses, or beds?",
+            "answer": "<p>Each product page includes a size guide with measurements. When in doubt, size up for comfort—especially for growing pets—or message us with your pet’s weight and breed and we’ll help.</p>"
+          }
+        },
+        "q5": {
+          "type": "item",
+          "settings": {
+            "question": "Are your products safe for pets?",
+            "answer": "<p>Yes. We source materials intended for pet use and list materials and care notes on every product. If you ever have a concern, contact us and we’ll make it right.</p>"
+          }
+        },
+        "q6": {
+          "type": "item",
+          "settings": {
+            "question": "Can I change or cancel my order?",
+            "answer": "<p>If your order has not shipped yet, email care@petlio.com with your order number and we’ll do our best to update or cancel it. Once shipped, you can use our 30-day return window.</p>"
           }
         }
       },
       "block_order": [
-        "post_DyEXFr",
-        "post_WX3UAB",
-        "post_FY78Xd",
-        "post_pgTGRz"
+        "item_MGVwGR",
+        "item_QQk3Qt",
+        "item_4GfhAc",
+        "item_A9LCz7",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6"
       ],
-      "name": "Social Media Gallery",
       "settings": {
-        "heading": "Follow Us on Social Media",
-        "subheading": "Join our community and stay updated",
-        "show_follow_button": true,
-        "follow_platform": "instagram",
-        "follow_text": "Follow Us",
-        "follow_link": "",
-        "aria_label": "Social media gallery"
+        "heading": "Frequently asked questions",
+        "subheading": "Help center",
+        "description": "<p>Quick answers about shipping, returns, sizing, and care. Still stuck? We’re here.</p>",
+        "layout": "narrow",
+        "open_first": true,
+        "background_color": "#ffffff",
+        "text_color": "#1a1a1a",
+        "accent_color": "#121212"
       }
     },
-    "newsletter_phQKPk": {
+    "newsletter": {
       "type": "newsletter",
-      "name": "Newsletter",
       "settings": {
-        "subheading": "Subscribe Now",
-        "heading": "Join Our Newsletter",
-        "description": "<p>Subscribe to get special offers, free giveaways, and exclusive deals.</p>",
-        "placeholder": "Enter your email",
-        "button_label": "Subscribe",
-        "button_style": "gradient",
+        "subheading": "Stay close",
+        "heading": "NEWSLETTER",
+        "description": "<p>New finds, care tips, and quiet offers—for the everyday life you share with them.</p>",
+        "placeholder": "Your email address",
+        "button_label": "Join us",
+        "button_style": "primary",
         "show_icon": true,
         "style": "default",
-        "background_color": "#f7f4ee",
-        "section_text_color": "#000000",
+        "background_color": "#f8f9fa",
+        "section_text_color": "#1a1a2e",
         "show_note": true,
-        "note_text": "No spam. Unsubscribe anytime.",
-        "success_message": "Thanks for subscribing!",
-        "show_social": false,
-        "social_label": "Follow us:",
-        "reduced_motion_mode": "system",
-        "anim_duration": 700,
-        "anim_delay": 0,
-        "mobile_motion": "lighter"
+        "note_text": "No noise. Unsubscribe anytime.",
+        "success_message": "You're in. Welcome to Petlio.",
+        "show_social": true,
+        "social_label": "Follow along"
       }
     }
   },
   "order": [
-    "hero_carousel_8FFQXy",
-    "images_with_text_carousel_Umaybx",
-    "featured_products_KhYjYk",
-    "shop_the_kit_NLcrJy",
-    "mix_match_pack_zfbxLA",
-    "lookbook_PJk88J",
-    "text_with_icons_kcfmqC",
-    "testimonials_wwx7nK",
-    "blog_posts_TUtF9Y",
-    "social_media_gallery_mTtQC4",
-    "newsletter_phQKPk"
+    "hero",
+    "shop_by_pet",
+    "featured_products",
+    "outfit_builder",
+    "lookbook_gallery",
+    "lookbook",
+    "care_ritual_WTwbiB",
+    "blog_posts",
+    "faq",
+    "newsletter"
   ]
 }

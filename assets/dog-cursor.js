@@ -678,6 +678,24 @@
       0.5;
 
 
+    /*
+     * Publish position for other on-page creatures (the scroll bird
+     * and scroll monkey use this to notice the dog getting close and
+     * flee). Cheap shared object, no dependency in either direction —
+     * if this script isn't loaded, the others just never see a threat.
+     */
+
+    window.PetlioCursorPet =
+      window.PetlioCursorPet ||
+      {};
+
+    window.PetlioCursorPet.x =
+      dogX;
+
+    window.PetlioCursorPet.y =
+      dogY;
+
+
     lastMoveTime =
       performance.now();
 
@@ -754,6 +772,13 @@
 
     mouseX = -9999;
     mouseY = -9999;
+
+
+    if (window.PetlioCursorPet) {
+
+      window.PetlioCursorPet.x = -9999;
+      window.PetlioCursorPet.y = -9999;
+    }
 
 
     if (toyEl) {
@@ -1178,6 +1203,10 @@
 
     dogY +=
       velY;
+
+
+    window.PetlioCursorPet.x = dogX;
+    window.PetlioCursorPet.y = dogY;
 
 
     /* --------------------------------------------------------

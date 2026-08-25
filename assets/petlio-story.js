@@ -232,16 +232,21 @@
       var fromLeft = incoming.classList.contains('paper-from-left');
       var enterClass = fromLeft ? 'paper-enter-from-left' : 'paper-enter-from-right';
 
+      // Ensure no leftover enter class from a previous interrupted run
       clearAnimClasses(incoming);
       incoming.classList.remove('is-paper-settled');
-      void incoming.offsetWidth; // restart animation
+      // Force style recalc so animation restarts cleanly from the "from" keyframe
+      void incoming.offsetWidth;
 
       incoming.classList.add(enterClass);
       setActive(toIndex);
 
       function finish() {
         clearAnimClasses(incoming);
+        // Always force settled so no residual translate can remain
         incoming.classList.add('is-paper-settled');
+        // Extra safety: remove any transform that might have been left by the animation
+        incoming.style.transform = '';
         isAnimating = false;
       }
 
@@ -251,11 +256,12 @@
         finish();
       }
       incoming.addEventListener('animationend', onEnd);
+      // Fallback in case animationend is missed (tab backgrounded, reduced motion edge, etc.)
       setTimeout(function () {
         if (!isAnimating) return;
         incoming.removeEventListener('animationend', onEnd);
         finish();
-      }, ANIM_MS + 60);
+      }, ANIM_MS + 80);
     }
 
     function scoreSection(node, vh, mid) {
@@ -325,10 +331,11 @@
       });
     }
 
-    // Initial settle — no animation on first paint
+    // Initial settle — no animation on first paint; force zero offset
     nodes.forEach(function (n) {
-      n.classList.add('is-paper-settled');
       clearAnimClasses(n);
+      n.classList.add('is-paper-settled');
+      n.style.transform = '';
     });
     var initial = findDominantIndex();
     activeIndex = initial.index;

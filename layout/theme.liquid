@@ -15,6 +15,7 @@
     {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
     {{ 'dog-cursor.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-bird.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-cat.css' | asset_url | stylesheet_tag }}
     {{ 'petlio-toast.css' | asset_url | stylesheet_tag }}
     {% if request.page_type == 'index' %}
       {{ 'petlio-story.css' | asset_url | stylesheet_tag }}
@@ -31,6 +32,7 @@
     <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
     <script src="{{ 'dog-cursor.js' | asset_url }}" defer></script>
     <script src="{{ 'scroll-bird.js' | asset_url }}" defer></script>
+    <script src="{{ 'scroll-cat.js' | asset_url }}" defer></script>
     <script src="{{ 'petlio-toast.js' | asset_url }}" defer></script>
     {% if request.page_type == 'index' %}
       <script src="{{ 'petlio-story.js' | asset_url }}" defer></script>

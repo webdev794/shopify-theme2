@@ -37,6 +37,10 @@
   var BIRD_HEIGHT = 52;
   var PERCH_OFFSET_Y = 0.16;
   var EMBER_INTERVAL_MS = 65;
+  var FLEE_RADIUS = 150;
+  var FLEE_CHECK_MS = 120;
+  var FLEE_COOLDOWN_MS = 1700;
+  var STARTLE_MS = 180;
   var EMBER_COLORS = [
     'radial-gradient(circle, #fff3c4 0%, #ffb04d 45%, rgba(255, 90, 30, 0) 75%)',
     'radial-gradient(circle, #ffe08a 0%, #ff7a3d 45%, rgba(220, 60, 20, 0) 75%)',
@@ -124,9 +128,12 @@
     var velocity = 0;
     var lastScrollY = window.scrollY || window.pageYOffset;
     var isScrolling = false;
+    var isFleeing = false;
     var idleTimer = null;
     var perches = [];
     var lastEmberAt = 0;
+    var lastFleeCheckAt = 0;
+    var lastFleeAt = -Infinity;
 
     function spawnEmber(rect, opts) {
       if (!rect || !rect.width) return;
@@ -229,18 +236,130 @@
       return vh * 0.28;
     }
 
+    // Same perch list, but picks whichever visible perch is FARTHEST from
+    // a given point — used when fleeing, so the bird actually puts
+    // distance between itself and the dog instead of picking its usual
+    // "closest to center" spot.
+    //
+    // A perch-only pick can fail near the top/bottom of the page, where
+    // often only one section is in view: the "farthest visible perch"
+    // is then the bird's own perch, which looked like it never moved.
+    // So this always also considers a guaranteed-far fallback (flip to
+    // the opposite half of the viewport) and returns whichever of the
+    // two actually ends up farther from the danger point.
+    var MIN_FLEE_DISTANCE = 160;
+
+    function clampToViewport(y, vh) {
+      return Math.max(36, Math.min(vh - BIRD_HEIGHT - 16, y));
+    }
+
+    function getFleeTargetY(dangerY, fromY) {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var bestPerch = null;
+      var bestPerchDist = -1;
+
+      perches.forEach(function (item) {
+        var rect = item.section.getBoundingClientRect();
+        if (rect.bottom < 40 || rect.top > vh - 40) return;
+
+        var perchLocal = rect.height * PERCH_OFFSET_Y;
+        var perchViewportY = rect.top + perchLocal;
+        var distFromDanger = Math.abs(perchViewportY - dangerY);
+        var distFromSelf = Math.abs(perchViewportY - fromY);
+
+        if (distFromSelf < MIN_FLEE_DISTANCE) return;
+
+        if (distFromDanger > bestPerchDist) {
+          bestPerchDist = distFromDanger;
+          bestPerch = clampToViewport(
+            perchViewportY - BIRD_HEIGHT * 0.55,
+            vh
+          );
+        }
+      });
+
+      var flipped = clampToViewport(
+        fromY < vh / 2 ? vh * 0.82 : vh * 0.18,
+        vh
+      );
+
+      if (bestPerch === null) {
+        return flipped;
+      }
+
+      var bestPerchDistFromDanger = Math.abs(bestPerch - dangerY);
+      var flippedDistFromDanger = Math.abs(flipped - dangerY);
+
+      return flippedDistFromDanger > bestPerchDistFromDanger
+        ? flipped
+        : bestPerch;
+    }
+
     function setState(state) {
-      bird.classList.remove('is-flying', 'is-landing', 'is-perched');
+      bird.classList.remove(
+        'is-flying',
+        'is-landing',
+        'is-perched',
+        'is-startled'
+      );
       if (state) bird.classList.add(state);
     }
 
+    // The dog got close while the bird was sitting still — flinch, then
+    // bolt to the farthest visible perch from the danger point. Clears
+    // the spot the bird was occupying and adds a bit of life to the page.
+    function triggerFlee(dangerX, dangerY) {
+      lastFleeAt = performance.now();
+      setState('is-startled');
+
+      setTimeout(function () {
+        if (isScrolling) return;
+
+        isFleeing = true;
+        setState('is-flying');
+        targetY = getFleeTargetY(dangerY, currentY);
+
+        setTimeout(function () {
+          isFleeing = false;
+          if (isScrolling) return;
+
+          setState('is-landing');
+          spawnEmberBurst(bird.getBoundingClientRect(), 4);
+
+          setTimeout(function () {
+            if (!isScrolling) setState('is-perched');
+          }, 400);
+        }, 550);
+      }, STARTLE_MS);
+    }
+
+    function checkFlee(now) {
+      if (isScrolling || isFleeing) return;
+      if (now - lastFleeAt < FLEE_COOLDOWN_MS) return;
+
+      var pet = window.PetlioCursorPet;
+      if (!pet || typeof pet.x !== 'number' || pet.x < -1000) return;
+
+      var rect = bird.getBoundingClientRect();
+      if (!rect.width) return;
+
+      var bx = rect.left + rect.width / 2;
+      var by = rect.top + rect.height / 2;
+      var dist = Math.hypot(pet.x - bx, pet.y - by);
+
+      if (dist < FLEE_RADIUS) {
+        triggerFlee(pet.x, pet.y);
+      }
+    }
+
     function tick() {
-      var lerp = isScrolling ? LERP_FLY : LERP_LAND;
+      var inFlight = isScrolling || isFleeing;
+      var lerp = inFlight ? LERP_FLY : LERP_LAND;
       var prev = currentY;
       currentY += (targetY - currentY) * lerp;
       velocity = currentY - prev;
 
-      var bank = isScrolling ? Math.max(-12, Math.min(12, velocity * 2.2)) : 0;
+      var bank = inFlight ? Math.max(-12, Math.min(12, velocity * 2.2)) : 0;
 
       bird.style.transform =
         'translate3d(0, ' +
@@ -249,12 +368,18 @@
         bank.toFixed(2) +
         'deg)';
 
-      if (isScrolling) {
+      if (inFlight) {
         var now = Date.now();
         if (now - lastEmberAt > EMBER_INTERVAL_MS) {
           lastEmberAt = now;
           spawnEmber(bird.getBoundingClientRect());
         }
+      }
+
+      var perfNow = performance.now();
+      if (perfNow - lastFleeCheckAt > FLEE_CHECK_MS) {
+        lastFleeCheckAt = perfNow;
+        checkFlee(perfNow);
       }
 
       requestAnimationFrame(tick);

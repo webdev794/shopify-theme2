@@ -223,13 +223,13 @@
     ]
   },
   {
-    "name": "Story / motion",
+    "name": "Story and motion",
     "settings": [
       {
         "type": "checkbox",
         "id": "enable_paper_slide",
         "label": "Home page paper-slide sections",
-        "default": true,
+        "default": false,
         "info": "On the home page, when a new section becomes the main one in view, it enters with a short left/right paper animation, then stays fully still. Turn OFF for a fully static layout (no paper motion). Respects reduced-motion preferences."
       },
       {

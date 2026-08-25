@@ -26,9 +26,10 @@ body.template-index #MainContent {
   background: var(--petlio-story-paper);
 }
 
-/* When paper-slide is on, prefer visible so side travel is not cropped */
+/* Keep overflow clipped so enter animations never create a horizontal scrollbar
+   (scrollbar appearance would shift the whole page left/right). */
 body.template-index.petlio-paper-slide #MainContent {
-  overflow-x: visible;
+  overflow-x: clip;
 }
 
 /* Remove the feeling that Shopify has placed separate white cards one after another. */
@@ -355,22 +356,34 @@ body.petlio-paper-slide #MainContent {
   overflow-x: clip;
 }
 
+/* Base: sections never carry a horizontal offset unless actively entering.
+   This prevents any residual translate from a failed/interrupted animation
+   and eliminates empty space on the left caused by a stuck translateX. */
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
   position: relative;
-  transform: none;
+  left: 0;
+  right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  transform: translate3d(0, 0, 0);
   opacity: 1;
   transform-origin: center center;
   will-change: auto;
   backface-visibility: hidden;
 }
 
-body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-settled {
-  transform: none !important;
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-settled,
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section:not(.paper-enter-from-left):not(.paper-enter-from-right) {
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  transform: translate3d(0, 0, 0) !important;
   opacity: 1 !important;
   animation: none !important;
 }
 
-/* Active chapter — static lift only */
+/* Active chapter — static lift only (no horizontal movement) */
 body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
   z-index: 6;
   box-shadow:
@@ -378,7 +391,7 @@ body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-
     0 1px 0 rgba(255, 255, 255, 0.3) inset;
 }
 
-/* Enter keyframes only */
+/* Enter keyframes only — applied solely while the enter class is present */
 @keyframes petlio-paper-enter-left {
   from {
     transform: translate3d(calc(var(--petlio-paper-dist) * -1), 0, 0);
@@ -420,7 +433,7 @@ body.template-index .petlio-chapter {
 @media (prefers-reduced-motion: reduce) {
   body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
     animation: none !important;
-    transform: none !important;
+    transform: translate3d(0, 0, 0) !important;
     opacity: 1 !important;
   }
 }

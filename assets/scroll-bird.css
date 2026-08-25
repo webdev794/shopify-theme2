@@ -52,6 +52,36 @@
   transform: translateY(2px);
 }
 
+/* Startled — the dog got close. A quick alarmed flutter before it bolts. */
+#scroll-bird.is-startled .scroll-bird__wing {
+  animation: scroll-bird-startle-flap 0.08s ease-in-out infinite alternate;
+}
+
+#scroll-bird.is-startled .scroll-bird__body {
+  animation: scroll-bird-flinch 0.18s ease-out;
+}
+
+@keyframes scroll-bird-startle-flap {
+  from {
+    transform: rotate(-32deg);
+  }
+  to {
+    transform: rotate(40deg);
+  }
+}
+
+@keyframes scroll-bird-flinch {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(-3px) scale(1.06);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
 #scroll-bird svg {
   display: block;
   width: 100%;

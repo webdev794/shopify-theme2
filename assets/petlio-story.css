@@ -1,0 +1,437 @@
+/*
+ * Petlio Homepage Story System
+ *
+ * The homepage is intentionally treated as one continuous story instead of
+ * a stack of unrelated Shopify sections. This file only affects the index.
+ *
+ * Combined with the global petlio-theme.css chapter + paper language, this
+ * is a core uniqueness device: the site reads as sequential chapters of
+ * life with pets.
+ */
+
+body.template-index {
+  --petlio-story-radius: clamp(24px, 3vw, 48px);
+  --petlio-story-gap: clamp(2rem, 5vw, 6rem);
+  --petlio-story-ink: #171717;
+  --petlio-story-paper: #f8f6f1;
+  --petlio-story-warm: #eee7dc;
+  --petlio-story-soft: #f3efe8;
+  --petlio-story-line: rgba(23, 23, 23, 0.12);
+  background: var(--petlio-story-paper);
+}
+
+body.template-index #MainContent {
+  overflow-x: clip;
+  overflow-y: visible;
+  background: var(--petlio-story-paper);
+}
+
+/* Keep overflow clipped so enter animations never create a horizontal scrollbar
+   (scrollbar appearance would shift the whole page left/right). */
+body.template-index.petlio-paper-slide #MainContent {
+  overflow-x: clip;
+}
+
+/* Remove the feeling that Shopify has placed separate white cards one after another. */
+body.template-index #MainContent > .shopify-section {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+
+body.template-index .petlio-story-section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Every chapter gets breathing room, but the chapters overlap visually. */
+body.template-index .petlio-story-section + .petlio-story-section {
+  margin-top: calc(var(--petlio-story-gap) * -0.34);
+  padding-top: var(--petlio-story-gap);
+}
+
+/* HERO — the opening scene. */
+body.template-index .petlio-story-section--hero {
+  z-index: 5;
+  margin-bottom: 0;
+}
+
+body.template-index .petlio-story-section--hero::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: clamp(-20px, -1.5vw, -10px);
+  width: min(70%, 720px);
+  height: clamp(18px, 3vw, 40px);
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--petlio-story-paper);
+  box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.04);
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* Hide the heavy hero bridge when paper-slide is active — it fought labels */
+body.template-index.petlio-paper-slide .petlio-story-section--hero::after {
+  display: none;
+}
+
+/* DISCOVERY — pet cards become the first chapter after the hero. */
+body.template-index .petlio-story-section--shop-by-pet {
+  z-index: 4;
+  padding-bottom: clamp(3rem, 7vw, 8rem);
+  background:
+    radial-gradient(circle at 15% 35%, rgba(255,255,255,.8), transparent 26%),
+    var(--petlio-story-paper);
+  border-radius: 0 0 var(--petlio-story-radius) var(--petlio-story-radius);
+}
+
+body.template-index .petlio-story-section--shop-by-pet .shop-by-pet__card {
+  transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease;
+}
+
+body.template-index .petlio-story-section--shop-by-pet .shop-by-pet__card:hover {
+  transform: translateY(-8px) rotate(-.35deg);
+  box-shadow: 0 24px 60px rgba(0,0,0,.10);
+}
+
+/* PRODUCTS — visually enters the pet world rather than starting a new card. */
+body.template-index .petlio-story-section--featured-products {
+  z-index: 3;
+  padding-bottom: clamp(4rem, 8vw, 9rem);
+  background: var(--petlio-story-warm);
+  border-radius: var(--petlio-story-radius);
+  box-shadow: 0 20px 80px rgba(0,0,0,.05);
+}
+
+body.template-index .petlio-story-section--featured-products::before {
+  content: 'FOR THEIR EVERYDAY';
+  display: block;
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto clamp(1rem, 2vw, 2rem);
+  padding-top: clamp(1.5rem, 3vw, 3rem);
+  color: rgba(23,23,23,.48);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+
+/* BUILD — this section should feel like the user is now composing a life, not browsing another grid. */
+body.template-index .petlio-story-section--outfit-builder {
+  z-index: 4;
+  margin-left: auto;
+  margin-right: auto;
+  width: min(96%, 1440px);
+  background: var(--petlio-story-paper);
+  border-radius: var(--petlio-story-radius);
+  box-shadow: 0 25px 80px rgba(0,0,0,.08);
+  overflow: clip;
+}
+
+/* LOOK — image-led pause. */
+body.template-index .petlio-story-section--lookbook-gallery {
+  z-index: 2;
+  padding-bottom: clamp(3rem, 7vw, 8rem);
+  background: var(--petlio-story-soft);
+}
+
+body.template-index .petlio-story-section--lookbook-gallery::after {
+  content: '';
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 0;
+  height: 1px;
+  background: var(--petlio-story-line);
+}
+
+body.template-index .petlio-story-section--lookbook {
+  z-index: 3;
+  width: min(94%, 1500px);
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--petlio-story-ink);
+  color: #fff;
+  border-radius: var(--petlio-story-radius);
+  overflow: clip;
+  box-shadow: 0 30px 100px rgba(0,0,0,.14);
+  box-sizing: border-box;
+}
+
+/* TRUST — deliberately quieter after the large visual moment. */
+body.template-index .petlio-story-section--text-with-icons {
+  z-index: 2;
+  padding-top: clamp(4rem, 8vw, 9rem);
+  padding-bottom: clamp(3rem, 6vw, 7rem);
+  background: var(--petlio-story-paper);
+}
+
+/* CARE / STORIES — blog + FAQ are one continuation. */
+body.template-index .petlio-story-section--blog-posts {
+  z-index: 3;
+  background: var(--petlio-story-warm);
+  border-radius: var(--petlio-story-radius) var(--petlio-story-radius) 0 0;
+}
+
+body.template-index .petlio-story-section--faq {
+  z-index: 4;
+  width: min(94%, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--petlio-story-paper);
+  border-radius: var(--petlio-story-radius);
+  box-shadow: 0 18px 70px rgba(0,0,0,.06);
+}
+
+/* COMMUNITY — testimonials should feel like the emotional conclusion. */
+body.template-index .petlio-story-section--testimonials {
+  z-index: 2;
+  padding-top: clamp(4rem, 8vw, 9rem);
+  padding-bottom: clamp(5rem, 10vw, 11rem);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.85), transparent 35%),
+    var(--petlio-story-soft);
+}
+
+/* JOIN — final chapter visually closes the story. */
+body.template-index .petlio-story-section--newsletter {
+  z-index: 5;
+  width: min(96%, 1500px);
+  margin: 0 auto;
+  padding-bottom: clamp(3rem, 5vw, 5rem);
+  background: var(--petlio-story-ink);
+  color: #fff;
+  border-radius: var(--petlio-story-radius) var(--petlio-story-radius) 0 0;
+  overflow: clip;
+}
+
+/* Scroll reveal. JS only adds .is-visible; without JS the content remains visible. */
+body.template-index .petlio-story-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .75s ease, transform .9s cubic-bezier(.2,.8,.2,1);
+}
+
+body.template-index .petlio-story-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Small chapter marker used by the story navigation. */
+/* Legacy JS floating labels — hidden. Chapter numbers live in Liquid. */
+body.template-index .petlio-story-chapter-label {
+  display: none !important;
+}
+
+/* Positioning context for any absolute chapter UI inside sections */
+body.template-index #MainContent > .shopify-section,
+body.template-index .petlio-story-section {
+  position: relative;
+}
+
+/* Story progress rail. */
+.petlio-story-progress {
+  position: fixed;
+  top: 50%;
+  right: 18px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
+
+.petlio-story-progress__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  opacity: .38;
+  transition: transform .25s ease, opacity .25s ease, background-color .25s ease;
+  cursor: pointer;
+}
+
+.petlio-story-progress__dot.is-active {
+  opacity: 1;
+  transform: scale(1.45);
+  background: currentColor;
+}
+
+@media screen and (max-width: 749px) {
+  body.template-index .petlio-story-section + .petlio-story-section {
+    margin-top: -1rem;
+    padding-top: 2.5rem;
+  }
+
+  body.template-index .petlio-story-section--outfit-builder,
+  body.template-index .petlio-story-section--lookbook,
+  body.template-index .petlio-story-section--faq,
+  body.template-index .petlio-story-section--newsletter {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 20px;
+    box-sizing: border-box;
+  }
+
+  /* Lookbook: no side crop — full width inside the page, overflow only inside scene */
+  body.template-index .petlio-story-section--lookbook {
+    overflow: visible;
+    padding-inline: 0;
+  }
+
+  body.template-index .petlio-story-section--lookbook .petlio-lookbook {
+    max-width: 100%;
+  }
+
+  .petlio-story-progress {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.template-index .petlio-story-reveal,
+  body.template-index .petlio-story-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ---- Stronger continuous story rhythm ---- */
+body.template-index #MainContent > .shopify-section {
+  background: transparent;
+}
+
+/* Soft paper bridges between chapters */
+body.template-index .petlio-story-section + .petlio-story-section::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 50%;
+  width: min(88%, 960px);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--petlio-story-line, rgba(23, 23, 23, 0.12)),
+    transparent
+  );
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Keep lower sections on paper tones even if merchant global bg is white */
+body.template-index .shopify-section .blog-posts,
+body.template-index .shopify-section .faq,
+body.template-index .shopify-section .testimonials {
+  background-color: var(--petlio-paper, #f7f3eb);
+}
+
+
+/* ==========================================================================
+   PAPER SLIDE — discrete enter-only chapter transitions (optional)
+   Sections stay fully readable. Crossing ~midpoint triggers a short
+   L/R enter animation on the new section, then everything settles static.
+   No exit transform (prevents snap-back glitch).
+   ========================================================================== */
+
+body.petlio-paper-slide {
+  --petlio-paper-slide: 0.55;
+  --petlio-paper-dist: 48%;
+  --petlio-paper-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --petlio-paper-duration: 0.52s;
+}
+
+body.petlio-paper-slide #MainContent {
+  overflow-x: clip;
+}
+
+/* Base: sections never carry a horizontal offset unless actively entering.
+   This prevents any residual translate from a failed/interrupted animation. */
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
+  position: relative;
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+  transform-origin: center center;
+  will-change: auto;
+  backface-visibility: hidden;
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-settled,
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section:not(.paper-enter-from-left):not(.paper-enter-from-right) {
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* Active chapter — static lift only (no horizontal movement) */
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.is-paper-active {
+  z-index: 6;
+  box-shadow:
+    0 10px 36px rgba(39, 48, 40, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.3) inset;
+}
+
+/* Enter keyframes only — applied solely while the enter class is present */
+@keyframes petlio-paper-enter-left {
+  from {
+    transform: translate3d(calc(var(--petlio-paper-dist) * -1), 0, 0);
+    opacity: 0.4;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes petlio-paper-enter-right {
+  from {
+    transform: translate3d(var(--petlio-paper-dist), 0, 0);
+    opacity: 0.4;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-enter-from-left {
+  animation: petlio-paper-enter-left var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 8;
+}
+
+body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section.paper-enter-from-right {
+  animation: petlio-paper-enter-right var(--petlio-paper-duration) var(--petlio-paper-ease) both;
+  z-index: 8;
+}
+
+/* Keep liquid chapter headers above decorative bridges */
+body.template-index .petlio-chapter {
+  position: relative;
+  z-index: 12;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.petlio-paper-slide #MainContent > .shopify-section.petlio-story-section {
+    animation: none !important;
+    transform: translate3d(0, 0, 0) !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (max-width: 749px) {
+  body.petlio-paper-slide {
+    --petlio-paper-dist: 32%;
+    --petlio-paper-duration: 0.42s;
+  }
+}

@@ -1,5 +1,9 @@
 {%- comment -%}
   Header with Mega Menu
+  - Rendered inside the header section group (sections/header-group.json)
+  - Multi-level navigation with mega menu support for level 1 parent links
+  - Predictive search with progressive enhancement
+  - Cart, account, and country/language selectors
 {%- endcomment -%}
 
 {%- liquid
@@ -7,29 +11,22 @@
   assign logo = section.settings.logo
   assign enable_mega_menu = section.settings.enable_mega_menu
   assign mega_menu_parents = section.settings.mega_menu_parents | strip | split: ','
-  assign header_style = section.settings.header_style | default: 'classic'
-  assign is_minimal = false
-  if header_style == 'minimal'
-    assign is_minimal = true
-  endif
-  assign float_position = section.settings.float_button_position | default: 'bottom-left'
-  assign float_label = section.settings.float_button_label | default: 'Menu'
 -%}
 
 {{ 'header.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'header.js' | asset_url }}" defer></script>
 
 <header
-  class="header{% if section.settings.enable_sticky_header %} header--sticky{% endif %}{% if is_minimal %} header--minimal{% endif %}"
+  class="header{% if section.settings.enable_sticky_header %} header--sticky{% endif %}"
   style="--header-background: {{ section.settings.color_background }}; 
          --header-foreground: {{ section.settings.color_foreground }}; 
          --header-hover: {{ section.settings.color_hover | default: section.settings.color_foreground }};
-         --header-logo-width: {{ section.settings.logo_width }}px;"
+         --header-logo-width: {{ section.settings.logo_width }}px;
+         --header-bg: {{ section.settings.color_background }};"
   data-predictive-search-url="{{ routes.predictive_search_url }}"
   data-search-url="{{ routes.search_url }}"
   {% if section.settings.open_on_hover %}data-hover-menus{% endif %}
   {% if section.settings.enable_sticky_header and section.settings.sticky_hide_on_scroll %}data-hide-on-scroll{% endif %}
-  {% if is_minimal %}data-header-minimal{% endif %}
 >
   <div class="header__inner">
     <!-- Mobile Menu Toggle -->
@@ -63,19 +60,27 @@
                           {{ child_link.title | escape }}
                         </a>
                         {%- if child_link.links != blank -%}
-                          <ul class="header__mobile-sublist header__mobile-sublist--nested list-unstyled">
-                            {%- for grandchild_link in child_link.links -%}
-                              <li>
-                                <a
-                                  href="{{ grandchild_link.url }}"
-                                  class="header__mobile-link header__mobile-link--nested"
-                                  {% if grandchild_link.current %}aria-current="page"{% endif %}
-                                >
-                                  {{ grandchild_link.title | escape }}
-                                </a>
-                              </li>
-                            {%- endfor -%}
-                          </ul>
+                          <details class="header__mobile-dropdown header__mobile-dropdown--nested">
+                            <summary
+                              class="header__mobile-nested-toggle"
+                              aria-label="{{ child_link.title | escape }}"
+                            >
+                              <span class="header__caret" aria-hidden="true">{% render 'icon-caret' %}</span>
+                            </summary>
+                            <ul class="header__mobile-sublist header__mobile-sublist--nested list-unstyled">
+                              {%- for grandchild_link in child_link.links -%}
+                                <li>
+                                  <a
+                                    href="{{ grandchild_link.url }}"
+                                    class="header__mobile-link header__mobile-link--nested"
+                                    {% if grandchild_link.current %}aria-current="page"{% endif %}
+                                  >
+                                    {{ grandchild_link.title | escape }}
+                                  </a>
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          </details>
                         {%- endif -%}
                       </li>
                     {%- endfor -%}
@@ -250,7 +255,7 @@
                         {%- endfor -%}
                         </div>
 
-                        <!-- Optional Featured Content (sits beside the link grid) -->
+                        <!-- Optional Featured Content -->
                         {%- if section.settings.mega_show_featured -%}
                           <aside class="header__mega-featured">
                             {%- if section.settings.mega_featured_image != blank -%}
@@ -451,146 +456,6 @@
       </a>
     </div>
   </div>
-
-  {%- if is_minimal -%}
-    <!-- Floating Menu Trigger -->
-    <button
-      type="button"
-      class="header-float-trigger header-float-trigger--{{ float_position }}"
-      data-header-float-trigger
-      aria-expanded="false"
-      aria-controls="HeaderFloatOverlay-{{ section.id }}"
-      aria-label="{{ float_label | escape }}"
-    >
-      <span class="header-float-trigger__icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <line x1="4" y1="8" x2="20" y2="8"></line>
-          <line x1="4" y1="15" x2="14" y2="15"></line>
-        </svg>
-      </span>
-      {%- if float_label != blank -%}
-        <span class="header-float-trigger__label">{{ float_label | escape }}</span>
-      {%- endif -%}
-    </button>
-
-    <!-- Full-screen Floating Menu Overlay -->
-    <div
-      id="HeaderFloatOverlay-{{ section.id }}"
-      class="header-float-overlay"
-      data-header-float-overlay
-      hidden
-      role="dialog"
-      aria-modal="true"
-      aria-label="{{ float_label | escape }}"
-    >
-      <div class="header-float-overlay__backdrop" data-header-float-close tabindex="-1"></div>
-      <div class="header-float-overlay__panel">
-        <div class="header-float-overlay__top">
-          <a href="{{ routes.root_url }}" class="header-float-overlay__logo" aria-label="{{ shop.name | escape }}">
-            {%- if logo != blank -%}
-              {{
-                logo
-                | image_url: width: 400
-                | image_tag:
-                  class: 'header-float-overlay__logo-image',
-                  widths: '100, 200, 300, 400',
-                  sizes: '160px',
-                  alt: shop.name,
-                  loading: 'lazy'
-              }}
-            {%- else -%}
-              <span class="header-float-overlay__shop-name">{{ shop.name }}</span>
-            {%- endif -%}
-          </a>
-          <button
-            type="button"
-            class="header-float-overlay__close"
-            data-header-float-close
-            aria-label="Close menu"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-
-        {%- if menu != blank -%}
-          <nav class="header-float-overlay__nav" aria-label="{{ 'sections.header.nav_label' | t }}">
-            <ul class="header-float-overlay__list list-unstyled">
-              {%- for link in menu.links -%}
-                <li class="header-float-overlay__item" style="--item-index: {{ forloop.index0 }};">
-                  {%- if link.links != blank -%}
-                    <details class="header-float-overlay__dropdown">
-                      <summary class="header-float-overlay__link header-float-overlay__link--parent">
-                        <span>{{ link.title | escape }}</span>
-                        <span class="header-float-overlay__caret" aria-hidden="true">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                        </span>
-                      </summary>
-                      <ul class="header-float-overlay__sublist list-unstyled">
-                        {%- for child_link in link.links -%}
-                          <li>
-                            <a
-                              href="{{ child_link.url }}"
-                              class="header-float-overlay__sublink"
-                              {% if child_link.current %}aria-current="page"{% endif %}
-                            >
-                              {{ child_link.title | escape }}
-                            </a>
-                            {%- if child_link.links != blank -%}
-                              <ul class="header-float-overlay__sublist header-float-overlay__sublist--nested list-unstyled">
-                                {%- for grandchild_link in child_link.links -%}
-                                  <li>
-                                    <a
-                                      href="{{ grandchild_link.url }}"
-                                      class="header-float-overlay__sublink header-float-overlay__sublink--nested"
-                                      {% if grandchild_link.current %}aria-current="page"{% endif %}
-                                    >
-                                      {{ grandchild_link.title | escape }}
-                                    </a>
-                                  </li>
-                                {%- endfor -%}
-                              </ul>
-                            {%- endif -%}
-                          </li>
-                        {%- endfor -%}
-                      </ul>
-                    </details>
-                  {%- else -%}
-                    <a
-                      href="{{ link.url }}"
-                      class="header-float-overlay__link"
-                      {% if link.current %}aria-current="page"{% endif %}
-                    >
-                      {{ link.title | escape }}
-                    </a>
-                  {%- endif -%}
-                </li>
-              {%- endfor -%}
-            </ul>
-          </nav>
-        {%- endif -%}
-
-        <div class="header-float-overlay__footer">
-          {%- if section.settings.show_account_link and shop.customer_accounts_enabled -%}
-            <shopify-account
-              menu="{{ section.settings.customer_account_menu | default: 'customer-account-main-menu' }}"
-              class="header-float-overlay__account"
-            >
-              <span slot="signed-out-avatar" class="header-float-overlay__footer-link">{{ 'sections.header.account' | t }}</span>
-            </shopify-account>
-          {%- endif -%}
-          <a href="{{ routes.cart_url }}" class="header-float-overlay__footer-link">
-            {{ 'sections.header.cart' | t }}
-            {%- if cart.item_count > 0 -%}
-              <span>({{ cart.item_count }})</span>
-            {%- endif -%}
-          </a>
-        </div>
-      </div>
-    </div>
-  {%- endif -%}
 </header>
 
 {% schema %}
@@ -598,7 +463,10 @@
   "name": "t:sections.header.name",
   "class": "section-header",
   "settings": [
-    { "type": "header", "content": "t:sections.header.settings.header__1.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__1.content"
+    },
     {
       "type": "image_picker",
       "id": "logo",
@@ -615,38 +483,10 @@
       "unit": "px",
       "default": 120
     },
-    { "type": "header", "content": "Layout style" },
     {
-      "type": "select",
-      "id": "header_style",
-      "label": "Header style",
-      "options": [
-        { "value": "classic", "label": "Classic (menu always visible)" },
-        { "value": "minimal", "label": "Minimal / Floating menu" }
-      ],
-      "default": "classic",
-      "info": "Minimal hides the main menu and shows a floating button that opens a full-screen menu overlay."
+      "type": "header",
+      "content": "t:sections.header.settings.header__2.content"
     },
-    {
-      "type": "select",
-      "id": "float_button_position",
-      "label": "Floating button position",
-      "options": [
-        { "value": "bottom-left", "label": "Bottom left" },
-        { "value": "bottom-right", "label": "Bottom right" },
-        { "value": "top-right", "label": "Top right" }
-      ],
-      "default": "bottom-left",
-      "info": "Only used when Header style is Minimal / Floating menu."
-    },
-    {
-      "type": "text",
-      "id": "float_button_label",
-      "label": "Floating button label",
-      "default": "Menu",
-      "info": "Leave blank for icon-only button."
-    },
-    { "type": "header", "content": "t:sections.header.settings.header__2.content" },
     {
       "type": "link_list",
       "id": "menu",
@@ -665,7 +505,7 @@
       "type": "checkbox",
       "id": "enable_sticky_header",
       "label": "t:sections.header.settings.enable_sticky_header.label",
-      "default": false
+      "default": true
     },
     {
       "type": "checkbox",
@@ -674,7 +514,10 @@
       "default": false,
       "info": "t:sections.header.settings.sticky_hide_on_scroll.info"
     },
-    { "type": "header", "content": "t:sections.header.settings.header__3.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__3.content"
+    },
     {
       "type": "checkbox",
       "id": "enable_mega_menu",
@@ -733,7 +576,10 @@
       "label": "t:sections.header.settings.mega_featured_button_label.label",
       "default": "Shop now"
     },
-    { "type": "header", "content": "t:sections.header.settings.header__4.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__4.content"
+    },
     {
       "type": "checkbox",
       "id": "show_search",
@@ -768,7 +614,10 @@
       "info": "t:sections.header.settings.show_language_selector.info",
       "default": true
     },
-    { "type": "header", "content": "t:sections.header.settings.header__5.content" },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header__5.content"
+    },
     {
       "type": "color",
       "id": "color_background",

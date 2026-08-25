@@ -217,6 +217,7 @@
   padding: 2rem;
   background: var(--hero-box-background);
   border-radius: 8px;
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
@@ -393,6 +394,7 @@
   .hero--stack-mobile .hero__content--boxed {
     padding: 0;
     background: none;
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 

@@ -11,83 +11,81 @@
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
+  assign og_image = page_image
 
   if request.page_type == 'product'
     assign og_type = 'product'
+    if og_image == blank and product.featured_media.preview_image
+      assign og_image = product.featured_media.preview_image
+    endif
   elsif request.page_type == 'article'
     assign og_type = 'article'
+    if og_image == blank and article.image
+      assign og_image = article.image
+    endif
+  elsif request.page_type == 'collection'
+    if og_image == blank and collection.image
+      assign og_image = collection.image
+    endif
   elsif request.page_type == 'password'
     assign og_url = request.origin
   endif
-%}
 
-<meta
-  property="og:site_name"
-  content="{{ shop.name }}"
->
-<meta
-  property="og:url"
-  content="{{ og_url }}"
->
-<meta
-  property="og:title"
-  content="{{ og_title | escape }}"
->
-<meta
-  property="og:type"
-  content="{{ og_type }}"
->
-<meta
-  property="og:description"
-  content="{{ og_description | escape }}"
->
+  if og_image == blank and settings.share_image != blank
+    assign og_image = settings.share_image
+  endif
+  if og_image == blank and shop.brand.cover_image
+    assign og_image = shop.brand.cover_image
+  endif
+  if og_image == blank and shop.brand.square_logo
+    assign og_image = shop.brand.square_logo
+  endif
+  if og_image == blank and settings.favicon != blank
+    assign og_image = settings.favicon
+  endif
+-%}
 
-{%- if page_image -%}
-  <meta
-    property="og:image"
-    content="http:{{ page_image | image_url }}"
-  >
-  <meta
-    property="og:image:secure_url"
-    content="https:{{ page_image | image_url }}"
-  >
-  <meta
-    property="og:image:width"
-    content="{{ page_image.width }}"
-  >
-  <meta
-    property="og:image:height"
-    content="{{ page_image.height }}"
-  >
+{%- comment -%} Open Graph {%- endcomment -%}
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+<meta property="og:locale" content="{{ request.locale.iso_code | replace: '-', '_' }}">
+
+{%- if og_image != blank -%}
+  {%- assign og_image_url = og_image | image_url: width: 1200 -%}
+  <meta property="og:image" content="http:{{ og_image_url }}">
+  <meta property="og:image:secure_url" content="https:{{ og_image_url }}">
+  {%- if og_image.width != blank -%}
+    <meta property="og:image:width" content="{{ og_image.width }}">
+  {%- endif -%}
+  {%- if og_image.height != blank -%}
+    <meta property="og:image:height" content="{{ og_image.height }}">
+  {%- endif -%}
+  {%- if og_image.alt != blank -%}
+    <meta property="og:image:alt" content="{{ og_image.alt | escape }}">
+  {%- endif -%}
 {%- endif -%}
 
 {%- if request.page_type == 'product' -%}
   <script type="application/ld+json">
     {{ product | structured_data }}
   </script>
-
-  <meta
-    property="og:price:amount"
-    content="{{ product.price | money_without_currency | strip_html }}"
-  >
-  <meta
-    property="og:price:currency"
-    content="{{ cart.currency.iso_code }}"
-  >
+  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
 {%- endif -%}
 
-<meta
-  name="twitter:card"
-  content="summary_large_image"
->
-<meta
-  name="twitter:title"
-  content="{{ og_title | escape }}"
->
-<meta
-  name="twitter:description"
-  content="{{ og_description | escape }}"
->
+{%- comment -%} Twitter Card {%- endcomment -%}
+<meta name="twitter:card" content="{% if og_image != blank %}summary_large_image{% else %}summary{% endif %}">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">
+{%- if og_image != blank -%}
+  <meta name="twitter:image" content="https:{{ og_image | image_url: width: 1200 }}">
+  {%- if og_image.alt != blank -%}
+    <meta name="twitter:image:alt" content="{{ og_image.alt | escape }}">
+  {%- endif -%}
+{%- endif -%}
 
 <title>
   {{ page_title }}
@@ -96,14 +94,8 @@
   {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
 </title>
 
-<link
-  rel="canonical"
-  href="{{ canonical_url }}"
->
+<link rel="canonical" href="{{ canonical_url }}">
 
-{% if og_description != blank %}
-  <meta
-    name="description"
-    content="{{ og_description | escape }}"
-  >
-{% endif %}
+{%- if og_description != blank -%}
+  <meta name="description" content="{{ og_description | escape }}">
+{%- endif -%}

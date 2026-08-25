@@ -20,13 +20,12 @@
     {{ 'critical.css' | asset_url | stylesheet_tag }}
     {{ 'gift-card.css' | asset_url | stylesheet_tag }}
 
-    <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+    <script src="{{ 'qrcode.js' | asset_url }}" defer></script>
 
     {{ content_for_header }}
   </head>
 
   <body class="gift-card-layout">
     {{ content_for_layout }}
-    {{ 'typography.css' | asset_url | stylesheet_tag }}
-</body>
+  </body>
 </html>

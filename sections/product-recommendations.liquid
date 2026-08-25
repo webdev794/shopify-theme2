@@ -22,6 +22,7 @@
                 | image_tag:
                   loading: 'lazy',
                   widths: '300,450,600',
+                  sizes: '(min-width: 750px) 25vw, 50vw',
                   alt: product.featured_media.alt | default: product.title,
                   class: 'product-recommendations__image'
               }}

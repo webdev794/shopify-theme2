@@ -76,7 +76,6 @@
     <div class="collection__page-width">
       <div class="collection__layout">
         {% if section.settings.enable_filtering %}
-          {{ 'facets.css' | asset_url | stylesheet_tag }}
           <aside class="collection__filters">
             {% render 'facets', filters: collection.filters, clear_url: collection.url, section: section %}
           </aside>
@@ -140,8 +139,20 @@
                             widths: '250,350,450,500',
                             sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, 50vw',
                             alt: product.featured_image.alt | default: product.title,
-                            class: 'product-card__image'
+                            class: 'product-card__image product-card__image--primary'
                         }}
+                        {% if product.images.size > 1 %}
+                          {{
+                            product.images[1]
+                            | image_url: width: 500
+                            | image_tag:
+                              loading: 'lazy',
+                              widths: '250,350,450,500',
+                              sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, 50vw',
+                              alt: '',
+                              class: 'product-card__image product-card__image--secondary'
+                          }}
+                        {% endif %}
                       {% else %}
                         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__image' }}
                       {% endif %}
@@ -185,17 +196,25 @@
                     </h3>
 
                     <div class="product-card__price">
+                      {% assign product_on_sale = false %}
+                      {% if product.compare_at_price_max > product.price_min %}
+                        {% assign product_on_sale = true %}
+                      {% endif %}
+
                       {% if product.price_varies %}
-                        <span class="price price--range">
+                        <span class="price price--range{% if product_on_sale %} price--sale{% endif %}">
                           {{ product.price_min | money }} &ndash; {{ product.price_max | money }}
                         </span>
-                      {% elsif product.compare_at_price_max > product.price_min %}
+                      {% elsif product_on_sale %}
                         <span class="price price--sale">{{ product.price_min | money }}</span>
+                      {% else %}
+                        <span class="price">{{ product.price_min | money }}</span>
+                      {% endif %}
+
+                      {% if product_on_sale %}
                         <span class="price price--compare">
                           <s>{{ product.compare_at_price_max | money }}</s>
                         </span>
-                      {% else %}
-                        <span class="price">{{ product.price_min | money }}</span>
                       {% endif %}
                     </div>
                     {% render 'unit-price', object: product.selected_or_first_available_variant %}
@@ -258,7 +277,7 @@
     }
 
     .collection__filters {
-      flex: 0 0 240px;
+      flex: 0 0 220px;
       position: sticky;
       top: 1.5rem;
     }
@@ -371,22 +390,13 @@
   }
 
   .collection__sort-select {
-    appearance: none;
-    padding: 0.3rem 1.5rem 0.3rem 0;
-    border: none;
-    border-bottom: 1px solid var(--collection-border);
-    border-radius: 0;
-    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%238c7b6b' stroke-width='1.4'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E") right center / 0.85rem no-repeat;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.3rem;
+    border: 1px solid var(--collection-border);
+    background: var(--collection-ivory);
     color: var(--collection-ink);
     font-family: var(--collection-font-label);
     font-size: 0.8rem;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-  }
-
-  .collection__sort-select:hover,
-  .collection__sort-select:focus-visible {
-    border-color: var(--collection-ink);
   }
 
   /* ---------- Empty state ---------- */
@@ -457,8 +467,20 @@
     transition: transform 0.5s ease;
   }
 
-  .product-card:hover .product-card__image {
+  .product-card:hover .product-card__image--primary {
     transform: scale(1.03);
+  }
+
+  .product-card__image--secondary {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-card__media:hover .product-card__image--secondary,
+  .product-card__media:focus-within .product-card__image--secondary {
+    opacity: 1;
   }
 
   .product-card__badges {
@@ -533,10 +555,11 @@
   }
 
   .product-card__content {
-    margin-top: 0.65rem;
+    margin-top: 0;
+    padding: 0.65rem 0.85rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.2rem;
   }
 
   .product-card__vendor {
@@ -566,10 +589,14 @@
 
   .product-card__price {
     font-size: 0.82rem;
+    line-height: 1.4;
     display: flex;
     gap: 0.4rem;
     align-items: baseline;
-    margin-top: 0.15rem;
+    margin-top: 0.1rem;
+    /* Keep currency glyph clear of the card's rounded bottom corners */
+    padding-inline: 0.05rem;
+    overflow: visible;
   }
 
   .price--range {
@@ -608,25 +635,19 @@
     min-width: 2.1rem;
     height: 2.1rem;
     padding-inline: 0.5rem;
-    border-radius: 0;
-    border-bottom: 1px solid transparent;
+    border-radius: 0.3rem;
     font-size: 0.82rem;
     text-decoration: none;
-    color: var(--collection-taupe);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    color: var(--collection-ink);
   }
 
   .collection__pagination nav a:hover {
-    background: none;
-    border-color: var(--collection-ink);
-    color: var(--collection-ink);
+    background: var(--collection-ivory);
   }
 
   .collection__pagination nav [aria-current='page'] {
-    background: none;
-    border-color: var(--collection-bronze);
-    color: var(--collection-ink);
-    font-weight: 600;
+    background: var(--collection-ink);
+    color: var(--collection-ivory);
   }
 {% endstylesheet %}
 
@@ -709,15 +730,7 @@
       "type": "checkbox",
       "id": "enable_filtering",
       "label": "t:sections.collection.settings.enable_filtering.label",
-      "default": true,
-      "info": "Shows Shopify filters (variants like Size/Color, price, availability, vendor). Configure filters in Admin → Online Store → Navigation → Filters or Search & Discovery app."
-    },
-    {
-      "type": "checkbox",
-      "id": "show_collections_filter",
-      "label": "Show collections list",
-      "default": true,
-      "info": "Lists all collections in the left sidebar so shoppers can jump between collections."
+      "default": true
     },
     {
       "type": "checkbox",

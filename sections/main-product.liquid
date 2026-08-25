@@ -1,5 +1,7 @@
 {% comment %}
-  Renders the main product section
+  Renders the main product section: media gallery, product information,
+  and add-to-cart form. Content is block-based so merchants can reorder,
+  hide, or configure each piece from the theme editor.
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
@@ -71,7 +73,7 @@
                 {{
                   media.preview_image
                   | image_url: width: 200
-                  | image_tag: alt: '', loading: 'lazy', widths: '100,150,200'
+                  | image_tag: alt: '', loading: 'lazy', widths: '100,150,200', sizes: '64px'
                 }}
               </a>
             {% endfor %}
@@ -184,6 +186,12 @@
 
           {% when 'variant_picker' %}
             {% if product.has_only_default_variant == false %}
+              {% if block.settings.picker_style == 'pets' %}
+                <div {{ block.shopify_attributes }}>
+                  {% assign product_form_id = 'product-form-' | append: section.id %}
+                  {% render 'variant-picker-pets', product: product, section: section, product_form_id: product_form_id %}
+                </div>
+              {% else %}
               <variant-selects
                 class="product__variants"
                 data-section-id="{{ section.id }}"
@@ -195,7 +203,14 @@
                       {{ option.name }}:
                       <span data-selected-value>{{ option.selected_value }}</span>
                     </legend>
-                    <div class="product__option-values{% if option.values.first.swatch %} product__option-values--swatches{% endif %}">
+                    {% assign has_swatches = false %}
+                    {% for option_value in option.values %}
+                      {% if option_value.swatch.image or option_value.swatch.color %}
+                        {% assign has_swatches = true %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+                    <div class="product__option-values{% if has_swatches %} product__option-values--swatches{% endif %}">
                       {% for value in option.values %}
                         {% liquid
                           assign input_id = 'option-' | append: section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0
@@ -245,6 +260,7 @@
                   </fieldset>
                 {% endfor %}
               </variant-selects>
+              {% endif %}
             {% endif %}
 
           {% when 'selling_plan_selector' %}
@@ -611,22 +627,70 @@
       "id": "media_position",
       "label": "t:sections.main_product.settings.media_position.label",
       "options": [
-        { "value": "left", "label": "t:sections.main_product.settings.media_position.options__1.label" },
-        { "value": "right", "label": "t:sections.main_product.settings.media_position.options__2.label" }
+        {
+          "value": "left",
+          "label": "t:sections.main_product.settings.media_position.options__1.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.main_product.settings.media_position.options__2.label"
+        }
       ],
       "default": "left"
     }
   ],
   "blocks": [
-    { "type": "vendor", "name": "t:sections.main_product.blocks.vendor.name", "limit": 1 },
-    { "type": "title", "name": "t:sections.main_product.blocks.title.name", "limit": 1 },
-    { "type": "price", "name": "t:sections.main_product.blocks.price.name", "limit": 1 },
-    { "type": "variant_picker", "name": "t:sections.main_product.blocks.variant_picker.name", "limit": 1 },
-    { "type": "selling_plan_selector", "name": "t:sections.main_product.blocks.selling_plan_selector.name", "limit": 1 },
-    { "type": "quantity_selector", "name": "t:sections.main_product.blocks.quantity_selector.name", "limit": 1 },
+    {
+      "type": "vendor",
+      "name": "t:sections.main_product.blocks.vendor.name",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "t:sections.main_product.blocks.title.name",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "t:sections.main_product.blocks.price.name",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "t:sections.main_product.blocks.variant_picker.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_style",
+          "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.label",
+          "default": "standard",
+          "options": [
+            {
+              "value": "standard",
+              "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__1.label"
+            },
+            {
+              "value": "pets",
+              "label": "t:sections.main_product.blocks.variant_picker.settings.picker_style.options__2.label"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "selling_plan_selector",
+      "name": "t:sections.main_product.blocks.selling_plan_selector.name",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "t:sections.main_product.blocks.quantity_selector.name",
+      "limit": 1
+    },
     {
       "type": "complementary_products",
-      "name": "Complementary Products",
+      "name": "Complementary products",
       "limit": 1,
       "settings": [
         {
@@ -655,7 +719,7 @@
     },
     {
       "type": "pickup_availability",
-      "name": "Pickup Availability",
+      "name": "Pickup availability",
       "limit": 1,
       "settings": [
         {
@@ -663,26 +727,51 @@
           "id": "enable_pickup_availability",
           "label": "Enable pickup availability",
           "default": true,
-          "info": "Requires local pickup enabled in Settings → Locations"
+          "info": "Requires local pickup to be enabled in Settings \u2192 Locations."
         },
-        { "type": "text", "id": "available_text", "label": "Available text", "default": "Pickup available at" },
-        { "type": "text", "id": "unavailable_text", "label": "Unavailable text", "default": "Pickup currently unavailable at" },
-        { "type": "text", "id": "no_pickup_text", "label": "No pickup text", "default": "Pickup currently unavailable for this item" },
-        { "type": "text", "id": "view_all_text", "label": "\"View store info\" text", "default": "View store info" },
-        { "type": "text", "id": "modal_title", "label": "Modal title", "default": "Store availability" }
+        {
+          "type": "text",
+          "id": "available_text",
+          "label": "Available text",
+          "default": "Pickup available at"
+        },
+        {
+          "type": "text",
+          "id": "unavailable_text",
+          "label": "Unavailable text",
+          "default": "Pickup currently unavailable at"
+        },
+        {
+          "type": "text",
+          "id": "no_pickup_text",
+          "label": "No pickup text",
+          "default": "Pickup currently unavailable for this item"
+        },
+        {
+          "type": "text",
+          "id": "view_all_text",
+          "label": "\"View store info\" text",
+          "default": "View store info"
+        },
+        {
+          "type": "text",
+          "id": "modal_title",
+          "label": "Modal heading",
+          "default": "Store availability"
+        }
       ]
     },
     {
       "type": "shop_pay_installments",
-      "name": "Shop Pay Installments",
+      "name": "Shop Pay installments",
       "limit": 1,
       "settings": [
         {
           "type": "checkbox",
           "id": "enable_shop_pay_installments",
-          "label": "Enable Shop Pay Installments",
+          "label": "Enable Shop Pay installments",
           "default": true,
-          "info": "Show installment payment options on the product page"
+          "info": "Shows installment payment options on the product page."
         },
         {
           "type": "range",
@@ -693,55 +782,55 @@
           "step": 1,
           "default": 6,
           "unit": "x",
-          "info": "Number of monthly payments (e.g., 6 = 6 months)"
+          "info": "Number of monthly payments (e.g., 6 = 6 months)."
         },
         {
           "type": "number",
           "id": "min_installment_price",
           "label": "Minimum price for installments",
           "default": 50,
-          "info": "Products below this price (in your store's currency, e.g. 50 for $50.00) won't show the installment badge"
+          "info": "Products below this price (in your store's currency, e.g. 50 for $50.00) won't show the installment badge."
         },
         {
           "type": "text",
           "id": "installments_or_text",
           "label": "\"Or\" text",
           "default": "or",
-          "info": "Text between the price and installment amount"
+          "info": "Text between the price and the installment amount."
         },
         {
           "type": "text",
           "id": "installments_label",
           "label": "Installment label",
           "default": "/mo for",
-          "info": "Label after the installment amount (e.g., '/mo for')"
+          "info": "Label after the installment amount (e.g., '/mo for')."
         },
         {
           "type": "text",
           "id": "installments_months_label",
           "label": "Months label",
           "default": "months",
-          "info": "Label after the number of months"
+          "info": "Label after the number of months."
         },
         {
           "type": "text",
           "id": "installments_provider",
           "label": "Provider name",
           "default": "Shop Pay",
-          "info": "Name of the payment provider"
+          "info": "Name of the payment provider."
         },
         {
           "type": "text",
           "id": "installments_tooltip",
           "label": "Tooltip text",
           "default": "Interest-free payments with Shop Pay.",
-          "info": "Text shown when hovering or focusing the info icon. If a terms URL is set below, a \"See terms\" link is appended automatically."
+          "info": "Text shown when hovering over or focusing on the info icon. If a terms URL is set below, a \"See terms\" link is appended automatically."
         },
         {
           "type": "url",
           "id": "installments_terms_url",
           "label": "Terms link URL",
-          "info": "Optional — if set, a clickable \"See terms\" link is added to the tooltip"
+          "info": "Optional. If set, a clickable \"See terms\" link is added to the tooltip."
         }
       ]
     },
@@ -772,7 +861,11 @@
         }
       ]
     },
-    { "type": "description", "name": "t:sections.main_product.blocks.description.name", "limit": 1 },
+    {
+      "type": "description",
+      "name": "t:sections.main_product.blocks.description.name",
+      "limit": 1
+    },
     {
       "type": "custom_liquid",
       "name": "t:sections.main_product.blocks.custom_liquid.name",
@@ -792,23 +885,49 @@
     {
       "name": "t:general.product",
       "blocks": [
-        { "type": "vendor" },
-        { "type": "title" },
-        { "type": "price" },
-        { "type": "variant_picker" },
-        { "type": "selling_plan_selector" },
-        { "type": "quantity_selector" },
-        { "type": "complementary_products" },
-        { "type": "pickup_availability" },
-        { "type": "shop_pay_installments" },
-        { "type": "follow_on_shop" },
-        { "type": "buy_buttons" },
-        { "type": "description" }
+        {
+          "type": "vendor"
+        },
+        {
+          "type": "title"
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "variant_picker"
+        },
+        {
+          "type": "selling_plan_selector"
+        },
+        {
+          "type": "quantity_selector"
+        },
+        {
+          "type": "complementary_products"
+        },
+        {
+          "type": "pickup_availability"
+        },
+        {
+          "type": "shop_pay_installments"
+        },
+        {
+          "type": "follow_on_shop"
+        },
+        {
+          "type": "buy_buttons"
+        },
+        {
+          "type": "description"
+        }
       ]
     }
   ],
   "enabled_on": {
-    "templates": ["product"]
+    "templates": [
+      "product"
+    ]
   }
 }
 {% endschema %}

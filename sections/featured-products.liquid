@@ -81,26 +81,130 @@
     </div>
 
     <div class="featured-products__grid-wrapper">
-      <div class="featured-products__grid{% if section.settings.layout == 'carousel' %} featured-products__grid--carousel{% endif %}"
+      <div class="featured-products__grid{% if section.settings.layout == 'carousel' %} featured-products__grid--carousel{% else %} featured-products__grid--masonry{% endif %}"
            role="list"
            data-fp-grid>
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'product' -%}
               {%- if block.settings.product != blank -%}
+                {%- assign product = block.settings.product -%}
+                {%- assign media = product.media | first -%}
+                {%- assign has_video = false -%}
+                {%- assign video_url = nil -%}
+                {%- if media and media.media_type == 'video' -%}
+                  {%- assign has_video = true -%}
+                  {%- assign video_url = media.sources[1].url | default: media.sources[0].url -%}
+                {%- elsif media and media.media_type == 'external_video' -%}
+                  {%- assign has_video = true -%}
+                  {%- assign video_url = media.embed_url -%}
+                {%- endif -%}
+
                 <div class="featured-products__item featured-products__item--{{ forloop.index }}"
                      role="listitem"
+                     style="{% if section.settings.layout != 'carousel' %}grid-column: span {{ block.settings.column_span | default: 1 }}; grid-row: span {{ block.settings.row_span | default: 1 }};{% endif %}"
+                     data-product-handle="{{ product.handle }}"
                      {{ block.shopify_attributes }}>
-                  {%- render 'featured-products',
-                      product: block.settings.product,
-                      show_vendor: section.settings.show_vendor,
-                      show_rating: section.settings.show_rating,
-                      show_quick_add: section.settings.show_quick_add,
-                      show_compare_at: section.settings.show_compare_at,
-                      image_size: section.settings.image_size,
-                      card_style: section.settings.card_style -%}
+                  <div class="product-card product-card--{{ section.settings.card_style }}">
+                    <div class="product-card__image-wrapper product-card__image-wrapper--{{ section.settings.image_size }}">
+                      {%- if has_video -%}
+                        <div class="product-card__media-container">
+                          <video
+                            class="product-card__video"
+                            src="{{ video_url }}"
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            poster="{{ product.featured_image | image_url: width: 600 }}"
+                          ></video>
+                          <button class="product-card__play-btn" aria-label="{{ 'sections.featured_products.play_video' | t }}" data-play-btn>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                              <circle cx="12" cy="12" r="12" fill="rgba(0,0,0,0.6)"/>
+                              <path d="M9.5 7.5l8 4.5-8 4.5v-9z" fill="#fff"/>
+                            </svg>
+                          </button>
+                        </div>
+                      {%- elsif product.featured_image -%}
+                        <a href="{{ product.url }}" class="product-card__image-link">
+                          <img
+                            class="product-card__image"
+                            src="{{ product.featured_image | image_url: width: 600 }}"
+                            srcset="{{ product.featured_image | image_url: width: 300 }} 300w, {{ product.featured_image | image_url: width: 600 }} 600w"
+                            alt="{{ product.featured_image.alt | escape }}"
+                            loading="lazy"
+                            width="{{ product.featured_image.width }}"
+                            height="{{ product.featured_image.height }}"
+                          >
+                        </a>
+                      {%- else -%}
+                        <div class="product-card__image-placeholder">
+                          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                      {%- endif -%}
+
+                      {%- if section.settings.show_compare_at -%}
+                        <div class="product-card__badges">
+                          <span class="product-card__badge product-card__badge--sale">{{ 'products.product.on_sale' | t }}</span>
+                        </div>
+                      {%- endif -%}
+
+                      <button class="product-card__quick-view" data-quick-view data-product-handle="{{ product.handle }}" aria-label="{{ 'sections.featured_products.quick_view' | t }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17h-2v-2h2v2zm2-4h-4v-2h4v2zm1-6c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/>
+                        </svg>
+                      </button>
+                    </div>
+
+                    <div class="product-card__info">
+                      {%- if section.settings.show_vendor -%}
+                        <p class="product-card__vendor">{{ product.vendor }}</p>
+                      {%- endif -%}
+                      <h3 class="product-card__title">
+                        <a href="{{ product.url }}">{{ product.title }}</a>
+                      </h3>
+                      {%- if section.settings.show_rating and product.metafields.reviews.rating -%}
+                        <div class="product-card__rating">
+                          <span class="product-card__stars" aria-hidden="true">
+                            {%- assign rating = product.metafields.reviews.rating.value | default: 4.5 -%}
+                            {%- assign full_stars = rating | floor -%}
+                            {%- assign remainder = rating | minus: full_stars -%}
+                            {%- assign full_stars_plus_one = full_stars | plus: 1 -%}
+                            {%- for i in (1..5) -%}
+                              {%- if i <= full_stars -%}
+                                <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                              {%- elsif remainder > 0 and i == full_stars_plus_one -%}
+                                <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/><rect x="12" y="2" width="12" height="20" fill="white"/></svg>
+                              {%- else -%}
+                                <svg class="empty" viewBox="0 0 24 24"><path d="M22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.45 13.97L5.82 21.02L12 17.27L18.18 21.02L16.54 13.97L22 9.24ZM12 15.4V6.1L13.71 10.13L18.09 10.5L14.77 13.39L15.76 17.67L12 15.4Z"/></svg>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </span>
+                          <span class="product-card__rating-count">({{ product.metafields.reviews.rating_count.value | default: 12 }})</span>
+                        </div>
+                      {%- endif -%}
+                      <div class="product-card__price{% if product.compare_at_price > product.price %} product-card__price--sale{% endif %}">
+                        <span class="product-card__price-current">{{ product.price | money }}</span>
+                        {%- if product.compare_at_price > product.price -%}
+                          <span class="product-card__price-compare">{{ product.compare_at_price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+
+                    {%- if section.settings.show_quick_add -%}
+                      <button class="product-card__quick-add" data-variant-id="{{ product.selected_or_first_available_variant.id }}" {% unless product.available %}disabled{% endunless %}>
+                        {%- if product.available -%}
+                          {{ 'sections.featured_products.add_to_cart' | t }}
+                        {%- else -%}
+                          {{ 'sections.featured_products.sold_out' | t }}
+                        {%- endif -%}
+                      </button>
+                    {%- endif -%}
+                  </div>
                 </div>
+
               {%- else -%}
+                <!-- Placeholder block -->
                 <div class="featured-products__item featured-products__item--placeholder featured-products__item--{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
                   <div class="product-card product-card--{{ section.settings.card_style }}">
                     <div class="product-card__image-wrapper product-card__image-wrapper--{{ section.settings.image_size }}">
@@ -173,6 +277,17 @@
     </div>
   </div>
 </section>
+
+<!-- Quick View Modal (hidden by default) -->
+<div class="featured-products__quickview" data-quickview-modal role="dialog" aria-modal="true" aria-label="{{ 'sections.featured_products.quick_view' | t }}">
+  <div class="featured-products__quickview-backdrop" data-quickview-close></div>
+  <div class="featured-products__quickview-content">
+    <button class="featured-products__quickview-close" data-quickview-close aria-label="{{ 'sections.featured_products.close' | t }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"/></svg>
+    </button>
+    <div class="featured-products__quickview-body"></div>
+  </div>
+</div>
 
 <script src="{{ 'featured-products.js' | asset_url }}" defer></script>
 
@@ -384,6 +499,30 @@
           "type": "product",
           "id": "product",
           "label": "t:sections.featured_products.blocks.product.settings.product.label"
+        },
+        {
+          "type": "header",
+          "content": "Masonry layout (only when Layout = Grid)"
+        },
+        {
+          "type": "select",
+          "id": "column_span",
+          "label": "Column span",
+          "default": "1",
+          "options": [
+            { "value": "1", "label": "1 column" },
+            { "value": "2", "label": "2 columns" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "row_span",
+          "label": "Row span",
+          "default": "1",
+          "options": [
+            { "value": "1", "label": "1 row" },
+            { "value": "2", "label": "2 rows" }
+          ]
         }
       ]
     },
@@ -413,10 +552,11 @@
         "layout": "grid"
       },
       "blocks": [
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" },
-        { "type": "product" }
+        { "type": "product", "settings": { "column_span": "2", "row_span": "1" } },
+        { "type": "product", "settings": { "column_span": "1", "row_span": "1" } },
+        { "type": "product", "settings": { "column_span": "1", "row_span": "2" } },
+        { "type": "product", "settings": { "column_span": "2", "row_span": "1" } },
+        { "type": "product", "settings": { "column_span": "1", "row_span": "1" } }
       ]
     }
   ]

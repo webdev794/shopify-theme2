@@ -1,33 +1,78 @@
 {{ 'faq.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'faq.js' | asset_url }}" defer></script>
-<div class="faq faq--{{ section.settings.layout }}" data-section-type="faq" data-section-id="{{ section.id }}"
-  style="--faq-bg: {{ section.settings.background_color }}; --faq-text: {{ section.settings.text_color }}; --faq-accent: {{ section.settings.accent_color }};">
+
+<div
+  class="faq faq--{{ section.settings.layout }}"
+  data-section-type="faq"
+  data-section-id="{{ section.id }}"
+  style="
+    --faq-bg: {{ section.settings.background_color }};
+    --faq-text: {{ section.settings.text_color }};
+    --faq-accent: {{ section.settings.accent_color }};
+  "
+>
   <div class="faq__container">
     {% if section.settings.heading != blank or section.settings.subheading != blank %}
       <div class="faq__header">
-        {% if section.settings.subheading != blank %}<p class="faq__subheading">{{ section.settings.subheading | escape }}</p>{% endif %}
-        {% if section.settings.heading != blank %}<h2 class="faq__heading">{{ section.settings.heading | escape }}</h2>{% endif %}
-        {% if section.settings.description != blank %}<div class="faq__description">{{ section.settings.description }}</div>{% endif %}
+        {% if section.settings.subheading != blank %}
+          <p class="faq__subheading">{{ section.settings.subheading | escape }}</p>
+        {% endif %}
+        {% if section.settings.heading != blank %}
+          <h2 class="faq__heading">{{ section.settings.heading | escape }}</h2>
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <div class="faq__description">{{ section.settings.description }}</div>
+        {% endif %}
       </div>
     {% endif %}
+
     <div class="faq__list" data-faq-list>
       {% for block in section.blocks %}
-        <details class="faq__item" data-faq-item {{ block.shopify_attributes }} {% if section.settings.open_first and forloop.first %}open{% endif %}>
+        <details
+          class="faq__item"
+          data-faq-item
+          {{ block.shopify_attributes }}
+          {% if section.settings.open_first and forloop.first %}open{% endif %}
+        >
           <summary class="faq__question">
             <span class="faq__question-text">{{ block.settings.question | escape }}</span>
-            <span class="faq__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+            <span class="faq__icon faq__icon--{{ section.settings.icon_style }}" aria-hidden="true">
+              {%- case section.settings.icon_style -%}
+                {%- when 'chevron' -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                {%- when 'plus' -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                {%- when 'arrow' -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                {%- when 'circle' -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              {%- endcase -%}
+            </span>
           </summary>
-          <div class="faq__answer rte">{{ block.settings.answer }}</div>
+          <div class="faq__answer-wrapper">
+            <div class="faq__answer rte">{{ block.settings.answer }}</div>
+          </div>
         </details>
       {% else %}
+        <!-- Fallback placeholder -->
         <details class="faq__item" open>
-          <summary class="faq__question"><span class="faq__question-text">What is your return policy?</span><span class="faq__icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-          <div class="faq__answer rte"><p>We offer free returns within 30 days of purchase.</p></div>
+          <summary class="faq__question">
+            <span class="faq__question-text">What is your return policy?</span>
+            <span class="faq__icon faq__icon--{{ section.settings.icon_style }}" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </summary>
+          <div class="faq__answer-wrapper"><div class="faq__answer rte"><p>We offer free returns within 30 days of purchase.</p></div></div>
         </details>
       {% endfor %}
     </div>
   </div>
 </div>
+
 {% schema %}
 {
   "name": "t:sections.faq.name",
@@ -60,6 +105,19 @@
         { "value": "wide", "label": "t:sections.faq.settings.layout.options__2.label" }
       ],
       "default": "narrow"
+    },
+    {
+      "type": "select",
+      "id": "icon_style",
+      "label": "Icon style",
+      "options": [
+        { "value": "chevron", "label": "Chevron (▼)" },
+        { "value": "plus", "label": "Plus / Minus (➕)" },
+        { "value": "arrow", "label": "Arrow (→)" },
+        { "value": "circle", "label": "Circle (◯)" },
+        { "value": "heart", "label": "Heart (♥)" }
+      ],
+      "default": "chevron"
     },
     {
       "type": "checkbox",

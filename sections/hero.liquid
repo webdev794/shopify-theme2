@@ -7,6 +7,9 @@
     fetchpriority="high"; every other instance lazy-loads
   - Autoplaying video is muted, respects prefers-reduced-motion, and
     ships a visible pause/play control (WCAG 2.2.2)
+  - Split layout: media on left or right with content opposite
+  - Gradient overlay and adjustable text shadow for better legibility
+  - Separate subheading color for improved readability
 {%- endcomment -%}
 
 {%- liquid
@@ -25,6 +28,13 @@
     assign loading = 'lazy'
     assign fetchpriority = 'auto'
   endif
+
+  assign overlay_class = ''
+  if section.settings.overlay_type != 'solid'
+    assign overlay_class = ' hero--overlay-' | append: section.settings.overlay_type
+  endif
+
+  assign shadow_class = ' hero--shadow-' | append: section.settings.text_shadow
 -%}
 
 {{ 'hero.css' | asset_url | stylesheet_tag }}
@@ -33,9 +43,10 @@
 {%- endif -%}
 
 <div
-  class="hero hero--{{ section.settings.height }} hero--content-{{ section.settings.content_position }}{% if section.settings.full_width %} hero--full-width{% endif %}{% if section.settings.stack_on_mobile %} hero--stack-mobile{% endif %}"
+  class="hero hero--{{ section.settings.height }} hero--content-{{ section.settings.content_position }}{% if section.settings.full_width %} hero--full-width{% endif %}{% if section.settings.stack_on_mobile %} hero--stack-mobile{% endif %} hero--{{ section.settings.layout }}{{ overlay_class }}{{ shadow_class }}"
   style="
     --hero-foreground: {{ section.settings.color_foreground }};
+    --hero-subheading-color: {{ section.settings.color_subheading | default: section.settings.color_foreground }};
     --hero-overlay: {{ section.settings.color_overlay }};
     --hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
     --hero-box-background: {{ section.settings.color_box_background }};
@@ -194,6 +205,17 @@
       "default": "medium"
     },
     {
+      "type": "select",
+      "id": "layout",
+      "label": "t:sections.hero.settings.layout.label",
+      "options": [
+        { "value": "full", "label": "t:sections.hero.settings.layout.options__1.label" },
+        { "value": "split-left", "label": "t:sections.hero.settings.layout.options__2.label" },
+        { "value": "split-right", "label": "t:sections.hero.settings.layout.options__3.label" }
+      ],
+      "default": "full"
+    },
+    {
       "type": "checkbox",
       "id": "full_width",
       "label": "t:sections.hero.settings.full_width.label",
@@ -252,6 +274,20 @@
       "default": "#000000"
     },
     {
+      "type": "select",
+      "id": "overlay_type",
+      "label": "t:sections.hero.settings.overlay_type.label",
+      "options": [
+        { "value": "solid", "label": "t:sections.hero.settings.overlay_type.options__1.label" },
+        { "value": "gradient-left", "label": "t:sections.hero.settings.overlay_type.options__2.label" },
+        { "value": "gradient-right", "label": "t:sections.hero.settings.overlay_type.options__3.label" },
+        { "value": "gradient-top", "label": "t:sections.hero.settings.overlay_type.options__4.label" },
+        { "value": "gradient-bottom", "label": "t:sections.hero.settings.overlay_type.options__5.label" }
+      ],
+      "default": "solid",
+      "info": "t:sections.hero.settings.overlay_type.info"
+    },
+    {
       "type": "range",
       "id": "overlay_opacity",
       "label": "t:sections.hero.settings.overlay_opacity.label",
@@ -268,6 +304,25 @@
       "id": "color_foreground",
       "label": "t:sections.hero.settings.color_foreground.label",
       "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_subheading",
+      "label": "t:sections.hero.settings.color_subheading.label",
+      "default": "#f0f0f0",
+      "info": "t:sections.hero.settings.color_subheading.info"
+    },
+    {
+      "type": "select",
+      "id": "text_shadow",
+      "label": "t:sections.hero.settings.text_shadow.label",
+      "options": [
+        { "value": "light", "label": "t:sections.hero.settings.text_shadow.options__1.label" },
+        { "value": "medium", "label": "t:sections.hero.settings.text_shadow.options__2.label" },
+        { "value": "strong", "label": "t:sections.hero.settings.text_shadow.options__3.label" }
+      ],
+      "default": "medium",
+      "info": "t:sections.hero.settings.text_shadow.info"
     },
     {
       "type": "checkbox",

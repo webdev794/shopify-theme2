@@ -92,12 +92,31 @@
   fill: #a0a0a0;
 }
 
+/* ---- Overlay ---- */
 .hero__overlay {
   position: absolute;
   inset: 0;
   background-color: var(--hero-overlay);
   opacity: var(--hero-overlay-opacity);
   pointer-events: none;
+}
+
+/* Gradient overlays – override background and opacity */
+.hero--overlay-gradient-left .hero__overlay {
+  background: linear-gradient(to right, var(--hero-overlay), transparent);
+  opacity: 1;
+}
+.hero--overlay-gradient-right .hero__overlay {
+  background: linear-gradient(to left, var(--hero-overlay), transparent);
+  opacity: 1;
+}
+.hero--overlay-gradient-top .hero__overlay {
+  background: linear-gradient(to bottom, var(--hero-overlay), transparent);
+  opacity: 1;
+}
+.hero--overlay-gradient-bottom .hero__overlay {
+  background: linear-gradient(to top, var(--hero-overlay), transparent);
+  opacity: 1;
 }
 
 /* ---- Video pause/play control ---- */
@@ -244,11 +263,14 @@
    --hero-foreground color with the theme's default ink/muted text
    colors. That's what caused hero text to blend into light photos
    regardless of the "Text color" setting. Scoping with the extra
-   ".hero" ancestor raises specificity so the overlay-aware color
-   always wins. */
+   ".hero" ancestor was the first attempt at a fix, but a reported case
+   still showed the global muted-gray leaking through -- likely a rule
+   elsewhere in petlio-theme.css with equal-or-higher specificity (a
+   file this section doesn't control and can't fully audit). !important
+   makes this unconditional instead of a specificity race: the
+   merchant's chosen color always wins, full stop. */
 .hero .hero__heading {
-  color: var(--hero-foreground);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 24px rgba(0, 0, 0, 0.25);
+  color: var(--hero-foreground) !important;
   margin: 0;
   font-weight: 700;
   line-height: 1.1;
@@ -269,10 +291,10 @@
 }
 
 .hero .hero__text {
-  color: var(--hero-foreground);
+  color: var(--hero-subheading-color, var(--hero-foreground)) !important;
   line-height: 1.6;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 16px rgba(0, 0, 0, 0.3);
   opacity: 1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65), 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero .hero__text > p {
@@ -294,6 +316,20 @@
 
 .hero__text--large {
   font-size: 1.25rem;
+}
+
+/* ---- Text shadow variants (applied to both heading and text) ---- */
+.hero--shadow-light .hero__heading,
+.hero--shadow-light .hero__text {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+.hero--shadow-medium .hero__heading,
+.hero--shadow-medium .hero__text {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+.hero--shadow-strong .hero__heading,
+.hero--shadow-strong .hero__text {
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 /* ---- Buttons ----
@@ -402,6 +438,111 @@
     color: var(--color-accent-foreground, #ffffff);
     background-color: var(--color-accent-background, #121212);
     border-color: var(--color-accent-background, #121212);
+  }
+}
+
+/* ---- Split layout ---- */
+.hero--split-left,
+.hero--split-right {
+  display: flex;
+  flex-direction: row;
+  min-height: 0; /* let content determine height */
+  color: inherit; /* reset inherited color for content side */
+}
+
+/* Media side: relative, fills 50% of the container */
+.hero--split-left .hero__media,
+.hero--split-right .hero__media {
+  position: relative;
+  flex: 0 0 50%;
+  max-width: 50%;
+  min-height: 26rem; /* fallback min-height */
+}
+
+/* Content side: takes remaining width, respects padding and alignment */
+.hero--split-left .hero__content-wrapper,
+.hero--split-right .hero__content-wrapper {
+  position: relative;
+  flex: 1 1 50%;
+  width: auto;
+  max-width: 50%;
+  padding: 4rem 3rem; /* increased from 3rem 2rem for better spacing */
+  /* the existing align-items/justify-content from content_position will still apply */
+}
+
+/* Swap sides for split-right */
+.hero--split-right {
+  flex-direction: row-reverse;
+}
+
+/* Ensure images/videos fill the media container */
+.hero--split-left .hero__image,
+.hero--split-left .hero__video,
+.hero--split-left .hero__placeholder,
+.hero--split-right .hero__image,
+.hero--split-right .hero__video,
+.hero--split-right .hero__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Overlay stays inside media, still works */
+.hero--split-left .hero__overlay,
+.hero--split-right .hero__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+/* Content box styling works inside the content column */
+.hero--split-left .hero__content,
+.hero--split-right .hero__content {
+  max-width: 100%; /* content can fill its column */
+}
+
+/* When height is "adapt", we want the container's aspect ratio to come from the image.
+   The media side will inherit that height. */
+.hero--split-left.hero--adapt .hero__media,
+.hero--split-right.hero--adapt .hero__media {
+  min-height: 0;
+  aspect-ratio: var(--hero-aspect-ratio, 16 / 7);
+}
+.hero--split-left.hero--adapt .hero__content-wrapper,
+.hero--split-right.hero--adapt .hero__content-wrapper {
+  /* same height, determined by the media side */
+  min-height: 0;
+}
+
+/* ---- Mobile: stack vertically ---- */
+@media (max-width: 749px) {
+  .hero--split-left,
+  .hero--split-right {
+    flex-direction: column;
+  }
+
+  .hero--split-left .hero__media,
+  .hero--split-right .hero__media {
+    flex: 0 0 auto;
+    max-width: 100%;
+    width: 100%;
+    aspect-ratio: var(--hero-aspect-ratio-mobile, 4 / 3);
+  }
+
+  .hero--split-left .hero__content-wrapper,
+  .hero--split-right .hero__content-wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 1.75rem 1.5rem 2.25rem;
+  }
+
+  /* Keep content box styles on mobile if used */
+  .hero--split-left .hero__content--boxed,
+  .hero--split-right .hero__content--boxed {
+    padding: 1.5rem;
+    background: var(--hero-box-background);
+    backdrop-filter: blur(4px);
   }
 }
 

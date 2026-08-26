@@ -8,6 +8,7 @@
    - Total price
    - Remove from outfit
    - Add complete outfit to cart
+   - Progress bar feedback
    - Shopify theme editor re-initialization
    ========================================================= */
 
@@ -37,6 +38,11 @@
     var totalPriceEl = section.querySelector('[data-ob-total-price]');
     var addAllBtn = section.querySelector('[data-ob-add-all]');
     var countEl = section.querySelector('[data-ob-count]');
+
+    // Progress bar elements
+    var progressWrap = section.querySelector('[data-ob-progress-wrap]');
+    var progressBar = section.querySelector('[data-ob-progress-bar]');
+    var progressCount = section.querySelector('[data-ob-progress-count]');
 
     if (!catalog || !summary) {
       return;
@@ -208,8 +214,25 @@
       }
 
       if (countEl) {
-        countEl.textContent =
-          selection.length + '/' + maxItems;
+        countEl.textContent = selection.length + '/' + maxItems;
+      }
+
+      // Update progress bar
+      if (progressBar) {
+        var percent = (selection.length / maxItems) * 100;
+        progressBar.style.width = Math.min(percent, 100) + '%';
+      }
+
+      if (progressCount) {
+        progressCount.textContent = selection.length + ' / ' + maxItems;
+      }
+
+      // Pulse animation when item added
+      if (progressWrap) {
+        progressWrap.classList.remove('is-pulsing');
+        // Force reflow to restart animation
+        void progressWrap.offsetWidth;
+        progressWrap.classList.add('is-pulsing');
       }
 
       var hasSelection = selection.length > 0;

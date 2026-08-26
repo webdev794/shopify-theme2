@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "404": {
     "title": "404",
@@ -295,7 +304,11 @@
       "empty": "Add media cards to display them here."
     },
     "testimonials": {
-      "empty": "Add testimonials to display them here."
+      "empty": "Add testimonials to display them here.",
+      "previous": "Previous testimonial",
+      "next": "Next testimonial",
+      "out_of_5": "out of 5 stars",
+      "verified": "Verified"
     },
     "vertical_carousel": {
       "previous_slide": "Previous slide",
@@ -354,7 +367,13 @@
       "error": "Error",
       "added_notice": "Product added to cart",
       "rating_label": "Rated {{ rating }} out of 5 stars",
-      "regular_price": "Regular price"
+      "regular_price": "Regular price",
+      "quick_view": "Quick View",
+      "play_video": "Play video",
+      "pause_video": "Pause video",
+      "close": "Close",
+      "sold_out": "Sold Out",
+      "add_to_cart": "Add to Cart"
     },
     "featured_collection": {
       "view_all": "View all"

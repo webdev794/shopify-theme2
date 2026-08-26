@@ -1,92 +1,147 @@
 {% comment %}
   Testimonials Section
-  Version: 1.0
+  Version: 2.0 — split layout with a draggable testimonial slider,
+  adapted from a reference design (big brand statement on one side,
+  a card slider with star rating / headline / quote / verified badge
+  on the other, over a full-bleed parallax background photo).
 {% endcomment %}
 
 {{ 'testimonials.css' | asset_url | stylesheet_tag: preload: true }}
+<script src="{{ 'testimonials.js' | asset_url }}" defer></script>
 
-<div class="testimonials" data-section-id="{{ section.id }}" data-section-type="testimonials"
+{%- liquid
+  assign bg_image = section.settings.background_image
+  assign enable_parallax = section.settings.enable_parallax
+-%}
+
+<section
+  class="testimonials{% if bg_image != blank %} testimonials--has-bg{% endif %}"
+  data-section-id="{{ section.id }}"
+  data-section-type="testimonials"
   style="
     --t-bg: {{ section.settings.background_color | default: '#f7f3eb' }};
     --t-heading-color: {{ section.settings.text_color | default: '#273028' }};
     --t-subheading-color: {{ section.settings.text_color | default: '#273028' }};
     --t-card-bg: {{ section.settings.card_background | default: '#faf7f0' }};
-  ">
-  <div class="page-width">
-    {%- if section.settings.heading != blank -%}
-      <div class="testimonials__header">
-        <h2 class="testimonials__heading">{{ section.settings.heading | escape }}</h2>
-        {%- if section.settings.subheading != blank -%}
-          <p class="testimonials__subheading">{{ section.settings.subheading | escape }}</p>
+  "
+>
+  {%- if bg_image != blank -%}
+    <div class="testimonials__bg" aria-hidden="true">
+      <img
+        class="testimonials__bg-image"
+        {% if enable_parallax %}data-testimonials-parallax{% endif %}
+        src="{{ bg_image | image_url: width: 1600 }}"
+        srcset="
+          {{ bg_image | image_url: width: 800 }} 800w,
+          {{ bg_image | image_url: width: 1200 }} 1200w,
+          {{ bg_image | image_url: width: 1600 }} 1600w,
+          {{ bg_image | image_url: width: 2200 }} 2200w
+        "
+        sizes="100vw"
+        alt=""
+        loading="lazy"
+        width="{{ bg_image.width }}"
+        height="{{ bg_image.height }}"
+      >
+      <div class="testimonials__bg-overlay"></div>
+    </div>
+  {%- endif -%}
+
+  <div class="testimonials__container page-width">
+    <div class="testimonials__grid-layout">
+
+      <div class="testimonials__intro">
+        {%- if section.settings.kicker_text != blank -%}
+          <span class="testimonials__kicker">{{ section.settings.kicker_text | escape }}</span>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="testimonials__big-heading">{{ section.settings.heading }}</h2>
         {%- endif -%}
       </div>
-    {%- endif -%}
 
-    <div class="testimonials__grid testimonials__grid--{{ section.settings.columns }}">
-      {%- for block in section.blocks -%}
-        <div class="testimonials__item" {{ block.shopify_attributes }}>
-          <div class="testimonials__card">
-            {%- if section.settings.show_rating and block.settings.rating > 0 -%}
-              <div class="testimonials__stars">
-                {%- for i in (1..5) -%}
-                  {%- if i <= block.settings.rating -%}
-                    <span class="testimonials__star testimonials__star--filled">★</span>
-                  {%- else -%}
-                    <span class="testimonials__star">★</span>
-                  {%- endif -%}
-                {%- endfor -%}
-              </div>
-            {%- endif -%}
+      <div class="testimonials__slider-col">
+        {%- if section.settings.subheading != blank -%}
+          <h3 class="testimonials__slider-heading">{{ section.settings.subheading }}</h3>
+        {%- endif -%}
 
-            {%- if block.settings.quote != blank -%}
-              <div class="testimonials__quote">
-                <svg class="testimonials__quote-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path d="M10 11H6.5C5.67 11 5 10.33 5 9.5V6c0-1.1.9-2 2-2h3c1.1 0 2 .9 2 2v5c0 2.21-1.79 4-4 4h-2v-2h2c1.1 0 2-.9 2-2zm9 0h-3.5c-.83 0-1.5-.67-1.5-1.5V6c0-1.1.9-2 2-2h3c1.1 0 2 .9 2 2v5c0 2.21-1.79 4-4 4h-2v-2h2c1.1 0 2-.9 2-2z"/>
+        {%- if section.blocks.size > 0 -%}
+          <div class="testimonials__slider" data-testimonials-slider>
+            <div class="testimonials__slider-nav">
+              <button
+                type="button"
+                class="testimonials__slider-btn testimonials__slider-btn--prev"
+                data-slider-prev
+                aria-label="{{ 'sections.testimonials.previous' | t: default: 'Previous testimonial' }}"
+              >
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M12.5 4.5 7 10l5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <div class="testimonials__quote-text rte">{{ block.settings.quote }}</div>
-              </div>
-            {%- endif -%}
+              </button>
+              <button
+                type="button"
+                class="testimonials__slider-btn testimonials__slider-btn--next"
+                data-slider-next
+                aria-label="{{ 'sections.testimonials.next' | t: default: 'Next testimonial' }}"
+              >
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                  <path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
 
-            <div class="testimonials__author">
-              {%- if block.settings.avatar != blank -%}
-                <div class="testimonials__avatar">
-                  <img
-                    src="{{ block.settings.avatar | image_url: width: 80, height: 80, crop: 'center' }}"
-                    srcset="{{ block.settings.avatar | image_url: width: 80, height: 80, crop: 'center' }} 1x, {{ block.settings.avatar | image_url: width: 160, height: 160, crop: 'center' }} 2x"
-                    alt="{{ block.settings.author | escape }}"
-                    loading="lazy"
-                    width="80"
-                    height="80"
-                    class="testimonials__avatar-image"
-                  >
-                </div>
-              {%- else -%}
-                <div class="testimonials__avatar testimonials__avatar--placeholder">
-                  <span class="testimonials__avatar-initials">
-                    {{ block.settings.author | slice: 0 | upcase }}
-                  </span>
-                </div>
-              {%- endif -%}
+            <div class="testimonials__slider-viewport" data-slider-viewport>
+              <div class="testimonials__slider-track" data-slider-track>
+                {%- for block in section.blocks -%}
+                  <div class="testimonials__card" data-slider-item {{ block.shopify_attributes }}>
+                    {%- if section.settings.show_rating and block.settings.rating > 0 -%}
+                      <div class="testimonials__stars" aria-hidden="true">
+                        {%- for i in (1..5) -%}
+                          <svg class="testimonials__star{% if i <= block.settings.rating %} testimonials__star--filled{% endif %}" viewBox="0 0 20 20" focusable="false">
+                            <path d="M10 1.5l2.5 5.6 6.1.6-4.6 4.1 1.3 6-5.3-3.2-5.3 3.2 1.3-6-4.6-4.1 6.1-.6z"/>
+                          </svg>
+                        {%- endfor -%}
+                        <span class="visually-hidden">{{ block.settings.rating }} {{ 'sections.testimonials.out_of_5' | t: default: 'out of 5 stars' }}</span>
+                      </div>
+                    {%- endif -%}
 
-              <div class="testimonials__author-info">
-                {%- if block.settings.author != blank -%}
-                  <p class="testimonials__author-name">{{ block.settings.author | escape }}</p>
-                {%- endif -%}
-                {%- if block.settings.position != blank -%}
-                  <p class="testimonials__author-position">{{ block.settings.position | escape }}</p>
-                {%- endif -%}
+                    {%- if block.settings.headline != blank -%}
+                      <h4 class="testimonials__card-headline">{{ block.settings.headline | escape }}</h4>
+                    {%- endif -%}
+
+                    {%- if block.settings.quote != blank -%}
+                      <div class="testimonials__card-quote rte">{{ block.settings.quote }}</div>
+                    {%- endif -%}
+
+                    <div class="testimonials__card-divider" aria-hidden="true"></div>
+
+                    <div class="testimonials__card-bottom">
+                      {%- if block.settings.author != blank -%}
+                        <span class="testimonials__card-name">{{ block.settings.author | escape }}</span>
+                      {%- endif -%}
+                      {%- if block.settings.verified -%}
+                        <span class="testimonials__card-verified">
+                          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+                            <circle cx="10" cy="10" r="9" fill="currentColor" opacity="0.15"/>
+                            <path d="M6.2 10.2l2.4 2.4 5.2-5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          {{ 'sections.testimonials.verified' | t: default: 'Verified' }}
+                        </span>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
               </div>
             </div>
           </div>
-        </div>
-      {%- else -%}
-        <div class="testimonials__empty">
-          <p>{{ 'sections.testimonials.empty' | t }}</p>
-          {%- if shop.editor_mode -%}
-            <p><small>Click "Add block" to add testimonials</small></p>
-          {%- endif -%}
-        </div>
-      {%- endfor -%}
+        {%- else -%}
+          <div class="testimonials__empty">
+            <p>{{ 'sections.testimonials.empty' | t: default: 'Add testimonials to get started.' }}</p>
+            {%- if request.design_mode -%}
+              <p><small>Click "Add block" to add testimonials</small></p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
     </div>
 
     {%- if section.settings.show_view_all and section.blocks.size > 0 -%}
@@ -97,7 +152,7 @@
       </div>
     {%- endif -%}
   </div>
-</div>
+</section>
 
 {% schema %}
 {
@@ -106,40 +161,43 @@
   "class": "testimonials-section",
   "settings": [
     {
-      "type": "text",
-      "id": "heading",
-      "label": "t:sections.testimonials.settings.heading.label",
-      "default": "What Our Customers Say"
+      "type": "header",
+      "content": "Background"
     },
     {
-      "type": "text",
-      "id": "subheading",
-      "label": "t:sections.testimonials.settings.subheading.label",
-      "default": "Real reviews from real customers"
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background photo",
+      "info": "Full-bleed photo behind the section. Leave blank to use the background color instead."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_parallax",
+      "label": "Enable parallax scroll effect",
+      "default": true,
+      "info": "Automatically disabled for visitors who prefer reduced motion."
     },
     {
       "type": "header",
-      "content": "t:sections.testimonials.settings.header__1.content"
+      "content": "Content"
     },
     {
-      "type": "select",
-      "id": "columns",
-      "label": "t:sections.testimonials.settings.columns.label",
-      "options": [
-        {
-          "value": "1",
-          "label": "1 column"
-        },
-        {
-          "value": "2",
-          "label": "2 columns"
-        },
-        {
-          "value": "3",
-          "label": "3 columns"
-        }
-      ],
-      "default": "3"
+      "type": "text",
+      "id": "kicker_text",
+      "label": "Kicker label",
+      "default": "REAL STORIES"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Big heading",
+      "default": "Happy pets. Happier people."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Slider heading",
+      "default": "Don't take our word for it"
     },
     {
       "type": "header",
@@ -176,6 +234,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
+      "info": "Used when no background photo is set.",
       "default": "#f7f3eb"
     },
     {
@@ -196,6 +255,13 @@
       "type": "testimonial",
       "name": "t:sections.testimonials.blocks.testimonial.name",
       "settings": [
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "info": "Short, punchy summary shown above the quote (e.g. \"Best treats ever!\").",
+          "default": "Best treats ever!"
+        },
         {
           "type": "textarea",
           "id": "quote",
@@ -218,15 +284,10 @@
           "default": "Customer name"
         },
         {
-          "type": "text",
-          "id": "position",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.position.label",
-          "default": "Happy Customer"
-        },
-        {
-          "type": "image_picker",
-          "id": "avatar",
-          "label": "t:sections.testimonials.blocks.testimonial.settings.avatar.label"
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show \"Verified\" badge",
+          "default": true
         }
       ]
     }
@@ -238,28 +299,28 @@
         {
           "type": "testimonial",
           "settings": {
-            "quote": "Absolutely love this store! The quality is outstanding and shipping was super fast.",
+            "headline": "Best treats ever!",
+            "quote": "My dog goes absolutely wild for these — and they're actually good for him too.",
             "rating": 5,
-            "author": "Sarah Johnson",
-            "position": "Regular Customer"
+            "author": "Sarah J."
           }
         },
         {
           "type": "testimonial",
           "settings": {
-            "quote": "Best customer service I've ever experienced. They went above and beyond to help me.",
+            "headline": "Fast shipping, happy cat",
+            "quote": "Ordered Monday, arrived Wednesday. My cat approves, which is rare.",
             "rating": 5,
-            "author": "Michael Chen",
-            "position": "Business Owner"
+            "author": "Michael C."
           }
         },
         {
           "type": "testimonial",
           "settings": {
-            "quote": "The products are exactly as described and the quality is premium. Will definitely buy again.",
+            "headline": "Exactly as described",
+            "quote": "The quality is premium and it's clear a lot of care went into these products.",
             "rating": 4,
-            "author": "Emily Davis",
-            "position": "Designer"
+            "author": "Emily D."
           }
         }
       ]

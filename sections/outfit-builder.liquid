@@ -177,6 +177,17 @@
           >0/{{ section.settings.max_items }}</span>
         </div>
 
+        <!-- Progress Bar -->
+        <div class="outfit-builder__progress">
+          <div class="outfit-builder__progress-bar-wrap" data-ob-progress-wrap>
+            <div class="outfit-builder__progress-bar" data-ob-progress-bar style="width:0%;"></div>
+          </div>
+          <div class="outfit-builder__progress-label">
+            <span>{{ section.settings.progress_label | default: 'Building their kit' }}</span>
+            <span class="outfit-builder__progress-count" data-ob-progress-count>0 / {{ section.settings.max_items }}</span>
+          </div>
+        </div>
+
         <div class="outfit-builder__summary-note">
           <span class="outfit-builder__paw" aria-hidden="true">🐾</span>
           <p>
@@ -296,6 +307,12 @@
       "id": "footer_text",
       "label": "Footer text",
       "default": "Pick \u00b7 mix \u00b7 make it theirs"
+    },
+    {
+      "type": "text",
+      "id": "progress_label",
+      "label": "Progress label",
+      "default": "Building their kit"
     },
     {
       "type": "text",

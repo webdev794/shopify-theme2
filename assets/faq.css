@@ -1,7 +1,17 @@
+/* Make the FAQ section full-bleed (removes side empty space) */
+.shopify-section.section-faq {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
 .faq {
   background: var(--faq-bg, var(--petlio-paper-deep, var(--color-background, #eee8dc)));
   color: var(--faq-text, var(--petlio-ink, var(--color-foreground, #273028)));
   padding: 4rem 0;
+  width: 100%;
+  max-width: none;
 }
 
 .faq__container {

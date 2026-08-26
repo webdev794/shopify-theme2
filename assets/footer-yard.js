@@ -51,14 +51,14 @@
     '<ellipse cx="58" cy="57" rx="30" ry="4.5" fill="rgba(60,40,20,0.16)"/>' +
     '<g class="dog-cursor__tail"><path d="M30 38C18 30 8 18 12 10C18 14 24 22 30 30C34 26 34 20 30 14C38 20 40 30 34 38Z" fill="url(#dogFurYard)"/></g>' +
     '<g class="dog-cursor__legs-back">' +
-    '<path d="M32 48C30 48 29 52 30 58L36 58C37 52 36 48 34 48Z" fill="#8a5a2e"/>' +
-    '<path d="M38 48C36 48 35 52 36 58L42 58C43 52 42 48 40 48Z" fill="#c98a4a"/></g>' +
+    '<path d="M30.4 50.6A2.6 2.6 0 0 1 35.6 50.6L35.6 55.4A2.6 2.6 0 0 1 30.4 55.4Z" fill="#8a5a2e"/>' +
+    '<path d="M36.4 50.6A2.6 2.6 0 0 1 41.6 50.6L41.6 55.4A2.6 2.6 0 0 1 36.4 55.4Z" fill="#c98a4a"/></g>' +
     '<g class="dog-cursor__body">' +
     '<ellipse cx="56" cy="40" rx="28" ry="18" fill="url(#dogFurYard)"/>' +
     '<ellipse cx="52" cy="50" rx="20" ry="10" fill="#faeccb" opacity="0.65"/></g>' +
     '<g class="dog-cursor__legs-front">' +
-    '<path d="M68 46C66 46 65 50 66 58L72 58C73 50 72 46 70 46Z" fill="#8a5a2e"/>' +
-    '<path d="M76 46C74 46 73 50 74 58L80 58C81 50 80 46 78 46Z" fill="#c98a4a"/></g>' +
+    '<path d="M66.4 48.6A2.6 2.6 0 0 1 71.6 48.6L71.6 55.4A2.6 2.6 0 0 1 66.4 55.4Z" fill="#8a5a2e"/>' +
+    '<path d="M74.4 48.6A2.6 2.6 0 0 1 79.6 48.6L79.6 55.4A2.6 2.6 0 0 1 74.4 55.4Z" fill="#c98a4a"/></g>' +
     '<g class="dog-cursor__head">' +
     '<path d="M84 16C76 10 70 14 70 24C70 34 78 37 84 31C80 27 78 21 84 16Z" fill="#8a5a2e"/>' +
     '<circle cx="94" cy="27" r="15" fill="url(#dogFurYard)"/>' +
@@ -77,14 +77,14 @@
     '<ellipse cx="58" cy="53" rx="26" ry="4" fill="rgba(60,40,10,0.14)"/>' +
     '<g class="scroll-cat__tail"><path d="M28 40C16 44 6 40 4 30C10 34 18 38 24 34C20 28 17 23 21 17C26 22 29 32 28 40Z" fill="url(#catFurYard)"/></g>' +
     '<g class="scroll-cat__legs-back">' +
-    '<path d="M32 44C30 44 29 48 30 54L35 54C36 48 35 44 33 44Z" fill="#c56a2c"/>' +
-    '<path d="M38 44C36 44 35 48 36 54L41 54C42 48 41 44 39 44Z" fill="#e08c46"/></g>' +
+    '<path d="M30 46.5A2.5 2.5 0 0 1 35 46.5L35 51.5A2.5 2.5 0 0 1 30 51.5Z" fill="#c56a2c"/>' +
+    '<path d="M36 46.5A2.5 2.5 0 0 1 41 46.5L41 51.5A2.5 2.5 0 0 1 36 51.5Z" fill="#e08c46"/></g>' +
     '<g class="scroll-cat__body">' +
     '<ellipse cx="54" cy="36" rx="24" ry="14" fill="url(#catFurYard)"/>' +
     '<ellipse cx="50" cy="44" rx="16" ry="8" fill="#faeccb" opacity="0.6"/></g>' +
     '<g class="scroll-cat__legs-front">' +
-    '<path d="M66 42C64 42 63 46 64 54L69 54C70 46 69 42 67 42Z" fill="#c56a2c"/>' +
-    '<path d="M74 42C72 42 71 46 72 54L77 54C78 46 77 42 75 42Z" fill="#e08c46"/></g>' +
+    '<path d="M64 44.5A2.5 2.5 0 0 1 69 44.5L69 51.5A2.5 2.5 0 0 1 64 51.5Z" fill="#c56a2c"/>' +
+    '<path d="M72 44.5A2.5 2.5 0 0 1 77 44.5L77 51.5A2.5 2.5 0 0 1 72 51.5Z" fill="#e08c46"/></g>' +
     '<g class="scroll-cat__head">' +
     '<g class="scroll-cat__ears">' +
     '<path d="M80 15L74 3L88 12Z" fill="url(#catFurYard)"/>' +

@@ -132,9 +132,118 @@
 }
 
 /* ==========================================================
-   DOG — reuses .dog-cursor__* transform-origins (already global,
-   loaded via dog-cursor.css) and dog-cursor-*-run / tail-wag keyframes.
+   CAT — leg pivots scoped and overridden here.
+   ------------------------------------------------------------
+   scroll-cat.css still defines .scroll-cat__legs-back/-front with
+   transform-origin: 34px/72px 46px (tuned for the OLD leg shape).
+   That file is shared with the site-wide cat, so it's left alone --
+   but this yard's legs were redesigned into rounded capsules with
+   different geometry, and pixel-based transform-origin under
+   transform-box: fill-box is inconsistently interpreted across
+   browsers (same issue already fixed once here for the butterfly's
+   wings). Percentage-based origin sidesteps that ambiguity, and
+   this selector's extra class gives it enough specificity to win
+   over the shared rule for footer-yard's cat specifically.
    ========================================================== */
+
+.footer-yard__cat .scroll-cat__legs-back {
+  transform-origin: 36% 10%;
+}
+
+.footer-yard__cat .scroll-cat__legs-front {
+  transform-origin: 39% 8%;
+}
+
+/* ==========================================================
+   DOG — dog-cursor.css is no longer loaded (the site cursor is now
+   ball-cursor.js, not the illustrated dog), so this file can't rely
+   on it for .dog-cursor__* transform-origins anymore. Defined
+   directly here instead, matched to this file's own DOG_SVG
+   geometry. Keyframe names (dog-cursor-*-run etc.) are still fine
+   to reuse -- those are just @keyframes, not tied to any stylesheet.
+   ========================================================== */
+
+.dog-cursor__tail {
+  transform-origin: 31px 34px;
+}
+
+.dog-cursor__head {
+  transform-origin: 80px 28px;
+}
+
+.dog-cursor__legs-back {
+  transform-origin: 33px 48px;
+}
+
+.dog-cursor__legs-front {
+  transform-origin: 69px 46px;
+}
+
+.dog-cursor__body {
+  transform-origin: 55px 42px;
+}
+
+/* Same reason as the transform-origins above: dog-cursor.css no
+   longer loads, so these keyframes -- referenced by name below --
+   need to be defined somewhere. Values copied exactly from the
+   original file. */
+
+@keyframes dog-cursor-legs-back-run {
+  0% {
+    transform: rotate(24deg);
+  }
+  50% {
+    transform: rotate(-26deg);
+  }
+  100% {
+    transform: rotate(24deg);
+  }
+}
+
+@keyframes dog-cursor-legs-front-run {
+  0% {
+    transform: rotate(-26deg);
+  }
+  50% {
+    transform: rotate(24deg);
+  }
+  100% {
+    transform: rotate(-26deg);
+  }
+}
+
+@keyframes dog-cursor-body-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes dog-cursor-head-nod {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  40% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+  60% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+}
+
+@keyframes dog-cursor-tail-wag {
+  0%,
+  100% {
+    transform: rotate(-16deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
 
 .footer-yard__dog[data-dog-mode='run'] .dog-cursor__legs-back {
   animation: dog-cursor-legs-back-run 0.26s ease-in-out infinite;

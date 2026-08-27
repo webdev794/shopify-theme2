@@ -38,6 +38,35 @@
   transition: opacity 0.5s ease;
 }
 
+#scroll-parrot-branch {
+  position: fixed;
+  left: 0;
+  width: 90px;
+  height: 28px;
+  margin: 0;
+  transform: translate3d(0, 0, 0);
+  will-change: transform, opacity;
+  z-index: 39;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+#scroll-parrot-branch svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 3px 5px rgba(20, 50, 30, 0.22));
+}
+
+/* Only shown while the parrot is actually sitting on it -- retracts
+   (fades) the instant it takes flight. */
+#scroll-parrot-branch.is-perched,
+#scroll-parrot-branch.is-landing {
+  opacity: 1;
+}
+
 #scroll-parrot.is-flying .scroll-parrot__wing {
   animation: scroll-parrot-flap 0.16s ease-in-out infinite alternate;
 }
@@ -210,7 +239,8 @@
    FOOTER YARD HANDOFF — see footer-yard.js / dog-cursor.css.
    ========================================================== */
 
-body.petlio-footer-yard-active #scroll-parrot {
+body.petlio-footer-yard-active #scroll-parrot,
+body.petlio-footer-yard-active #scroll-parrot-branch {
   opacity: 0 !important;
   transition: opacity 0.3s ease;
 }
@@ -221,6 +251,7 @@ body.petlio-footer-yard-active #scroll-parrot {
   (prefers-reduced-motion: reduce) {
   #scroll-parrot-root,
   #scroll-parrot,
+  #scroll-parrot-branch,
   #scroll-parrot-feathers,
   .scroll-parrot-perch {
     display: none !important;

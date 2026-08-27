@@ -35,6 +35,7 @@
   var LERP_FLY = 0.22;
   var LERP_LAND = 0.16;
   var BIRD_HEIGHT = 52;
+  var BRANCH_HEIGHT = 28;
   var PERCH_OFFSET_Y = 0.16;
   var EMBER_INTERVAL_MS = 65;
   var FLEE_RADIUS = 150;
@@ -100,6 +101,20 @@
     '</g>' +
     '</svg>';
 
+  // Thick end at LEFT, tapering to a thin tip on the RIGHT -- mirrored
+  // via CSS (scaleX(-1), same trick the phoenix body itself already
+  // uses) so the thick end lands against the screen's right edge.
+  var BRANCH_SVG =
+    '<svg viewBox="0 0 90 28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+    '<path d="M0 15C16 11 30 17 46 13C60 10 74 8 90 4" stroke="#8a6240" stroke-width="6" stroke-linecap="round" fill="none"/>' +
+    '<path d="M0 15C16 11 30 17 46 13C60 10 74 8 90 4" stroke="#a8794f" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>' +
+    '<path d="M42 14C46 9 51 5 58 3" stroke="#7a5636" stroke-width="3.5" stroke-linecap="round" fill="none"/>' +
+    '<ellipse cx="20" cy="9" rx="7" ry="3.4" fill="#5f8f56" transform="rotate(-18 20 9)"/>' +
+    '<ellipse cx="33" cy="18" rx="6" ry="3" fill="#6f9c5f" transform="rotate(14 33 18)"/>' +
+    '<ellipse cx="58" cy="1" rx="6.5" ry="3" fill="#5f8f56" transform="rotate(-30 58 1)"/>' +
+    '<ellipse cx="70" cy="6" rx="5.5" ry="2.6" fill="#6f9c5f" transform="rotate(-8 70 6)"/>' +
+    '</svg>';
+
   function mount() {
     if (document.getElementById('scroll-bird')) return;
 
@@ -114,15 +129,21 @@
     root.appendChild(bird);
     document.body.appendChild(root);
 
+    var branch = document.createElement('div');
+    branch.id = 'scroll-bird-branch';
+    branch.setAttribute('aria-hidden', 'true');
+    branch.innerHTML = BRANCH_SVG;
+    document.body.appendChild(branch);
+
     var embers = document.createElement('div');
     embers.id = 'scroll-bird-embers';
     embers.setAttribute('aria-hidden', 'true');
     document.body.appendChild(embers);
 
-    start(bird, embers);
+    start(bird, branch, embers);
   }
 
-  function start(bird, emberContainer) {
+  function start(bird, branch, emberContainer) {
     var targetY = window.innerHeight * 0.32;
     var currentY = targetY;
     var velocity = 0;
@@ -302,7 +323,16 @@
         'is-perched',
         'is-startled'
       );
-      if (state) bird.classList.add(state);
+      branch.classList.remove(
+        'is-flying',
+        'is-landing',
+        'is-perched',
+        'is-startled'
+      );
+      if (state) {
+        bird.classList.add(state);
+        branch.classList.add(state);
+      }
     }
 
     // The dog got close while the bird was sitting still — flinch, then
@@ -373,6 +403,13 @@
         bank.toFixed(2) +
         'deg)';
 
+      // Branch tracks the same Y, offset down to the bird's feet rather
+      // than its center, and mirrored (scaleX) so its thick end reads
+      // as attached to the screen edge.
+      var branchY = currentY + BIRD_HEIGHT * 0.9 - BRANCH_HEIGHT * 0.3;
+      branch.style.transform =
+        'translate3d(0, ' + branchY.toFixed(2) + 'px, 0) scaleX(-1)';
+
       if (inFlight) {
         var now = Date.now();
         if (now - lastEmberAt > EMBER_INTERVAL_MS) {
@@ -441,10 +478,15 @@
     currentY = targetY;
     bird.style.transform =
       'translate3d(0, ' + currentY + 'px, 0) scaleX(-1)';
+    branch.style.transform =
+      'translate3d(0, ' +
+      (currentY + BIRD_HEIGHT * 0.9 - BRANCH_HEIGHT * 0.3) +
+      'px, 0) scaleX(-1)';
     setState('is-perched');
 
     requestAnimationFrame(function () {
       bird.classList.add('is-ready');
+      branch.classList.add('is-ready');
     });
 
     window.addEventListener('scroll', onScroll, { passive: true });

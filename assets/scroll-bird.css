@@ -35,6 +35,36 @@
   transition: opacity 0.5s ease;
 }
 
+#scroll-bird-branch {
+  position: fixed;
+  right: 0;
+  width: 90px;
+  height: 28px;
+  margin: 0;
+  transform: translate3d(0, 0, 0) scaleX(-1);
+  will-change: transform, opacity;
+  z-index: 39;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+#scroll-bird-branch svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 3px 5px rgba(60, 30, 10, 0.25));
+}
+
+/* Only shown while the phoenix is actually sitting on it -- retracts
+   (fades) the instant it takes flight, so it doesn't read as a random
+   floating branch when nothing's perched there. */
+#scroll-bird-branch.is-perched,
+#scroll-bird-branch.is-landing {
+  opacity: 1;
+}
+
 #scroll-bird.is-flying .scroll-bird__wing {
   animation: scroll-bird-flap 0.16s ease-in-out infinite alternate;
 }
@@ -248,7 +278,8 @@
    FOOTER YARD HANDOFF — see footer-yard.js / dog-cursor.css.
    ========================================================== */
 
-body.petlio-footer-yard-active #scroll-bird {
+body.petlio-footer-yard-active #scroll-bird,
+body.petlio-footer-yard-active #scroll-bird-branch {
   opacity: 0 !important;
   transition: opacity 0.3s ease;
 }
@@ -259,6 +290,7 @@ body.petlio-footer-yard-active #scroll-bird {
   (prefers-reduced-motion: reduce) {
   #scroll-bird-root,
   #scroll-bird,
+  #scroll-bird-branch,
   #scroll-bird-embers,
   .scroll-bird-perch {
     display: none !important;

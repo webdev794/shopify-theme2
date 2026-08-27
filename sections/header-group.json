@@ -1,1 +1,36 @@
-{"type":"header","name":"Header group","sections":{"header":{"type":"header","settings":{"logo":"shopify:\/\/shop_images\/ChatGPT_Image_Aug_24_2026_04_32_32_PM.png","logo_width":120,"menu":"main-menu","open_on_hover":true,"enable_sticky_header":true,"sticky_hide_on_scroll":false,"enable_mega_menu":false,"mega_menu_parents":"catalog","mega_show_images":false,"mega_show_featured":true,"mega_featured_title":"Featured Collection","mega_featured_text":"Discover our latest arrivals and best sellers.","mega_featured_link":"","mega_featured_button_label":"Shop now","show_search":true,"show_account_link":true,"customer_account_menu":"customer-account-main-menu","show_country_selector":true,"show_language_selector":true,"color_background":"#ffffff","color_foreground":"#121212","color_hover":"#000000"}}},"order":["header"]}
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo": "shopify://shop_images/ChatGPT_Image_Aug_24_2026_04_32_32_PM.png",
+        "logo_width": 120,
+        "menu": "main-menu",
+        "open_on_hover": true,
+        "enable_sticky_header": true,
+        "sticky_hide_on_scroll": false,
+        "enable_mega_menu": false,
+        "mega_menu_parents": "catalog",
+        "mega_show_images": false,
+        "mega_show_featured": true,
+        "mega_featured_title": "Featured Collection",
+        "mega_featured_text": "Discover our latest arrivals and best sellers.",
+        "mega_featured_link": "",
+        "mega_featured_button_label": "Shop now",
+        "show_search": true,
+        "show_account_link": true,
+        "customer_account_menu": "customer-account-main-menu",
+        "show_country_selector": true,
+        "show_language_selector": true,
+        "color_background": "#ffffff",
+        "color_foreground": "#121212",
+        "color_hover": "#000000"
+      }
+    }
+  },
+  "order": [
+    "header"
+  ]
+}

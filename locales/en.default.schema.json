@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "general": {
     "404": "Not found",
@@ -1921,6 +1930,143 @@
       },
       "presets": {
         "name": "Shop the kit"
+      }
+    },
+    "shop_the_look": {
+      "name": "Shop The Look Premium",
+      "settings": {
+        "header__layout": {
+          "content": "Layout"
+        },
+        "max_width": {
+          "label": "Maximum width"
+        },
+        "stage_height": {
+          "label": "Main image height"
+        },
+        "padding_top": {
+          "label": "Padding top"
+        },
+        "padding_bottom": {
+          "label": "Padding bottom"
+        },
+        "header__top_label": {
+          "content": "Top label"
+        },
+        "header__typography": {
+          "content": "Typography"
+        },
+        "heading_size": {
+          "label": "Heading size"
+        },
+        "header__colors": {
+          "content": "Colors"
+        },
+        "background_color": {
+          "label": "Background"
+        },
+        "heading_color": {
+          "label": "Heading color"
+        },
+        "text_color": {
+          "label": "Text color"
+        },
+        "accent_color": {
+          "label": "Accent color"
+        },
+        "border_color": {
+          "label": "Border color"
+        },
+        "header__button": {
+          "content": "Button"
+        },
+        "button_bg": {
+          "label": "Button background"
+        },
+        "button_text": {
+          "label": "Button text"
+        },
+        "header__badge": {
+          "content": "Round badge"
+        },
+        "show_badge": {
+          "label": "Show round badge"
+        },
+        "badge_size": {
+          "label": "Badge size"
+        },
+        "badge_background": {
+          "label": "Badge background"
+        },
+        "badge_color": {
+          "label": "Badge color"
+        },
+        "header__features": {
+          "content": "Features"
+        },
+        "show_features": {
+          "label": "Show features"
+        },
+        "feature_1_title": {
+          "label": "Feature 1 title"
+        },
+        "feature_1_text": {
+          "label": "Feature 1 text"
+        },
+        "feature_2_title": {
+          "label": "Feature 2 title"
+        },
+        "feature_2_text": {
+          "label": "Feature 2 text"
+        },
+        "feature_3_title": {
+          "label": "Feature 3 title"
+        },
+        "feature_3_text": {
+          "label": "Feature 3 text"
+        }
+      },
+      "blocks": {
+        "look": {
+          "name": "Look",
+          "settings": {
+            "primary_image": {
+              "label": "Main large image",
+              "info": "Optional. Leave blank to automatically use the selected product's photo."
+            },
+            "secondary_image": {
+              "label": "Overlapping image",
+              "info": "Optional. Leave blank to automatically use the selected product's second photo."
+            },
+            "secondary_link": {
+              "label": "Overlapping image link"
+            },
+            "eyebrow": {
+              "label": "Small heading"
+            },
+            "heading": {
+              "label": "Main heading",
+              "info": "Optional. Leave blank to automatically use the selected product's title."
+            },
+            "caption": {
+              "label": "Description",
+              "info": "Optional. Leave blank to automatically use the selected product's description."
+            },
+            "button_text": {
+              "label": "Button text"
+            },
+            "button_link": {
+              "label": "Button link"
+            },
+            "product": {
+              "label": "Product",
+              "info": "The button adds this product to cart. Also used as the default image source below — upload Main/Overlapping images only if you want to override the product's own photos."
+            }
+          }
+        }
+      },
+      "presets": {
+        "name": "Shop The Look Premium"
       }
     },
     "slideshow_with_marquee": {

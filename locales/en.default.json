@@ -281,6 +281,16 @@
     "shop_the_kit": {
       "select_product": "Select a product"
     },
+    "shop_the_look": {
+      "previous": "Previous",
+      "next": "Next",
+      "slide": "Slide {{ index }}",
+      "view": "View",
+      "adding": "Adding…",
+      "added": "Added ✓",
+      "error": "Something went wrong",
+      "sold_out": "Sold out"
+    },
     "media_with_text_overlay": {
       "play_pause_video": "Play/Pause video"
     },

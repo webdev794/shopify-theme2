@@ -1,1204 +1,747 @@
 {%- liquid
   assign section_id = section.id
   assign s = section.settings
-  assign heading_font = s.heading_font
-  assign body_font = s.body_font
   assign looks = section.blocks | where: 'type', 'look'
 -%}
 
-<style>
-  {{ heading_font | font_face: font_display: 'swap' }}
-  {{ body_font | font_face: font_display: 'swap' }}
+{{ 'shop-the-look.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'shop-the-look.js' | asset_url }}" defer="defer"></script>
 
-  #ShopLook-{{ section_id }} {
-    --sl-heading-font: {{ heading_font.family }}, {{ heading_font.fallback_families }};
-    --sl-body-font: {{ body_font.family }}, {{ body_font.fallback_families }};
-    position: relative;
-    background-color: {{ s.background_color }};
-    padding-top: {{ s.section_padding_top }}px;
-    padding-bottom: {{ s.section_padding_bottom }}px;
-    font-family: var(--sl-body-font);
-    overflow: hidden;
-  }
+<section
+  id="ShopLook-{{ section_id }}"
+  class="shop-the-look"
+  data-cart-add-url="{{ routes.cart_add_url }}.js"
+  style="
+    --bg: {{ s.background_color }};
+    --heading: {{ s.heading_color }};
+    --text: {{ s.text_color }};
+    --accent: {{ s.accent_color }};
+    --border: {{ s.border_color }};
+    --button-bg: {{ s.button_bg }};
+    --button-text: {{ s.button_text }};
+    --max-width: {{ s.max_width }}px;
+    --stage-height: {{ s.stage_height }}px;
+    --padding-top: {{ s.padding_top }}px;
+    --padding-bottom: {{ s.padding_bottom }}px;
+    --heading-size: {{ s.heading_size }}px;
+    --badge-size: {{ s.badge_size }}px;
+    --badge-background: {{ s.badge_background }};
+    --badge-color: {{ s.badge_color }};
+  "
+>
 
-  #ShopLook-{{ section_id }} .sl-wrap {
-    max-width: {{ s.max_width }}px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
+  <div class="sl-container">
 
-  /* Header */
-  #ShopLook-{{ section_id }} .sl-header {
-    text-align: center;
-    opacity: 0;
-    transform: translateY(22px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    margin-bottom: {{ s.gap_header_to_nav }}px;
-  }
+    {% if s.chapter_number != blank or s.chapter_label != blank %}
+      <div class="sl-chapter" aria-hidden="true">
+        {% if s.chapter_number != blank %}
+          <span class="sl-chapter-number">{{ s.chapter_number | escape }}</span>
+        {% endif %}
+        <span class="sl-chapter-line"></span>
+        {% if s.chapter_label != blank %}
+          <span class="sl-chapter-label">{{ s.chapter_label | escape }}</span>
+        {% endif %}
+      </div>
+    {% endif %}
 
-  #ShopLook-{{ section_id }}.is-inview .sl-header {
-    opacity: 1;
-    transform: translateY(0);
-  }
 
-  #ShopLook-{{ section_id }} .sl-eyebrow-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: {{ s.text_color }};
-    opacity: 0.65;
-    margin: 0 0 10px;
-  }
+    {% for block in looks %}
 
-  #ShopLook-{{ section_id }} .sl-eyebrow-top::before,
-  #ShopLook-{{ section_id }} .sl-eyebrow-top::after {
-    content: "";
-    width: 32px;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.5;
-  }
+      {%- liquid
+        assign primary_img = block.settings.primary_image
+        if primary_img == blank and block.settings.product != blank
+          assign primary_img = block.settings.product.featured_image
+        endif
 
-  #ShopLook-{{ section_id }} .sl-eyebrow-bottom {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: {{ s.accent_color }};
-    margin: 0 0 14px;
-  }
+        assign secondary_img = block.settings.secondary_image
+        if secondary_img == blank and block.settings.product != blank and block.settings.product.images.size > 1
+          assign secondary_img = block.settings.product.images[1]
+        endif
 
-  #ShopLook-{{ section_id }} .sl-heading {
-    font-family: var(--sl-heading-font);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    line-height: 1.08;
-    color: {{ s.heading_color }};
-    margin: 0 0 18px;
-    font-size: {{ s.heading_size | times: 0.5 | round }}px;
-  }
+        assign look_heading = block.settings.heading
+        if look_heading == blank and block.settings.product != blank
+          assign look_heading = block.settings.product.title
+        endif
 
-  @media screen and (min-width: 750px) {
-    #ShopLook-{{ section_id }} .sl-heading {
-      font-size: {{ s.heading_size }}px;
-    }
-  }
+        assign look_caption = block.settings.caption
+        if look_caption == blank and block.settings.product != blank
+          assign look_caption = block.settings.product.description | strip_html | truncatewords: 28
+        endif
+      -%}
 
-  #ShopLook-{{ section_id }} .sl-divider {
-    width: 64px;
-    height: 1px;
-    background: {{ s.divider_color }};
-    margin: 0 auto;
-  }
+      <div
+        class="sl-slide {% if forloop.first %}is-active{% endif %}"
+        data-slide="{{ forloop.index0 }}"
+        {{ block.shopify_attributes }}
+      >
 
-  /* Nav row (per look) */
-  #ShopLook-{{ section_id }} .sl-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 22px;
-    margin-bottom: {{ s.gap_nav_to_stage }}px;
-    flex-wrap: wrap;
-  }
+        <div class="sl-layout">
 
-  #ShopLook-{{ section_id }} .sl-arrow {
-    flex: 0 0 auto;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 1px solid {{ s.divider_color }};
-    background: transparent;
-    color: {{ s.heading_color }};
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-  }
 
-  #ShopLook-{{ section_id }} .sl-arrow:hover {
-    background-color: {{ s.accent_color }};
-    border-color: {{ s.accent_color }};
-    color: #fff;
-    transform: scale(1.06);
-  }
+          <!-- LEFT IMAGE -->
 
-  #ShopLook-{{ section_id }} .sl-nav-center {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+          <div class="sl-image-area">
 
-  #ShopLook-{{ section_id }} .sl-caption {
-    font-size: {{ s.body_size }}px;
-    color: {{ s.text_color }};
-    margin: 0;
-    white-space: nowrap;
-  }
+            <div class="sl-primary-image">
 
-  #ShopLook-{{ section_id }} .sl-look-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: {{ s.button_padding_y }}px {{ s.button_padding_x }}px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: {{ s.button_radius }}px;
-    background-color: {{ s.button_bg_color }};
-    color: {{ s.button_text_color }};
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    white-space: nowrap;
-    font-family: var(--sl-heading-font);
-  }
+              {% if primary_img != blank %}
 
-  #ShopLook-{{ section_id }} .sl-look-button:hover {
-    background-color: {{ s.accent_color }};
-    transform: translateY(-2px);
-  }
+                {{
+                  primary_img
+                  | image_url: width: 1800
+                  | image_tag:
+                    loading: 'lazy',
+                    sizes: '(min-width: 750px) 55vw, 100vw'
+                }}
 
-  /* Looks wrapper + stage */
-  #ShopLook-{{ section_id }} .sl-looks-wrap {
-    position: relative;
-    opacity: 0;
-    transform: translateY(26px);
-    transition: opacity 0.8s ease 0.12s, transform 0.8s ease 0.12s;
-  }
+              {% else %}
 
-  #ShopLook-{{ section_id }}.is-inview .sl-looks-wrap {
-    opacity: 1;
-    transform: translateY(0);
-  }
+                <div class="sl-primary-placeholder"></div>
 
-  #ShopLook-{{ section_id }} .sl-look {
-    display: none;
-  }
+              {% endif %}
 
-  #ShopLook-{{ section_id }} .sl-look.is-active {
-    display: block;
-  }
-
-  #ShopLook-{{ section_id }} .sl-stage {
-    position: relative;
-    min-height: {{ s.stage_height }}px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
-
-  #ShopLook-{{ section_id }} .sl-look.is-active .sl-stage {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  #ShopLook-{{ section_id }} .sl-look.is-leaving .sl-stage {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  {%- if s.show_corner_accents -%}
-  #ShopLook-{{ section_id }} .sl-ring {
-    position: absolute;
-    border: 1px solid {{ s.divider_color }};
-    border-radius: 50%;
-    z-index: 0;
-  }
-  #ShopLook-{{ section_id }} .sl-ring--tl { width: 26px; height: 26px; top: 6%; left: 2%; }
-  #ShopLook-{{ section_id }} .sl-ring--br { width: 34px; height: 34px; bottom: 4%; right: 3%; }
-  {%- endif -%}
-
-  #ShopLook-{{ section_id }} .sl-img-primary {
-    position: absolute;
-    top: 0;
-    left: 8%;
-    width: 62%;
-    height: 82%;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.14);
-    z-index: 1;
-  }
-
-  #ShopLook-{{ section_id }} .sl-img-secondary {
-    position: absolute;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 50px rgba(0,0,0,0.2);
-    z-index: 2;
-    border: 4px solid {{ s.background_color }};
-  }
-
-  #ShopLook-{{ section_id }} .sl-img-primary img,
-  #ShopLook-{{ section_id }} .sl-img-secondary img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  #ShopLook-{{ section_id }} .sl-img-fallback {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(155deg, {{ s.accent_color }}22, {{ s.divider_color }});
-    color: {{ s.accent_color }};
-  }
-
-  /* Hotspots */
-  #ShopLook-{{ section_id }} .sl-hotspot {
-    position: absolute;
-    z-index: 5;
-    transform: translate(-50%, -50%);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot-dot {
-    position: relative;
-    display: block;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot-dot::before {
-    content: "";
-    position: absolute;
-    inset: 4px;
-    border-radius: 50%;
-    background: {{ s.accent_color }};
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot-dot::after {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 2px solid {{ s.accent_color }};
-    opacity: 0.6;
-    animation: sl-pulse-{{ section_id }} 2.2s ease-out infinite;
-  }
-
-  @keyframes sl-pulse-{{ section_id }} {
-    0% { transform: scale(0.7); opacity: 0.6; }
-    100% { transform: scale(1.9); opacity: 0; }
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot-tooltip {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 14px);
-    transform: translate(-50%, 6px) scale(0.92);
-    width: 176px;
-    background: {{ s.tooltip_bg_color }};
-    border-radius: 8px;
-    box-shadow: 0 16px 34px rgba(0,0,0,0.22);
-    padding: 10px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    text-align: left;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot[data-flip-y="true"] .sl-hotspot-tooltip {
-    bottom: auto;
-    top: calc(100% + 14px);
-    transform: translate(-50%, -6px) scale(0.92);
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot[data-flip-x="true"] .sl-hotspot-tooltip {
-    left: auto;
-    right: -12px;
-    transform: translate(0, 6px) scale(0.92);
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot[data-flip-x="true"][data-flip-y="true"] .sl-hotspot-tooltip {
-    transform: translate(0, -6px) scale(0.92);
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot.is-open .sl-hotspot-tooltip {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(-50%, 0) scale(1);
-  }
-
-  #ShopLook-{{ section_id }} .sl-hotspot[data-flip-x="true"].is-open .sl-hotspot-tooltip {
-    transform: translate(0, 0) scale(1);
-  }
-
-  #ShopLook-{{ section_id }} .sl-tooltip-img {
-    flex: 0 0 auto;
-    width: 44px;
-    height: 44px;
-    border-radius: 6px;
-    overflow: hidden;
-    background: {{ s.divider_color }};
-  }
-
-  #ShopLook-{{ section_id }} .sl-tooltip-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  #ShopLook-{{ section_id }} .sl-tooltip-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: {{ s.heading_color }};
-    margin: 0 0 2px;
-    line-height: 1.25;
-  }
-
-  #ShopLook-{{ section_id }} .sl-tooltip-price {
-    font-size: 12px;
-    font-weight: 600;
-    color: {{ s.accent_color }};
-    margin: 0;
-  }
-
-  /* Dots */
-  #ShopLook-{{ section_id }} .sl-dots {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: {{ s.gap_stage_to_dots }}px;
-  }
-
-  #ShopLook-{{ section_id }} .sl-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: {{ s.divider_color }};
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-  }
-
-  #ShopLook-{{ section_id }} .sl-dot.is-active {
-    background: {{ s.accent_color }};
-    transform: scale(1.3);
-  }
-
-  /* Footer note */
-  #ShopLook-{{ section_id }} .sl-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: {{ s.gap_dots_to_footer }}px;
-    padding-top: 16px;
-    border-top: 1px solid {{ s.divider_color }};
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: {{ s.text_color }};
-    opacity: 0.6;
-  }
-
-  @media screen and (max-width: 749px) {
-    #ShopLook-{{ section_id }} .sl-stage {
-      min-height: {{ s.stage_height | times: 0.85 | round }}px;
-    }
-    #ShopLook-{{ section_id }} .sl-img-primary {
-      left: 0;
-      width: 68%;
-    }
-    #ShopLook-{{ section_id }} .sl-caption {
-      white-space: normal;
-      text-align: center;
-    }
-    #ShopLook-{{ section_id }} .sl-footer {
-      justify-content: center;
-      text-align: center;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #ShopLook-{{ section_id }} .sl-header,
-    #ShopLook-{{ section_id }} .sl-looks-wrap,
-    #ShopLook-{{ section_id }} .sl-stage {
-      transition: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-    #ShopLook-{{ section_id }} .sl-hotspot-dot::after {
-      animation: none;
-    }
-  }
-</style>
-
-<section id="ShopLook-{{ section_id }}" data-autoplay="{{ s.enable_autoplay }}" data-autoplay-interval="{{ s.autoplay_interval }}">
-  <div class="sl-wrap">
-
-    <div class="sl-header">
-      {%- if s.eyebrow_top != blank -%}
-        <p class="sl-eyebrow-top">{{ s.eyebrow_top }}</p>
-      {%- endif -%}
-      {%- if s.eyebrow_bottom != blank -%}
-        <p class="sl-eyebrow-bottom">{{ s.eyebrow_bottom }}</p>
-      {%- endif -%}
-      {%- if s.heading != blank -%}
-        <h2 class="sl-heading">{{ s.heading }}</h2>
-      {%- endif -%}
-      {%- if s.show_divider -%}
-        <div class="sl-divider"></div>
-      {%- endif -%}
-    </div>
-
-    {%- if looks.size > 0 -%}
-      <div class="sl-looks-wrap">
-        {%- for block in looks -%}
-          {%- assign bs = block.settings -%}
-          <div class="sl-look {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
-
-            <div class="sl-nav">
-              <button type="button" class="sl-arrow sl-arrow-prev" aria-label="Previous look">‹</button>
-              <div class="sl-nav-center">
-                {%- if bs.caption != blank -%}
-                  <p class="sl-caption">{{ bs.caption }}</p>
-                {%- endif -%}
-                {%- if bs.button_text != blank -%}
-                  <a href="{{ bs.button_link | default: '#' }}" class="sl-look-button">{{ bs.button_text }}</a>
-                {%- endif -%}
-              </div>
-              <button type="button" class="sl-arrow sl-arrow-next" aria-label="Next look">›</button>
             </div>
 
-            <div class="sl-stage">
-              {%- if s.show_corner_accents -%}
-                <span class="sl-ring sl-ring--tl" aria-hidden="true"></span>
-                <span class="sl-ring sl-ring--br" aria-hidden="true"></span>
-              {%- endif -%}
-
-              <div class="sl-img-primary">
-                {%- if bs.primary_image != blank -%}
-                  {{ bs.primary_image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 40vw, 70vw' }}
-                {%- else -%}
-                  <div class="sl-img-fallback">
-                    <svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="16" stroke="currentColor" stroke-width="1.5"/></svg>
-                  </div>
-                {%- endif -%}
-              </div>
-
-              {%- if bs.secondary_image != blank -%}
-                <div class="sl-img-secondary" style="left:{{ bs.secondary_left }}%; top:{{ bs.secondary_top }}%; width:{{ bs.secondary_width }}%; height:{{ bs.secondary_height }}%;">
-                  {{ bs.secondary_image | image_url: width: 900 | image_tag: loading: 'lazy', sizes: '(min-width: 750px) 30vw, 55vw' }}
-                </div>
-              {%- endif -%}
-
-              {%- for i in (1..3) -%}
-                {%- assign enable_key = 'hotspot_' | append: i | append: '_enable' -%}
-                {%- assign enabled = bs[enable_key] -%}
-                {%- if enabled -%}
-                  {%- assign x_key = 'hotspot_' | append: i | append: '_x' -%}
-                  {%- assign y_key = 'hotspot_' | append: i | append: '_y' -%}
-                  {%- assign name_key = 'hotspot_' | append: i | append: '_name' -%}
-                  {%- assign price_key = 'hotspot_' | append: i | append: '_price' -%}
-                  {%- assign image_key = 'hotspot_' | append: i | append: '_image' -%}
-                  {%- assign link_key = 'hotspot_' | append: i | append: '_link' -%}
-                  {%- assign hx = bs[x_key] -%}
-                  {%- assign hy = bs[y_key] -%}
-                  {%- assign flip_x = false -%}
-                  {%- assign flip_y = false -%}
-                  {%- if hx > 62 -%}{%- assign flip_x = true -%}{%- endif -%}
-                  {%- if hy < 30 -%}{%- assign flip_y = true -%}{%- endif -%}
-                  <button
-                    type="button"
-                    class="sl-hotspot"
-                    style="left:{{ hx }}%; top:{{ hy }}%;"
-                    data-flip-x="{{ flip_x }}"
-                    data-flip-y="{{ flip_y }}"
-                    aria-label="{{ bs[name_key] }}"
-                  >
-                    <span class="sl-hotspot-dot"></span>
-                    <span class="sl-hotspot-tooltip">
-                      <span class="sl-tooltip-img">
-                        {%- if bs[image_key] != blank -%}
-                          {{ bs[image_key] | image_url: width: 120 | image_tag: loading: 'lazy' }}
-                        {%- endif -%}
-                      </span>
-                      <span>
-                        <span class="sl-tooltip-name">{{ bs[name_key] }}</span>
-                        <span class="sl-tooltip-price">{{ bs[price_key] }}</span>
-                      </span>
-                    </span>
-                  </button>
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
           </div>
-        {%- endfor -%}
-      </div>
 
-      {%- if s.show_nav_dots and looks.size > 1 -%}
-        <div class="sl-dots">
-          {%- for block in looks -%}
-            <button type="button" class="sl-dot {% if forloop.first %}is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to look {{ forloop.index }}"></button>
-          {%- endfor -%}
+
+          <!-- RIGHT CONTENT -->
+
+          <div class="sl-content-area">
+
+            {% if block.settings.eyebrow != blank %}
+              <p class="sl-eyebrow">
+                {{ block.settings.eyebrow }}
+              </p>
+            {% endif %}
+
+
+            {% if look_heading != blank %}
+              <h2 class="sl-heading">
+                {{ look_heading }}
+              </h2>
+            {% endif %}
+
+
+            {% if block.settings.product != blank %}
+              <div class="sl-price">
+                {% if block.settings.product.price_varies %}
+                  {{ 'products.product.from_price_html' | t }}
+                  {{ block.settings.product.price_min | money }}
+                {% else %}
+                  {{ block.settings.product.price | money }}
+                {% endif %}
+              </div>
+            {% endif %}
+
+
+            {% if look_caption != blank %}
+              <div class="sl-caption">
+                {{ look_caption }}
+              </div>
+            {% endif %}
+
+
+            {% if block.settings.button_text != blank %}
+
+              {% if block.settings.product != blank %}
+
+                {% assign look_variant = block.settings.product.selected_or_first_available_variant %}
+
+                <button
+                  type="button"
+                  class="sl-button sl-add-look"
+                  {% if look_variant.available %}
+                    data-variant-id="{{ look_variant.id }}"
+                    data-text-idle="{{ block.settings.button_text | escape }}"
+                    data-text-adding="{{ 'sections.shop_the_look.adding' | t }}"
+                    data-text-added="{{ 'sections.shop_the_look.added' | t }}"
+                    data-text-error="{{ 'sections.shop_the_look.error' | t }}"
+                  {% else %}
+                    disabled
+                    aria-disabled="true"
+                  {% endif %}
+                >
+                  <span class="sl-button-label">
+                    {% if look_variant.available %}
+                      {{ block.settings.button_text }}
+                    {% else %}
+                      {{ 'sections.shop_the_look.sold_out' | t }}
+                    {% endif %}
+                  </span>
+
+                  <span class="sl-button-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </button>
+
+              {% else %}
+
+                <a
+                  href="{{ block.settings.button_link | default: '#' }}"
+                  class="sl-button"
+                >
+                  {{ block.settings.button_text }}
+
+                  <span class="sl-button-arrow">
+                    ↗
+                  </span>
+                </a>
+
+              {% endif %}
+
+            {% endif %}
+
+
+            {% if looks.size > 1 %}
+
+              <div class="sl-navigation">
+
+                <button
+                  class="sl-arrow sl-prev"
+                  type="button"
+                  aria-label="{{ 'sections.shop_the_look.previous' | t }}"
+                >
+                  ‹
+                </button>
+
+                <button
+                  class="sl-arrow sl-next"
+                  type="button"
+                  aria-label="{{ 'sections.shop_the_look.next' | t }}"
+                >
+                  ›
+                </button>
+
+              </div>
+
+            {% endif %}
+
+          </div>
+
+
+          <!-- OVERLAPPING IMAGE -->
+
+          {% if secondary_img != blank %}
+
+            <div class="sl-secondary-image">
+
+              {{
+                secondary_img
+                | image_url: width: 1000
+                | image_tag:
+                  loading: 'lazy'
+              }}
+
+              {% if block.settings.secondary_link != blank %}
+
+                <a
+                  href="{{ block.settings.secondary_link }}"
+                  class="sl-plus"
+                  aria-label="{{ 'sections.shop_the_look.view' | t }}"
+                >
+                  +
+                </a>
+
+              {% endif %}
+
+            </div>
+
+          {% endif %}
+
+
+          <!-- ROUND BADGE -->
+
+          {% if s.show_badge %}
+
+            <div class="sl-badge">
+
+              <div class="sl-badge-circle">
+
+                <div class="sl-badge-text">
+
+                  <span style="--i:0;">S</span>
+                  <span style="--i:1;">H</span>
+                  <span style="--i:2;">O</span>
+                  <span style="--i:3;">P</span>
+                  <span style="--i:4;">T</span>
+                  <span style="--i:5;">H</span>
+                  <span style="--i:6;">E</span>
+                  <span style="--i:7;">L</span>
+                  <span style="--i:8;">O</span>
+                  <span style="--i:9;">O</span>
+                  <span style="--i:10;">K</span>
+                  <span style="--i:11;">•</span>
+
+                </div>
+
+                <span class="sl-badge-arrow">
+                  ↗
+                </span>
+
+              </div>
+
+            </div>
+
+          {% endif %}
+
         </div>
-      {%- endif -%}
-    {%- endif -%}
 
-    {%- if s.footer_left_text != blank or s.footer_right_text != blank -%}
-      <div class="sl-footer">
-        <span>{{ s.footer_left_text }}</span>
-        <span>{{ s.footer_right_text }}</span>
       </div>
-    {%- endif -%}
+
+    {% endfor %}
+
+
+    <!-- DOTS -->
+
+    {% if looks.size > 1 %}
+
+      <div class="sl-dots">
+
+        {% for block in looks %}
+
+          <button
+            type="button"
+            class="sl-dot {% if forloop.first %}is-active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="{{ 'sections.shop_the_look.slide' | t: index: forloop.index }}"
+          ></button>
+
+        {% endfor %}
+
+      </div>
+
+    {% endif %}
+
+
+    <!-- FEATURES -->
+
+    {% if s.show_features %}
+
+      <div class="sl-features">
+
+        <div class="sl-feature">
+
+          <div class="sl-feature-icon">
+            ♢
+          </div>
+
+          <div>
+
+            <h3 class="sl-feature-title">
+              {{ s.feature_1_title }}
+            </h3>
+
+            <p class="sl-feature-text">
+              {{ s.feature_1_text }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="sl-feature">
+
+          <div class="sl-feature-icon">
+            ♧
+          </div>
+
+          <div>
+
+            <h3 class="sl-feature-title">
+              {{ s.feature_2_title }}
+            </h3>
+
+            <p class="sl-feature-text">
+              {{ s.feature_2_text }}
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="sl-feature">
+
+          <div class="sl-feature-icon">
+            □
+          </div>
+
+          <div>
+
+            <h3 class="sl-feature-title">
+              {{ s.feature_3_title }}
+            </h3>
+
+            <p class="sl-feature-text">
+              {{ s.feature_3_text }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    {% endif %}
 
   </div>
+
 </section>
 
-<script>
-  (function () {
-    var root = document.getElementById('ShopLook-{{ section_id }}');
-    if (!root || root.dataset.slInit) return;
-    root.dataset.slInit = 'true';
-
-    var looks = Array.prototype.slice.call(root.querySelectorAll('.sl-look'));
-    var dots = Array.prototype.slice.call(root.querySelectorAll('.sl-dot'));
-    var total = looks.length;
-    var activeIndex = 0;
-    var autoplayTimer = null;
-
-    function updateDots() {
-      dots.forEach(function (dot, i) {
-        dot.classList.toggle('is-active', i === activeIndex);
-      });
-    }
-
-    function activate(newIndex) {
-      if (total === 0 || newIndex === activeIndex) return;
-      var current = looks[activeIndex];
-      var next = looks[newIndex];
-
-      current.classList.add('is-leaving');
-      current.classList.remove('is-active');
-
-      window.setTimeout(function () {
-        current.classList.remove('is-leaving');
-        current.style.display = 'none';
-        next.style.display = '';
-        void next.offsetWidth;
-        next.classList.add('is-active');
-      }, 260);
-
-      activeIndex = newIndex;
-      updateDots();
-    }
-
-    root.addEventListener('click', function (e) {
-      var prevBtn = e.target.closest('.sl-arrow-prev');
-      var nextBtn = e.target.closest('.sl-arrow-next');
-      var dot = e.target.closest('.sl-dot');
-      var hotspot = e.target.closest('.sl-hotspot');
-
-      if (prevBtn) {
-        activate((activeIndex - 1 + total) % total);
-      } else if (nextBtn) {
-        activate((activeIndex + 1) % total);
-      } else if (dot) {
-        activate(parseInt(dot.getAttribute('data-index'), 10));
-      } else if (hotspot) {
-        var wasOpen = hotspot.classList.contains('is-open');
-        root.querySelectorAll('.sl-hotspot.is-open').forEach(function (h) { h.classList.remove('is-open'); });
-        if (!wasOpen) hotspot.classList.add('is-open');
-      } else {
-        root.querySelectorAll('.sl-hotspot.is-open').forEach(function (h) { h.classList.remove('is-open'); });
-      }
-    });
-
-    document.addEventListener('click', function (e) {
-      if (!root.contains(e.target)) {
-        root.querySelectorAll('.sl-hotspot.is-open').forEach(function (h) { h.classList.remove('is-open'); });
-      }
-    });
-
-    // Entrance animation
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            root.classList.add('is-inview');
-            io.unobserve(root);
-          }
-        });
-      }, { threshold: 0.2 });
-      io.observe(root);
-    } else {
-      root.classList.add('is-inview');
-    }
-
-    // Autoplay
-    var autoplay = root.getAttribute('data-autoplay') === 'true';
-    var interval = parseInt(root.getAttribute('data-autoplay-interval'), 10) || 5;
-    if (autoplay && total > 1) {
-      function startAutoplay() {
-        autoplayTimer = window.setInterval(function () {
-          activate((activeIndex + 1) % total);
-        }, interval * 1000);
-      }
-      function stopAutoplay() {
-        if (autoplayTimer) window.clearInterval(autoplayTimer);
-      }
-      startAutoplay();
-      root.addEventListener('mouseenter', stopAutoplay);
-      root.addEventListener('mouseleave', startAutoplay);
-    }
-  })();
-</script>
 
 {% schema %}
 {
-  "name": "Shop The Look",
+  "name": "t:sections.shop_the_look.name",
   "tag": "section",
-  "class": "section-shop-the-look",
+  "class": "section-shop-look-premium",
+
   "settings": [
+
     {
       "type": "header",
-      "content": "Layout"
+      "content": "t:sections.shop_the_look.settings.header__layout.content"
     },
+
     {
       "type": "range",
       "id": "max_width",
-      "label": "Section max width",
-      "min": 700,
-      "max": 1400,
+      "label": "t:sections.shop_the_look.settings.max_width.label",
+      "min": 1000,
+      "max": 1800,
       "step": 20,
       "unit": "px",
-      "default": 900
+      "default": 1600
     },
+
     {
       "type": "range",
       "id": "stage_height",
-      "label": "Stage height",
-      "min": 280,
-      "max": 640,
-      "step": 20,
+      "label": "t:sections.shop_the_look.settings.stage_height.label",
+      "min": 300,
+      "max": 900,
+      "step": 10,
       "unit": "px",
-      "default": 420
+      "default": 720
     },
-    {
-      "type": "checkbox",
-      "id": "show_corner_accents",
-      "label": "Show corner ring accents",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_nav_dots",
-      "label": "Show navigation dots",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_autoplay",
-      "label": "Autoplay through looks",
-      "default": false
-    },
+
     {
       "type": "range",
-      "id": "autoplay_interval",
-      "label": "Autoplay interval",
-      "min": 3,
-      "max": 12,
-      "step": 1,
-      "unit": "s",
-      "default": 5
-    },
-    {
-      "type": "header",
-      "content": "Section spacing"
-    },
-    {
-      "type": "range",
-      "id": "section_padding_top",
-      "label": "Section padding top",
+      "id": "padding_top",
+      "label": "t:sections.shop_the_look.settings.padding_top.label",
       "min": 0,
       "max": 160,
       "step": 4,
       "unit": "px",
       "default": 80
     },
+
     {
       "type": "range",
-      "id": "section_padding_bottom",
-      "label": "Section padding bottom",
+      "id": "padding_bottom",
+      "label": "t:sections.shop_the_look.settings.padding_bottom.label",
       "min": 0,
       "max": 160,
       "step": 4,
       "unit": "px",
       "default": 80
     },
-    {
-      "type": "range",
-      "id": "gap_header_to_nav",
-      "label": "Gap: header → nav row",
-      "min": 0,
-      "max": 64,
-      "step": 2,
-      "unit": "px",
-      "default": 36
-    },
-    {
-      "type": "range",
-      "id": "gap_nav_to_stage",
-      "label": "Gap: nav row → stage",
-      "min": 0,
-      "max": 64,
-      "step": 2,
-      "unit": "px",
-      "default": 28
-    },
-    {
-      "type": "range",
-      "id": "gap_stage_to_dots",
-      "label": "Gap: stage → dots",
-      "min": 0,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 22
-    },
-    {
-      "type": "range",
-      "id": "gap_dots_to_footer",
-      "label": "Gap: dots → footer note",
-      "min": 0,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 22
-    },
+
+
     {
       "type": "header",
-      "content": "Header text"
+      "content": "t:sections.shop_the_look.settings.header__top_label.content"
     },
+
     {
       "type": "text",
-      "id": "eyebrow_top",
-      "label": "Top eyebrow (with divider lines)",
-      "default": "Looks · Moments"
+      "id": "chapter_number",
+      "label": "Chapter number",
+      "default": "07"
     },
+
     {
       "type": "text",
-      "id": "eyebrow_bottom",
-      "label": "Bottom eyebrow",
-      "default": "Shop The Look"
+      "id": "chapter_label",
+      "label": "Chapter label",
+      "default": "Looks / Moments"
     },
+
+
     {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "See Life With Them"
+      "type": "header",
+      "content": "t:sections.shop_the_look.settings.header__typography.content"
     },
+
     {
       "type": "range",
       "id": "heading_size",
-      "label": "Heading font size",
-      "min": 24,
-      "max": 64,
+      "label": "t:sections.shop_the_look.settings.heading_size.label",
+      "min": 36,
+      "max": 100,
       "step": 2,
       "unit": "px",
-      "default": 44
+      "default": 72
     },
-    {
-      "type": "checkbox",
-      "id": "show_divider",
-      "label": "Show divider under heading",
-      "default": true
-    },
+
+
     {
       "type": "header",
-      "content": "Footer note (optional)"
+      "content": "t:sections.shop_the_look.settings.header__colors.content"
     },
-    {
-      "type": "text",
-      "id": "footer_left_text",
-      "label": "Left text"
-    },
-    {
-      "type": "text",
-      "id": "footer_right_text",
-      "label": "Right text"
-    },
-    {
-      "type": "header",
-      "content": "Typography & colors"
-    },
-    {
-      "type": "font_picker",
-      "id": "heading_font",
-      "label": "Heading font",
-      "default": "assistant_n7"
-    },
-    {
-      "type": "font_picker",
-      "id": "body_font",
-      "label": "Body font",
-      "default": "assistant_n4"
-    },
+
     {
       "type": "color",
       "id": "background_color",
-      "label": "Background",
-      "default": "#fbfaf7"
+      "label": "t:sections.shop_the_look.settings.background_color.label",
+      "default": "#F7F6F2"
     },
+
     {
       "type": "color",
       "id": "heading_color",
-      "label": "Heading color",
-      "default": "#1c1a18"
+      "label": "t:sections.shop_the_look.settings.heading_color.label",
+      "default": "#222522"
     },
+
     {
       "type": "color",
       "id": "text_color",
-      "label": "Body text color",
-      "default": "#5c574d"
+      "label": "t:sections.shop_the_look.settings.text_color.label",
+      "default": "#686B66"
     },
+
     {
       "type": "color",
       "id": "accent_color",
-      "label": "Accent color",
-      "default": "#4a5d43"
+      "label": "t:sections.shop_the_look.settings.accent_color.label",
+      "default": "#53604E"
     },
+
     {
       "type": "color",
-      "id": "divider_color",
-      "label": "Divider / border color",
-      "default": "#e5e0d6"
+      "id": "border_color",
+      "label": "t:sections.shop_the_look.settings.border_color.label",
+      "default": "#D8D7D0"
     },
-    {
-      "type": "color",
-      "id": "tooltip_bg_color",
-      "label": "Hotspot tooltip background",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "body_size",
-      "label": "Body font size",
-      "min": 13,
-      "max": 18,
-      "step": 1,
-      "unit": "px",
-      "default": 14
-    },
+
+
     {
       "type": "header",
-      "content": "Look button"
+      "content": "t:sections.shop_the_look.settings.header__button.content"
     },
-    {
-      "type": "range",
-      "id": "button_padding_x",
-      "label": "Button padding left/right",
-      "min": 12,
-      "max": 36,
-      "step": 2,
-      "unit": "px",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "button_padding_y",
-      "label": "Button padding top/bottom",
-      "min": 8,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "button_radius",
-      "label": "Button corner radius",
-      "min": 0,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "default": 4
-    },
+
     {
       "type": "color",
-      "id": "button_bg_color",
-      "label": "Button background",
-      "default": "#1c1a18"
+      "id": "button_bg",
+      "label": "t:sections.shop_the_look.settings.button_bg.label",
+      "default": "#273026"
     },
+
     {
       "type": "color",
-      "id": "button_text_color",
-      "label": "Button text",
-      "default": "#ffffff"
+      "id": "button_text",
+      "label": "t:sections.shop_the_look.settings.button_text.label",
+      "default": "#FFFFFF"
+    },
+
+
+    {
+      "type": "header",
+      "content": "t:sections.shop_the_look.settings.header__badge.content"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "t:sections.shop_the_look.settings.show_badge.label",
+      "default": true
+    },
+
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "t:sections.shop_the_look.settings.badge_size.label",
+      "min": 64,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 104
+    },
+
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "t:sections.shop_the_look.settings.badge_background.label",
+      "default": "#171A17"
+    },
+
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "t:sections.shop_the_look.settings.badge_color.label",
+      "default": "#FFFFFF"
+    },
+
+
+    {
+      "type": "header",
+      "content": "t:sections.shop_the_look.settings.header__features.content"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "show_features",
+      "label": "t:sections.shop_the_look.settings.show_features.label",
+      "default": true
+    },
+
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "t:sections.shop_the_look.settings.feature_1_title.label",
+      "default": "Trusted Quality"
+    },
+
+    {
+      "type": "text",
+      "id": "feature_1_text",
+      "label": "t:sections.shop_the_look.settings.feature_1_text.label",
+      "default": "Carefully selected for happy, healthy pets"
+    },
+
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "t:sections.shop_the_look.settings.feature_2_title.label",
+      "default": "Natural Ingredients"
+    },
+
+    {
+      "type": "text",
+      "id": "feature_2_text",
+      "label": "t:sections.shop_the_look.settings.feature_2_text.label",
+      "default": "Made with love and premium ingredients"
+    },
+
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "t:sections.shop_the_look.settings.feature_3_title.label",
+      "default": "Fast Delivery"
+    },
+
+    {
+      "type": "text",
+      "id": "feature_3_text",
+      "label": "t:sections.shop_the_look.settings.feature_3_text.label",
+      "default": "Quick and reliable delivery to your door"
     }
+
   ],
+
+
   "blocks": [
+
     {
       "type": "look",
-      "name": "Look",
+      "name": "t:sections.shop_the_look.blocks.look.name",
+
       "settings": [
+
         {
-          "type": "header",
-          "content": "Images"
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.shop_the_look.blocks.look.settings.product.label",
+          "info": "t:sections.shop_the_look.blocks.look.settings.product.info"
         },
+
         {
           "type": "image_picker",
           "id": "primary_image",
-          "label": "Primary image"
+          "label": "t:sections.shop_the_look.blocks.look.settings.primary_image.label",
+          "info": "t:sections.shop_the_look.blocks.look.settings.primary_image.info"
         },
+
         {
           "type": "image_picker",
           "id": "secondary_image",
-          "label": "Secondary (overlapping) image"
+          "label": "t:sections.shop_the_look.blocks.look.settings.secondary_image.label",
+          "info": "t:sections.shop_the_look.blocks.look.settings.secondary_image.info"
         },
+
         {
-          "type": "range",
-          "id": "secondary_left",
-          "label": "Secondary image: left position",
-          "min": 0,
-          "max": 80,
-          "step": 2,
-          "unit": "%",
-          "default": 40
+          "type": "url",
+          "id": "secondary_link",
+          "label": "t:sections.shop_the_look.blocks.look.settings.secondary_link.label"
         },
-        {
-          "type": "range",
-          "id": "secondary_top",
-          "label": "Secondary image: top position",
-          "min": 0,
-          "max": 70,
-          "step": 2,
-          "unit": "%",
-          "default": 34
-        },
-        {
-          "type": "range",
-          "id": "secondary_width",
-          "label": "Secondary image: width",
-          "min": 20,
-          "max": 60,
-          "step": 2,
-          "unit": "%",
-          "default": 42
-        },
-        {
-          "type": "range",
-          "id": "secondary_height",
-          "label": "Secondary image: height",
-          "min": 20,
-          "max": 70,
-          "step": 2,
-          "unit": "%",
-          "default": 50
-        },
-        {
-          "type": "header",
-          "content": "Caption & button"
-        },
+
         {
           "type": "text",
-          "id": "caption",
-          "label": "Caption",
-          "default": "Cozy nights and quiet naps."
+          "id": "eyebrow",
+          "label": "t:sections.shop_the_look.blocks.look.settings.eyebrow.label"
         },
+
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "t:sections.shop_the_look.blocks.look.settings.heading.label",
+          "info": "t:sections.shop_the_look.blocks.look.settings.heading.info"
+        },
+
+        {
+          "type": "textarea",
+          "id": "caption",
+          "label": "t:sections.shop_the_look.blocks.look.settings.caption.label",
+          "info": "t:sections.shop_the_look.blocks.look.settings.caption.info"
+        },
+
         {
           "type": "text",
           "id": "button_text",
-          "label": "Button label",
-          "default": "Add Look to Cart"
+          "label": "t:sections.shop_the_look.blocks.look.settings.button_text.label",
+          "default": "Add Look To Cart"
         },
+
         {
           "type": "url",
           "id": "button_link",
-          "label": "Button link"
+          "label": "t:sections.shop_the_look.blocks.look.settings.button_link.label"
+        }
+
+      ]
+    }
+
+  ],
+
+
+  "max_blocks": 5,
+
+
+  "presets": [
+    {
+      "name": "t:sections.shop_the_look.presets.name",
+      "blocks": [
+        {
+          "type": "look",
+          "settings": {
+            "eyebrow": "Looks · Moments",
+            "heading": "See Life With Them",
+            "caption": "Cozy nights and quiet naps. Add a product above to pull in its own title, description and price automatically."
+          }
         },
         {
-          "type": "header",
-          "content": "Hotspot 1"
-        },
-        {
-          "type": "checkbox",
-          "id": "hotspot_1_enable",
-          "label": "Enable hotspot 1",
-          "default": true
-        },
-        {
-          "type": "range",
-          "id": "hotspot_1_x",
-          "label": "Position: horizontal",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 60
-        },
-        {
-          "type": "range",
-          "id": "hotspot_1_y",
-          "label": "Position: vertical",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 70
-        },
-        {
-          "type": "text",
-          "id": "hotspot_1_name",
-          "label": "Product name",
-          "default": "Product name"
-        },
-        {
-          "type": "text",
-          "id": "hotspot_1_price",
-          "label": "Product price",
-          "default": "$24.00"
-        },
-        {
-          "type": "image_picker",
-          "id": "hotspot_1_image",
-          "label": "Product thumbnail"
-        },
-        {
-          "type": "url",
-          "id": "hotspot_1_link",
-          "label": "Product link"
-        },
-        {
-          "type": "header",
-          "content": "Hotspot 2"
-        },
-        {
-          "type": "checkbox",
-          "id": "hotspot_2_enable",
-          "label": "Enable hotspot 2",
-          "default": false
-        },
-        {
-          "type": "range",
-          "id": "hotspot_2_x",
-          "label": "Position: horizontal",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 40
-        },
-        {
-          "type": "range",
-          "id": "hotspot_2_y",
-          "label": "Position: vertical",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 40
-        },
-        {
-          "type": "text",
-          "id": "hotspot_2_name",
-          "label": "Product name",
-          "default": "Product name"
-        },
-        {
-          "type": "text",
-          "id": "hotspot_2_price",
-          "label": "Product price",
-          "default": "$18.00"
-        },
-        {
-          "type": "image_picker",
-          "id": "hotspot_2_image",
-          "label": "Product thumbnail"
-        },
-        {
-          "type": "url",
-          "id": "hotspot_2_link",
-          "label": "Product link"
-        },
-        {
-          "type": "header",
-          "content": "Hotspot 3"
-        },
-        {
-          "type": "checkbox",
-          "id": "hotspot_3_enable",
-          "label": "Enable hotspot 3",
-          "default": false
-        },
-        {
-          "type": "range",
-          "id": "hotspot_3_x",
-          "label": "Position: horizontal",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 75
-        },
-        {
-          "type": "range",
-          "id": "hotspot_3_y",
-          "label": "Position: vertical",
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "unit": "%",
-          "default": 20
-        },
-        {
-          "type": "text",
-          "id": "hotspot_3_name",
-          "label": "Product name",
-          "default": "Product name"
-        },
-        {
-          "type": "text",
-          "id": "hotspot_3_price",
-          "label": "Product price",
-          "default": "$32.00"
-        },
-        {
-          "type": "image_picker",
-          "id": "hotspot_3_image",
-          "label": "Product thumbnail"
-        },
-        {
-          "type": "url",
-          "id": "hotspot_3_link",
-          "label": "Product link"
+          "type": "look",
+          "settings": {
+            "eyebrow": "Everyday · Adventures",
+            "heading": "Built For Busy Days",
+            "caption": "Built for busy little paws. Add a product above to pull in its own title, description and price automatically."
+          }
         }
       ]
     }
-  ],
-  "max_blocks": 5,
-  "presets": [
-    {
-      "name": "Shop The Look",
-      "blocks": [
-        { "type": "look" },
-        { "type": "look" }
-      ]
-    }
   ]
+
 }
 {% endschema %}

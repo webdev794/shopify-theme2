@@ -540,7 +540,11 @@
 
   border: 0;
 
-  outline: 0;
+  border-radius: var(--style-border-radius-inputs, 4px);
+
+  outline: 2px solid transparent;
+
+  outline-offset: 2px;
 
   background: transparent;
 
@@ -553,6 +557,16 @@
   padding:
     0.75rem
     0.25rem;
+
+  transition: outline-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+
+/* Only shows for keyboard/assistive-tech focus, not mouse clicks */
+.footer__newsletter-input:focus-visible {
+  outline-color: var(--footer-text);
+
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--footer-text) 18%, transparent);
 }
 
 

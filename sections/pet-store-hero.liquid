@@ -1,0 +1,350 @@
+{% if section.settings.ph_enabled %}
+<section class="cf-pethero" style="background: {{ section.settings.ph_bg_color }};">
+  {% style %}
+    #shopify-section-{{ section.id }} .cf-pethero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cinematic diagonal glow beam (like the red beam reference) */
+    {% if section.settings.ph_show_beam %}
+      #shopify-section-{{ section.id }} .cf-pethero::before {
+        content: "";
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 60%;
+        height: 160%;
+        background: linear-gradient(135deg, transparent 40%, color-mix(in srgb, {{ section.settings.ph_accent_color }} 22%, transparent) 55%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+        transform: rotate(8deg);
+      }
+    {% endif %}
+
+    #shopify-section-{{ section.id }} .cf-pethero__inner {
+      position: relative;
+      z-index: 1;
+      max-width: {{ section.settings.ph_container_width }}px;
+      margin: 0 auto;
+      padding: {{ section.settings.ph_padding_top }}px {{ section.settings.ph_padding_x_desktop }}px {{ section.settings.ph_padding_bottom }}px;
+      display: grid;
+      grid-template-columns: {{ section.settings.ph_content_ratio }}fr {{ section.settings.ph_image_ratio }}fr;
+      gap: {{ section.settings.ph_column_gap }}px;
+      align-items: center;
+    }
+
+    #shopify-section-{{ section.id }} .cf-pethero__content {
+      position: relative;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s cubic-bezier(.2,.7,.3,1);
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__content.cf-pethero--in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Decorative floating stickers */
+    #shopify-section-{{ section.id }} .cf-pethero__sticker {
+      position: absolute;
+      font-size: {{ section.settings.ph_sticker_size }}px;
+      line-height: 1;
+      animation: cf-pethero-float 3.6s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__sticker--1 {
+      top: -6px;
+      left: 4px;
+      animation-delay: 0s;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__sticker--2 {
+      top: -18px;
+      left: 88px;
+      animation-delay: 0.5s;
+    }
+    @keyframes cf-pethero-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(-4deg); }
+    }
+
+    #shopify-section-{{ section.id }} .cf-pethero__heading {
+      position: relative;
+      margin: 0 0 20px;
+      color: {{ section.settings.ph_heading_color }};
+      font-size: {{ section.settings.ph_heading_size }}px;
+      line-height: 0.98;
+      letter-spacing: -0.01em;
+      font-family: {{ section.settings.ph_heading_font.family }}, sans-serif;
+      font-weight: {{ section.settings.ph_heading_font.weight }};
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__heading span {
+      display: block;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__heading em {
+      font-style: normal;
+      color: {{ section.settings.ph_accent_color }};
+    }
+
+    #shopify-section-{{ section.id }} .cf-pethero__paragraph {
+      margin: 0 0 32px;
+      max-width: 420px;
+      color: {{ section.settings.ph_paragraph_color }};
+      font-size: {{ section.settings.ph_paragraph_size }}px;
+      line-height: 1.6;
+      font-family: {{ section.settings.ph_body_font.family }}, sans-serif;
+    }
+
+    #shopify-section-{{ section.id }} .cf-pethero__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: {{ section.settings.ph_button_radius }}px;
+      background: {{ section.settings.ph_button_bg_color }};
+      color: {{ section.settings.ph_button_text_color }};
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      font-family: {{ section.settings.ph_body_font.family }}, sans-serif;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px color-mix(in srgb, {{ section.settings.ph_button_bg_color }} 45%, transparent);
+    }
+
+    /* Image with soft fade-blend edge, like the portraits fading into the dark bg */
+    #shopify-section-{{ section.id }} .cf-pethero__image-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: {{ section.settings.ph_image_radius }}px;
+      min-height: {{ section.settings.ph_image_min_height }}px;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.9s ease 0.15s, transform 0.9s cubic-bezier(.2,.7,.3,1) 0.15s;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__image-wrap.cf-pethero--in {
+      opacity: 1;
+      transform: scale(1);
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    {% if section.settings.ph_fade_image_edge %}
+      #shopify-section-{{ section.id }} .cf-pethero__image-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, {{ section.settings.ph_bg_color }} 0%, transparent 18%);
+        pointer-events: none;
+      }
+    {% endif %}
+    #shopify-section-{{ section.id }} .cf-pethero__image-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: {{ section.settings.ph_image_min_height }}px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: color-mix(in srgb, {{ section.settings.ph_accent_color }} 12%, {{ section.settings.ph_bg_color }});
+      color: {{ section.settings.ph_accent_color }};
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__image-placeholder svg {
+      width: 18%;
+      height: 18%;
+    }
+
+    #shopify-section-{{ section.id }} .cf-pethero__dots {
+      display: flex;
+      gap: 6px;
+      margin-top: 28px;
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: color-mix(in srgb, {{ section.settings.ph_paragraph_color }} 35%, transparent);
+    }
+    #shopify-section-{{ section.id }} .cf-pethero__dots span:first-child {
+      background: {{ section.settings.ph_accent_color }};
+      width: 20px;
+      border-radius: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .cf-pethero__content,
+      #shopify-section-{{ section.id }} .cf-pethero__image-wrap {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      #shopify-section-{{ section.id }} .cf-pethero__sticker {
+        animation: none;
+      }
+    }
+
+    @media screen and (max-width: 989px) {
+      #shopify-section-{{ section.id }} .cf-pethero__inner {
+        grid-template-columns: 1fr;
+        padding-left: {{ section.settings.ph_padding_x_tablet }}px;
+        padding-right: {{ section.settings.ph_padding_x_tablet }}px;
+      }
+      #shopify-section-{{ section.id }} .cf-pethero__image-wrap {
+        order: -1;
+        min-height: 320px;
+      }
+      #shopify-section-{{ section.id }} .cf-pethero__image-wrap::after {
+        display: none;
+      }
+      #shopify-section-{{ section.id }} .cf-pethero__paragraph {
+        max-width: 100%;
+      }
+    }
+
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ section.id }} .cf-pethero__inner {
+        padding-left: {{ section.settings.ph_padding_x_mobile }}px;
+        padding-right: {{ section.settings.ph_padding_x_mobile }}px;
+      }
+      #shopify-section-{{ section.id }} .cf-pethero__heading {
+        font-size: clamp(38px, 13vw, {{ section.settings.ph_heading_size }}px);
+      }
+    }
+  {% endstyle %}
+
+  <div class="cf-pethero__inner">
+
+    <div class="cf-pethero__content" data-cf-pethero>
+      {% if section.settings.ph_sticker_1 != blank %}
+        <span class="cf-pethero__sticker cf-pethero__sticker--1" aria-hidden="true">{{ section.settings.ph_sticker_1 }}</span>
+      {% endif %}
+      {% if section.settings.ph_sticker_2 != blank %}
+        <span class="cf-pethero__sticker cf-pethero__sticker--2" aria-hidden="true">{{ section.settings.ph_sticker_2 }}</span>
+      {% endif %}
+
+      {% if section.settings.ph_heading_line1 != blank or section.settings.ph_heading_line2 != blank %}
+        <h1 class="cf-pethero__heading">
+          {% if section.settings.ph_heading_line1 != blank %}<span>{{ section.settings.ph_heading_line1 }}</span>{% endif %}
+          {% if section.settings.ph_heading_line2 != blank %}<span><em>{{ section.settings.ph_heading_line2 }}</em></span>{% endif %}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.ph_paragraph != blank %}
+        <p class="cf-pethero__paragraph">{{ section.settings.ph_paragraph }}</p>
+      {% endif %}
+
+      {% if section.settings.ph_button_label != blank %}
+        <a href="{{ section.settings.ph_button_link | default: '#' }}" class="cf-pethero__btn">{{ section.settings.ph_button_label }}</a>
+      {% endif %}
+
+      {% if section.settings.ph_show_dots %}
+        <div class="cf-pethero__dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      {% endif %}
+    </div>
+
+    <div class="cf-pethero__image-wrap" data-cf-pethero>
+      {% if section.settings.ph_image != blank %}
+        <img
+          src="{{ section.settings.ph_image | image_url: width: 1400 }}"
+          alt="{{ section.settings.ph_heading_line1 | escape }} {{ section.settings.ph_heading_line2 | escape }}"
+          loading="eager"
+          fetchpriority="high"
+          width="1400"
+          height="1000"
+        >
+      {% else %}
+        <span class="cf-pethero__image-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </span>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  (function () {
+    var els = document.querySelectorAll('#shopify-section-{{ section.id }} [data-cf-pethero]');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('cf-pethero--in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('cf-pethero--in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Pet Store Hero",
+  "settings": [
+    { "type": "checkbox", "id": "ph_enabled", "label": "Show this section", "default": true },
+
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "ph_heading_line1", "label": "Heading — line 1", "default": "Life with them" },
+    { "type": "text", "id": "ph_heading_line2", "label": "Heading — line 2 (accent color)", "default": "starts here." },
+    { "type": "textarea", "id": "ph_paragraph", "label": "Paragraph", "default": "Everything you need, for every moment together." },
+    { "type": "text", "id": "ph_button_label", "label": "Button label", "default": "Shop now" },
+    { "type": "url", "id": "ph_button_link", "label": "Button link" },
+    { "type": "range", "id": "ph_button_radius", "label": "Button corner radius (px)", "min": 0, "max": 50, "step": 2, "default": 50 },
+    { "type": "checkbox", "id": "ph_show_dots", "label": "Show carousel dots decoration", "default": true },
+
+    { "type": "header", "content": "Decorative stickers (optional)" },
+    { "type": "text", "id": "ph_sticker_1", "label": "Sticker 1 (emoji)", "default": "🦊" },
+    { "type": "text", "id": "ph_sticker_2", "label": "Sticker 2 (emoji)", "default": "🐦" },
+    { "type": "range", "id": "ph_sticker_size", "label": "Sticker size (px)", "min": 16, "max": 48, "step": 2, "default": 28 },
+
+    { "type": "header", "content": "Image" },
+    { "type": "image_picker", "id": "ph_image", "label": "Hero image" },
+    { "type": "checkbox", "id": "ph_fade_image_edge", "label": "Fade image edge into background", "default": true },
+    { "type": "range", "id": "ph_image_radius", "label": "Image corner radius (px)", "min": 0, "max": 40, "step": 2, "default": 0 },
+    { "type": "range", "id": "ph_image_min_height", "label": "Image min height (px)", "min": 260, "max": 700, "step": 20, "default": 480 },
+
+    { "type": "header", "content": "Cinematic glow beam" },
+    { "type": "checkbox", "id": "ph_show_beam", "label": "Show diagonal glow beam", "default": true },
+
+    { "type": "header", "content": "Colors & fonts" },
+    { "type": "color", "id": "ph_bg_color", "label": "Background color", "default": "#F7F3EC" },
+    { "type": "color", "id": "ph_accent_color", "label": "Accent color", "default": "#3F5B45" },
+    { "type": "color", "id": "ph_heading_color", "label": "Heading color", "default": "#2B2B2B" },
+    { "type": "color", "id": "ph_paragraph_color", "label": "Paragraph color", "default": "#6B6B6B" },
+    { "type": "color", "id": "ph_button_bg_color", "label": "Button background", "default": "#3F5B45" },
+    { "type": "color", "id": "ph_button_text_color", "label": "Button text color", "default": "#FFFFFF" },
+    { "type": "font_picker", "id": "ph_heading_font", "label": "Heading font", "default": "assistant_n7" },
+    { "type": "range", "id": "ph_heading_size", "label": "Heading font size (px)", "min": 40, "max": 130, "step": 2, "default": 72 },
+    { "type": "font_picker", "id": "ph_body_font", "label": "Body font", "default": "assistant_n4" },
+    { "type": "range", "id": "ph_paragraph_size", "label": "Paragraph font size (px)", "min": 12, "max": 22, "step": 1, "default": 16 },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "ph_content_ratio", "label": "Content column ratio", "min": 1, "max": 4, "step": 1, "default": 1 },
+    { "type": "range", "id": "ph_image_ratio", "label": "Image column ratio", "min": 1, "max": 4, "step": 1, "default": 1 },
+    { "type": "range", "id": "ph_column_gap", "label": "Gap between columns (px)", "min": 0, "max": 100, "step": 4, "default": 0 },
+
+    { "type": "header", "content": "Section width" },
+    { "type": "range", "id": "ph_container_width", "label": "Container max width (px)", "min": 1000, "max": 1800, "step": 20, "default": 1400 },
+    { "type": "range", "id": "ph_padding_x_desktop", "label": "Side padding — Desktop (px)", "min": 0, "max": 120, "step": 4, "default": 64 },
+    { "type": "range", "id": "ph_padding_x_tablet", "label": "Side padding — Tablet (px)", "min": 0, "max": 80, "step": 4, "default": 32 },
+    { "type": "range", "id": "ph_padding_x_mobile", "label": "Side padding — Mobile (px)", "min": 0, "max": 60, "step": 2, "default": 20 },
+
+    { "type": "header", "content": "Section spacing" },
+    { "type": "range", "id": "ph_padding_top", "label": "Top padding (px)", "min": 0, "max": 140, "step": 4, "default": 64 },
+    { "type": "range", "id": "ph_padding_bottom", "label": "Bottom padding (px)", "min": 0, "max": 140, "step": 4, "default": 64 }
+  ],
+  "presets": [
+    { "name": "Pet Store Hero" }
+  ]
+}
+{% endschema %}

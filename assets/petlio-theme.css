@@ -5,33 +5,34 @@
    ========================================================================== */
 
 :root {
-  /* Paper surfaces */
-  --petlio-paper: #f7f3eb;
-  --petlio-paper-light: #faf7f0;
-  --petlio-paper-deep: #eee8dc;
-  --petlio-paper-warm: #f3efe6;
+  /* Paper surfaces — driven by the theme editor's Background color setting */
+  --petlio-paper: var(--color-background, #f7f3eb);
+  --petlio-paper-light: color-mix(in srgb, var(--color-background, #f7f3eb) 85%, white);
+  --petlio-paper-deep: color-mix(in srgb, var(--color-background, #f7f3eb) 90%, var(--color-foreground, #273028));
+  --petlio-paper-warm: color-mix(in srgb, var(--color-background, #f7f3eb) 95%, var(--color-foreground, #273028));
 
-  /* Sage / calm surfaces */
-  --petlio-sage: #eef0e5;
-  --petlio-sage-light: #dfe6d9;
-  --petlio-sage-deep: #d4ddcf;
+  /* Sage / calm surfaces — driven by the theme editor's Secondary background setting */
+  --petlio-sage: var(--color-background-secondary, #eef0e5);
+  --petlio-sage-light: color-mix(in srgb, var(--color-background-secondary, #eef0e5) 80%, white);
+  --petlio-sage-deep: color-mix(in srgb, var(--color-background-secondary, #eef0e5) 85%, var(--color-foreground, #273028));
 
   /* Story / editorial */
-  --petlio-story: #e9e2d7;
+  --petlio-story: color-mix(in srgb, var(--color-background, #f7f3eb) 88%, var(--color-foreground, #273028));
 
-  /* Ink & text — tuned for WCAG AA contrast on paper surfaces
+  /* Ink & text — driven by the theme editor's Text color setting.
+     Tuned for WCAG AA contrast on paper surfaces:
      muted ≥4.5:1 for body text; soft ≥3:1 (preferably ≥4.5) for secondary text */
-  --petlio-ink: #273028;
-  --petlio-muted: #4f5851;
-  --petlio-soft: #5a635c;
+  --petlio-ink: var(--color-foreground, #273028);
+  --petlio-muted: color-mix(in srgb, var(--color-foreground, #273028) 78%, white);
+  --petlio-soft: color-mix(in srgb, var(--color-foreground, #273028) 68%, white);
 
-  /* Accent */
-  --petlio-accent: #71806d;
-  --petlio-accent-deep: #304b38; /* #0C130E;  #18261C;   */
+  /* Accent — driven by the theme editor's Accent background setting */
+  --petlio-accent: var(--color-accent-background, #71806d);
+  --petlio-accent-deep: color-mix(in srgb, var(--color-accent-background, #71806d) 70%, black);
 
-  /* Lines & edges */
-  --petlio-line: rgba(39, 48, 40, 0.12);
-  --petlio-line-strong: rgba(39, 48, 40, 0.18);
+  /* Lines & edges — derived from text color so they stay in harmony automatically */
+  --petlio-line: color-mix(in srgb, var(--color-foreground, #273028) 12%, transparent);
+  --petlio-line-strong: color-mix(in srgb, var(--color-foreground, #273028) 18%, transparent);
 
   /* Radius language — keep consistent everywhere */
   --petlio-radius-sm: 10px;

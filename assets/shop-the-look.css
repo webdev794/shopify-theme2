@@ -1,0 +1,802 @@
+/* ============================================================
+   Shop The Look Premium — assets/shop-the-look.css
+   Faithful split of the original single-file section.
+   Scoped with .shop-the-look; per-instance values (colors,
+   sizes) are supplied as CSS custom properties inline on the
+   section element from sections/shop-the-look.liquid, since a
+   static .css asset cannot contain Liquid ({{ section_id }}).
+============================================================ */
+
+.shop-the-look {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding: var(--padding-top) 0 var(--padding-bottom);
+}
+
+.shop-the-look * {
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   MAIN CONTAINER
+======================================== */
+
+.shop-the-look .sl-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+
+/* ========================================
+   SMALL TOP EYEBROW
+======================================== */
+
+.shop-the-look .sl-chapter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+
+  margin: 0 0 1.5rem;
+
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  line-height: 1.2;
+  text-transform: uppercase;
+
+  color: var(--text);
+  opacity: .65;
+}
+
+.shop-the-look .sl-chapter-number {
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-the-look .sl-chapter-line {
+  display: block;
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.shop-the-look .sl-chapter-label {
+  white-space: nowrap;
+}
+
+
+/* ========================================
+   SLIDES
+======================================== */
+
+.shop-the-look .sl-slide {
+  display: none;
+}
+
+.shop-the-look .sl-slide.is-active {
+  display: block;
+}
+
+
+/* ========================================
+   MAIN HERO GRID
+======================================== */
+
+.shop-the-look .sl-layout {
+  display: grid;
+  grid-template-columns: 54% 46%;
+  min-height: var(--stage-height);
+  align-items: center;
+  position: relative;
+}
+
+
+/* ========================================
+   LEFT PRIMARY IMAGE
+======================================== */
+
+.shop-the-look .sl-image-area {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  z-index: 1;
+}
+
+.shop-the-look .sl-primary-image {
+  position: absolute;
+  inset: 0 auto 0 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.shop-the-look .sl-primary-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: top;
+}
+
+.shop-the-look .sl-primary-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #e8e5de;
+}
+
+
+/* ========================================
+   RIGHT CONTENT AREA
+======================================== */
+
+.shop-the-look .sl-content-area {
+  position: relative;
+
+  min-height: var(--stage-height);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding:
+    70px
+    10%
+    140px
+    18%;
+
+  z-index: 3;
+}
+
+.shop-the-look .sl-eyebrow {
+  margin: 0 0 25px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+
+  color: var(--accent);
+}
+
+.shop-the-look .sl-heading {
+  margin: 0 0 25px;
+
+  color: var(--heading);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: var(--heading-size);
+  font-weight: 500;
+  line-height: .95;
+  letter-spacing: -.04em;
+
+  max-width: 620px;
+}
+
+.shop-the-look .sl-caption {
+  margin: 0 0 35px;
+
+  max-width: 460px;
+
+  color: var(--text);
+
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.shop-the-look .sl-price {
+  margin: 0 0 18px;
+
+  color: var(--heading);
+
+  font-size: 20px;
+  font-weight: 600;
+}
+
+
+/* ========================================
+   BUTTON
+======================================== */
+
+.shop-the-look .sl-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  width: fit-content;
+
+  min-height: 58px;
+  padding: 16px 30px;
+
+  background: var(--button-bg);
+  color: var(--button-text);
+
+  border: 1px solid var(--button-bg);
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  transition: all .3s ease;
+}
+
+.shop-the-look .sl-button:hover {
+  transform: translateY(-3px);
+  opacity: .9;
+}
+
+.shop-the-look .sl-button-arrow {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.shop-the-look .sl-add-look {
+  cursor: pointer;
+  border: 1px solid var(--button-bg);
+}
+
+.shop-the-look .sl-add-look:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.shop-the-look .sl-add-look.is-adding {
+  opacity: .75;
+  cursor: progress;
+}
+
+.shop-the-look .sl-add-look.is-added {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.shop-the-look .sl-add-look.is-error {
+  background: #a33;
+  border-color: #a33;
+}
+
+
+/* ========================================
+   NAVIGATION
+======================================== */
+
+.shop-the-look .sl-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 40px;
+}
+
+.shop-the-look .sl-arrow {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  background: transparent;
+  color: var(--heading);
+
+  font-size: 28px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition: all .25s ease;
+}
+
+.shop-the-look .sl-arrow:hover {
+  background: var(--heading);
+  border-color: var(--heading);
+  color: #fff;
+
+  transform: translateY(-2px);
+}
+
+
+/* ========================================
+   SECONDARY OVERLAPPING IMAGE
+======================================== */
+
+.shop-the-look .sl-secondary-image {
+  position: absolute;
+
+  width: 34%;
+  aspect-ratio: 1 / 1;
+
+  left: 27%;
+  bottom: -65px;
+
+  z-index: 5;
+
+  padding: 9px;
+
+  background: #fff;
+
+  box-shadow: 0 25px 70px rgba(0,0,0,.14);
+
+  overflow: hidden;
+}
+
+.shop-the-look .sl-secondary-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: top;
+}
+
+
+/* ========================================
+   BADGE
+======================================== */
+
+.shop-the-look .sl-badge {
+  position: absolute;
+
+  right: 4%;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: var(--badge-size);
+  height: var(--badge-size);
+
+  z-index: 6;
+}
+
+.shop-the-look .sl-badge-circle {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--badge-background);
+  border-radius: 50%;
+
+  color: var(--badge-color);
+}
+
+.shop-the-look .sl-badge-circle::before {
+  content: "";
+
+  position: absolute;
+  inset: 11px;
+
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+}
+
+.shop-the-look .sl-badge-arrow {
+  position: relative;
+  z-index: 2;
+
+  font-size: 28px;
+}
+
+.shop-the-look .sl-badge-text {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  animation: slRotate 15s linear infinite;
+}
+
+.shop-the-look .sl-badge-text span {
+  position: absolute;
+
+  left: 50%;
+  top: 9px;
+
+  transform:
+    translateX(-50%)
+    rotate(calc(var(--i) * 30deg));
+
+  transform-origin:
+    0 calc((var(--badge-size) / 2) - 9px);
+
+  font-size: 6px;
+  font-weight: 700;
+
+  color: var(--badge-color);
+
+  white-space: nowrap;
+}
+
+@keyframes slRotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ========================================
+   PLUS BUTTON ON SECONDARY IMAGE
+======================================== */
+
+.shop-the-look .sl-plus {
+  position: absolute;
+
+  right: 30px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  color: var(--heading);
+
+  text-decoration: none;
+
+  font-size: 32px;
+  font-weight: 300;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,.12);
+
+  transition: all .25s ease;
+}
+
+.shop-the-look .sl-plus:hover {
+  transform: translateY(-50%) scale(1.08);
+}
+
+
+/* ========================================
+   DOTS
+======================================== */
+
+.shop-the-look .sl-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  margin-top: 105px;
+}
+
+.shop-the-look .sl-dot {
+  width: 7px;
+  height: 7px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: var(--border);
+
+  cursor: pointer;
+
+  transition: all .25s ease;
+}
+
+.shop-the-look .sl-dot.is-active {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+
+/* ========================================
+   TRUST FEATURES
+======================================== */
+
+.shop-the-look .sl-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 70px;
+
+  max-width: 1150px;
+
+  margin: 95px auto 0;
+
+  padding-top: 45px;
+}
+
+.shop-the-look .sl-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.shop-the-look .sl-feature-icon {
+  width: 55px;
+  height: 55px;
+
+  flex: 0 0 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border);
+
+  color: var(--accent);
+
+  font-size: 25px;
+}
+
+.shop-the-look .sl-feature-title {
+  margin: 0 0 8px;
+
+  color: var(--heading);
+
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.shop-the-look .sl-feature-text {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+
+/* ========================================
+   ANIMATION
+======================================== */
+
+.shop-the-look .sl-primary-image,
+.shop-the-look .sl-content-area,
+.shop-the-look .sl-secondary-image {
+  opacity: 0;
+}
+
+.shop-the-look.is-visible .sl-primary-image {
+  animation: slFadeLeft 1s ease forwards;
+}
+
+.shop-the-look.is-visible .sl-content-area {
+  animation: slFadeRight 1s ease .2s forwards;
+}
+
+.shop-the-look.is-visible .sl-secondary-image {
+  animation: slFadeUp .9s ease .5s forwards;
+}
+
+@keyframes slFadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slFadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media screen and (max-width: 1100px) {
+
+  .shop-the-look .sl-container {
+    padding: 0 25px;
+  }
+
+  .shop-the-look .sl-layout {
+    grid-template-columns: 50% 50%;
+  }
+
+  .shop-the-look .sl-content-area {
+    padding:
+      60px
+      70px
+      120px
+      70px;
+  }
+
+  .shop-the-look .sl-heading {
+    font-size: calc(var(--heading-size) * .75);
+  }
+
+  .shop-the-look .sl-secondary-image {
+    width: 42%;
+    left: 30%;
+  }
+
+  .shop-the-look .sl-badge {
+    right: 2%;
+  }
+
+  .shop-the-look .sl-features {
+    gap: 35px;
+  }
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media screen and (max-width: 749px) {
+
+  .shop-the-look {
+    padding-top: 40px;
+    padding-bottom: 55px;
+  }
+
+  .shop-the-look .sl-container {
+    padding: 0 16px;
+  }
+
+  .shop-the-look .sl-chapter {
+    margin-bottom: 20px;
+    font-size: .6rem;
+  }
+
+  .shop-the-look .sl-layout {
+    display: flex;
+    flex-direction: column;
+
+    min-height: auto;
+  }
+
+  .shop-the-look .sl-image-area {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  .shop-the-look .sl-primary-image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .shop-the-look .sl-content-area {
+    width: 100%;
+    min-height: auto;
+
+    padding:
+      80px
+      20px
+      120px;
+
+    text-align: center;
+
+    align-items: center;
+  }
+
+  .shop-the-look .sl-heading {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .shop-the-look .sl-caption {
+    font-size: 16px;
+  }
+
+  .shop-the-look .sl-button {
+    width: 100%;
+  }
+
+  .shop-the-look .sl-navigation {
+    justify-content: center;
+  }
+
+  .shop-the-look .sl-secondary-image {
+    width: 78%;
+    aspect-ratio: 1 / 1;
+
+    left: 50%;
+    bottom: -95px;
+
+    transform: translateX(-50%);
+  }
+
+  .shop-the-look.is-visible .sl-secondary-image {
+    animation: slFadeUpMobile .9s ease .5s forwards;
+  }
+
+  @keyframes slFadeUpMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(50px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .shop-the-look .sl-plus {
+    width: 50px;
+    height: 50px;
+
+    right: 18px;
+
+    font-size: 27px;
+  }
+
+  .shop-the-look .sl-badge {
+    width: 70px;
+    height: 70px;
+
+    right: 18px;
+    top: auto;
+    bottom: 210px;
+
+    transform: none;
+  }
+
+  .shop-the-look .sl-dots {
+    margin-top: 25px;
+  }
+
+  .shop-the-look .sl-features {
+    grid-template-columns: 1fr;
+
+    gap: 28px;
+
+    margin-top: 60px;
+
+    padding: 0 15px;
+  }
+}

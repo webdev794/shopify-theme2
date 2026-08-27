@@ -120,7 +120,6 @@
                 --columns-desktop: {{ section.settings.columns_desktop }};
                 --columns-mobile: {{ section.settings.columns_mobile }};
               "
-              data-image-ratio="{{ section.settings.image_ratio }}"
             >
               {% for product in collection.products %}
                 <div class="product-card">
@@ -133,10 +132,10 @@
                       {% if product.featured_image %}
                         {{
                           product.featured_image
-                          | image_url: width: 500
+                          | image_url: width: 600, height: 600, crop: 'center'
                           | image_tag:
                             loading: 'lazy',
-                            widths: '250,350,450,500',
+                            widths: '250,350,450,600',
                             sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, 50vw',
                             alt: product.featured_image.alt | default: product.title,
                             class: 'product-card__image product-card__image--primary'
@@ -144,10 +143,10 @@
                         {% if product.images.size > 1 %}
                           {{
                             product.images[1]
-                            | image_url: width: 500
+                            | image_url: width: 600, height: 600, crop: 'center'
                             | image_tag:
                               loading: 'lazy',
-                              widths: '250,350,450,500',
+                              widths: '250,350,450,600',
                               sizes: '(min-width: 1400px) 16vw, (min-width: 990px) 20vw, 50vw',
                               alt: '',
                               class: 'product-card__image product-card__image--secondary'
@@ -235,7 +234,6 @@
 
 {% stylesheet %}
   .collection {
-    /* Uses theme CSS variables instead of hardcoded editorial palette */
     --collection-ink: var(--color-foreground, #171310);
     --collection-ivory: var(--color-background, #faf7f2);
     --collection-bronze: var(--color-accent-background, #c9a063);
@@ -333,9 +331,6 @@
     z-index: 1;
     width: 100%;
     height: 100%;
-    /* scale-down never upscales past the source's native resolution —
-       if the image is smaller than the box, it centers at its real size
-       instead of stretching and blurring. */
     object-fit: scale-down;
     object-position: center;
     display: block;
@@ -422,7 +417,7 @@
     text-transform: uppercase;
   }
 
-  /* ---------- Grid: denser by default so more products are visible at once ---------- */
+  /* ---------- Grid Layout ---------- */
   .collection__grid {
     display: grid;
     grid-template-columns: repeat(var(--columns-mobile, 2), 1fr);
@@ -436,34 +431,40 @@
     }
   }
 
-  /* ---------- Product card ---------- */
+  /* ---------- Product Card Image Hard Fix ---------- */
+  .product-card {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+
   .product-card__media {
-    position: relative;
-    aspect-ratio: 1 / 1;
+    position: relative !important;
+    width: 100% !important;
+    padding-top: 100% !important; /* Forces 1:1 Aspect Ratio Box */
+    height: 0 !important;
     border-radius: 0.4rem;
     overflow: hidden;
     background: var(--collection-ivory);
   }
 
-  .collection__grid[data-image-ratio='portrait'] .product-card__media {
-    aspect-ratio: 3 / 4;
-  }
-
-  .collection__grid[data-image-ratio='natural'] .product-card__media {
-    aspect-ratio: auto;
-  }
-
   .product-card__media-link {
-    display: block;
-    width: 100%;
-    height: 100%;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 
   .product-card__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* Crops image to fill exact box dimensions */
+    object-position: center !important;
+    display: block !important;
     transition: transform 0.5s ease;
   }
 
@@ -491,6 +492,7 @@
     flex-direction: column;
     gap: 0.3rem;
     pointer-events: none;
+    z-index: 2;
   }
 
   .badge {
@@ -521,6 +523,7 @@
     opacity: 0;
     transform: translateY(0.4rem);
     transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 2;
   }
 
   .product-card__media:hover .product-card__quick-add,
@@ -560,6 +563,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    flex-grow: 1;
   }
 
   .product-card__vendor {
@@ -593,8 +597,7 @@
     display: flex;
     gap: 0.4rem;
     align-items: baseline;
-    margin-top: 0.1rem;
-    /* Keep currency glyph clear of the card's rounded bottom corners */
+    margin-top: auto;
     padding-inline: 0.05rem;
     overflow: visible;
   }

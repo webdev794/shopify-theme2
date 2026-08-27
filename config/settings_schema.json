@@ -74,13 +74,13 @@
       {
         "type": "color",
         "id": "background_color",
-        "default": "#FFFFFF",
+        "default": "#F7F3EB",
         "label": "t:labels.background"
       },
       {
         "type": "color",
         "id": "foreground_color",
-        "default": "#333333",
+        "default": "#273028",
         "label": "t:labels.foreground"
       },
       {
@@ -90,13 +90,13 @@
       {
         "type": "color",
         "id": "background_color_secondary",
-        "default": "#F5F5F5",
+        "default": "#EEF0E5",
         "label": "Secondary background"
       },
       {
         "type": "color",
         "id": "foreground_color_secondary",
-        "default": "#1A1A1A",
+        "default": "#273028",
         "label": "Secondary foreground"
       },
       {
@@ -106,7 +106,7 @@
       {
         "type": "color",
         "id": "accent_background",
-        "default": "#121212",
+        "default": "#304B38",
         "label": "Accent background"
       },
       {

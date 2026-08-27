@@ -17,6 +17,9 @@
     {{ 'scroll-bird.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-cat.css' | asset_url | stylesheet_tag }}
     {{ 'footer-yard.css' | asset_url | stylesheet_tag }}
+    {% if settings.hero_yard_enabled %}
+      {{ 'hero-yard.css' | asset_url | stylesheet_tag }}
+    {% endif %}
     {{ 'petlio-toast.css' | asset_url | stylesheet_tag }}
     {% if request.page_type == 'index' %}
       {{ 'petlio-story.css' | asset_url | stylesheet_tag }}
@@ -35,6 +38,20 @@
     <script src="{{ 'scroll-bird.js' | asset_url }}" defer></script>
     <script src="{{ 'scroll-cat.js' | asset_url }}" defer></script>
     <script src="{{ 'footer-yard.js' | asset_url }}" defer></script>
+    {% if settings.hero_yard_enabled %}
+      <script>
+        window.PetlioHeroYardSettings = {
+          enabled: {{ settings.hero_yard_enabled | json }},
+          weather: {{ settings.hero_yard_weather | json }},
+          vignetteOpacity: {{ settings.hero_yard_vignette_opacity | divided_by: 100.0 | json }},
+          grassHeight: {{ settings.hero_yard_grass_height | json }},
+          weatherCycleDistance: {{ settings.hero_yard_weather_cycle | json }},
+          cloudCrossDistance: {{ settings.hero_yard_cloud_cross_distance | json }},
+          mergeAtFooter: {{ settings.hero_yard_merge_at_footer | json }}
+        };
+      </script>
+      <script src="{{ 'hero-yard.js' | asset_url }}" defer></script>
+    {% endif %}
     <script src="{{ 'petlio-toast.js' | asset_url }}" defer></script>
     {% if request.page_type == 'index' %}
       <script src="{{ 'petlio-story.js' | asset_url }}" defer></script>

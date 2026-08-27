@@ -1,14 +1,14 @@
 /* ==========================================================================
-   PETLIO — SCROLL CAT
-   An orange tabby that trots along the left edge while scrolling, and
-   sits on section perch lines when the page is still — classic cat-on-
-   a-ledge pose. Companion to scroll-bird.css/js — same scroll-driven
-   approach, mirrored to the left. If the dog cursor gets close while
-   it's sitting, it startles and bolts to a different spot, same as the
-   bird.
+   PETLIO — SCROLL PARROT
+   A colorful macaw that flies on the left while scrolling, trailing loose
+   feathers, and perches with a little wing-settle on section lines when
+   the page is still. Left-edge companion to scroll-bird.css/js (the
+   phoenix on the right) — same scroll-driven approach, mirrored, with
+   flying/perching instead of a ground-level trot (a bird makes more
+   sense in the air than running along a vertical edge).
    ========================================================================== */
 
-#scroll-cat-root {
+#scroll-parrot-root {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,11 +19,11 @@
   contain: layout style;
 }
 
-#scroll-cat {
+#scroll-parrot {
   position: fixed;
   left: clamp(12px, 2.4vw, 36px);
-  width: 58px;
-  height: 46px;
+  width: 60px;
+  height: 52px;
   margin: 0;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -33,255 +33,144 @@
   opacity: 0;
 }
 
-#scroll-cat.is-ready {
+#scroll-parrot.is-ready {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-#scroll-cat svg {
+#scroll-parrot.is-flying .scroll-parrot__wing {
+  animation: scroll-parrot-flap 0.16s ease-in-out infinite alternate;
+}
+
+#scroll-parrot.is-landing .scroll-parrot__wing {
+  animation: scroll-parrot-settle 0.45s ease-out forwards;
+}
+
+#scroll-parrot.is-perched .scroll-parrot__wing {
+  animation: none;
+  transform: rotate(6deg);
+}
+
+#scroll-parrot.is-perched .scroll-parrot__body {
+  animation: scroll-parrot-breathe 2.6s ease-in-out infinite;
+}
+
+/* Startled — the dog got close. A quick alarmed flutter before it bolts. */
+#scroll-parrot.is-startled .scroll-parrot__wing {
+  animation: scroll-parrot-startle-flap 0.08s ease-in-out infinite alternate;
+}
+
+#scroll-parrot.is-startled .scroll-parrot__body {
+  animation: scroll-parrot-flinch 0.18s ease-out;
+}
+
+@keyframes scroll-parrot-startle-flap {
+  from { transform: rotate(-30deg); }
+  to { transform: rotate(38deg); }
+}
+
+@keyframes scroll-parrot-flinch {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(-3px) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes scroll-parrot-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+#scroll-parrot svg {
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 3px 6px rgba(60, 40, 10, 0.2));
+  filter: drop-shadow(0 4px 7px rgba(20, 60, 40, 0.22));
 }
 
-/* Shared transform origins */
-
-.scroll-cat__legs-back {
-  transform-origin: 34px 46px;
+.scroll-parrot__wing {
+  transform-origin: 66px 30px;
   transform-box: fill-box;
 }
 
-.scroll-cat__legs-front {
-  transform-origin: 72px 46px;
+.scroll-parrot__body {
+  transition: transform 0.35s ease;
+}
+
+.scroll-parrot__tail {
+  transform-origin: 30px 38px;
   transform-box: fill-box;
 }
 
-.scroll-cat__body {
-  transform-origin: 54px 40px;
-  transform-box: fill-box;
+#scroll-parrot.is-flying .scroll-parrot__tail {
+  animation: scroll-parrot-tail-trail 0.5s ease-in-out infinite;
 }
 
-.scroll-cat__tail {
-  transform-origin: 28px 38px;
-  transform-box: fill-box;
+#scroll-parrot.is-perched .scroll-parrot__tail {
+  animation: scroll-parrot-tail-sway 3.4s ease-in-out infinite;
 }
 
-.scroll-cat__ears {
-  transform-origin: 90px 14px;
-  transform-box: fill-box;
+@keyframes scroll-parrot-flap {
+  from { transform: rotate(-16deg); }
+  to { transform: rotate(30deg); }
 }
 
-/* ==========================================================
-   RUNNING (while scrolling)
-   ========================================================== */
-
-#scroll-cat.is-running .scroll-cat__legs-back {
-  animation: scroll-cat-legs-back-run 0.28s ease-in-out infinite;
+@keyframes scroll-parrot-settle {
+  0% { transform: rotate(24deg); }
+  60% { transform: rotate(-4deg); }
+  100% { transform: rotate(6deg); }
 }
 
-#scroll-cat.is-running .scroll-cat__legs-front {
-  animation: scroll-cat-legs-front-run 0.28s ease-in-out infinite;
+@keyframes scroll-parrot-tail-trail {
+  0% { transform: rotate(-3deg); }
+  50% { transform: rotate(5deg); }
+  100% { transform: rotate(-3deg); }
 }
 
-#scroll-cat.is-running .scroll-cat__tail {
-  animation: scroll-cat-tail-swish 0.36s ease-in-out infinite;
+@keyframes scroll-parrot-tail-sway {
+  0%, 80%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(4deg); }
 }
 
-#scroll-cat.is-running .scroll-cat__body {
-  animation: scroll-cat-body-bounce 0.28s ease-in-out infinite;
+/* Feathers trailing off the parrot as it flies / a small flourish as it
+   lands. Spawned and removed by scroll-parrot.js. Rainbow-tinted per
+   feather rather than a single trail color, for that "colorful parrot"
+   read. */
+#scroll-parrot-feathers {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style;
 }
 
-@keyframes scroll-cat-legs-back-run {
+.scroll-parrot__feather {
+  position: fixed;
+  border-radius: 60% 20% 60% 20%;
+  pointer-events: none;
+  filter: blur(0.2px);
+  animation: scroll-parrot-feather-drift var(--feather-duration, 900ms)
+    ease-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes scroll-parrot-feather-drift {
   0% {
-    transform: rotate(24deg);
-  }
-  50% {
-    transform: rotate(-26deg);
+    opacity: 0.95;
+    transform: translate(0, 0) rotate(var(--feather-rot-from, 0deg)) scale(1);
   }
   100% {
-    transform: rotate(24deg);
-  }
-}
-
-@keyframes scroll-cat-legs-front-run {
-  0% {
-    transform: rotate(-26deg);
-  }
-  50% {
-    transform: rotate(24deg);
-  }
-  100% {
-    transform: rotate(-26deg);
-  }
-}
-
-@keyframes scroll-cat-tail-swish {
-  0%,
-  100% {
-    transform: rotate(-9deg);
-  }
-  50% {
-    transform: rotate(11deg);
-  }
-}
-
-@keyframes scroll-cat-body-bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-1.3px);
-  }
-}
-
-/* ==========================================================
-   LANDING (brief settle into a sit)
-   ========================================================== */
-
-#scroll-cat.is-landing .scroll-cat__legs-back {
-  animation: scroll-cat-settle-back 0.4s ease-out forwards;
-}
-
-#scroll-cat.is-landing .scroll-cat__legs-front {
-  animation: scroll-cat-settle-front 0.4s ease-out forwards;
-}
-
-@keyframes scroll-cat-settle-back {
-  0% {
-    transform: rotate(24deg);
-  }
-  60% {
-    transform: rotate(66deg);
-  }
-  100% {
-    transform: rotate(56deg);
-  }
-}
-
-@keyframes scroll-cat-settle-front {
-  0% {
-    transform: rotate(-26deg);
-  }
-  60% {
-    transform: rotate(4deg);
-  }
-  100% {
-    transform: rotate(-4deg);
-  }
-}
-
-/* ==========================================================
-   SITTING (idle, on a perch line)
-   ========================================================== */
-
-#scroll-cat.is-sitting .scroll-cat__legs-back {
-  animation: none;
-  transform: rotate(56deg);
-}
-
-#scroll-cat.is-sitting .scroll-cat__legs-front {
-  animation: none;
-  transform: rotate(-4deg);
-}
-
-#scroll-cat.is-sitting .scroll-cat__body {
-  animation: scroll-cat-breathe 2.8s ease-in-out infinite;
-}
-
-#scroll-cat.is-sitting .scroll-cat__tail {
-  animation: scroll-cat-tail-curl 3.6s ease-in-out infinite;
-}
-
-#scroll-cat.is-sitting .scroll-cat__ears {
-  animation: scroll-cat-ear-flick 5s ease-in-out infinite;
-}
-
-@keyframes scroll-cat-breathe {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.012);
-  }
-}
-
-@keyframes scroll-cat-tail-curl {
-  0%,
-  75%,
-  100% {
-    transform: rotate(0deg);
-  }
-  85% {
-    transform: rotate(8deg);
-  }
-}
-
-@keyframes scroll-cat-ear-flick {
-  0%,
-  92%,
-  100% {
-    transform: rotate(0deg);
-  }
-  95% {
-    transform: rotate(-6deg);
-  }
-}
-
-/* ==========================================================
-   STARTLED — the dog got close. A quick flinch before it bolts.
-   ========================================================== */
-
-#scroll-cat.is-startled .scroll-cat__ears {
-  animation: scroll-cat-ears-flat 0.18s ease-out forwards;
-}
-
-#scroll-cat.is-startled .scroll-cat__body {
-  animation: scroll-cat-flinch 0.18s ease-out;
-}
-
-#scroll-cat.is-startled .scroll-cat__tail {
-  animation: scroll-cat-tail-puff 0.18s ease-in-out infinite;
-}
-
-@keyframes scroll-cat-ears-flat {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-18deg) scaleY(0.85);
-  }
-}
-
-@keyframes scroll-cat-flinch {
-  0% {
-    transform: scale(1);
-  }
-  35% {
-    transform: scale(1.1) translateY(-2px);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes scroll-cat-tail-puff {
-  0%,
-  100% {
-    transform: rotate(-14deg) scaleX(1.15);
-  }
-  50% {
-    transform: rotate(12deg) scaleX(1.15);
+    opacity: 0;
+    transform: translate(var(--feather-dx, -14px), var(--feather-dy, 22px))
+      rotate(var(--feather-rot-to, 140deg)) scale(0.35);
   }
 }
 
 /* Decorative perch lines injected on sections (left edge) — same idea
-   as .scroll-bird-perch, mirrored, with a dusty-rose accent matching
-   the cat's nose/inner-ear tone. */
-.scroll-cat-perch {
+   as .scroll-bird-perch, mirrored, with a bright teal accent matching
+   the parrot's wing-band tone. */
+.scroll-parrot-perch {
   position: absolute;
   left: 0;
   top: 55%;
@@ -298,7 +187,7 @@
   opacity: 0.85;
 }
 
-.scroll-cat-perch::after {
+.scroll-parrot-perch::after {
   content: '';
   position: absolute;
   left: 0;
@@ -306,9 +195,11 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #e8879a;
-  opacity: 0.55;
-  box-shadow: 0 0 0 2px var(--petlio-paper, #f7f3eb);
+  background: #2ec4b6;
+  opacity: 0.6;
+  box-shadow:
+    0 0 0 2px var(--petlio-paper, #f7f3eb),
+    0 0 6px 1px rgba(46, 196, 182, 0.5);
 }
 
 .shopify-section {
@@ -319,7 +210,7 @@
    FOOTER YARD HANDOFF — see footer-yard.js / dog-cursor.css.
    ========================================================== */
 
-body.petlio-footer-yard-active #scroll-cat {
+body.petlio-footer-yard-active #scroll-parrot {
   opacity: 0 !important;
   transition: opacity 0.3s ease;
 }
@@ -328,9 +219,10 @@ body.petlio-footer-yard-active #scroll-cat {
 @media (max-width: 989px),
   (pointer: coarse),
   (prefers-reduced-motion: reduce) {
-  #scroll-cat-root,
-  #scroll-cat,
-  .scroll-cat-perch {
+  #scroll-parrot-root,
+  #scroll-parrot,
+  #scroll-parrot-feathers,
+  .scroll-parrot-perch {
     display: none !important;
   }
 }

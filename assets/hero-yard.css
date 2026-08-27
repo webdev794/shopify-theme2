@@ -3,27 +3,39 @@
    A full duplicate of the footer-yard critter engine (SVGs, AI, ball
    physics), mounted separately so footer-yard.js/.css are never touched.
    Instead of a thin strip, this version fills a position:sticky panel
-   that stays pinned while .hero-yard-wrap scrolls past, plus a scroll
+   layer that stays on screen through every section, plus a scroll
    -driven weather layer (sun/clouds/rain/lightning/leaves). It fades out
    right as the real #footer-yard scrolls into view (see startMergeWatch
    in hero-yard.js), so the two read as one continuous yard.
    ========================================================================== */
 
-.hero-yard-wrap {
-  position: relative;
-  /* Height controls how long the yard stays pinned before releasing.
-     Set inline by sections/hero-yard.liquid from the section setting. */
-}
+/* ==========================================================================
+   PETLIO — HERO YARD (global fixed overlay)
+   A full duplicate of the footer-yard critter engine (SVGs, AI, ball
+   physics), loaded site-wide from theme.liquid so footer-yard.js/.css are
+   never touched. Sits in a position:fixed layer on top of every section,
+   so it never scrolls away with the page. Weather (sun/clouds/rain/
+   lightning/leaves) is driven by whole-page scroll progress. Only a soft
+   vignette tint sits behind the scene near center — the rest of the fixed
+   layer, and the page under it, stays fully visible and clickable
+   (pointer-events: none on everything except the draggable ball).
+   It fades out when the real #footer-yard scrolls into view (see
+   startMergeWatch in hero-yard.js), so the two read as one continuous yard.
+   ========================================================================== */
 
-.hero-yard-sticky {
-  position: sticky;
-  top: 0;
+#hero-yard-fixed {
+  position: fixed;
+  inset: 0;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: transparent;
   pointer-events: none;
-  transition: opacity 0.5s ease;
-  z-index: 1;
+  z-index: var(--hero-yard-z, 30);
+}
+
+#hero-yard-fixed[hidden],
+#hero-yard-fixed.is-disabled {
+  display: none !important;
 }
 
 #hero-yard {
@@ -33,20 +45,62 @@
   height: 100%;
   overflow: hidden;
   pointer-events: none;
-  z-index: 1;
 }
 
-/* ---- weather layer: sits behind the critters, in front of the page ---- */
+/* Explicit stacking order, independent of DOM insertion order, so
+   effects layer correctly no matter which markup comes first:
+   sky/sun/clouds sit behind everything; grass/ground sit on the page;
+   rain and lightning render ABOVE the grass so falling drops stay
+   visible right down in the yard where the pets are; critters sit on
+   top of the weather; lightning's full flash sits above everything. */
+.hero-yard__vignette { z-index: 0; }
+.hero-yard__sky,
+.hero-yard__sun,
+.hero-yard__cloud { z-index: 1; }
+.hero-yard__grass { z-index: 2; }
+#hero-yard .hero-yard__ground { z-index: 3; }
+.hero-yard__rain { z-index: 4; }
+.hero-yard__leaf { z-index: 5; }
+.hero-yard__plate,
+.hero-yard__water-bowl { z-index: 6; }
+.hero-yard__dog,
+.hero-yard__cat,
+.hero-yard__bird,
+.hero-yard__rabbit,
+.hero-yard__butterfly,
+.hero-yard__ball { z-index: 7; }
+.hero-yard__lightning { z-index: 8; }
+
+/* soft center vignette only — edges stay fully transparent so page
+   content everywhere else reads normally underneath the fixed layer */
+.hero-yard__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 55%,
+    rgba(245, 239, 227, var(--hero-yard-vignette, 0.22)) 0%,
+    rgba(245, 239, 227, 0) 70%
+  );
+}
+
+/* ---- weather layer: sits behind the critters, in front of the page ----
+   No z-index here on purpose: giving this wrapper its own z-index would
+   create an isolated stacking context, trapping its children (rain,
+   lightning, leaves) at that single level and making it impossible for
+   them to render above sibling elements like the grass strip. Leaving
+   it un-stacked lets each child's own z-index (set above) interleave
+   correctly with grass/ground/critters in one shared stacking context. */
 .hero-yard__weather {
   position: absolute;
   inset: 0;
-  z-index: 0;
 }
 
 .hero-yard__sky {
   position: absolute;
   inset: 0;
   transition: background 0.4s linear;
+  mix-blend-mode: multiply;
+  opacity: var(--hero-yard-vignette, 0.22);
 }
 
 .hero-yard__sun {
@@ -83,14 +137,20 @@
 }
 .hero-yard__rain span {
   position: absolute;
-  top: -20%;
-  width: 2px;
-  height: 26px;
-  background: linear-gradient(180deg, rgba(140, 170, 210, 0), rgba(140, 170, 210, 0.7));
-  animation: hero-yard-rainfall 0.7s linear infinite;
+  top: -15vh;
+  width: 3px;
+  height: 46px;
+  background: linear-gradient(180deg, rgba(150, 185, 225, 0), rgba(150, 185, 225, 0.9));
+  box-shadow: 0 0 5px rgba(150, 185, 225, 0.45);
+  animation: hero-yard-rainfall 0.55s linear infinite;
 }
 @keyframes hero-yard-rainfall {
-  to { transform: translateY(140%); }
+  /* translateY() percentages resolve against the ELEMENT'S OWN height
+     (46px here), not the container -- so a "140%" end value only ever
+     moved it ~64px total, nowhere near enough to cross a full-height
+     viewport. Using vh units ties it to the actual screen height
+     instead, so it genuinely falls from above the screen to below it. */
+  to { transform: translateY(130vh); }
 }
 
 .hero-yard__lightning {
@@ -113,10 +173,20 @@
   will-change: transform, opacity;
 }
 
-@media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .hero-yard-sticky {
-    display: none !important;
-  }
+#hero-yard .hero-yard__grass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--hero-yard-grass-height, 110px);
+  background: linear-gradient(
+    180deg,
+    rgba(58, 79, 46, 0) 0%,
+    rgba(58, 79, 46, 0.32) 30%,
+    rgba(46, 66, 38, 0.58) 65%,
+    rgba(36, 54, 30, 0.74) 100%
+  );
+  pointer-events: none;
 }
 
 #hero-yard .hero-yard__ground {
@@ -187,7 +257,6 @@
   width: 46px;
   height: 20px;
   will-change: auto;
-  z-index: 1;
 }
 
 .hero-yard__water-bowl {
@@ -197,7 +266,6 @@
   width: 36px;
   height: 18px;
   will-change: auto;
-  z-index: 1;
 }
 
 .hero-yard__ball {
@@ -212,7 +280,6 @@
      pass-through scene — everything else stays pointer-events:none. */
   pointer-events: auto;
   cursor: grab;
-  z-index: 6;
 }
 
 .hero-yard__ball.is-held {
@@ -584,7 +651,7 @@
    ========================================================== */
 
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  #hero-yard {
+  #hero-yard-fixed {
     display: none !important;
   }
 }

@@ -1,8 +1,13 @@
 /**
- * PETLIO -- HERO YARD (scroll-pinned copy)
+ * PETLIO -- HERO YARD (global fixed overlay)
  * ============================================================
- * A small scripted scene above the footer, using its top edge as
- * "ground." Now includes a playable ball and a food plate:
+ * A copy of the footer-yard critter scene, self-mounted to <body> as
+ * a position:fixed layer loaded from theme.liquid, so it stays on
+ * screen through every section, fading out smoothly as the real
+ * #footer-yard scrolls into view (see the MERGE block inside
+ * startWeather/updateWeather below) -- that element is read-only,
+ * never modified.
+ * Includes a playable ball and a food plate:
  *
  * - Ball: real physics (gravity, ground bounce, rolling friction).
  *   Hover past it to bump it, or press-drag-release to fling it --
@@ -202,15 +207,27 @@
   function mount() {
     if (document.getElementById('hero-yard')) return;
 
-    // Mounts into the sticky slot rendered by sections/hero-yard.liquid --
-    // does NOT touch the real #footer-yard or its section at all.
-    var stickyEl = document.getElementById('hero-yard-sticky');
-    if (!stickyEl) return;
+    var cfg = window.PetlioHeroYardSettings || {};
+    if (cfg.enabled === false) return;
+
+    // Global fixed overlay, appended directly to <body>. Does NOT touch
+    // the real #footer-yard or its section at all.
+    var fixedEl = document.createElement('div');
+    fixedEl.id = 'hero-yard-fixed';
+    fixedEl.style.setProperty(
+      '--hero-yard-vignette',
+      cfg.vignetteOpacity != null ? cfg.vignetteOpacity : 0.22
+    );
+    fixedEl.style.setProperty(
+      '--hero-yard-grass-height',
+      (cfg.grassHeight != null ? cfg.grassHeight : 110) + 'px'
+    );
 
     var yard = document.createElement('div');
     yard.id = 'hero-yard';
     yard.setAttribute('aria-hidden', 'true');
     yard.innerHTML =
+      '<div class="hero-yard__vignette"></div>' +
       '<div class="hero-yard__weather">' +
       '<div class="hero-yard__sky"></div>' +
       '<div class="hero-yard__sun"></div>' +
@@ -226,6 +243,7 @@
       '<div class="hero-yard__leaf" data-leaf="4"></div>' +
       '<div class="hero-yard__leaf" data-leaf="5"></div>' +
       '</div>' +
+      '<div class="hero-yard__grass"></div>' +
       '<div class="hero-yard__ground"></div>' +
       '<div class="hero-yard__plate">' +
       PLATE_SVG +
@@ -252,22 +270,32 @@
       BALL_SVG +
       '</div>';
 
-    stickyEl.appendChild(yard);
+    fixedEl.appendChild(yard);
+    document.body.appendChild(fixedEl);
+
     start(yard);
-    startWeather(stickyEl);
-    startMergeWatch(stickyEl);
+    startWeather(fixedEl, cfg);
   }
 
   /* ================================================================
-     WEATHER -- purely a function of scroll progress through the tall
-     .hero-yard-wrap. Never touches the critter engine below; reads
-     nothing from it either. Reversible by construction: scrolling up
-     simply decreases `progress`, which un-plays every step here.
+     WEATHER -- tied to the page's real sections: sun in section 1,
+     clouds + falling leaves from section 2, lightning confined to
+     section 3, big rain from section 4 through the footer. Resolved
+     from actual section positions (see resolveBounds below), not a
+     fixed pixel guess. Reversible by construction: every stage is a
+     function of absolute scrollY, so scrolling up un-plays it exactly.
+     Never touches the critter engine below; reads nothing from it.
      ================================================================ */
-  function startWeather(stickyEl) {
-    var wrap = document.getElementById('hero-yard-wrap');
-    var weatherEl = stickyEl.querySelector('.hero-yard__weather');
-    if (!wrap || !weatherEl) return;
+  function startWeather(fixedEl, cfg) {
+    var weatherEl = fixedEl.querySelector('.hero-yard__weather');
+    if (!weatherEl) return;
+
+    // Weather visuals can be turned off in theme settings, but the
+    // merge-at-footer fade is a separate feature and must keep working
+    // either way -- so this no longer bails out of the whole function.
+    var weatherVisible = cfg.weather !== false;
+    var mergeEnabled = cfg.mergeAtFooter !== false;
+    if (!weatherVisible) weatherEl.style.display = 'none';
 
     var reduceMotion =
       window.matchMedia &&
@@ -284,7 +312,7 @@
       var streak = document.createElement('span');
       streak.style.left = Math.random() * 100 + '%';
       streak.style.animationDelay = Math.random() * 0.7 + 's';
-      streak.style.opacity = (0.4 + Math.random() * 0.5).toFixed(2);
+      streak.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
       rainEl.appendChild(streak);
     }
 
@@ -301,66 +329,158 @@
     }
 
     var leafConfig = [
-      { left: 0.10, start: 0.15, end: 0.55, size: 14, spin: 260 },
-      { left: 0.30, start: 0.22, end: 0.62, size: 18, spin: 340 },
-      { left: 0.55, start: 0.30, end: 0.72, size: 12, spin: 200 },
-      { left: 0.70, start: 0.55, end: 0.85, size: 16, spin: 300 },
-      { left: 0.85, start: 0.60, end: 0.92, size: 14, spin: 240 },
-      { left: 0.45, start: 0.65, end: 0.98, size: 20, spin: 360 }
+      { left: 0.10, start: 0.05, end: 0.55 },
+      { left: 0.30, start: 0.15, end: 0.68 },
+      { left: 0.55, start: 0.25, end: 0.80 },
+      { left: 0.70, start: 0.05, end: 0.55 },
+      { left: 0.85, start: 0.15, end: 0.70 },
+      { left: 0.45, start: 0.30, end: 0.85 }
     ];
 
-    function updateWeather(progress) {
-      var bandT = progress * 3;
-      var bi = Math.min(2, Math.floor(bandT));
-      skyEl.style.background = lerpColor(SKY_STOPS[bi], SKY_STOPS[bi + 1], bandT - bi);
+    /* ==============================================================
+       SECTION-TIED STAGING
+       Sections 1-4 map straight to weather stages:
+         Section 1 -> clear sun
+         Section 2 -> clouds roll in + leaves start falling
+         Section 3 -> lightning
+         Section 4 -> big rain, on through the footer
+       Resolved from the real top-level sections on the page (falls
+       back gracefully if the page has fewer than 4). Recomputed fresh
+       on every scroll frame rather than cached -- caching it once
+       turned out to be unreliable (below-the-fold images/fonts not
+       finished settling yet at first paint could freeze it on a stale,
+       too-short page height, and nothing short of catching every
+       possible layout-shift trigger fixed that reliably). A handful of
+       getBoundingClientRect() reads is cheap enough to just always be
+       correct instead.
+       ============================================================== */
 
-      var sunX = map(progress, 0, 1, 8, 78);
-      var sunY = map(progress, 0, 1, 10, 45) - Math.sin(progress * Math.PI) * 20;
-      sunEl.style.transform = 'translate(' + sunX + '%, ' + sunY + '%)';
-      sunEl.style.opacity = 1 - map(progress, 0.25, 0.42, 0, 1);
+    function resolveBounds() {
+      var selector =
+        '.shopify-section:not(.shopify-section-group-header-group):not(.shopify-section-group-footer-group)';
+      var sections = document.querySelectorAll(selector);
+      var scrollY = window.scrollY || window.pageYOffset || 0;
 
-      cloudEls.forEach(function (c, idx) {
-        var cOpacity = map(progress, 0.28 + idx * 0.04, 0.55 + idx * 0.04, 0, 0.9);
-        var cx = map(progress, 0.2, 0.9, -30 + idx * 8, 70 - idx * 6);
-        c.style.opacity = cOpacity.toFixed(2);
-        c.style.transform = 'translate(' + cx + '%, ' + idx * 4 + '%)';
-      });
-
-      rainEl.style.opacity = map(progress, 0.55, 0.72, 0, 0.85).toFixed(2);
-
-      if (progress > 0.78) {
-        var local = map(progress, 0.78, 1, 0, 1);
-        var wave = Math.abs(Math.sin(local * Math.PI * 6));
-        lightningEl.style.opacity = (wave > 0.93 ? (wave - 0.93) * 8 : 0).toFixed(2);
-      } else {
-        lightningEl.style.opacity = 0;
+      function topOf(el) {
+        return el.getBoundingClientRect().top + scrollY;
       }
 
-      leafEls.forEach(function (leaf, idx) {
-        var cfg = leafConfig[idx];
-        var t = map(progress, cfg.start, cfg.end, 0, 1);
-        var fallY = map(t, 0, 1, -10, 115);
-        var wind = progress > 0.6 ? 10 : 5;
-        var drift = Math.sin(t * Math.PI * 2) * wind;
-        var rotate = t * cfg.spin * (progress > 0.6 ? 1.6 : 1);
-        var opacity = progress < cfg.start || progress > cfg.end ? 0 : Math.sin(t * Math.PI);
-        leaf.style.width = leaf.style.height = cfg.size + 'px';
-        leaf.style.left = cfg.left * 100 + '%';
-        leaf.style.transform = 'translate(' + drift + 'px, ' + fallY + '%) rotate(' + rotate + 'deg)';
-        leaf.style.opacity = opacity.toFixed(2);
-      });
+      var realFooterYard = document.getElementById('footer-yard');
+      var doc = document.documentElement;
+      var end = realFooterYard
+        ? topOf(realFooterYard)
+        : doc.scrollHeight - window.innerHeight;
+      if (end < 400) end = cfg.weatherCycleDistance || 3000;
+
+      var s1 = sections.length > 0 ? topOf(sections[0]) : 0;
+      var s2 = sections.length > 1 ? topOf(sections[1]) : end * 0.25;
+      var s3 = sections.length > 2 ? topOf(sections[2]) : end * 0.5;
+      var s4 = sections.length > 3 ? topOf(sections[3]) : end * 0.75;
+
+      // Guard against out-of-order values (e.g. a very short section 1)
+      s2 = Math.max(s2, s1 + 100);
+      s3 = Math.max(s3, s2 + 100);
+      s4 = Math.max(s4, s3 + 100);
+      end = Math.max(end, s4 + 100);
+
+      return { s1: s1, s2: s2, s3: s3, s4: s4, end: end };
+    }
+
+    // per-cloud stagger so all three still land together at the right
+    // edge by the time the footer is reached, instead of arriving at
+    // different times
+    var cloudConfig = [
+      { start: 0 },
+      { start: 0.06 },
+      { start: 0.12 }
+    ];
+
+    function updateWeather(scrollY) {
+      var b = resolveBounds();
+
+      if (weatherVisible) {
+        // overall mood (sky tint + sun arc) still sweeps the whole span
+        var overall = Math.min(1, Math.max(0, (scrollY - b.s1) / (b.end - b.s1)));
+        var bandT = overall * 3;
+        var bi = Math.min(2, Math.floor(bandT));
+        skyEl.style.background = lerpColor(SKY_STOPS[bi], SKY_STOPS[bi + 1], bandT - bi);
+
+        // SUN -- full through most of section 1, fades out over its last
+        // 40% so it's gone by the time section 2 starts.
+        var sunFadeStart = b.s1 + (b.s2 - b.s1) * 0.6;
+        var sunOpacity = 1 - map(scrollY, sunFadeStart, b.s2, 0, 1);
+        var sunX = map(overall, 0, 1, 8, 78);
+        var sunY = map(overall, 0, 1, 10, 45) - Math.sin(overall * Math.PI) * 20;
+        sunEl.style.transform = 'translate(' + sunX + '%, ' + sunY + '%)';
+        sunEl.style.opacity = sunOpacity.toFixed(2);
+
+        // CLOUDS -- fade in starting just before section 2, stay visible
+        // the rest of the way (real clouds don't vanish once it starts
+        // raining). Left-to-right crossing motion is independent, driven
+        // by the same b.end target so it still finishes at the footer.
+        var cloudFadeStart = b.s1 + (b.s2 - b.s1) * 0.85;
+        var cloudCrossProgress = Math.min(1, Math.max(0, scrollY / b.end));
+        cloudEls.forEach(function (c, idx) {
+          var cOpacity = map(scrollY, cloudFadeStart + idx * 60, b.s2 + (b.s3 - b.s2) * 0.3, 0, 0.9);
+          var t = map(cloudCrossProgress, cloudConfig[idx].start, 1, 0, 1);
+          var cx = map(t, 0, 1, -20, 120);
+          c.style.opacity = cOpacity.toFixed(2);
+          c.style.transform = 'translate(' + cx + '%, ' + idx * 4 + '%)';
+        });
+
+        // LEAVES -- fall throughout section 2 onward (windier once the
+        // storm arrives in section 4).
+        var leafSpan = Math.min(1, Math.max(0, (scrollY - b.s2) / (b.end - b.s2)));
+        var windy = scrollY > b.s4;
+        leafEls.forEach(function (leaf, idx) {
+          var cfgLeaf = leafConfig[idx];
+          var t = map(leafSpan, cfgLeaf.start, cfgLeaf.end, 0, 1);
+          var fallY = map(t, 0, 1, -10, 115);
+          var wind = windy ? 10 : 5;
+          var drift = Math.sin(t * Math.PI * 2) * wind;
+          var rotate = t * 280 * (windy ? 1.5 : 1);
+          var opacity = leafSpan < cfgLeaf.start || leafSpan > cfgLeaf.end ? 0 : Math.sin(t * Math.PI);
+          leaf.style.width = leaf.style.height = 15 + idx + 'px';
+          leaf.style.left = cfgLeaf.left * 100 + '%';
+          leaf.style.transform = 'translate(' + drift + 'px, ' + fallY + '%) rotate(' + rotate + 'deg)';
+          leaf.style.opacity = opacity.toFixed(2);
+        });
+
+        // LIGHTNING -- confined to section 3's own scroll range only.
+        if (scrollY > b.s3 && scrollY < b.s4) {
+          var local = map(scrollY, b.s3, b.s4, 0, 1);
+          var wave = Math.abs(Math.sin(local * Math.PI * 6));
+          lightningEl.style.opacity = (wave > 0.93 ? (wave - 0.93) * 8 : 0).toFixed(2);
+        } else {
+          lightningEl.style.opacity = 0;
+        }
+
+        // RAIN -- big drops, starting at section 4, staying through the
+        // footer. Fades in over the first third of section 4.
+        var rainOpacity = map(scrollY, b.s4, b.s4 + (b.end - b.s4) * 0.35, 0, 1);
+        rainEl.style.opacity = rainOpacity.toFixed(2);
+      }
+
+      // MERGE -- the real #footer-yard (untouched, read-only) sits at
+      // b.end. This overlay is fixed full-viewport, so its own bottom
+      // edge is always at (scrollY + viewport height). The instant that
+      // edge reaches the real yard's top, vanish immediately -- no
+      // fade, no lingering overlap between the two scenes. Purely a
+      // scroll-position comparison, so scrolling back up brings it
+      // straight back the moment the boundary no longer overlaps.
+      if (mergeEnabled) {
+        var overlayBottom = scrollY + window.innerHeight;
+        fixedEl.style.opacity = overlayBottom >= b.end ? '0' : '1';
+      }
     }
 
     function onScroll() {
-      var rect = wrap.getBoundingClientRect();
-      var total = wrap.offsetHeight - window.innerHeight;
-      var scrolled = -rect.top;
-      var progress = total > 0 ? Math.min(1, Math.max(0, scrolled / total)) : 0;
-      updateWeather(progress);
+      var scrollY = window.scrollY || window.pageYOffset || 0;
+      updateWeather(scrollY);
     }
 
     if (reduceMotion) {
-      updateWeather(0.15);
+      updateWeather(0);
       return;
     }
 
@@ -378,30 +498,16 @@
       },
       { passive: true }
     );
+    // Resolving bounds fresh every frame means there's nothing to
+    // invalidate here anymore -- these just make sure the overlay
+    // updates promptly even if the user resizes/loads without
+    // scrolling in between.
     window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('load', onScroll, { once: true });
+
     onScroll();
   }
 
-  /* ================================================================
-     MERGE -- watches the REAL #footer-yard (untouched, unmodified)
-     and fades this sticky copy out right as it comes into view, so
-     the two read as one continuous yard. Purely additive: only reads
-     the existing element, never writes to it.
-     ================================================================ */
-  function startMergeWatch(stickyEl) {
-    var realFooterYard = document.getElementById('footer-yard');
-    if (!realFooterYard || !('IntersectionObserver' in window)) return;
-
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          stickyEl.style.opacity = entry.isIntersecting ? '0' : '1';
-        });
-      },
-      { rootMargin: '-10% 0px -60% 0px' }
-    );
-    io.observe(realFooterYard);
-  }
 
   function start(yard) {
     var dogEl = yard.querySelector('.hero-yard__dog');
@@ -1106,31 +1212,21 @@
 
     window.addEventListener('resize', measure, { passive: true });
 
-    // Watches the tall .hero-yard-wrap (not just the small `yard` box) so
-    // the critters keep patrolling for the whole time the box is pinned,
-    // not just a narrow strip around it.
-    var wrapForLoop = document.getElementById('hero-yard-wrap') || yard;
+    // This is now a global fixed layer, always on screen -- so the loop
+    // just runs continuously. The only pause is when the browser tab
+    // itself isn't visible (Page Visibility API), purely for performance.
+    startLoop();
+    window.PetlioHeroYardActive = true;
+    document.body.classList.add('petlio-hero-yard-active');
 
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(
-        function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              startLoop();
-              window.PetlioHeroYardActive = true;
-              document.body.classList.add('petlio-hero-yard-active');
-            } else {
-              stopLoop();
-              window.PetlioHeroYardActive = false;
-              document.body.classList.remove('petlio-hero-yard-active');
-            }
-          });
-        },
-        { rootMargin: '160px 0px' }
-      );
-      io.observe(wrapForLoop);
-    } else {
-      startLoop();
+    if ('visibilityState' in document) {
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          stopLoop();
+        } else {
+          startLoop();
+        }
+      });
     }
   }
 

@@ -37,14 +37,61 @@ body.ball-cursor-active #ball-cursor-ball {
   width: 100%;
   height: 100%;
   transform-origin: center;
-  transition: transform 0.12s ease;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.ball-cursor__hand {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  pointer-events: none;
+}
+
+/* While holding the yard's own ball, swap the ball icon out for a hand
+   -- the two objects (your cursor and the thing you're about to throw)
+   should never look like the same object at the same time. */
+#ball-cursor-ball.is-holding .ball-cursor__inner {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+#ball-cursor-ball.is-holding .ball-cursor__hand {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* A quick pulse right as the ball is released, so it reads clearly as
+   "let go of that, this is just the pointer again" rather than the
+   thrown ball and the cursor silently overlapping. */
+#ball-cursor-ball.is-released .ball-cursor__inner {
+  animation: ball-cursor-release-pulse 0.26s ease-out;
+}
+
+@keyframes ball-cursor-release-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 #ball-cursor-ball.is-idle .ball-cursor__inner {
   animation: ball-cursor-breathe 2.2s ease-in-out infinite;
 }
 
-#ball-cursor-ball.is-pressed .ball-cursor__inner {
+#ball-cursor-ball.is-pressed:not(.is-holding) .ball-cursor__inner {
   transform: scale(0.82, 1.16);
 }
 
@@ -108,6 +155,19 @@ body.petlio-footer-yard-active.ball-cursor-active select,
 body.petlio-footer-yard-active.ball-cursor-active [role="button"],
 body.petlio-footer-yard-active.ball-cursor-active label {
   cursor: auto;
+}
+
+/* ==========================================================
+   YARD BALL DIFFERENTIATION — the cursor and the yard's own
+   throwable ball used to be the same orange sphere, making it
+   genuinely hard to tell them apart mid-throw. This recolors the
+   yard ball to a green tennis-ball tone via a filter only, so it
+   reads as a distinct object at a glance -- footer-yard.css and
+   hero-yard.css are untouched; this just overrides on top.
+   ========================================================== */
+.footer-yard__ball svg,
+.hero-yard__ball svg {
+  filter: hue-rotate(140deg) saturate(1.2) !important;
 }
 
 /* ==========================================================

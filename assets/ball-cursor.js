@@ -45,6 +45,12 @@
   var INTERACTIVE_SELECTOR =
     'a, button, [role="button"], input, select, textarea, .product-card, .collection-card, .card, [data-cursor-interaction]';
 
+  // The yard scenes' own draggable/throwable ball -- detected purely by
+  // reading the DOM at press time (elementFromPoint), same technique
+  // already used below for hover detection. This never touches
+  // footer-yard.js/.css or hero-yard.js/.css; it only looks at them.
+  var YARD_BALL_SELECTOR = '.footer-yard__ball, .hero-yard__ball';
+
   var BALL_SVG =
     '<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
     '<defs><radialGradient id="ballShadeCursor" cx="35%" cy="30%" r="75%">' +
@@ -56,13 +62,36 @@
     '<ellipse cx="11" cy="10" rx="4" ry="2.4" fill="#fff6e0" opacity="0.55"/>' +
     '</svg>';
 
+  // Shown in place of the ball while actively holding the yard's ball,
+  // so the two objects never visually compete for "which one is mine."
+  var HAND_SVG =
+    '<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">' +
+    '<defs><linearGradient id="handShadeCursor" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#ffdcb0"/><stop offset="100%" stop-color="#e8a463"/>' +
+    '</linearGradient></defs>' +
+    '<path d="M10 26C7 26 5 23 5 19L5 14C5 12.6 6.1 11.5 7.5 11.5C8.9 11.5 10 12.6 10 14L10 17" ' +
+    'fill="url(#handShadeCursor)" stroke="#c8874a" stroke-width="1" stroke-linejoin="round"/>' +
+    '<path d="M10 17L10 10C10 8.6 11.1 7.5 12.5 7.5C13.9 7.5 15 8.6 15 10L15 17" ' +
+    'fill="url(#handShadeCursor)" stroke="#c8874a" stroke-width="1" stroke-linejoin="round"/>' +
+    '<path d="M15 17L15 9C15 7.6 16.1 6.5 17.5 6.5C18.9 6.5 20 7.6 20 9L20 17" ' +
+    'fill="url(#handShadeCursor)" stroke="#c8874a" stroke-width="1" stroke-linejoin="round"/>' +
+    '<path d="M20 17L20 11C20 9.6 21.1 8.5 22.5 8.5C23.9 8.5 25 9.6 25 11L25 20C25 24 22 27 18 27L14 27C11.5 27 10 25.5 8 23" ' +
+    'fill="url(#handShadeCursor)" stroke="#c8874a" stroke-width="1" stroke-linejoin="round"/>' +
+    '</svg>';
+
   function mount() {
     if (document.getElementById('ball-cursor-ball')) return;
 
     var ball = document.createElement('div');
     ball.id = 'ball-cursor-ball';
     ball.setAttribute('aria-hidden', 'true');
-    ball.innerHTML = '<div class="ball-cursor__inner">' + BALL_SVG + '</div>';
+    ball.innerHTML =
+      '<div class="ball-cursor__inner">' +
+      BALL_SVG +
+      '</div>' +
+      '<div class="ball-cursor__hand">' +
+      HAND_SVG +
+      '</div>';
     document.body.appendChild(ball);
 
     start(ball);
@@ -81,6 +110,8 @@
     var hasMoved = false;
     var lastHoverCheckAt = 0;
     var isHoveringInteractive = false;
+    var isHoldingYardBall = false;
+    var releasedTimer = null;
 
     window.PetlioCursorPet = window.PetlioCursorPet || {};
     window.PetlioCursorPet.x = -9999;
@@ -108,11 +139,34 @@
       startLoop();
     }
 
-    function onDown() {
+    function onDown(e) {
       ball.classList.add('is-pressed');
+
+      // Was the press specifically on the yard's own ball (the one pets
+      // fetch/play with), not just any mousedown on the page? Checked by
+      // reading the DOM at the press point -- doesn't require the yard
+      // scripts to announce anything.
+      var pressEl = document.elementFromPoint(e.clientX, e.clientY);
+      if (pressEl && pressEl.closest(YARD_BALL_SELECTOR)) {
+        isHoldingYardBall = true;
+        ball.classList.add('is-holding');
+      }
     }
+
     function onUp() {
       ball.classList.remove('is-pressed');
+
+      if (isHoldingYardBall) {
+        isHoldingYardBall = false;
+        ball.classList.remove('is-holding');
+        // A quick pulse on release so it's clear the hand let go and
+        // the ball is now its own separate, thrown object.
+        ball.classList.add('is-released');
+        clearTimeout(releasedTimer);
+        releasedTimer = setTimeout(function () {
+          ball.classList.remove('is-released');
+        }, 260);
+      }
     }
 
     function tick() {

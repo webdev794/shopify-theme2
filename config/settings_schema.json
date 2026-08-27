@@ -246,6 +246,76 @@
     ]
   },
   {
+    "name": "Hero Yard (global overlay)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "hero_yard_enabled",
+        "label": "Enable Hero Yard overlay",
+        "default": true,
+        "info": "Shows the scroll-driven pet yard (weather + critters) as a fixed layer on top of every page."
+      },
+      {
+        "type": "checkbox",
+        "id": "hero_yard_weather",
+        "label": "Enable weather effects",
+        "default": true,
+        "info": "Sun, clouds, rain and lightning driven by how far the page has scrolled."
+      },
+      {
+        "type": "range",
+        "id": "hero_yard_vignette_opacity",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "unit": "%",
+        "label": "Center tint opacity",
+        "default": 20,
+        "info": "Soft tint behind the scene, strongest at center, fully transparent at the edges."
+      },
+      {
+        "type": "range",
+        "id": "hero_yard_grass_height",
+        "min": 60,
+        "max": 220,
+        "step": 10,
+        "unit": "px",
+        "label": "Grass strip height",
+        "default": 110,
+        "info": "How tall the green grass tint is at the bottom of the overlay, where the pets run."
+      },
+      {
+        "type": "range",
+        "id": "hero_yard_weather_cycle",
+        "min": 1000,
+        "max": 8000,
+        "step": 500,
+        "unit": "px",
+        "label": "Weather cycle distance",
+        "default": 3000,
+        "info": "How far the page scrolls (in pixels) to go from clear sky to full storm. Scrolling further just holds the storm."
+      },
+      {
+        "type": "range",
+        "id": "hero_yard_cloud_cross_distance",
+        "min": 800,
+        "max": 6000,
+        "step": 200,
+        "unit": "px",
+        "label": "Cloud crossing distance (fallback)",
+        "default": 2400,
+        "info": "Used only on pages with fewer than 4 sections. Normally clouds finish crossing left-to-right exactly when the 4th page section comes into view, then hold until the footer."
+      },
+      {
+        "type": "checkbox",
+        "id": "hero_yard_merge_at_footer",
+        "label": "Fade out at the real footer yard",
+        "default": true,
+        "info": "When the existing footer yard scrolls into view, this overlay fades out so the two read as one continuous scene."
+      }
+    ]
+  },
+  {
     "name": "Social media",
     "settings": [
       {

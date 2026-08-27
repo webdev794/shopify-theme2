@@ -1,0 +1,50 @@
+{{ 'hero-yard.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Petlio — Hero Yard section
+  ------------------------------------------------------------
+  A separate, self-contained copy of the footer-yard critter
+  scene, pinned via position: sticky while this section's tall
+  wrapper scrolls past. Does not modify footer-yard.js/.css or
+  the footer section in any way — hero-yard.js only *reads* the
+  real #footer-yard element (via getElementById) to know when to
+  fade this copy out, so the two read as one continuous yard.
+
+  Drop this section anywhere above the footer (e.g. right under
+  the hero, or wrapping a few story sections) via the theme editor.
+{%- endcomment -%}
+
+<div
+  class="hero-yard-wrap"
+  id="hero-yard-wrap"
+  style="height: {{ section.settings.scroll_height | default: 220 }}vh;"
+>
+  <div class="hero-yard-sticky" id="hero-yard-sticky">
+    {%- comment -%} hero-yard.js injects the scene here at runtime {%- endcomment -%}
+  </div>
+</div>
+
+<script src="{{ 'hero-yard.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Hero Yard (scroll)",
+  "settings": [
+    {
+      "type": "range",
+      "id": "scroll_height",
+      "label": "Pinned scroll distance (vh)",
+      "min": 120,
+      "max": 400,
+      "step": 20,
+      "default": 220,
+      "info": "How much scrolling happens while the yard stays pinned before it releases."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Yard (scroll)"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,590 @@
+/* ==========================================================================
+   PETLIO — HERO YARD (scroll-pinned copy)
+   A full duplicate of the footer-yard critter engine (SVGs, AI, ball
+   physics), mounted separately so footer-yard.js/.css are never touched.
+   Instead of a thin strip, this version fills a position:sticky panel
+   that stays pinned while .hero-yard-wrap scrolls past, plus a scroll
+   -driven weather layer (sun/clouds/rain/lightning/leaves). It fades out
+   right as the real #footer-yard scrolls into view (see startMergeWatch
+   in hero-yard.js), so the two read as one continuous yard.
+   ========================================================================== */
+
+.hero-yard-wrap {
+  position: relative;
+  /* Height controls how long the yard stays pinned before releasing.
+     Set inline by sections/hero-yard.liquid from the section setting. */
+}
+
+.hero-yard-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+#hero-yard {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- weather layer: sits behind the critters, in front of the page ---- */
+.hero-yard__weather {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-yard__sky {
+  position: absolute;
+  inset: 0;
+  transition: background 0.4s linear;
+}
+
+.hero-yard__sun {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  left: 0;
+  top: 0;
+  background: radial-gradient(circle at 35% 30%, #f6d98b, #c1703d);
+  box-shadow: 0 0 40px rgba(193, 112, 61, 0.35);
+  will-change: transform, opacity;
+}
+
+.hero-yard__cloud {
+  position: absolute;
+  top: 8%;
+  width: 140px;
+  height: 46px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.85);
+  filter: blur(1px);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.hero-yard__cloud.c2 { width: 100px; height: 34px; top: 4%; }
+.hero-yard__cloud.c3 { width: 170px; height: 52px; top: 14%; }
+
+.hero-yard__rain {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+.hero-yard__rain span {
+  position: absolute;
+  top: -20%;
+  width: 2px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(140, 170, 210, 0), rgba(140, 170, 210, 0.7));
+  animation: hero-yard-rainfall 0.7s linear infinite;
+}
+@keyframes hero-yard-rainfall {
+  to { transform: translateY(140%); }
+}
+
+.hero-yard__lightning {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-yard__leaf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: #8fa05c;
+  border-radius: 0 60% 0 60%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .hero-yard-sticky {
+    display: none !important;
+  }
+}
+
+#hero-yard .hero-yard__ground {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 6%,
+    var(--petlio-line-strong, rgba(39, 48, 40, 0.18)) 94%,
+    transparent 100%
+  );
+}
+
+.hero-yard__dog,
+.hero-yard__cat,
+.hero-yard__bird {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  will-change: transform;
+  transform: translate3d(-100px, 0, 0);
+}
+
+.hero-yard__dog {
+  width: 62px;
+  height: 44px;
+}
+
+.hero-yard__cat {
+  width: 54px;
+  height: 42px;
+}
+
+.hero-yard__bird {
+  width: 48px;
+  height: 40px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero-yard__rabbit,
+.hero-yard__butterfly {
+  position: absolute;
+  left: 0;
+  will-change: transform;
+}
+
+.hero-yard__rabbit {
+  bottom: 20px;
+  width: 42px;
+  height: 30px;
+}
+
+.hero-yard__butterfly {
+  bottom: 20px; /* JS moves it further UP (negative translateY) from here — see start() */
+  width: 28px;
+  height: 22px;
+}
+
+.hero-yard__plate {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: 46px;
+  height: 20px;
+  will-change: auto;
+  z-index: 1;
+}
+
+.hero-yard__water-bowl {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  width: 36px;
+  height: 18px;
+  will-change: auto;
+  z-index: 1;
+}
+
+.hero-yard__ball {
+  position: absolute;
+  left: 0;
+  bottom: 20px;
+  width: 26px;
+  height: 26px;
+  will-change: transform;
+  transform: translate3d(-100px, 0, 0);
+  /* The only interactive element in an otherwise decorative,
+     pass-through scene — everything else stays pointer-events:none. */
+  pointer-events: auto;
+  cursor: grab;
+  z-index: 6;
+}
+
+.hero-yard__ball.is-held {
+  cursor: grabbing;
+}
+
+.hero-yard__dog svg,
+.hero-yard__cat svg,
+.hero-yard__bird svg,
+.hero-yard__rabbit svg,
+.hero-yard__butterfly svg,
+.hero-yard__ball svg,
+.hero-yard__plate svg,
+.hero-yard__water-bowl svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ==========================================================
+   CAT — leg pivots scoped and overridden here.
+   ------------------------------------------------------------
+   scroll-cat.css still defines .scroll-cat__legs-back/-front with
+   transform-origin: 34px/72px 46px (tuned for the OLD leg shape).
+   That file is shared with the site-wide cat, so it's left alone --
+   but this yard's legs were redesigned into rounded capsules with
+   different geometry, and pixel-based transform-origin under
+   transform-box: fill-box is inconsistently interpreted across
+   browsers (same issue already fixed once here for the butterfly's
+   wings). Percentage-based origin sidesteps that ambiguity, and
+   this selector's extra class gives it enough specificity to win
+   over the shared rule for hero-yard's cat specifically.
+   ========================================================== */
+
+.hero-yard__cat .scroll-cat__legs-back {
+  transform-origin: 36% 10%;
+}
+
+.hero-yard__cat .scroll-cat__legs-front {
+  transform-origin: 39% 8%;
+}
+
+/* ==========================================================
+   DOG — dog-cursor.css is no longer loaded (the site cursor is now
+   ball-cursor.js, not the illustrated dog), so this file can't rely
+   on it for .dog-cursor__* transform-origins anymore. Defined
+   directly here instead, matched to this file's own DOG_SVG
+   geometry. Keyframe names (dog-cursor-*-run etc.) are still fine
+   to reuse -- those are just @keyframes, not tied to any stylesheet.
+   ========================================================== */
+
+.dog-cursor__tail {
+  transform-origin: 31px 34px;
+}
+
+.dog-cursor__head {
+  transform-origin: 80px 28px;
+}
+
+.dog-cursor__legs-back {
+  transform-origin: 33px 48px;
+}
+
+.dog-cursor__legs-front {
+  transform-origin: 69px 46px;
+}
+
+.dog-cursor__body {
+  transform-origin: 55px 42px;
+}
+
+/* Same reason as the transform-origins above: dog-cursor.css no
+   longer loads, so these keyframes -- referenced by name below --
+   need to be defined somewhere. Values copied exactly from the
+   original file. */
+
+@keyframes dog-cursor-legs-back-run {
+  0% {
+    transform: rotate(24deg);
+  }
+  50% {
+    transform: rotate(-26deg);
+  }
+  100% {
+    transform: rotate(24deg);
+  }
+}
+
+@keyframes dog-cursor-legs-front-run {
+  0% {
+    transform: rotate(-26deg);
+  }
+  50% {
+    transform: rotate(24deg);
+  }
+  100% {
+    transform: rotate(-26deg);
+  }
+}
+
+@keyframes dog-cursor-body-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes dog-cursor-head-nod {
+  0%,
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+  }
+  40% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+  60% {
+    transform: rotate(16deg) translate(1px, 4px);
+  }
+}
+
+@keyframes dog-cursor-tail-wag {
+  0%,
+  100% {
+    transform: rotate(-16deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+.hero-yard__dog[data-dog-mode='run'] .dog-cursor__legs-back {
+  animation: dog-cursor-legs-back-run 0.26s ease-in-out infinite;
+}
+
+.hero-yard__dog[data-dog-mode='run'] .dog-cursor__legs-front {
+  animation: dog-cursor-legs-front-run 0.26s ease-in-out infinite;
+}
+
+.hero-yard__dog[data-dog-mode='run'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.22s ease-in-out infinite;
+}
+
+.hero-yard__dog[data-dog-mode='run'] .dog-cursor__body {
+  animation: dog-cursor-body-bounce 0.26s ease-in-out infinite;
+}
+
+.hero-yard__dog[data-dog-mode='sit'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+.hero-yard__dog[data-dog-mode='sit'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+.hero-yard__dog[data-dog-mode='sit'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.7s ease-in-out infinite;
+}
+
+/* Catching the ball. No mouth-chomp here (unlike the cursor dog) --
+   this SVG only has a closed-mouth path, no open-mouth one to
+   animate between, so the nod + fast tail-wag alone read as the
+   "got it!" beat. */
+.hero-yard__dog[data-dog-mode='bite'] .dog-cursor__legs-back {
+  transform: rotate(58deg);
+}
+
+.hero-yard__dog[data-dog-mode='bite'] .dog-cursor__legs-front {
+  transform: rotate(-4deg);
+}
+
+.hero-yard__dog[data-dog-mode='bite'] .dog-cursor__head {
+  animation: dog-cursor-head-nod 0.42s ease-in-out infinite;
+}
+
+.hero-yard__dog[data-dog-mode='bite'] .dog-cursor__tail {
+  animation: dog-cursor-tail-wag 0.24s ease-in-out infinite;
+}
+
+/* ==========================================================
+   CAT — reuses .scroll-cat__* transform-origins + keyframes.
+   ========================================================== */
+
+.hero-yard__cat.is-running .scroll-cat__legs-back {
+  animation: scroll-cat-legs-back-run 0.28s ease-in-out infinite;
+}
+
+.hero-yard__cat.is-running .scroll-cat__legs-front {
+  animation: scroll-cat-legs-front-run 0.28s ease-in-out infinite;
+}
+
+.hero-yard__cat.is-running .scroll-cat__tail {
+  animation: scroll-cat-tail-swish 0.36s ease-in-out infinite;
+}
+
+.hero-yard__cat.is-running .scroll-cat__body {
+  animation: scroll-cat-body-bounce 0.28s ease-in-out infinite;
+}
+
+.hero-yard__cat.is-sitting .scroll-cat__legs-back {
+  transform: rotate(56deg);
+}
+
+.hero-yard__cat.is-sitting .scroll-cat__legs-front {
+  transform: rotate(-4deg);
+}
+
+.hero-yard__cat.is-sitting .scroll-cat__tail {
+  animation: scroll-cat-tail-curl 3.6s ease-in-out infinite;
+}
+
+.hero-yard__cat.is-startled .scroll-cat__ears {
+  animation: scroll-cat-ears-flat 0.18s ease-out forwards;
+}
+
+.hero-yard__cat.is-startled .scroll-cat__body {
+  animation: scroll-cat-flinch 0.18s ease-out;
+}
+
+.hero-yard__cat.is-startled .scroll-cat__tail {
+  animation: scroll-cat-tail-puff 0.18s ease-in-out infinite;
+}
+
+/* ==========================================================
+   BIRD — reuses .scroll-bird__* transform-origins + keyframes.
+   ========================================================== */
+
+.hero-yard__bird.is-flying .scroll-bird__wing {
+  animation: scroll-bird-flap 0.16s ease-in-out infinite alternate;
+}
+
+.hero-yard__bird.is-flying .scroll-bird__tail {
+  animation: scroll-bird-tail-flicker 0.5s ease-in-out infinite;
+}
+
+.hero-yard__bird.is-flying .scroll-bird__aura {
+  animation: scroll-bird-aura-pulse 0.55s ease-in-out infinite;
+}
+
+.hero-yard__bird.is-perched .scroll-bird__wing {
+  animation: none;
+  transform: rotate(8deg);
+}
+
+/* ==========================================================
+   RABBIT — new, but minimal: one keyframe for ear flick during
+   idle, reused (faster) during the hop itself. Everything else
+   (the hop arc) is JS-driven position, no leg-rig needed.
+   ========================================================== */
+
+.hero-yard__rabbit-ears {
+  transform-origin: 34px 20px;
+  transform-box: fill-box;
+}
+
+.hero-yard__rabbit-tail {
+  transform-origin: 14px 38px;
+  transform-box: fill-box;
+}
+
+.hero-yard__rabbit.is-idle .hero-yard__rabbit-ears {
+  animation: hero-yard-rabbit-ear-flick 2.6s ease-in-out infinite;
+}
+
+.hero-yard__rabbit.is-hopping .hero-yard__rabbit-ears {
+  animation: hero-yard-rabbit-ear-flick 0.26s ease-in-out infinite;
+}
+
+@keyframes hero-yard-rabbit-ear-flick {
+  0%,
+  85%,
+  100% {
+    transform: rotate(0deg);
+  }
+  92% {
+    transform: rotate(-6deg);
+  }
+}
+
+/* ==========================================================
+   BUTTERFLY — new, but minimal: one keyframe, always running
+   (cheap — two small path groups oscillating scaleX).
+   ========================================================== */
+
+.hero-yard__wing-left {
+  /* Inner (body-adjacent) edge is the max-x side of this wing's own
+     bounding box — 100% anchors the scale there so it always
+     collapses toward the body, never away from it. */
+  transform-origin: 100% 50%;
+  transform-box: fill-box;
+}
+
+.hero-yard__wing-right {
+  /* Inner edge is the min-x side of this wing's own bounding box. */
+  transform-origin: 0% 50%;
+  transform-box: fill-box;
+}
+
+.hero-yard__butterfly .hero-yard__wing-left {
+  animation: hero-yard-wing-flutter-left 0.22s ease-in-out infinite;
+}
+
+.hero-yard__butterfly .hero-yard__wing-right {
+  animation: hero-yard-wing-flutter-right 0.22s ease-in-out infinite;
+}
+
+@keyframes hero-yard-wing-flutter-left {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.55);
+  }
+}
+
+@keyframes hero-yard-wing-flutter-right {
+  0%,
+  100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.55);
+  }
+}
+
+/* ==========================================================
+   EATING FACE MOVEMENT
+   ------------------------------------------------------------
+   One shared keyframe (a small dip toward the food, translateY
+   only — no transform-origin needed, so it's safe to reuse as-is
+   across every species regardless of head position/shape).
+   Scoped to a distinct .is-eating class, not the plain idle/sit
+   pose, so it only plays while actually at the plate.
+   ========================================================== */
+
+@keyframes hero-yard-eat-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  40%,
+  60% {
+    transform: translateY(3px);
+  }
+}
+
+.hero-yard__cat.is-eating .scroll-cat__head {
+  animation: hero-yard-eat-bob 0.5s ease-in-out infinite;
+}
+
+.hero-yard__rabbit.is-eating .hero-yard__rabbit-head {
+  animation: hero-yard-eat-bob 0.42s ease-in-out infinite;
+}
+
+.hero-yard__bird.is-eating .scroll-bird__body {
+  animation: hero-yard-eat-bob 0.46s ease-in-out infinite;
+}
+
+.hero-yard__dog.is-eating .dog-cursor__head {
+  animation: hero-yard-eat-bob 0.48s ease-in-out infinite;
+}
+
+/* ==========================================================
+   SAFETY — same convention as scroll-bird.css / scroll-cat.css
+   ========================================================== */
+
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  #hero-yard {
+    display: none !important;
+  }
+}

@@ -1,0 +1,87 @@
+/* ==========================================================================
+   PETLIO — YARD CAT SHARED MOTION
+   footer-yard.css (and its copy, hero-yard.css) don't define the yard
+   cat's leg-run / tail-swish / startle animations themselves -- they
+   trigger them by name only (e.g. "animation: scroll-cat-legs-back-run"),
+   reusing keyframes and transform-origins that used to live in
+   scroll-cat.css. Since that file's contents have been replaced with the
+   parrot's, those names no longer resolve to anything and the yard cat's
+   legs/tail/ears silently stop animating.
+
+   This file is a small, self-contained extraction of ONLY what
+   footer-yard.css/hero-yard.css actually need -- independent of whatever
+   scroll-cat.css or scroll-parrot.css currently contain, so it can't be
+   broken again by a future rename/replace of those files. Loaded
+   unconditionally in theme.liquid (not gated behind the Hero Yard
+   toggle), since footer-yard.css needs it regardless of that setting.
+
+   Does not touch footer-yard.css/.js or hero-yard.css/.js.
+   ========================================================================== */
+
+.scroll-cat__legs-back {
+  transform-origin: 34px 46px;
+  transform-box: fill-box;
+}
+
+.scroll-cat__legs-front {
+  transform-origin: 72px 46px;
+  transform-box: fill-box;
+}
+
+.scroll-cat__body {
+  transform-origin: 54px 40px;
+  transform-box: fill-box;
+}
+
+.scroll-cat__tail {
+  transform-origin: 28px 38px;
+  transform-box: fill-box;
+}
+
+.scroll-cat__ears {
+  transform-origin: 90px 14px;
+  transform-box: fill-box;
+}
+
+@keyframes scroll-cat-legs-back-run {
+  0% { transform: rotate(24deg); }
+  50% { transform: rotate(-26deg); }
+  100% { transform: rotate(24deg); }
+}
+
+@keyframes scroll-cat-legs-front-run {
+  0% { transform: rotate(-26deg); }
+  50% { transform: rotate(24deg); }
+  100% { transform: rotate(-26deg); }
+}
+
+@keyframes scroll-cat-tail-swish {
+  0%, 100% { transform: rotate(-9deg); }
+  50% { transform: rotate(11deg); }
+}
+
+@keyframes scroll-cat-body-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.3px); }
+}
+
+@keyframes scroll-cat-tail-curl {
+  0%, 75%, 100% { transform: rotate(0deg); }
+  85% { transform: rotate(8deg); }
+}
+
+@keyframes scroll-cat-ears-flat {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-18deg) scaleY(0.85); }
+}
+
+@keyframes scroll-cat-flinch {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.1) translateY(-2px); }
+  100% { transform: scale(1); }
+}
+
+@keyframes scroll-cat-tail-puff {
+  0%, 100% { transform: rotate(-14deg) scaleX(1.15); }
+  50% { transform: rotate(12deg) scaleX(1.15); }
+}

@@ -312,6 +312,13 @@
         "label": "Fade out at the real footer yard",
         "default": true,
         "info": "When the existing footer yard scrolls into view, this overlay fades out so the two read as one continuous scene."
+      },
+      {
+        "type": "checkbox",
+        "id": "hero_yard_section_index",
+        "label": "Show section index badge",
+        "default": true,
+        "info": "A steady, static badge (section number + heading) that stays on top of the weather layer as an anchor back to the page content. Turns off automatically if Hero Yard itself is disabled above."
       }
     ]
   },

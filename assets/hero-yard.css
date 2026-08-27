@@ -655,3 +655,166 @@
     display: none !important;
   }
 }
+/* ==========================================================================
+   SECTION INDEX (folded in from the former standalone section-index.css)
+   Lives and dies with Hero Yard as a whole -- turning the overlay off
+   in theme settings removes this too, since it exists specifically to
+   counter-balance the weather layer's motion with one steady, readable
+   anchor back to the page's actual content.
+   ========================================================================== */
+
+/* ==========================================================================
+   PETLIO — SECTION INDEX
+   A fixed "page position" badge, bottom-center, showing the section
+   currently in view as a big number ("02") plus its heading text,
+   auto-detected from each section's own h1/h2/h3 -- no per-section
+   theme edits needed. The number "flips" (odometer-style) the instant
+   the next section's boundary crosses the probe point, and reverses
+   cleanly on scroll-up since it's driven purely by scroll position.
+   Sits low enough (true bottom edge) to stay clear of the roaming
+   scroll-bird/scroll-parrot, which only ever travel the middle ~60%
+   of the viewport height.
+   ========================================================================== */
+
+#section-index {
+  position: fixed;
+  left: 50%;
+  /* Below the sticky header (--header-height is ~6rem, scoped to the
+     header element so not reliably inherited here -- clamp() gives a
+     safe fixed offset without depending on that variable's scope).
+     Also keeps clear of where the bird/parrot roam vertically
+     (~16%-76% of viewport height) and, crucially, off the bottom edge
+     where it was overlapping the yard/footer scenery. */
+  top: clamp(90px, 11vh, 128px);
+  transform: translateX(-50%) translateY(-10px);
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#section-index.is-ready {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#section-index.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+}
+
+.section-index__card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 26px 14px 20px;
+  /* Solid, not translucent -- this needs to read clearly over rain,
+     clouds, and everything else in the weather layer behind it, not
+     blend into it. */
+  background: var(--petlio-paper, #f7f3eb);
+  border: 1px solid var(--petlio-line-strong, rgba(39, 48, 40, 0.18));
+  border-radius: var(--petlio-radius-lg, 28px);
+  box-shadow: var(--petlio-shadow-lift, 0 24px 60px rgba(39, 48, 40, 0.1));
+}
+
+.section-index__num-wrap {
+  position: relative;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.section-index__num {
+  display: block;
+  font-family: var(--font-primary--family, serif);
+  font-weight: 700;
+  font-size: clamp(32px, 4vw, 52px);
+  font-variant-numeric: tabular-nums;
+  color: var(--petlio-ink, #273028);
+  letter-spacing: 0.01em;
+}
+
+/* Deliberately static -- a quick, calm crossfade only. The point of
+   this badge is to be the one steady thing on screen while weather
+   moves around it, not another animation competing for attention. */
+.section-index__num.is-changing {
+  transition: opacity 0.15s ease;
+  opacity: 0;
+}
+
+.section-index__divider {
+  width: 1px;
+  height: 34px;
+  background: var(--petlio-line-strong, rgba(39, 48, 40, 0.18));
+  flex: 0 0 auto;
+}
+
+.section-index__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.section-index__total {
+  font-family: var(--font-primary--family, sans-serif);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--petlio-muted, rgba(39, 48, 40, 0.6));
+}
+
+.section-index__label {
+  font-family: var(--font-primary--family, serif);
+  font-weight: 600;
+  font-size: clamp(15px, 1.6vw, 19px);
+  line-height: 1.25;
+  color: var(--petlio-ink, #273028);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: min(60vw, 360px);
+  transition: opacity 0.15s ease;
+}
+
+.section-index__label.is-changing {
+  opacity: 0;
+}
+
+@media (max-width: 560px) {
+  .section-index__label {
+    max-width: 52vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #section-index,
+  .section-index__num,
+  .section-index__label {
+    transition: none !important;
+  }
+}
+
+/* Thin progress rule along the bottom of the card, showing continuous
+   fractional position through the whole section run -- not just which
+   integer section is current. */
+.section-index__progress {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 0;
+  height: 3px;
+  background: var(--petlio-line, rgba(39, 48, 40, 0.1));
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.section-index__progress-fill {
+  height: 100%;
+  background: var(--petlio-accent, #71806d);
+  border-radius: 3px;
+  transform-origin: left center;
+  will-change: transform;
+}

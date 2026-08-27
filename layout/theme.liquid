@@ -15,7 +15,8 @@
     {{ 'a11y-utils.css' | asset_url | stylesheet_tag }}
     {{ 'ball-cursor.css' | asset_url | stylesheet_tag }}
     {{ 'scroll-bird.css' | asset_url | stylesheet_tag }}
-    {{ 'scroll-cat.css' | asset_url | stylesheet_tag }}
+    {{ 'scroll-parrot.css' | asset_url | stylesheet_tag }}
+    {{ 'yard-cat-shared.css' | asset_url | stylesheet_tag }}
     {{ 'footer-yard.css' | asset_url | stylesheet_tag }}
     {% if settings.hero_yard_enabled %}
       {{ 'hero-yard.css' | asset_url | stylesheet_tag }}
@@ -36,7 +37,7 @@
     <script src="{{ 'a11y-utils.js' | asset_url }}" defer></script>
     <script src="{{ 'ball-cursor.js' | asset_url }}" defer></script>
     <script src="{{ 'scroll-bird.js' | asset_url }}" defer></script>
-    <script src="{{ 'scroll-cat.js' | asset_url }}" defer></script>
+    <script src="{{ 'scroll-parrot.js' | asset_url }}" defer></script>
     <script src="{{ 'footer-yard.js' | asset_url }}" defer></script>
     {% if settings.hero_yard_enabled %}
       <script>
@@ -47,7 +48,8 @@
           grassHeight: {{ settings.hero_yard_grass_height | json }},
           weatherCycleDistance: {{ settings.hero_yard_weather_cycle | json }},
           cloudCrossDistance: {{ settings.hero_yard_cloud_cross_distance | json }},
-          mergeAtFooter: {{ settings.hero_yard_merge_at_footer | json }}
+          mergeAtFooter: {{ settings.hero_yard_merge_at_footer | json }},
+          sectionIndex: {{ settings.hero_yard_section_index | json }}
         };
       </script>
       <script src="{{ 'hero-yard.js' | asset_url }}" defer></script>

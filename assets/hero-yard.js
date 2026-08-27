@@ -275,6 +275,196 @@
 
     start(yard);
     startWeather(fixedEl, cfg);
+
+    // Folded in here (rather than a standalone script) specifically so
+    // it lives and dies with Hero Yard as a whole -- turning the
+    // overlay off in theme settings removes this too, since it exists
+    // to counter-balance the weather layer's motion, not stand alone.
+    if (cfg.sectionIndex !== false) {
+      startSectionIndex();
+    }
+  }
+
+  /* ================================================================
+     SECTION INDEX -- a fixed, deliberately static badge (big number +
+     section heading) that stays on top of the weather layer as a
+     steady anchor back to the page's actual content. "Current section"
+     is whichever real content section contains a probe point 40% down
+     the viewport, recomputed fresh every scroll frame (no caching --
+     same fix already applied to the weather bounds above, after a
+     caching bug there caused stale results before layout had settled).
+     Labels are auto-detected from each section's own h1/h2/h3, so this
+     needs no per-section settings and stays correct if sections are
+     reordered. Reads nothing from footer-yard.js/.css.
+     ================================================================ */
+  function startSectionIndex() {
+    if (document.getElementById('section-index')) return;
+
+    var PROBE_FRACTION = 0.4;
+    var MIN_SECTION_HEIGHT = 150;
+    var LABEL_MAX_LEN = 30;
+
+    function collectSections() {
+      var selector =
+        '.shopify-section:not(.shopify-section-group-header-group):not(.shopify-section-group-footer-group)';
+      var raw = document.querySelectorAll(selector);
+      var out = [];
+
+      for (var i = 0; i < raw.length; i++) {
+        var el = raw[i];
+        if (el.offsetHeight < MIN_SECTION_HEIGHT || el.offsetParent === null) continue;
+
+        var heading = el.querySelector('h1, h2, h3');
+        var label = heading && heading.textContent ? heading.textContent.trim() : '';
+        if (!label) label = 'Section ' + (out.length + 1);
+        if (label.length > LABEL_MAX_LEN) {
+          label = label.slice(0, LABEL_MAX_LEN - 1).trim() + '\u2026';
+        }
+
+        out.push({ el: el, label: label });
+      }
+
+      return out;
+    }
+
+    var sections = collectSections();
+    if (sections.length < 2) return; // not worth showing on a very short page
+
+    var root = document.createElement('div');
+    root.id = 'section-index';
+    root.setAttribute('aria-hidden', 'true');
+    root.innerHTML =
+      '<div class="section-index__card">' +
+      '<div class="section-index__num-wrap"><span class="section-index__num" id="section-index-num">01</span></div>' +
+      '<div class="section-index__divider"></div>' +
+      '<div class="section-index__meta">' +
+      '<span class="section-index__total" id="section-index-total"></span>' +
+      '<span class="section-index__label" id="section-index-label"></span>' +
+      '</div>' +
+      '<div class="section-index__progress"><div class="section-index__progress-fill" id="section-index-fill"></div></div>' +
+      '</div>';
+
+    document.body.appendChild(root);
+
+    var numEl = document.getElementById('section-index-num');
+    var totalEl = document.getElementById('section-index-total');
+    var labelEl = document.getElementById('section-index-label');
+    var fillEl = document.getElementById('section-index-fill');
+
+    var currentIndex = -1;
+    var flipTimer = null;
+
+    function pad(n) {
+      return n < 10 ? '0' + n : '' + n;
+    }
+
+    function refreshSections() {
+      var next = collectSections();
+      if (next.length >= 2) sections = next;
+    }
+
+    function renderTo(index, progressFraction) {
+      var isFirst = currentIndex === -1;
+      var changed = index !== currentIndex;
+      currentIndex = index;
+
+      var total = sections.length;
+      totalEl.textContent = '/ ' + pad(total);
+
+      if (changed) {
+        if (isFirst) {
+          numEl.textContent = pad(index + 1);
+          labelEl.textContent = sections[index].label;
+        } else {
+          // Deliberately understated: a quick crossfade only, not a
+          // flashy flip. This badge is meant to be the one steady,
+          // readable thing on screen -- it shouldn't compete with the
+          // weather layer's motion for attention.
+          numEl.classList.add('is-changing');
+          labelEl.classList.add('is-changing');
+
+          clearTimeout(flipTimer);
+          flipTimer = setTimeout(function () {
+            numEl.textContent = pad(index + 1);
+            labelEl.textContent = sections[index].label;
+            numEl.classList.remove('is-changing');
+            labelEl.classList.remove('is-changing');
+          }, 150);
+        }
+      }
+
+      var overall = (index + progressFraction) / total;
+      fillEl.style.transform = 'scaleX(' + Math.min(1, Math.max(0, overall)).toFixed(4) + ')';
+    }
+
+    function onScrollIndex() {
+      if (!sections.length) return;
+
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var probeY = vh * PROBE_FRACTION;
+
+      var found = -1;
+      var foundProgress = 0;
+
+      for (var i = 0; i < sections.length; i++) {
+        var rect = sections[i].el.getBoundingClientRect();
+        if (rect.top <= probeY && rect.bottom > probeY) {
+          found = i;
+          var span = rect.bottom - rect.top;
+          foundProgress = span > 0 ? (probeY - rect.top) / span : 0;
+          break;
+        }
+      }
+
+      if (found === -1) {
+        var firstRect = sections[0].el.getBoundingClientRect();
+        var lastRect = sections[sections.length - 1].el.getBoundingClientRect();
+        if (firstRect.top > probeY) {
+          found = 0;
+          foundProgress = 0;
+        } else if (lastRect.bottom <= probeY) {
+          found = sections.length - 1;
+          foundProgress = 1;
+        } else {
+          return;
+        }
+      }
+
+      root.classList.remove('is-hidden');
+      renderTo(found, foundProgress);
+    }
+
+    var ticking = false;
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (!ticking) {
+          requestAnimationFrame(function () {
+            onScrollIndex();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      },
+      { passive: true }
+    );
+    window.addEventListener('resize', onScrollIndex, { passive: true });
+    window.addEventListener('load', onScrollIndex, { once: true });
+
+    if (typeof MutationObserver !== 'undefined') {
+      var main = document.getElementById('MainContent');
+      if (main) {
+        var mo = new MutationObserver(function () {
+          refreshSections();
+        });
+        mo.observe(main, { childList: true, subtree: false });
+      }
+    }
+
+    onScrollIndex();
+    requestAnimationFrame(function () {
+      root.classList.add('is-ready');
+    });
   }
 
   /* ================================================================
@@ -358,8 +548,22 @@
     function resolveBounds() {
       var selector =
         '.shopify-section:not(.shopify-section-group-header-group):not(.shopify-section-group-footer-group)';
-      var sections = document.querySelectorAll(selector);
+      var rawSections = document.querySelectorAll(selector);
       var scrollY = window.scrollY || window.pageYOffset || 0;
+
+      // Skip hidden / disabled / very short sections (nav remnants,
+      // spacer sections, anything effectively invisible) -- otherwise a
+      // single stray section shifts every later stage by one, and
+      // "section 4" no longer lines up with what's visually the 4th
+      // section on the page. Same convention scroll-parrot.js and
+      // scroll-bird.js already use for their perch positions.
+      var sections = [];
+      for (var i = 0; i < rawSections.length; i++) {
+        var el = rawSections[i];
+        if (el.offsetHeight >= 150 && el.offsetParent !== null) {
+          sections.push(el);
+        }
+      }
 
       function topOf(el) {
         return el.getBoundingClientRect().top + scrollY;
@@ -418,6 +622,10 @@
         // the rest of the way (real clouds don't vanish once it starts
         // raining). Left-to-right crossing motion is independent, driven
         // by the same b.end target so it still finishes at the footer.
+        // Uses vw units for X, not % -- translate() percentages resolve
+        // against the cloud's OWN width (~100-170px), not the screen, so
+        // "120%" was only ever ~170px of real movement on any normal
+        // viewport (the same class of bug the rain streaks had).
         var cloudFadeStart = b.s1 + (b.s2 - b.s1) * 0.85;
         var cloudCrossProgress = Math.min(1, Math.max(0, scrollY / b.end));
         cloudEls.forEach(function (c, idx) {
@@ -425,7 +633,7 @@
           var t = map(cloudCrossProgress, cloudConfig[idx].start, 1, 0, 1);
           var cx = map(t, 0, 1, -20, 120);
           c.style.opacity = cOpacity.toFixed(2);
-          c.style.transform = 'translate(' + cx + '%, ' + idx * 4 + '%)';
+          c.style.transform = 'translate(' + cx + 'vw, ' + idx * 4 + '%)';
         });
 
         // LEAVES -- fall throughout section 2 onward (windier once the
